@@ -1,5 +1,13 @@
 """Provider adapters and provider-specific normalization packages."""
 
+from app.integrations.providers.aisstream import (
+    DEFAULT_AISSTREAM_URL,
+    AISStreamAdapter,
+    AISStreamNormalizer,
+    AISStreamSubscription,
+    AISWebSocketTransport,
+    MockAISWebSocketTransport,
+)
 from app.integrations.providers.openweather import (
     DEFAULT_OPENWEATHER_BASE_URL,
     ONE_CALL_BASE_URL,
@@ -22,4 +30,11 @@ __all__ = [
     "DEFAULT_TOMTOM_INCIDENTS_URL",
     "TomTomAdapter",
     "TomTomNormalizer",
+    "DEFAULT_AISSTREAM_URL",
+    "AISStreamAdapter",
+    "AISStreamNormalizer",
+    "AISStreamSubscription",
+    "AISWebSocketTransport",
+    "MockAISWebSocketTransport",
 ]
+

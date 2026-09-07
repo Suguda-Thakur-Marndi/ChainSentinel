@@ -58,9 +58,11 @@ class TimestampNormalizer:
 
             # Try ISO 8601 parsing
             try:
-                # Handle standard 'Z' suffix
+                # Handle standard 'Z' suffix or Go-style ' UTC' suffix
                 if clean_str.endswith("Z"):
                     clean_str = clean_str[:-1] + "+00:00"
+                elif clean_str.endswith(" UTC"):
+                    clean_str = clean_str[:-4].strip()
                 dt = datetime.fromisoformat(clean_str)
                 if dt.tzinfo is None:
                     return dt.replace(tzinfo=timezone.utc)

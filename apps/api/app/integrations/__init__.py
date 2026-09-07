@@ -66,10 +66,16 @@ from app.integrations.normalizers import (
     TimestampNormalizer,
 )
 from app.integrations.providers import (
+    DEFAULT_AISSTREAM_URL,
     DEFAULT_OPENWEATHER_BASE_URL,
     DEFAULT_TOMTOM_FLOW_URL,
     DEFAULT_TOMTOM_INCIDENTS_URL,
     ONE_CALL_BASE_URL,
+    AISStreamAdapter,
+    AISStreamNormalizer,
+    AISStreamSubscription,
+    AISWebSocketTransport,
+    MockAISWebSocketTransport,
     OpenWeatherAdapter,
     OpenWeatherNormalizer,
     TomTomAdapter,
@@ -111,7 +117,7 @@ __all__ = [
     "MockWeatherNormalizer",
     "MockAISNormalizer",
     "MockTrafficNormalizer",
-    # Providers (OpenWeather, TomTom)
+    # Providers (OpenWeather, TomTom, AISStream)
     "DEFAULT_OPENWEATHER_BASE_URL",
     "ONE_CALL_BASE_URL",
     "OpenWeatherAdapter",
@@ -120,6 +126,12 @@ __all__ = [
     "DEFAULT_TOMTOM_INCIDENTS_URL",
     "TomTomAdapter",
     "TomTomNormalizer",
+    "DEFAULT_AISSTREAM_URL",
+    "AISStreamAdapter",
+    "AISStreamNormalizer",
+    "AISStreamSubscription",
+    "AISWebSocketTransport",
+    "MockAISWebSocketTransport",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -191,3 +203,18 @@ if not default_provider_registry.is_registered(TomTomAdapter.provider_name):
             retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
         ),
     )
+
+if not default_provider_registry.is_registered(AISStreamAdapter.provider_name):
+    default_provider_registry.register(
+        AISStreamAdapter,
+        default_config=ProviderConfig(
+            provider_name=AISStreamAdapter.provider_name,
+            provider_type=AISStreamAdapter.provider_type,
+            base_url=DEFAULT_AISSTREAM_URL,
+            auth_mode=AuthMode.API_KEY_HEADER,
+            secret_ref="env:AISSTREAM_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=120),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
