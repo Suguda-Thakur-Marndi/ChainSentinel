@@ -65,6 +65,16 @@ from app.integrations.normalizers import (
     NormalizationPipeline,
     TimestampNormalizer,
 )
+from app.integrations.providers import (
+    DEFAULT_OPENWEATHER_BASE_URL,
+    DEFAULT_TOMTOM_FLOW_URL,
+    DEFAULT_TOMTOM_INCIDENTS_URL,
+    ONE_CALL_BASE_URL,
+    OpenWeatherAdapter,
+    OpenWeatherNormalizer,
+    TomTomAdapter,
+    TomTomNormalizer,
+)
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
 from app.integrations.retry import RetryPolicy
@@ -101,6 +111,15 @@ __all__ = [
     "MockWeatherNormalizer",
     "MockAISNormalizer",
     "MockTrafficNormalizer",
+    # Providers (OpenWeather, TomTom)
+    "DEFAULT_OPENWEATHER_BASE_URL",
+    "ONE_CALL_BASE_URL",
+    "OpenWeatherAdapter",
+    "OpenWeatherNormalizer",
+    "DEFAULT_TOMTOM_FLOW_URL",
+    "DEFAULT_TOMTOM_INCIDENTS_URL",
+    "TomTomAdapter",
+    "TomTomNormalizer",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -143,3 +162,32 @@ __all__ = [
     "IngestionResult",
     "IngestionService",
 ]
+
+# Pre-register built-in provider adapters into default registry
+if not default_provider_registry.is_registered(OpenWeatherAdapter.provider_name):
+    default_provider_registry.register(
+        OpenWeatherAdapter,
+        default_config=ProviderConfig(
+            provider_name=OpenWeatherAdapter.provider_name,
+            provider_type=OpenWeatherAdapter.provider_type,
+            base_url=DEFAULT_OPENWEATHER_BASE_URL,
+            auth_mode=AuthMode.API_KEY_QUERY,
+            secret_ref="env:OPENWEATHER_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=60),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(TomTomAdapter.provider_name):
+    default_provider_registry.register(
+        TomTomAdapter,
+        default_config=ProviderConfig(
+            provider_name=TomTomAdapter.provider_name,
+            provider_type=TomTomAdapter.provider_type,
+            base_url=DEFAULT_TOMTOM_FLOW_URL,
+            auth_mode=AuthMode.API_KEY_QUERY,
+            secret_ref="env:TOMTOM_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=60),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
