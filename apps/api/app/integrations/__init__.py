@@ -1,7 +1,7 @@
 """RiskWise external data ingestion foundation & provider architecture.
 
 Provider-agnostic ingestion framework supporting weather, traffic, AIS, air,
-rail, logistics, and news signals without canonical normalization coupling.
+rail, logistics, and news signals with a strongly-typed canonical normalization layer.
 """
 
 from app.integrations.base import (
@@ -14,12 +14,24 @@ from app.integrations.base import (
     RawEvent,
 )
 from app.integrations.boundaries import (
+    CanonicalEventStorage,
+    InMemoryCanonicalEventStorage,
     InMemoryIngestionScheduler,
     InMemoryRawEventStorage,
     IngestionScheduler,
     RawEventStorage,
     ScheduledIngestionJob,
+    ShipmentEventBridge,
     WebhookReceiver,
+)
+from app.integrations.canonical import (
+    CanonicalEventType,
+    CanonicalExternalEvent,
+    EntityCorrelation,
+    EventLocation,
+    EventQuality,
+    EventSeverity,
+    EventSourceType,
 )
 from app.integrations.config import (
     AuthMode,
@@ -43,6 +55,16 @@ from app.integrations.errors import (
     ProviderValidationError,
 )
 from app.integrations.idempotency import IdempotencyEngine
+from app.integrations.normalizers import (
+    BaseEventNormalizer,
+    CoordinateValidator,
+    DefaultEventNormalizer,
+    MockAISNormalizer,
+    MockTrafficNormalizer,
+    MockWeatherNormalizer,
+    NormalizationPipeline,
+    TimestampNormalizer,
+)
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
 from app.integrations.retry import RetryPolicy
@@ -62,6 +84,23 @@ __all__ = [
     "RawEvent",
     "IngestionBatch",
     "BaseProviderAdapter",
+    # Canonical & Taxonomy
+    "CanonicalEventType",
+    "EventSourceType",
+    "EventSeverity",
+    "EventQuality",
+    "EventLocation",
+    "EntityCorrelation",
+    "CanonicalExternalEvent",
+    # Normalizers
+    "BaseEventNormalizer",
+    "DefaultEventNormalizer",
+    "NormalizationPipeline",
+    "TimestampNormalizer",
+    "CoordinateValidator",
+    "MockWeatherNormalizer",
+    "MockAISNormalizer",
+    "MockTrafficNormalizer",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -88,6 +127,9 @@ __all__ = [
     # Boundaries
     "RawEventStorage",
     "InMemoryRawEventStorage",
+    "CanonicalEventStorage",
+    "InMemoryCanonicalEventStorage",
+    "ShipmentEventBridge",
     "ScheduledIngestionJob",
     "IngestionScheduler",
     "InMemoryIngestionScheduler",

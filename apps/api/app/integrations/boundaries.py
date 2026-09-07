@@ -1,7 +1,7 @@
-"""Ingestion boundary abstractions for raw storage, scheduling, and webhooks.
+"""Ingestion boundary abstractions for raw storage, canonical storage, scheduling, and webhooks.
 
-Step 1 establishes the structural boundaries without coupling to specific
-external providers, production cron daemons, or webhook routes.
+Step 1 established raw storage, scheduling, and webhook boundaries.
+Step 2 establishes the canonical event storage boundary and bridges.
 """
 
 from __future__ import annotations
@@ -14,9 +14,14 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from app.integrations.base import IngestionBatch, RawEvent
+from app.integrations.canonical import CanonicalExternalEvent
 
 logger = logging.getLogger("riskwise.integrations.boundaries")
 
+
+# =====================================================================
+# Raw Event Storage Boundary
+# =====================================================================
 
 class RawEventStorage(ABC):
     """Abstract storage boundary for raw external events prior to normalization."""
@@ -85,6 +90,147 @@ class InMemoryRawEventStorage(RawEventStorage):
             self._events.clear()
 
 
+# =====================================================================
+# Canonical Event Storage Boundary
+# =====================================================================
+
+class CanonicalEventStorage(ABC):
+    """Abstract storage boundary for normalized CanonicalExternalEvent objects."""
+
+    @abstractmethod
+    def store(self, event: CanonicalExternalEvent) -> str:
+        """Store a canonical event, returning its event_id."""
+        pass
+
+    @abstractmethod
+    def store_batch(self, events: List[CanonicalExternalEvent]) -> int:
+        """Store multiple canonical events, returning count stored."""
+        pass
+
+    @abstractmethod
+    def get_event(self, event_id: str) -> Optional[CanonicalExternalEvent]:
+        """Retrieve a canonical event by event_id."""
+        pass
+
+    @abstractmethod
+    def list_events(
+        self,
+        provider: Optional[str] = None,
+        event_type: Optional[str] = None,
+        org_id: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[CanonicalExternalEvent]:
+        """List canonical events with optional filtering."""
+        pass
+
+
+class InMemoryCanonicalEventStorage(CanonicalEventStorage):
+    """Thread-safe in-memory store for normalized canonical events."""
+
+    def __init__(self, max_capacity: int = 10000) -> None:
+        self._lock = threading.Lock()
+        self._max_capacity = max_capacity
+        self._events: Dict[str, CanonicalExternalEvent] = {}
+
+    def store(self, event: CanonicalExternalEvent) -> str:
+        with self._lock:
+            if len(self._events) >= self._max_capacity:
+                oldest_id = next(iter(self._events))
+                del self._events[oldest_id]
+            self._events[event.event_id] = event
+            return event.event_id
+
+    def store_batch(self, events: List[CanonicalExternalEvent]) -> int:
+        stored = 0
+        with self._lock:
+            for ev in events:
+                if len(self._events) >= self._max_capacity:
+                    oldest_id = next(iter(self._events))
+                    del self._events[oldest_id]
+                self._events[ev.event_id] = ev
+                stored += 1
+        return stored
+
+    def get_event(self, event_id: str) -> Optional[CanonicalExternalEvent]:
+        with self._lock:
+            return self._events.get(event_id)
+
+    def list_events(
+        self,
+        provider: Optional[str] = None,
+        event_type: Optional[str] = None,
+        org_id: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[CanonicalExternalEvent]:
+        with self._lock:
+            items = list(self._events.values())
+
+        if provider:
+            items = [e for e in items if e.provider.lower() == provider.lower()]
+        if event_type:
+            items = [e for e in items if str(e.event_type).upper() == event_type.upper()]
+        if org_id:
+            items = [e for e in items if e.org_id == org_id]
+
+        return items[-limit:]
+
+    def clear(self) -> None:
+        """Clear all stored canonical events."""
+        with self._lock:
+            self._events.clear()
+
+
+class ShipmentEventBridge:
+    """Bridge mapping correlated CanonicalExternalEvent models to ShipmentEvent persistence dictionaries."""
+
+    @classmethod
+    def can_persist_to_shipment_event(cls, event: CanonicalExternalEvent) -> bool:
+        """Check if an event satisfies the non-null shipment_id constraint of ShipmentEvent."""
+        return bool(event.correlation and event.correlation.shipment_id)
+
+    @classmethod
+    def to_shipment_event_dict(cls, event: CanonicalExternalEvent) -> Dict[str, Any]:
+        """Convert a canonical event into field values suitable for ShipmentEvent model creation.
+
+        Raises:
+            ValueError: If event has no correlated shipment_id.
+        """
+        if not cls.can_persist_to_shipment_event(event):
+            raise ValueError(
+                f"Canonical event '{event.event_id}' cannot be persisted to ShipmentEvent: "
+                "missing required shipment_id correlation."
+            )
+
+        return {
+            "shipment_id": event.correlation.shipment_id,
+            "mode": getattr(event, "normalized_attributes", {}).get("mode", "OCEAN"),
+            "event_type": str(event.event_type),
+            "timestamp": event.event_timestamp,
+            "latitude": event.latitude,
+            "longitude": event.longitude,
+            "status": event.status or "IN_TRANSIT",
+            "eta": event.eta,
+            "delay_minutes": event.delay_minutes,
+            "source": str(event.source_type.value),
+            "source_type": str(event.source_type.value),
+            "confidence": event.confidence,
+            "raw_event_id": event.raw_event_id,
+            "metadata_json": {
+                "provider": event.provider,
+                "source_event_id": event.source_event_id,
+                "payload_fingerprint": event.payload_fingerprint,
+                "correlation_id": event.correlation_id,
+                "ingestion_run_id": event.ingestion_run_id,
+                "quality": event.quality.value,
+                "normalized_attributes": event.normalized_attributes,
+            },
+        }
+
+
+# =====================================================================
+# Scheduling Boundary
+# =====================================================================
+
 @dataclass
 class ScheduledIngestionJob:
     """Descriptor for a scheduled provider polling task."""
@@ -149,6 +295,10 @@ class InMemoryIngestionScheduler(IngestionScheduler):
         with self._lock:
             return self._jobs.pop(job_id, None) is not None
 
+
+# =====================================================================
+# Webhook Boundary
+# =====================================================================
 
 class WebhookReceiver(ABC):
     """Abstract webhook receiver boundary for push-based external providers."""
