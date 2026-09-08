@@ -25,6 +25,9 @@ class ProviderRateLimiter:
         self._hour_windows: Dict[str, Deque[float]] = {}
         # provider_name -> monotonic timestamp until which the provider is blocked (e.g. Retry-After)
         self._cooldowns: Dict[str, float] = {}
+        # Observability stats
+        self._total_throttled: Dict[str, int] = {}
+        self._cooldown_counts: Dict[str, int] = {}
 
     def check_limit(
         self,
@@ -43,6 +46,7 @@ class ProviderRateLimiter:
             cooldown_until = self._cooldowns.get(provider_name, 0.0)
             if now < cooldown_until:
                 wait_time = cooldown_until - now
+                self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                 return False, wait_time
 
             if config is None:
@@ -57,6 +61,7 @@ class ProviderRateLimiter:
                 if len(q_min) >= config.requests_per_minute:
                     oldest = q_min[0]
                     wait_time = max(0.1, 60.0 - (now - oldest))
+                    self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                     return False, wait_time
 
             # Check requests per hour
@@ -68,6 +73,7 @@ class ProviderRateLimiter:
                 if len(q_hour) >= config.requests_per_hour:
                     oldest = q_hour[0]
                     wait_time = max(0.1, 3600.0 - (now - oldest))
+                    self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                     return False, wait_time
 
             return True, None
@@ -87,6 +93,7 @@ class ProviderRateLimiter:
         with self._lock:
             cooldown_until = self._cooldowns.get(provider_name, 0.0)
             if now < cooldown_until:
+                self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                 return False
 
             if config is not None:
@@ -95,6 +102,7 @@ class ProviderRateLimiter:
                     while q_min and (now - q_min[0]) > 60.0:
                         q_min.popleft()
                     if len(q_min) >= config.requests_per_minute:
+                        self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                         return False
 
                 if config.requests_per_hour is not None:
@@ -102,6 +110,7 @@ class ProviderRateLimiter:
                     while q_hour and (now - q_hour[0]) > 3600.0:
                         q_hour.popleft()
                     if len(q_hour) >= config.requests_per_hour:
+                        self._total_throttled[provider_name] = self._total_throttled.get(provider_name, 0) + 1
                         return False
 
             # Record token usage
@@ -127,7 +136,30 @@ class ProviderRateLimiter:
         now = time.monotonic()
         with self._lock:
             self._cooldowns[provider_name] = now + duration
+            self._cooldown_counts[provider_name] = self._cooldown_counts.get(provider_name, 0) + 1
         return duration
+
+    def get_provider_status(self, provider_name: str) -> Dict[str, Any]:
+        """Return safe diagnostic status of the rate limiter for a provider."""
+        now = time.monotonic()
+        with self._lock:
+            cooldown_until = self._cooldowns.get(provider_name, 0.0)
+            is_cooling_down = now < cooldown_until
+            cooldown_remaining = max(0.0, cooldown_until - now) if is_cooling_down else 0.0
+            minute_count = len(self._minute_windows.get(provider_name, []))
+            hour_count = len(self._hour_windows.get(provider_name, []))
+            throttled = self._total_throttled.get(provider_name, 0)
+            cooldown_events = self._cooldown_counts.get(provider_name, 0)
+
+            return {
+                "provider_name": provider_name,
+                "is_cooling_down": is_cooling_down,
+                "cooldown_remaining_seconds": round(cooldown_remaining, 2),
+                "minute_window_count": minute_count,
+                "hour_window_count": hour_count,
+                "total_throttled_requests": throttled,
+                "total_cooldown_events": cooldown_events,
+            }
 
     def reset(self, provider_name: Optional[str] = None) -> None:
         """Reset rate limiter state for one or all providers."""
@@ -136,7 +168,11 @@ class ProviderRateLimiter:
                 self._minute_windows.pop(provider_name, None)
                 self._hour_windows.pop(provider_name, None)
                 self._cooldowns.pop(provider_name, None)
+                self._total_throttled.pop(provider_name, None)
+                self._cooldown_counts.pop(provider_name, None)
             else:
                 self._minute_windows.clear()
                 self._hour_windows.clear()
                 self._cooldowns.clear()
+                self._total_throttled.clear()
+                self._cooldown_counts.clear()

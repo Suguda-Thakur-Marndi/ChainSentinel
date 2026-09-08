@@ -33,6 +33,12 @@ from app.integrations.canonical import (
     EventSeverity,
     EventSourceType,
 )
+from app.integrations.circuit_breaker import (
+    CircuitBreakerConfig,
+    CircuitBreakerOpenError,
+    CircuitState,
+    ProviderCircuitBreaker,
+)
 from app.integrations.config import (
     AuthMode,
     ProviderConfig,
@@ -42,7 +48,10 @@ from app.integrations.config import (
 )
 from app.integrations.errors import (
     DuplicateEventError,
+    FailureCategory,
+    IdempotencyError,
     IngestionError,
+    NormalizationError,
     ProviderAuthenticationError,
     ProviderConfigurationError,
     ProviderConnectionError,
@@ -53,6 +62,7 @@ from app.integrations.errors import (
     ProviderResponseError,
     ProviderTimeoutError,
     ProviderValidationError,
+    classify_failure,
 )
 from app.integrations.idempotency import IdempotencyEngine
 from app.integrations.normalizers import (
@@ -62,8 +72,28 @@ from app.integrations.normalizers import (
     MockAISNormalizer,
     MockTrafficNormalizer,
     MockWeatherNormalizer,
+    NormalizationBatchResult,
     NormalizationPipeline,
     TimestampNormalizer,
+)
+from app.integrations.observability import (
+    FreshnessConfig,
+    IngestionAuditAction,
+    IngestionAuditEntry,
+    IngestionMetricsCollector,
+    IngestionStructuredLogger,
+    InMemoryIngestionAuditLedger,
+    StaleDataDetector,
+    StructuredLogEntry,
+    default_audit_ledger,
+    default_metrics_collector,
+    default_structured_logger,
+    mask_sensitive_identifier,
+    sanitize_for_logging,
+)
+from app.integrations.retry import (
+    RetryAttempt,
+    RetryPolicy,
 )
 from app.integrations.providers import (
     DEFAULT_AISSTREAM_URL,
@@ -228,6 +258,31 @@ __all__ = [
     "ProviderValidationError",
     "ProviderPermanentError",
     "DuplicateEventError",
+    "NormalizationError",
+    "IdempotencyError",
+    "FailureCategory",
+    "classify_failure",
+    # Circuit Breaker
+    "CircuitState",
+    "CircuitBreakerConfig",
+    "CircuitBreakerOpenError",
+    "ProviderCircuitBreaker",
+    # Observability & Metrics & Audit
+    "IngestionMetricsCollector",
+    "default_metrics_collector",
+    "IngestionAuditAction",
+    "IngestionAuditEntry",
+    "InMemoryIngestionAuditLedger",
+    "default_audit_ledger",
+    "StructuredLogEntry",
+    "IngestionStructuredLogger",
+    "default_structured_logger",
+    "mask_sensitive_identifier",
+    "sanitize_for_logging",
+    "FreshnessConfig",
+    "StaleDataDetector",
+    "NormalizationBatchResult",
+    "RetryAttempt",
     # Config & Secrets
     "AuthMode",
     "RetryConfig",

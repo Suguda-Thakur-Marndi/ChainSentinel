@@ -43,9 +43,10 @@ class RawEventStorage(ABC):
     def list_events(
         self,
         provider_name: Optional[str] = None,
+        org_id: Optional[str] = None,
         limit: int = 100,
     ) -> List[RawEvent]:
-        """List stored raw events with optional provider filtering."""
+        """List stored raw events with optional provider and organization filtering."""
         pass
 
 
@@ -76,12 +77,15 @@ class InMemoryRawEventStorage(RawEventStorage):
     def list_events(
         self,
         provider_name: Optional[str] = None,
+        org_id: Optional[str] = None,
         limit: int = 100,
     ) -> List[RawEvent]:
         with self._lock:
             events = list(self._events.values())
         if provider_name:
             events = [e for e in events if e.provider_name == provider_name]
+        if org_id:
+            events = [e for e in events if getattr(e, "org_id", None) == org_id]
         return events[-limit:]
 
     def clear(self) -> None:
@@ -220,6 +224,8 @@ class ShipmentEventBridge:
                 "source_event_id": event.source_event_id,
                 "payload_fingerprint": event.payload_fingerprint,
                 "correlation_id": event.correlation_id,
+                "request_id": getattr(event, "request_id", None),
+                "trace_id": getattr(event, "trace_id", None),
                 "ingestion_run_id": event.ingestion_run_id,
                 "quality": event.quality.value,
                 "normalized_attributes": event.normalized_attributes,
@@ -243,6 +249,15 @@ class ScheduledIngestionJob:
     organization_id: Optional[str] = None
     last_run_at: Optional[datetime] = None
     next_run_at: Optional[datetime] = None
+    timeout_seconds: Optional[float] = None
+    last_status: Optional[str] = None
+    last_error: Optional[str] = None
+    consecutive_failures: int = 0
+    is_running: bool = False
+    cancel_requested: bool = False
+    total_runs: int = 0
+    successful_runs: int = 0
+    failed_runs: int = 0
 
 
 class IngestionScheduler(ABC):
@@ -259,7 +274,7 @@ class IngestionScheduler(ABC):
         pass
 
     @abstractmethod
-    def list_jobs(self, enabled_only: bool = False) -> List[ScheduledIngestionJob]:
+    def list_jobs(self, enabled_only: bool = False, org_id: Optional[str] = None) -> List[ScheduledIngestionJob]:
         """List registered ingestion jobs."""
         pass
 
@@ -268,9 +283,19 @@ class IngestionScheduler(ABC):
         """Unregister a scheduled job."""
         pass
 
+    @abstractmethod
+    def request_cancel(self, job_id: str) -> bool:
+        """Signal cancellation for a running or pending job."""
+        pass
+
+    @abstractmethod
+    def execute_job(self, job_id: str, ingestion_service: Any) -> Any:
+        """Execute a scheduled job with bounded execution and failure isolation."""
+        pass
+
 
 class InMemoryIngestionScheduler(IngestionScheduler):
-    """In-memory scheduler registry for Step 1 architectural compliance."""
+    """In-memory scheduler registry with failure-isolated, bounded execution."""
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
@@ -284,16 +309,77 @@ class InMemoryIngestionScheduler(IngestionScheduler):
         with self._lock:
             return self._jobs.get(job_id)
 
-    def list_jobs(self, enabled_only: bool = False) -> List[ScheduledIngestionJob]:
+    def list_jobs(self, enabled_only: bool = False, org_id: Optional[str] = None) -> List[ScheduledIngestionJob]:
         with self._lock:
             jobs = list(self._jobs.values())
         if enabled_only:
             jobs = [j for j in jobs if j.enabled]
+        if org_id:
+            jobs = [j for j in jobs if j.organization_id == org_id]
         return jobs
 
     def unregister_job(self, job_id: str) -> bool:
         with self._lock:
             return self._jobs.pop(job_id, None) is not None
+
+    def request_cancel(self, job_id: str) -> bool:
+        with self._lock:
+            job = self._jobs.get(job_id)
+            if job:
+                job.cancel_requested = True
+                return True
+            return False
+
+    def execute_job(self, job_id: str, ingestion_service: Any) -> Any:
+        """Execute a job synchronously with bounded execution, failure isolation, and lifecycle tracking."""
+        with self._lock:
+            job = self._jobs.get(job_id)
+            if not job:
+                raise ValueError(f"Job '{job_id}' not found in scheduler.")
+            if not job.enabled:
+                raise ValueError(f"Job '{job_id}' is disabled.")
+            if job.cancel_requested:
+                job.cancel_requested = False
+                job.last_status = "CANCELLED"
+                return None
+            job.is_running = True
+            job.total_runs += 1
+            job.last_run_at = datetime.now(timezone.utc)
+
+        try:
+            # Execute through ingestion service with isolated error handling
+            result = ingestion_service.ingest(
+                provider_name=job.provider_name,
+                parameters=job.parameters,
+                organization_id=job.organization_id,
+                raise_on_error=False,
+            )
+            with self._lock:
+                raw_st = getattr(result, "status", "")
+                st_str = (raw_st.value if hasattr(raw_st, "value") else str(raw_st)).upper()
+                if st_str in ("SUCCESS", "PARTIAL", "SKIPPED_DUPLICATE"):
+                    job.last_status = "SUCCESS"
+                    job.consecutive_failures = 0
+                    job.successful_runs += 1
+                    job.last_error = None
+                else:
+                    job.last_status = "FAILED"
+                    job.consecutive_failures += 1
+                    job.failed_runs += 1
+                    errors = getattr(result, "errors", [])
+                    job.last_error = str(errors[0]) if errors else "Ingestion returned FAILED status"
+            return result
+        except Exception as exc:
+            with self._lock:
+                job.last_status = "FAILED"
+                job.consecutive_failures += 1
+                job.failed_runs += 1
+                job.last_error = str(exc)
+            logger.error("Isolated failure during scheduled job '%s' execution: %s", job_id, exc)
+            return None
+        finally:
+            with self._lock:
+                job.is_running = False
 
 
 # =====================================================================

@@ -5,11 +5,14 @@ import logging
 import random
 import time
 from typing import Any, Callable, Optional, TypeVar
-
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from app.integrations.circuit_breaker import CircuitBreakerOpenError
 from app.integrations.config import RetryConfig
 from app.integrations.errors import (
     DuplicateEventError,
     IngestionError,
+    NormalizationError,
     ProviderAuthenticationError,
     ProviderConfigurationError,
     ProviderDisabledError,
@@ -23,6 +26,19 @@ logger = logging.getLogger("riskwise.ingestion.retry")
 T = TypeVar("T")
 
 
+@dataclass
+class RetryAttempt:
+    """Detailed record of a single retry execution attempt."""
+
+    attempt: int
+    max_retries: int
+    delay_seconds: float
+    reason: str
+    retry_after: Optional[float] = None
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    error_type: Optional[str] = None
+
+
 class RetryPolicy:
     """Safe, bounded retry policy respecting transient vs permanent failure boundaries."""
 
@@ -33,10 +49,13 @@ class RetryPolicy:
         ProviderConfigurationError,
         ProviderDisabledError,
         DuplicateEventError,
+        CircuitBreakerOpenError,
+        NormalizationError,
     )
 
     def __init__(self, config: Optional[RetryConfig] = None) -> None:
         self.config = config or RetryConfig()
+        self.attempts: list[RetryAttempt] = []
 
     @classmethod
     def is_retriable(cls, exc: Exception) -> bool:
@@ -99,6 +118,16 @@ class RetryPolicy:
                     config=self.config,
                     retry_after=retry_after,
                 )
+
+                attempt_record = RetryAttempt(
+                    attempt=retries + 1,
+                    max_retries=self.config.max_retries,
+                    delay_seconds=delay,
+                    reason=str(exc),
+                    retry_after=retry_after,
+                    error_type=exc.__class__.__name__,
+                )
+                self.attempts.append(attempt_record)
 
                 if on_retry:
                     on_retry(retries + 1, delay, exc)

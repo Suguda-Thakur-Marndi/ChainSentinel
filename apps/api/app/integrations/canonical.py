@@ -193,6 +193,8 @@ class CanonicalExternalEvent(BaseModel):
     # 8. Traceability & Multi-Tenancy
     ingestion_run_id: Optional[str] = None
     correlation_id: Optional[str] = None
+    request_id: Optional[str] = None
+    trace_id: Optional[str] = None
     payload_fingerprint: Optional[str] = None
     org_id: Optional[str] = None
 

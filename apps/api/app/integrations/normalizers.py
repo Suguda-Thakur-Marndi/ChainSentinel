@@ -212,6 +212,22 @@ class DefaultEventNormalizer(BaseEventNormalizer):
         )
 
 
+from dataclasses import dataclass, field
+from typing import Sequence
+
+
+@dataclass
+class NormalizationBatchResult:
+    """Outcome of batch normalization with granular error boundaries per event."""
+
+    received_count: int
+    normalized_count: int
+    rejected_count: int
+    normalized_events: List[CanonicalExternalEvent] = field(default_factory=list)
+    rejected_events: List[Dict[str, Any]] = field(default_factory=list)
+    duration_ms: float = 0.0
+
+
 class NormalizationPipeline:
     """Central pipeline executing validation, normalizer routing, and quality assessment."""
 
@@ -258,6 +274,17 @@ class NormalizationPipeline:
         if not canonical_event.org_id and raw_org:
             canonical_event.org_id = raw_org
 
+        # Propagate correlation identifiers
+        meta = raw_event.metadata or {}
+        if not getattr(canonical_event, "request_id", None) and meta.get("request_id"):
+            canonical_event.request_id = meta.get("request_id")
+        if not getattr(canonical_event, "correlation_id", None) and meta.get("correlation_id"):
+            canonical_event.correlation_id = meta.get("correlation_id")
+        if not getattr(canonical_event, "trace_id", None) and meta.get("trace_id"):
+            canonical_event.trace_id = meta.get("trace_id")
+        if not getattr(canonical_event, "ingestion_run_id", None) and meta.get("ingestion_run_id"):
+            canonical_event.ingestion_run_id = meta.get("ingestion_run_id")
+
         # Deep sanitize normalized attributes and provider metadata
         canonical_event.normalized_attributes = SecretResolver.sanitize_payload(
             canonical_event.normalized_attributes
@@ -292,6 +319,50 @@ class NormalizationPipeline:
 
         canonical_event.validation_errors = validation_errors
         return canonical_event
+
+    def normalize_batch(self, events: Sequence[RawEvent]) -> NormalizationBatchResult:
+        """Process a sequence of RawEvents with isolated error boundaries.
+
+        A malformed raw event that causes an exception does not abort the batch;
+        it is recorded as rejected, while all valid events continue through.
+        """
+        start_time = time.perf_counter()
+        normalized_events: List[CanonicalExternalEvent] = []
+        rejected_events: List[Dict[str, Any]] = []
+
+        for raw_event in events:
+            try:
+                canonical = self.normalize(raw_event)
+                normalized_events.append(canonical)
+            except Exception as exc:
+                raw_id = getattr(raw_event, "event_id", getattr(raw_event, "id", "unknown"))
+                p_id = getattr(raw_event, "provider_event_id", None)
+                logger.warning(
+                    "Normalization error isolated for event '%s' (provider_id=%s) from provider '%s': %s",
+                    raw_id,
+                    p_id,
+                    getattr(raw_event, "provider_name", "unknown"),
+                    exc,
+                )
+                rejected_events.append({
+                    "event_id": raw_id,
+                    "provider_event_id": p_id,
+                    "provider_name": getattr(raw_event, "provider_name", "unknown"),
+                    "reason": str(exc),
+                    "error_type": exc.__class__.__name__,
+                    "raw_event": raw_event,
+                })
+
+        duration_ms = (time.perf_counter() - start_time) * 1000.0
+
+        return NormalizationBatchResult(
+            received_count=len(events),
+            normalized_count=len(normalized_events),
+            rejected_count=len(rejected_events),
+            normalized_events=normalized_events,
+            rejected_events=rejected_events,
+            duration_ms=duration_ms,
+        )
 
 
 # =====================================================================

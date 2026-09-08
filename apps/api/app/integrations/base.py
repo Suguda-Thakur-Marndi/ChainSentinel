@@ -50,6 +50,7 @@ class ProviderHealthStatus(str, Enum):
     HEALTHY = "HEALTHY"
     DEGRADED = "DEGRADED"
     UNHEALTHY = "UNHEALTHY"
+    UNAVAILABLE = "UNAVAILABLE"
     UNCONFIGURED = "UNCONFIGURED"
 
 
@@ -63,6 +64,10 @@ class ProviderHealthResult(BaseModel):
     message: Optional[str] = None
     checked_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_successful_check: Optional[datetime] = None
+    consecutive_failures: int = 0
+    circuit_state: Optional[str] = None
+    rate_limited: bool = False
+    failure_category: Optional[str] = None
     details: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -93,6 +98,22 @@ class RawEvent(BaseModel):
     @organization_id.setter
     def organization_id(self, value: Optional[str]) -> None:
         self.org_id = value
+
+    @property
+    def request_id(self) -> Optional[str]:
+        return self.metadata.get("request_id")
+
+    @property
+    def correlation_id(self) -> Optional[str]:
+        return self.metadata.get("correlation_id")
+
+    @property
+    def trace_id(self) -> Optional[str]:
+        return self.metadata.get("trace_id")
+
+    @property
+    def ingestion_run_id(self) -> Optional[str]:
+        return self.metadata.get("ingestion_run_id")
 
 
 class IngestionBatch(BaseModel):
