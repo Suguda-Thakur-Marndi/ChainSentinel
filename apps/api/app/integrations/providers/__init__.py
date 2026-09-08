@@ -38,6 +38,18 @@ from app.integrations.providers.rail import (
     RailNormalizer,
     create_rail_polling_job,
 )
+from app.integrations.providers.karrio import (
+    DEFAULT_KARRIO_BASE_URL,
+    DEFAULT_KARRIO_TRACKERS_ENDPOINT,
+    KarrioAdapter,
+    KarrioIncidentReason,
+    KarrioNormalizer,
+    KarrioTracker,
+    KarrioTrackingEvent,
+    KarrioTrackingStatus,
+    KarrioWebhookReceiver,
+    create_karrio_polling_job,
+)
 from app.integrations.providers.tomtom import (
     DEFAULT_TOMTOM_FLOW_URL,
     DEFAULT_TOMTOM_INCIDENTS_URL,
@@ -80,5 +92,15 @@ __all__ = [
     "RailFeedType",
     "RailFeedConfig",
     "create_rail_polling_job",
+    "DEFAULT_KARRIO_BASE_URL",
+    "DEFAULT_KARRIO_TRACKERS_ENDPOINT",
+    "KarrioAdapter",
+    "KarrioNormalizer",
+    "KarrioTracker",
+    "KarrioTrackingEvent",
+    "KarrioTrackingStatus",
+    "KarrioIncidentReason",
+    "KarrioWebhookReceiver",
+    "create_karrio_polling_job",
 ]
 

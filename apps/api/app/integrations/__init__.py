@@ -96,8 +96,18 @@ from app.integrations.providers import (
     RailFeedConfig,
     RailFeedType,
     RailNormalizer,
+    DEFAULT_KARRIO_BASE_URL,
+    DEFAULT_KARRIO_TRACKERS_ENDPOINT,
+    KarrioAdapter,
+    KarrioIncidentReason,
+    KarrioNormalizer,
+    KarrioTracker,
+    KarrioTrackingEvent,
+    KarrioTrackingStatus,
+    KarrioWebhookReceiver,
     TomTomAdapter,
     TomTomNormalizer,
+    create_karrio_polling_job,
     create_opensky_polling_job,
     create_rail_polling_job,
 )
@@ -172,6 +182,16 @@ __all__ = [
     "RailFeedType",
     "RailFeedConfig",
     "create_rail_polling_job",
+    "DEFAULT_KARRIO_BASE_URL",
+    "DEFAULT_KARRIO_TRACKERS_ENDPOINT",
+    "KarrioAdapter",
+    "KarrioNormalizer",
+    "KarrioTracker",
+    "KarrioTrackingEvent",
+    "KarrioTrackingStatus",
+    "KarrioIncidentReason",
+    "KarrioWebhookReceiver",
+    "create_karrio_polling_job",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -286,4 +306,19 @@ if not default_provider_registry.is_registered(RailAdapter.provider_name):
             retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
         ),
     )
+
+if not default_provider_registry.is_registered(KarrioAdapter.provider_name):
+    default_provider_registry.register(
+        KarrioAdapter,
+        default_config=ProviderConfig(
+            provider_name=KarrioAdapter.provider_name,
+            provider_type=KarrioAdapter.provider_type,
+            base_url=DEFAULT_KARRIO_BASE_URL,
+            auth_mode=AuthMode.API_KEY_HEADER,
+            secret_ref="env:KARRIO_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=120),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
 
