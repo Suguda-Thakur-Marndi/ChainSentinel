@@ -67,19 +67,39 @@ from app.integrations.normalizers import (
 )
 from app.integrations.providers import (
     DEFAULT_AISSTREAM_URL,
+    DEFAULT_OPENSKY_BASE_URL,
+    DEFAULT_OPENSKY_TOKEN_URL,
     DEFAULT_OPENWEATHER_BASE_URL,
+    DEFAULT_TFNSW_ALERTS_URL,
+    DEFAULT_TFNSW_BASE_URL,
+    DEFAULT_TFNSW_TRIP_UPDATES_URL,
+    DEFAULT_TFNSW_VEHICLE_POSITIONS_URL,
     DEFAULT_TOMTOM_FLOW_URL,
     DEFAULT_TOMTOM_INCIDENTS_URL,
+    DELAY_MAJOR_THRESHOLD_SECONDS,
+    DELAY_MEDIUM_THRESHOLD_SECONDS,
+    DELAY_MINOR_THRESHOLD_SECONDS,
     ONE_CALL_BASE_URL,
     AISStreamAdapter,
     AISStreamNormalizer,
     AISStreamSubscription,
     AISWebSocketTransport,
     MockAISWebSocketTransport,
+    OpenSkyAdapter,
+    OpenSkyBoundingBox,
+    OpenSkyNormalizer,
+    OpenSkyOAuthTokenManager,
+    OpenSkyStateVector,
     OpenWeatherAdapter,
     OpenWeatherNormalizer,
+    RailAdapter,
+    RailFeedConfig,
+    RailFeedType,
+    RailNormalizer,
     TomTomAdapter,
     TomTomNormalizer,
+    create_opensky_polling_job,
+    create_rail_polling_job,
 )
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
@@ -117,7 +137,7 @@ __all__ = [
     "MockWeatherNormalizer",
     "MockAISNormalizer",
     "MockTrafficNormalizer",
-    # Providers (OpenWeather, TomTom, AISStream)
+    # Providers (OpenWeather, TomTom, AISStream, OpenSky, Rail)
     "DEFAULT_OPENWEATHER_BASE_URL",
     "ONE_CALL_BASE_URL",
     "OpenWeatherAdapter",
@@ -132,6 +152,26 @@ __all__ = [
     "AISStreamSubscription",
     "AISWebSocketTransport",
     "MockAISWebSocketTransport",
+    "DEFAULT_OPENSKY_BASE_URL",
+    "DEFAULT_OPENSKY_TOKEN_URL",
+    "OpenSkyAdapter",
+    "OpenSkyNormalizer",
+    "OpenSkyOAuthTokenManager",
+    "OpenSkyBoundingBox",
+    "OpenSkyStateVector",
+    "create_opensky_polling_job",
+    "DEFAULT_TFNSW_BASE_URL",
+    "DEFAULT_TFNSW_TRIP_UPDATES_URL",
+    "DEFAULT_TFNSW_VEHICLE_POSITIONS_URL",
+    "DEFAULT_TFNSW_ALERTS_URL",
+    "DELAY_MINOR_THRESHOLD_SECONDS",
+    "DELAY_MEDIUM_THRESHOLD_SECONDS",
+    "DELAY_MAJOR_THRESHOLD_SECONDS",
+    "RailAdapter",
+    "RailNormalizer",
+    "RailFeedType",
+    "RailFeedConfig",
+    "create_rail_polling_job",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -214,6 +254,35 @@ if not default_provider_registry.is_registered(AISStreamAdapter.provider_name):
             auth_mode=AuthMode.API_KEY_HEADER,
             secret_ref="env:AISSTREAM_API_KEY",
             rate_limit=RateLimitConfig(requests_per_minute=120),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(OpenSkyAdapter.provider_name):
+    default_provider_registry.register(
+        OpenSkyAdapter,
+        default_config=ProviderConfig(
+            provider_name=OpenSkyAdapter.provider_name,
+            provider_type=OpenSkyAdapter.provider_type,
+            base_url=DEFAULT_OPENSKY_BASE_URL,
+            auth_mode=AuthMode.OAUTH2,
+            secret_ref="env:OPENSKY_CLIENT_SECRET",
+            extra_settings={"client_id_ref": "env:OPENSKY_CLIENT_ID"},
+            rate_limit=RateLimitConfig(requests_per_minute=60),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(RailAdapter.provider_name):
+    default_provider_registry.register(
+        RailAdapter,
+        default_config=ProviderConfig(
+            provider_name=RailAdapter.provider_name,
+            provider_type=RailAdapter.provider_type,
+            base_url=DEFAULT_TFNSW_TRIP_UPDATES_URL,
+            auth_mode=AuthMode.API_KEY_HEADER,
+            secret_ref="env:TFNSW_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=60),
             retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
         ),
     )
