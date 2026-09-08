@@ -105,11 +105,22 @@ from app.integrations.providers import (
     KarrioTrackingEvent,
     KarrioTrackingStatus,
     KarrioWebhookReceiver,
+    DEFAULT_TAVILY_BASE_URL,
+    DEFAULT_TAVILY_SEARCH_ENDPOINT,
+    TavilyAdapter,
+    TavilyNormalizer,
+    TavilySearchDepth,
+    TavilySearchRequest,
+    TavilySearchResponse,
+    TavilySearchResult,
+    TavilySearchTimeRange,
+    TavilySearchTopic,
     TomTomAdapter,
     TomTomNormalizer,
     create_karrio_polling_job,
     create_opensky_polling_job,
     create_rail_polling_job,
+    create_tavily_research_job,
 )
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
@@ -192,6 +203,18 @@ __all__ = [
     "KarrioIncidentReason",
     "KarrioWebhookReceiver",
     "create_karrio_polling_job",
+    # Providers (Tavily News / Research)
+    "DEFAULT_TAVILY_BASE_URL",
+    "DEFAULT_TAVILY_SEARCH_ENDPOINT",
+    "TavilyAdapter",
+    "TavilyNormalizer",
+    "TavilySearchTopic",
+    "TavilySearchDepth",
+    "TavilySearchTimeRange",
+    "TavilySearchRequest",
+    "TavilySearchResult",
+    "TavilySearchResponse",
+    "create_tavily_research_job",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -317,6 +340,20 @@ if not default_provider_registry.is_registered(KarrioAdapter.provider_name):
             auth_mode=AuthMode.API_KEY_HEADER,
             secret_ref="env:KARRIO_API_KEY",
             rate_limit=RateLimitConfig(requests_per_minute=120),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(TavilyAdapter.provider_name):
+    default_provider_registry.register(
+        TavilyAdapter,
+        default_config=ProviderConfig(
+            provider_name=TavilyAdapter.provider_name,
+            provider_type=TavilyAdapter.provider_type,
+            base_url=DEFAULT_TAVILY_BASE_URL,
+            auth_mode=AuthMode.API_KEY_HEADER,
+            secret_ref="env:TAVILY_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=60),
             retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
         ),
     )

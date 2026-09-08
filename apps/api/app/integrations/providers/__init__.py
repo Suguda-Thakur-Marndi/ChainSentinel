@@ -50,6 +50,19 @@ from app.integrations.providers.karrio import (
     KarrioWebhookReceiver,
     create_karrio_polling_job,
 )
+from app.integrations.providers.tavily import (
+    DEFAULT_TAVILY_BASE_URL,
+    DEFAULT_TAVILY_SEARCH_ENDPOINT,
+    TavilyAdapter,
+    TavilyNormalizer,
+    TavilySearchDepth,
+    TavilySearchRequest,
+    TavilySearchResponse,
+    TavilySearchResult,
+    TavilySearchTimeRange,
+    TavilySearchTopic,
+    create_tavily_research_job,
+)
 from app.integrations.providers.tomtom import (
     DEFAULT_TOMTOM_FLOW_URL,
     DEFAULT_TOMTOM_INCIDENTS_URL,
@@ -102,5 +115,16 @@ __all__ = [
     "KarrioIncidentReason",
     "KarrioWebhookReceiver",
     "create_karrio_polling_job",
+    "DEFAULT_TAVILY_BASE_URL",
+    "DEFAULT_TAVILY_SEARCH_ENDPOINT",
+    "TavilyAdapter",
+    "TavilyNormalizer",
+    "TavilySearchTopic",
+    "TavilySearchDepth",
+    "TavilySearchTimeRange",
+    "TavilySearchRequest",
+    "TavilySearchResult",
+    "TavilySearchResponse",
+    "create_tavily_research_job",
 ]
 
