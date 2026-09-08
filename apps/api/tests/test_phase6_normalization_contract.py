@@ -209,13 +209,14 @@ def test_effective_interval_handling(pipeline: NormalizationPipeline):
 # =============================================================================
 def test_coordinate_preservation_and_bounds(pipeline: NormalizationPipeline):
     """Verify valid coordinates are preserved and invalid coordinates are rejected."""
-    # Valid
+    # 1. Valid coordinates with correlated entity -> VALID
     valid_event = CanonicalExternalEvent(
         event_id="can_geo_valid",
         provider="tomtom",
         event_type=CanonicalEventType.TRAFFIC_CONGESTION,
         event_timestamp=datetime.now(timezone.utc),
         location=EventLocation(latitude=-33.8688, longitude=151.2093),
+        correlation=EntityCorrelation(route_id="rou_syd_101"),
         quality=EventQuality.VALID,
     )
     res_valid = pipeline.normalize_event(valid_event)
@@ -223,7 +224,21 @@ def test_coordinate_preservation_and_bounds(pipeline: NormalizationPipeline):
     assert res_valid.signal.latitude == -33.8688
     assert res_valid.signal.longitude == 151.2093
 
-    # Invalid latitude
+    # 2. Valid coordinates on unlinked event -> PARTIAL, but coordinates strictly preserved
+    unlinked_event = CanonicalExternalEvent(
+        event_id="can_geo_unlinked",
+        provider="tomtom",
+        event_type=CanonicalEventType.TRAFFIC_CONGESTION,
+        event_timestamp=datetime.now(timezone.utc),
+        location=EventLocation(latitude=-33.8688, longitude=151.2093),
+        quality=EventQuality.VALID,
+    )
+    res_unlinked = pipeline.normalize_event(unlinked_event)
+    assert res_unlinked.status == NormalizationStatus.PARTIAL
+    assert res_unlinked.signal.latitude == -33.8688
+    assert res_unlinked.signal.longitude == 151.2093
+
+    # 3. Invalid latitude out of bounds
     bad_lat_event = CanonicalExternalEvent(
         event_id="can_geo_bad_lat",
         provider="tomtom",
@@ -235,6 +250,19 @@ def test_coordinate_preservation_and_bounds(pipeline: NormalizationPipeline):
     res_bad_lat = pipeline.normalize_event(bad_lat_event)
     assert res_bad_lat.status == NormalizationStatus.INVALID
     assert any("latitude" in e for e in res_bad_lat.errors)
+
+    # 4. Invalid longitude out of bounds
+    bad_lon_event = CanonicalExternalEvent(
+        event_id="can_geo_bad_lon",
+        provider="tomtom",
+        event_type=CanonicalEventType.TRAFFIC_CONGESTION,
+        event_timestamp=datetime.now(timezone.utc),
+        quality=EventQuality.VALID,
+    )
+    bad_lon_event.location = EventLocation.model_construct(latitude=0.0, longitude=-999.0)
+    res_bad_lon = pipeline.normalize_event(bad_lon_event)
+    assert res_bad_lon.status == NormalizationStatus.INVALID
+    assert any("longitude" in e for e in res_bad_lon.errors)
 
 
 # =============================================================================
@@ -300,6 +328,59 @@ def test_unit_normalization_weight():
     # Pounds -> kg (100 lbs = 45.36 kg)
     res_lb = UnitNormalizer.normalize_weight(100.0, "lbs")
     assert res_lb.normalized_value == 45.36
+
+
+def test_unit_normalization_volume():
+    """Verify volume conversions to cubic meters (m³)."""
+    # Liters -> m³ (5000 l = 5.0 m³)
+    res_l = UnitNormalizer.normalize_volume(5000.0, "liters")
+    assert res_l.is_converted is True
+    assert res_l.normalized_value == 5.0
+    assert res_l.target_unit == "m³"
+
+    # Gallons -> m³ (1000 gal = 3.785 m³)
+    res_gal = UnitNormalizer.normalize_volume(1000.0, "gallons")
+    assert res_gal.is_converted is True
+    assert res_gal.normalized_value == 3.785
+
+    # Cubic feet -> m³ (100 cuft = 2.832 m³)
+    res_cuft = UnitNormalizer.normalize_volume(100.0, "cuft")
+    assert res_cuft.is_converted is True
+    assert res_cuft.normalized_value == 2.832
+
+    # Unknown volume unit
+    res_unk = UnitNormalizer.normalize_volume(100.0, "hogsheads")
+    assert res_unk.is_converted is False
+    assert res_unk.normalized_value == 100.0
+    assert res_unk.target_unit == "unknown"
+
+
+def test_unit_normalization_currency():
+    """Verify currency normalization to uppercase ISO 4217 code and no synthetic FX."""
+    res_usd = UnitNormalizer.normalize_currency(1250.755, "usd")
+    assert res_usd.is_converted is True
+    assert res_usd.normalized_value == 1250.76
+    assert res_usd.target_unit == "USD"
+    assert "synthetic FX" in res_usd.conversion_note
+
+    # None / empty currency
+    res_empty = UnitNormalizer.normalize_currency(500.0, None)
+    assert res_empty.is_converted is False
+    assert res_empty.normalized_value == 500.0
+    assert res_empty.target_unit == "unknown"
+
+
+def test_coordinate_bounds_normalizer_unit():
+    """Verify UnitNormalizer.normalize_coordinates validates WGS84 and precision."""
+    lat, lon = UnitNormalizer.normalize_coordinates(37.7749291, -122.4194159)
+    assert lat == 37.774929
+    assert lon == -122.419416
+
+    with pytest.raises(ValueError, match="Latitude out of bounds"):
+        UnitNormalizer.normalize_coordinates(105.0, 0.0)
+
+    with pytest.raises(ValueError, match="Longitude out of bounds"):
+        UnitNormalizer.normalize_coordinates(0.0, -195.0)
 
 
 # =============================================================================
@@ -710,3 +791,556 @@ def test_prompt_injection_remains_inert_data(pipeline: NormalizationPipeline):
     # Injected string is preserved harmlessly as text attribute
     assert res.signal.normalized_attributes["content"] == malicious_text
     assert res.signal.canonical_attributes["raw_status"] == malicious_text
+
+
+# =============================================================================
+# 27. Source Precedence Hierarchy (REAL > ESTIMATED > SIMULATED)
+# =============================================================================
+def test_source_precedence_hierarchy(pipeline: NormalizationPipeline):
+    """Verify REAL data supersedes SIMULATED data regardless of ingestion timing."""
+    now = datetime(2026, 9, 8, 18, 0, 0, tzinfo=timezone.utc)
+
+    # Initial simulated signal
+    s_simulated = NormalizedRiskSignal(
+        domain=SignalDomain.WEATHER,
+        signal_type=SignalType.HAZARD,
+        event_type="WEATHER_ALERT",
+        event_time=now + timedelta(minutes=10),
+        latitude=25.0,
+        longitude=55.0,
+        source="weather_model_sim",
+        provider="sim_weather",
+        source_type=EventSourceType.SIMULATED,
+        canonical_event_id="can_sim_1",
+        confidence=0.6,
+    )
+
+    # Subsequent real sensor observation
+    s_real = NormalizedRiskSignal(
+        domain=SignalDomain.WEATHER,
+        signal_type=SignalType.HAZARD,
+        event_type="WEATHER_ALERT",
+        event_time=now,
+        latitude=25.0,
+        longitude=55.0,
+        source="coastal_buoy_sensor",
+        provider="sensor_net",
+        source_type=EventSourceType.REAL,
+        canonical_event_id="can_real_1",
+        confidence=0.98,
+    )
+
+    # Case A: Simulated first, then Real -> Real promoted to primary
+    merged_a = pipeline.deduplicate_and_corroborate([s_simulated, s_real])
+    assert len(merged_a) == 1
+    assert merged_a[0].source_type == EventSourceType.REAL
+    assert merged_a[0].source == "coastal_buoy_sensor"
+    assert len(merged_a[0].supporting_sources) == 1
+    assert merged_a[0].supporting_sources[0].source == "weather_model_sim"
+
+    # Case B: Real first, then Simulated -> Real remains primary
+    merged_b = pipeline.deduplicate_and_corroborate([s_real, s_simulated])
+    assert len(merged_b) == 1
+    assert merged_b[0].source_type == EventSourceType.REAL
+    assert merged_b[0].source == "coastal_buoy_sensor"
+    assert len(merged_b[0].supporting_sources) == 1
+    assert merged_b[0].supporting_sources[0].source == "weather_model_sim"
+
+
+# =============================================================================
+# 28. Multi-Tenant Organization Boundary Preservation
+# =============================================================================
+def test_multi_tenant_isolation_preserved(pipeline: NormalizationPipeline):
+    """Verify org_id is faithfully propagated to organization_id and isolated."""
+    ev = CanonicalExternalEvent(
+        event_id="can_org_test",
+        provider="tomtom",
+        event_type=CanonicalEventType.ROAD_INCIDENT,
+        event_timestamp=datetime.now(timezone.utc),
+        org_id="tenant_aerospace_007",
+        quality=EventQuality.VALID,
+    )
+    res = pipeline.normalize_event(ev)
+    assert res.signal is not None
+    assert res.signal.organization_id == "tenant_aerospace_007"
+
+
+# =============================================================================
+# 29. Domain Normalization Registry Custom Handler Registration
+# =============================================================================
+def test_domain_normalization_registry_custom_handler():
+    """Verify custom domain handlers can be dynamically registered in DomainNormalizationRegistry."""
+    from app.normalization.handlers import BaseDomainNormalizationHandler
+
+    class CustomSpaceTelemetryHandler(BaseDomainNormalizationHandler):
+        def can_handle(self, event: CanonicalExternalEvent) -> bool:
+            return "space" in str(event.event_type).lower()
+
+        def normalize(self, event: CanonicalExternalEvent) -> NormalizedRiskSignal:
+            return NormalizedRiskSignal(
+                domain=SignalDomain.GENERAL,
+                signal_type=SignalType.CUSTOM,
+                event_type="SPACE_DEBRIS",
+                event_time=event.event_timestamp,
+                source=event.provider,
+                provider=event.provider,
+                canonical_event_id=event.event_id,
+            )
+
+    registry = DomainNormalizationRegistry()
+    registry.register_handler(CustomSpaceTelemetryHandler(), index=0)
+
+    pipe = NormalizationPipeline(registry=registry)
+    ev = CanonicalExternalEvent(
+        event_id="can_space_01",
+        provider="satellite_tracker",
+        event_type="SPACE_DEBRIS_WARNING",
+        event_timestamp=datetime.now(timezone.utc),
+        quality=EventQuality.VALID,
+    )
+    res = pipe.normalize_event(ev)
+    assert res.signal is not None
+    assert res.signal.event_type == "SPACE_DEBRIS"
+
+
+# =============================================================================
+# 30. Chained Multiple-Source Corroboration
+# =============================================================================
+def test_chained_multi_source_corroboration(pipeline: NormalizationPipeline):
+    """Verify three distinct sources reporting the same event are merged with complete lineage."""
+    now = datetime(2026, 9, 8, 20, 0, 0, tzinfo=timezone.utc)
+    s1 = NormalizedRiskSignal(
+        domain=SignalDomain.ROAD,
+        signal_type=SignalType.INCIDENT,
+        event_type="ROAD_CLOSURE",
+        event_time=now,
+        latitude=40.71,
+        longitude=-74.00,
+        source="tomtom",
+        provider="tomtom",
+        canonical_event_id="can_c1",
+        source_type=EventSourceType.REAL,
+    )
+    s2 = NormalizedRiskSignal(
+        domain=SignalDomain.ROAD,
+        signal_type=SignalType.INCIDENT,
+        event_type="ROAD_CLOSURE",
+        event_time=now,
+        latitude=40.71,
+        longitude=-74.00,
+        source="tavily",
+        provider="tavily",
+        canonical_event_id="can_c2",
+        source_type=EventSourceType.REAL,
+        source_reference="https://news.example.com/ny-closure",
+    )
+    s3 = NormalizedRiskSignal(
+        domain=SignalDomain.ROAD,
+        signal_type=SignalType.INCIDENT,
+        event_type="ROAD_CLOSURE",
+        event_time=now,
+        latitude=40.71,
+        longitude=-74.00,
+        source="dot_traffic_api",
+        provider="dot",
+        canonical_event_id="can_c3",
+        source_type=EventSourceType.REAL,
+        provider_event_id="dot_inc_9981",
+    )
+
+    combined = pipeline.deduplicate_and_corroborate([s1, s2, s3])
+    assert len(combined) == 1
+    primary = combined[0]
+    assert len(primary.supporting_sources) == 2
+    sources = {src.source for src in primary.supporting_sources}
+    assert "tavily" in sources
+    assert "dot_traffic_api" in sources
+
+
+# =============================================================================
+# 31. Batch Normalization Counts & Breakdown
+# =============================================================================
+def test_batch_normalization_counts_breakdown(pipeline: NormalizationPipeline):
+    """Verify BatchNormalizationResult accurately tallies valid, partial, and invalid events."""
+    now = datetime.now(timezone.utc)
+    # Valid (with correlation)
+    ev_valid = CanonicalExternalEvent(
+        event_id="b_valid",
+        provider="tomtom",
+        event_type=CanonicalEventType.ROAD_INCIDENT,
+        event_timestamp=now,
+        correlation=EntityCorrelation(shipment_id="shp_b1"),
+        quality=EventQuality.VALID,
+    )
+    # Partial (no correlation)
+    ev_partial = CanonicalExternalEvent(
+        event_id="b_partial",
+        provider="tavily",
+        event_type=CanonicalEventType.NEWS_EVENT,
+        event_timestamp=now,
+        quality=EventQuality.VALID,
+    )
+    # Invalid (quality INVALID)
+    ev_invalid = CanonicalExternalEvent(
+        event_id="b_invalid",
+        provider="openweather",
+        event_type=CanonicalEventType.WEATHER_ALERT,
+        event_timestamp=now,
+        quality=EventQuality.INVALID,
+    )
+
+    batch_res = pipeline.normalize_batch([ev_valid, ev_partial, ev_invalid])
+    assert batch_res.total_count == 3
+    assert batch_res.valid_count == 1
+    assert batch_res.partial_count == 1
+    assert batch_res.invalid_count == 1
+    assert len(batch_res.signals) == 2
+    assert len(batch_res.rejected_signals) == 1
+
+
+# =============================================================================
+# 32. Operational Values Explicit Typed Fields (Volume, Weight, Currency)
+# =============================================================================
+def test_operational_values_typed_metrics():
+    """Verify OperationalValues model supports explicit fields for weight, volume, and currency."""
+    ops = OperationalValues(
+        delay_minutes=45.0,
+        distance_km=120.5,
+        speed_kmh=80.0,
+        temperature_celsius=18.5,
+        weight_kg=540.0,
+        volume_m3=12.5,
+        monetary_amount=15000.0,
+        currency_code="EUR",
+        disruption_level=0.75,
+        operational_status="DIVERTED",
+    )
+    assert ops.weight_kg == 540.0
+    assert ops.volume_m3 == 12.5
+    assert ops.monetary_amount == 15000.0
+    assert ops.currency_code == "EUR"
+    assert ops.disruption_level == 0.75
+
+
+# =============================================================================
+# 33. Regression Interoperability with Phase 5 CanonicalExternalEvent
+# =============================================================================
+def test_phase5_canonical_interoperability(pipeline: NormalizationPipeline):
+    """Verify that all Phase 5 CanonicalExternalEvent properties are accepted and preserved."""
+    now = datetime.now(timezone.utc)
+    ev = CanonicalExternalEvent(
+        event_id="can_phase5_interop",
+        provider="aisstream",
+        source_event_id="mmsi_503000000",
+        event_type=CanonicalEventType.VESSEL_LOCATION,
+        event_timestamp=now,
+        observed_at=now - timedelta(seconds=30),
+        received_at=now,
+        location=EventLocation(
+            latitude=-33.8568,
+            longitude=151.2153,
+            location_name="Sydney Harbour",
+            country_code="AUS",
+            region="NSW",
+            precision_meters=5.0,
+        ),
+        correlation=EntityCorrelation(
+            shipment_id="shp_interop_01",
+            port_id="port_syd_01",
+            custom_identifiers={"mmsi": "503000000"},
+        ),
+        status="UNDERWAY",
+        severity=EventSeverity.INFO,
+        source_type=EventSourceType.REAL,
+        source_url="https://aisstream.io/vessels/503000000",
+        confidence=0.99,
+        raw_event_id="raw_ais_999",
+        normalized_attributes={"speed_knots": 14.2, "heading_degrees": 210},
+        provider_metadata={"antenna": "east_quay"},
+        ingestion_run_id="run_ais_daily",
+        correlation_id="corr_ais_123",
+        request_id="req_ais_456",
+        trace_id="trace_ais_789",
+        payload_fingerprint="sha256_dummy_fingerprint",
+        org_id="org_maritime_global",
+        quality=EventQuality.VALID,
+    )
+    result = pipeline.normalize_event(ev)
+    assert result.status == NormalizationStatus.VALID
+    sig = result.signal
+    assert sig.domain == SignalDomain.OCEAN
+    assert sig.signal_type == SignalType.STATUS_UPDATE
+    assert sig.status == SignalStatus.ACTIVE
+    assert sig.severity == EventSeverity.INFO
+    assert sig.confidence == 0.99
+    assert sig.quality == EventQuality.VALID
+    assert sig.latitude == -33.8568
+    assert sig.longitude == 151.2153
+    assert sig.location_name == "Sydney Harbour"
+    assert sig.country_code == "AUS"
+    assert sig.entities.shipment_id == "shp_interop_01"
+    assert sig.entities.port_id == "port_syd_01"
+    assert sig.entities.vessel_mmsi == "503000000"
+    assert sig.provider == "aisstream"
+    assert sig.raw_event_id == "raw_ais_999"
+    assert sig.organization_id == "org_maritime_global"
+    assert sig.correlation_id == "corr_ais_123"
+    assert sig.trace_id == "trace_ais_789"
+    assert sig.measurements.speed_kmh == 26.3  # 14.2 knots * 1.852 = 26.2984 -> round 26.3
+
+
+# =============================================================================
+# 34. Port CanonicalExternalEvent -> Normalized Signal
+# =============================================================================
+def test_port_canonical_to_normalized_signal(pipeline: NormalizationPipeline):
+    """Verify PORT_CONGESTION translates to NormalizedRiskSignal with port-specific attributes."""
+    now = datetime.now(timezone.utc)
+    ev = CanonicalExternalEvent(
+        event_id="can_port_001",
+        provider="rotterdam_port_authority",
+        source_event_id="port_rot_cong_99",
+        event_type=CanonicalEventType.PORT_CONGESTION,
+        event_timestamp=now,
+        location=EventLocation(
+            latitude=51.9244,
+            longitude=4.4777,
+            location_name="Port of Rotterdam",
+            country_code="NLD",
+            region="South Holland",
+            precision_meters=10.0,
+        ),
+        correlation=EntityCorrelation(
+            port_id="port_rot_01",
+            custom_identifiers={"terminal": "Maasvlakte II"},
+        ),
+        status="CONGESTED",
+        severity=EventSeverity.HIGH,
+        delay_minutes=240.0,
+        confidence=0.95,
+        source_type=EventSourceType.REAL,
+        quality=EventQuality.VALID,
+    )
+    result = pipeline.normalize_event(ev)
+    assert result.status == NormalizationStatus.VALID
+    sig = result.signal
+    assert sig is not None
+    assert sig.domain == SignalDomain.OCEAN
+    assert sig.signal_type == SignalType.CONGESTION
+    assert sig.status == SignalStatus.DISRUPTED
+    assert sig.severity == EventSeverity.HIGH
+    assert sig.measurements.delay_minutes == 240.0
+    assert sig.measurements.disruption_level == 0.7
+    assert sig.entities.port_id == "port_rot_01"
+    assert sig.entities.unresolved_identifiers["terminal"] == "Maasvlakte II"
+
+
+# =============================================================================
+# 35. Port Registry Routing
+# =============================================================================
+def test_port_registry_routing():
+    """Verify DomainNormalizationRegistry routes all Port event types to the Maritime/Port handler."""
+    from app.normalization.handlers import DomainNormalizationRegistry, PortNormalizationHandler
+
+    reg = DomainNormalizationRegistry()
+    now = datetime.now(timezone.utc)
+
+    for p_type in [
+        CanonicalEventType.PORT_CONGESTION,
+        CanonicalEventType.PORT_CLOSURE,
+        CanonicalEventType.PORT_DELAY,
+        "PORT_CONGESTION",
+        "PORT_CLOSURE",
+        "PORT_DELAY",
+    ]:
+        ev = CanonicalExternalEvent(
+            event_id=f"can_test_{p_type}",
+            provider="port_feed",
+            event_type=p_type,
+            event_timestamp=now,
+            quality=EventQuality.VALID,
+        )
+        handler = reg.resolve_handler(ev)
+        assert isinstance(handler, PortNormalizationHandler)
+
+
+# =============================================================================
+# 36. Port Provenance Preservation
+# =============================================================================
+def test_port_provenance_preservation(pipeline: NormalizationPipeline):
+    """Verify complete lineage and citation URLs are preserved for Port signals."""
+    now = datetime.now(timezone.utc)
+    ev = CanonicalExternalEvent(
+        event_id="can_port_prov_01",
+        provider="singapore_mpa",
+        source_event_id="mpa_alert_777",
+        event_type=CanonicalEventType.PORT_DELAY,
+        event_timestamp=now,
+        source_url="https://mpa.gov.sg/alerts/777",
+        raw_event_id="raw_mpa_888",
+        correlation_id="corr_mpa_999",
+        trace_id="trace_mpa_000",
+        ingestion_run_id="run_mpa_daily",
+        correlation=EntityCorrelation(port_id="port_sin_01"),
+        quality=EventQuality.VALID,
+    )
+    result = pipeline.normalize_event(ev)
+    sig = result.signal
+    assert sig.canonical_event_id == "can_port_prov_01"
+    assert sig.provider == "singapore_mpa"
+    assert sig.provider_event_id == "mpa_alert_777"
+    assert sig.source_reference == "https://mpa.gov.sg/alerts/777"
+    assert sig.raw_event_id == "raw_mpa_888"
+    assert sig.correlation_id == "corr_mpa_999"
+    assert sig.trace_id == "trace_mpa_000"
+    assert sig.ingestion_run_id == "run_mpa_daily"
+
+
+# =============================================================================
+# 37. Port Location Preservation
+# =============================================================================
+def test_port_location_preservation(pipeline: NormalizationPipeline):
+    """Verify full spatial metadata is preserved on Port events."""
+    now = datetime.now(timezone.utc)
+    ev = CanonicalExternalEvent(
+        event_id="can_port_loc_01",
+        provider="antwerp_port_authority",
+        event_type=CanonicalEventType.PORT_CLOSURE,
+        event_timestamp=now,
+        location=EventLocation(
+            latitude=51.2194,
+            longitude=4.4025,
+            location_name="Port of Antwerp-Bruges",
+            country_code="BEL",
+            region="Flanders",
+            precision_meters=25.0,
+        ),
+        correlation=EntityCorrelation(port_id="port_ant_01"),
+        quality=EventQuality.VALID,
+    )
+    result = pipeline.normalize_event(ev)
+    sig = result.signal
+    assert sig.latitude == 51.2194
+    assert sig.longitude == 4.4025
+    assert sig.location_name == "Port of Antwerp-Bruges"
+    assert sig.country_code == "BEL"
+    assert sig.region == "Flanders"
+    assert sig.precision_meters == 25.0
+    assert sig.signal_type == SignalType.DISRUPTION
+    assert sig.measurements.disruption_level == 0.9
+
+
+# =============================================================================
+# 38. Invalid Port Event Handling
+# =============================================================================
+def test_invalid_port_event_handling(pipeline: NormalizationPipeline):
+    """Verify invalid Port events (malformed coordinates or INVALID quality) are rejected."""
+    now = datetime.now(timezone.utc)
+    # Bad coordinates
+    ev_bad_coords = CanonicalExternalEvent(
+        event_id="can_port_bad_geo",
+        provider="test_port",
+        event_type=CanonicalEventType.PORT_CONGESTION,
+        event_timestamp=now,
+        quality=EventQuality.VALID,
+    )
+    ev_bad_coords.location = EventLocation.model_construct(latitude=999.0, longitude=0.0)
+    res_bad = pipeline.normalize_event(ev_bad_coords)
+    assert res_bad.status == NormalizationStatus.INVALID
+    assert res_bad.signal is None
+
+    # Quality INVALID
+    ev_invalid_qual = CanonicalExternalEvent(
+        event_id="can_port_inv_qual",
+        provider="test_port",
+        event_type=CanonicalEventType.PORT_CONGESTION,
+        event_timestamp=now,
+        quality=EventQuality.INVALID,
+        validation_errors=["Missing berth identifier"],
+    )
+    res_inv = pipeline.normalize_event(ev_invalid_qual)
+    assert res_inv.status == NormalizationStatus.INVALID
+    assert res_inv.signal is None
+
+
+# =============================================================================
+# 39. Port Provider Independence
+# =============================================================================
+def test_port_provider_independence(pipeline: NormalizationPipeline):
+    """Verify arbitrary proprietary port providers normalize identically without provider checks."""
+    now = datetime.now(timezone.utc)
+    providers = ["port_shanghai_custom", "feed_jebel_ali_99", "random_harbour_api_xyz"]
+
+    for prov in providers:
+        ev = CanonicalExternalEvent(
+            event_id=f"can_{prov}_01",
+            provider=prov,
+            event_type=CanonicalEventType.PORT_DELAY,
+            event_timestamp=now,
+            correlation=EntityCorrelation(port_id=f"port_{prov}"),
+            quality=EventQuality.VALID,
+        )
+        res = pipeline.normalize_event(ev)
+        assert res.status == NormalizationStatus.VALID
+        assert res.signal.provider == prov
+        assert res.signal.event_type == "PORT_DELAY"
+        assert res.signal.signal_type == SignalType.DELAY
+
+
+# =============================================================================
+# 40. All 9 Canonical Domains Have Normalization Routes
+# =============================================================================
+def test_all_nine_canonical_domains_have_normalization_route(pipeline: NormalizationPipeline):
+    """Verify every one of the 9 Phase 5 canonical event taxonomy domains has a valid normalization route."""
+    from app.normalization.handlers import (
+        AirFreightNormalizationHandler,
+        DomainNormalizationRegistry,
+        IntelligenceNewsNormalizationHandler,
+        LogisticsTrackingNormalizationHandler,
+        OceanAISNormalizationHandler,
+        RailTransitNormalizationHandler,
+        RoadTrafficNormalizationHandler,
+        WeatherNormalizationHandler,
+    )
+
+    reg = DomainNormalizationRegistry()
+    now = datetime.now(timezone.utc)
+
+    domain_spec = [
+        ("1. Transport", CanonicalEventType.SHIPMENT_STATUS, LogisticsTrackingNormalizationHandler, SignalDomain.LOGISTICS),
+        ("2. Port", CanonicalEventType.PORT_CONGESTION, OceanAISNormalizationHandler, SignalDomain.OCEAN),
+        ("3. Road", CanonicalEventType.ROAD_INCIDENT, RoadTrafficNormalizationHandler, SignalDomain.ROAD),
+        ("4. Weather", CanonicalEventType.WEATHER_ALERT, WeatherNormalizationHandler, SignalDomain.WEATHER),
+        ("5. Ocean AIS", CanonicalEventType.VESSEL_LOCATION, OceanAISNormalizationHandler, SignalDomain.OCEAN),
+        ("6. Air Freight", CanonicalEventType.FLIGHT_DELAY, AirFreightNormalizationHandler, SignalDomain.AIR),
+        ("7. Rail", CanonicalEventType.TRAIN_DELAY, RailTransitNormalizationHandler, SignalDomain.RAIL),
+        ("8. Logistics", CanonicalEventType.PARCEL_STATUS, LogisticsTrackingNormalizationHandler, SignalDomain.LOGISTICS),
+        ("9. Intelligence", CanonicalEventType.NEWS_EVENT, IntelligenceNewsNormalizationHandler, SignalDomain.INTELLIGENCE),
+    ]
+
+    for domain_name, ev_type, expected_handler_cls, expected_domain in domain_spec:
+        ev = CanonicalExternalEvent(
+            event_id=f"can_route_{ev_type.value}",
+            provider="generic_provider",
+            event_type=ev_type,
+            event_timestamp=now,
+            correlation=EntityCorrelation(
+                shipment_id="shp_test" if "SHIPMENT" in ev_type.value or "PARCEL" in ev_type.value else None,
+                port_id="port_test" if "PORT" in ev_type.value else None,
+                route_id="route_test" if "ROAD" in ev_type.value or "TRAIN" in ev_type.value else None,
+            ),
+            quality=EventQuality.VALID,
+        )
+        # Verify handler resolution in registry
+        resolved_handler = reg.resolve_handler(ev)
+        assert isinstance(resolved_handler, expected_handler_cls), (
+            f"Domain {domain_name} expected handler {expected_handler_cls.__name__}, got {resolved_handler.__class__.__name__}"
+        )
+
+        # Verify pipeline execution produces valid signal with expected domain
+        result = pipeline.normalize_event(ev)
+        assert result.signal is not None, f"Domain {domain_name} produced None signal"
+        assert result.signal.domain == expected_domain, (
+            f"Domain {domain_name} expected domain {expected_domain}, got {result.signal.domain}"
+        )
+
+

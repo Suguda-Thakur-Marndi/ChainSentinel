@@ -23,6 +23,8 @@ from app.normalization.contract import (
     CorroboratingEvidence,
     NormalizedRiskSignal,
 )
+from app.normalization.correlation import CrossSourceCorrelator
+from app.normalization.entity_resolver import EntityNormalizer
 from app.normalization.handlers import DomainNormalizationRegistry
 
 logger = logging.getLogger("riskwise.normalization.pipeline")
@@ -78,8 +80,16 @@ _SOURCE_PRECEDENCE = {
 class NormalizationPipeline:
     """Core Phase 6 normalization pipeline orchestrator."""
 
-    def __init__(self, registry: Optional[DomainNormalizationRegistry] = None) -> None:
+    def __init__(
+        self,
+        registry: Optional[DomainNormalizationRegistry] = None,
+        entity_normalizer: Optional[EntityNormalizer] = None,
+        cross_source_correlator: Optional[CrossSourceCorrelator] = None,
+    ) -> None:
         self.registry = registry or DomainNormalizationRegistry()
+        self.entity_normalizer = entity_normalizer if entity_normalizer is not None else EntityNormalizer()
+        self.cross_source_correlator = cross_source_correlator or CrossSourceCorrelator()
+
 
     def normalize_event(self, event: Any) -> NormalizationResult:
         """Normalize a single CanonicalExternalEvent into a NormalizedRiskSignal."""
@@ -143,13 +153,22 @@ class NormalizationPipeline:
                 duration_ms=duration_ms,
             )
 
-        # 5. Quality & Status Assessment
+        # 5. Entity Normalization (Phase 6 Step 3)
+        if self.entity_normalizer is not None:
+            try:
+                signal = self.entity_normalizer.normalize_entities(signal)
+            except Exception as exc:
+                logger.warning("Entity normalization error on event '%s': %s", event.event_id, exc)
+                warnings.append(f"Entity normalization encountered error: {str(exc)}")
+
+        # 6. Quality & Status Assessment
         if event.quality == EventQuality.PARTIAL or not signal.entities.has_any_entity:
             status = NormalizationStatus.PARTIAL
             if not signal.entities.has_any_entity:
                 warnings.append("Signal has no resolved primary supply-chain entities (stored as unlinked signal).")
         else:
             status = NormalizationStatus.VALID
+
 
         duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
         return NormalizationResult(

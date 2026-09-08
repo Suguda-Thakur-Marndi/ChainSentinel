@@ -77,6 +77,63 @@ class CorrelationStatus(str, Enum):
     AMBIGUOUS = "AMBIGUOUS"
 
 
+class EntityType(str, Enum):
+    """Supported supply chain network and asset entity types."""
+
+    SHIPMENT = "SHIPMENT"
+    SUPPLIER = "SUPPLIER"
+    SUPPLIER_SITE = "SUPPLIER_SITE"
+    FACTORY = "FACTORY"
+    WAREHOUSE = "WAREHOUSE"
+    PORT = "PORT"
+    ROUTE = "ROUTE"
+    CARRIER = "CARRIER"
+    VESSEL = "VESSEL"
+    AIRCRAFT = "AIRCRAFT"
+    VEHICLE = "VEHICLE"
+    TRACKING_OBJECT = "TRACKING_OBJECT"
+
+
+class CorrelationConfidence(str, Enum):
+    """Evidence confidence level establishing the entity correlation."""
+
+    EXACT = "EXACT"          # Direct match on primary internal ID or verified unambiguous mapping
+    VERIFIED = "VERIFIED"    # Verified provider mapping or registered master tracking lookup
+    STRONG = "STRONG"        # Strong unambiguous external identifier (e.g. valid IMO, unique ICAO24)
+    WEAK = "WEAK"            # Partial or secondary indicator (e.g. callsign without ICAO24)
+    UNRESOLVED = "UNRESOLVED"  # External reference present but unverified against internal entities
+
+
+class CorrelationMethod(str, Enum):
+    """Methodology used to resolve the entity association."""
+
+    INTERNAL_ID = "INTERNAL_ID"
+    VERIFIED_MAPPING = "VERIFIED_MAPPING"
+    PROVIDER_REFERENCE = "PROVIDER_REFERENCE"
+    EXACT_IDENTIFIER = "EXACT_IDENTIFIER"
+    NAMESPACE_IDENTIFIER = "NAMESPACE_IDENTIFIER"
+    EXTERNAL_REFERENCE = "EXTERNAL_REFERENCE"
+    UNRESOLVED = "UNRESOLVED"
+
+
+class EntityReference(BaseModel):
+    """Strongly typed, namespace-aware entity association record."""
+
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    entity_type: EntityType
+    internal_id: Optional[str] = None
+    external_id: Optional[str] = None
+    identifier_namespace: Optional[str] = None
+    identifier_type: Optional[str] = None
+    correlation_confidence: CorrelationConfidence = CorrelationConfidence.UNRESOLVED
+    correlation_method: CorrelationMethod = CorrelationMethod.UNRESOLVED
+    evidence: Optional[Dict[str, Any]] = None
+    raw_identifier: Optional[str] = None
+    is_conflict: bool = False
+    conflict_details: Optional[str] = None
+
+
 class SignalEntityReferences(BaseModel):
     """Normalized internal supply-chain entity references."""
 
@@ -103,6 +160,11 @@ class SignalEntityReferences(BaseModel):
 
     correlation_status: CorrelationStatus = CorrelationStatus.NONE
 
+    # Detailed typed entity references and conflict tracking (Phase 6 Step 3)
+    references: List[EntityReference] = Field(default_factory=list)
+    has_conflict: bool = False
+    conflict_reason: Optional[str] = None
+
     @property
     def has_any_entity(self) -> bool:
         """Return True if at least one primary domain entity ID is populated."""
@@ -116,6 +178,51 @@ class SignalEntityReferences(BaseModel):
             self.route_id,
             self.carrier_id,
         ])
+
+    def add_reference(self, ref: EntityReference) -> None:
+        """Add an entity reference and mirror primary internal ID if applicable."""
+        self.references.append(ref)
+        if ref.is_conflict:
+            self.has_conflict = True
+            self.conflict_reason = ref.conflict_details or "Conflicting entity identifier detected"
+            self.correlation_status = CorrelationStatus.AMBIGUOUS
+
+        # Mirror internal_id into convenience field if verified/exact and not conflicting
+        if ref.internal_id and not ref.is_conflict:
+            if ref.entity_type == EntityType.SHIPMENT and not self.shipment_id:
+                self.shipment_id = ref.internal_id
+            elif ref.entity_type == EntityType.SUPPLIER and not self.supplier_id:
+                self.supplier_id = ref.internal_id
+            elif ref.entity_type == EntityType.SUPPLIER_SITE and not self.supplier_site_id:
+                self.supplier_site_id = ref.internal_id
+            elif ref.entity_type == EntityType.FACTORY and not self.factory_id:
+                self.factory_id = ref.internal_id
+            elif ref.entity_type == EntityType.WAREHOUSE and not self.warehouse_id:
+                self.warehouse_id = ref.internal_id
+            elif ref.entity_type == EntityType.PORT and not self.port_id:
+                self.port_id = ref.internal_id
+            elif ref.entity_type == EntityType.ROUTE and not self.route_id:
+                self.route_id = ref.internal_id
+            elif ref.entity_type == EntityType.CARRIER and not self.carrier_id:
+                self.carrier_id = ref.internal_id
+
+    def get_references_by_type(self, entity_type: EntityType) -> List[EntityReference]:
+        """Retrieve all entity references matching a specific entity type."""
+        return [r for r in self.references if r.entity_type == entity_type]
+
+    def get_primary_reference(self) -> Optional[EntityReference]:
+        """Retrieve the highest confidence entity reference."""
+        if not self.references:
+            return None
+        order = {
+            CorrelationConfidence.EXACT: 5,
+            CorrelationConfidence.VERIFIED: 4,
+            CorrelationConfidence.STRONG: 3,
+            CorrelationConfidence.WEAK: 2,
+            CorrelationConfidence.UNRESOLVED: 1,
+        }
+        return max(self.references, key=lambda r: order.get(r.correlation_confidence, 0))
+
 
 
 class CorroboratingEvidence(BaseModel):
@@ -152,6 +259,10 @@ class OperationalValues(BaseModel):
     distance_km: Optional[float] = Field(None, ge=0.0)
     speed_kmh: Optional[float] = Field(None, ge=0.0)
     temperature_celsius: Optional[float] = None
+    weight_kg: Optional[float] = Field(None, ge=0.0)
+    volume_m3: Optional[float] = Field(None, ge=0.0)
+    monetary_amount: Optional[float] = Field(None, ge=0.0)
+    currency_code: Optional[str] = Field(None, max_length=3)
     disruption_level: Optional[float] = Field(None, ge=0.0, le=1.0)
     operational_status: Optional[str] = None
 

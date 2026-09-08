@@ -94,6 +94,19 @@ class BaseDomainNormalizationHandler(ABC):
 
         return entities
 
+    def _extract_location_context(self, event: CanonicalExternalEvent) -> Dict[str, Any]:
+        """Extract spatial context fields from event.location."""
+        loc = event.location
+        return {
+            "latitude": event.latitude,
+            "longitude": event.longitude,
+            "location_name": loc.location_name if loc else None,
+            "country_code": loc.country_code if loc else None,
+            "region": loc.region if loc else None,
+            "precision_meters": loc.precision_meters if loc else None,
+        }
+
+
 
 # -----------------------------------------------------------------------------
 # 1. Weather Domain Handler
@@ -152,12 +165,7 @@ class WeatherNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
-            location_name=event.location.location_name if event.location else None,
-            country_code=event.location.country_code if event.location else None,
-            region=event.location.region if event.location else None,
-            precision_meters=event.location.precision_meters if event.location else None,
+            **self._extract_location_context(event),
             entities=self._extract_base_entities(event),
             source=event.provider,
             source_type=event.source_type,
@@ -228,10 +236,7 @@ class RoadTrafficNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
-            location_name=event.location.location_name if event.location else None,
-            country_code=event.location.country_code if event.location else None,
+            **self._extract_location_context(event),
             entities=self._extract_base_entities(event),
             source=event.provider,
             source_type=event.source_type,
@@ -293,6 +298,19 @@ class OceanAISNormalizationHandler(BaseDomainNormalizationHandler):
         if "mmsi" in attrs and not entities.vessel_mmsi:
             entities.vessel_mmsi = str(attrs["mmsi"])
 
+        # Extract port identifiers from attributes if not already correlated
+        if "port_id" in attrs and not entities.port_id:
+            entities.port_id = str(attrs["port_id"])
+        elif "unlocode" in attrs and not entities.port_id:
+            entities.port_id = str(attrs["unlocode"])
+        elif "port_code" in attrs and not entities.port_id:
+            entities.port_id = str(attrs["port_code"])
+
+        # Normalize duration/delay
+        raw_delay = event.delay_minutes or attrs.get("delay_minutes") or attrs.get("delay")
+        delay_unit = attrs.get("delay_unit", "minutes" if (event.delay_minutes or "delay_minutes" in attrs) else None)
+        delay_norm = UnitNormalizer.normalize_duration(raw_delay, delay_unit)
+
         ev_str = str(event.event_type.value if hasattr(event.event_type, "value") else event.event_type)
         signal_type = SignalType.STATUS_UPDATE
         if "delay" in ev_str.lower():
@@ -302,10 +320,19 @@ class OceanAISNormalizationHandler(BaseDomainNormalizationHandler):
         elif "congestion" in ev_str.lower():
             signal_type = SignalType.CONGESTION
 
+        disruption_level = None
+        if "closure" in ev_str.lower():
+            disruption_level = 0.9
+        elif "congestion" in ev_str.lower():
+            disruption_level = 0.7 if event.severity in (EventSeverity.HIGH, EventSeverity.CRITICAL) else 0.4
+        elif "incident" in ev_str.lower():
+            disruption_level = 0.8 if event.severity in (EventSeverity.HIGH, EventSeverity.CRITICAL) else 0.5
+
         measurements = OperationalValues(
             speed_kmh=speed_norm.normalized_value,
-            delay_minutes=event.delay_minutes,
+            delay_minutes=delay_norm.normalized_value,
             eta=event.eta,
+            disruption_level=disruption_level,
             operational_status=event.status,
         )
 
@@ -321,9 +348,7 @@ class OceanAISNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
-            location_name=event.location.location_name if event.location else None,
+            **self._extract_location_context(event),
             entities=entities,
             source=event.provider,
             source_type=event.source_type,
@@ -339,6 +364,7 @@ class OceanAISNormalizationHandler(BaseDomainNormalizationHandler):
             normalized_attributes=attrs,
             canonical_attributes={"raw_status": event.status},
         )
+
 
 
 # -----------------------------------------------------------------------------
@@ -398,8 +424,7 @@ class AirFreightNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
+            **self._extract_location_context(event),
             entities=entities,
             source=event.provider,
             source_type=event.source_type,
@@ -467,8 +492,7 @@ class RailTransitNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
+            **self._extract_location_context(event),
             entities=entities,
             source=event.provider,
             source_type=event.source_type,
@@ -545,8 +569,7 @@ class LogisticsTrackingNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
+            **self._extract_location_context(event),
             entities=self._extract_base_entities(event),
             source=event.provider,
             source_type=event.source_type,
@@ -602,8 +625,7 @@ class IntelligenceNewsNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
+            **self._extract_location_context(event),
             entities=self._extract_base_entities(event),
             source=event.provider,
             source_type=event.source_type,
@@ -650,8 +672,7 @@ class GeneralNormalizationHandler(BaseDomainNormalizationHandler):
             event_time=event.event_timestamp,
             observed_at=event.observed_at,
             received_at=event.received_at,
-            latitude=event.latitude,
-            longitude=event.longitude,
+            **self._extract_location_context(event),
             entities=self._extract_base_entities(event),
             source=event.provider,
             source_type=event.source_type,
@@ -701,3 +722,9 @@ class DomainNormalizationRegistry:
             if handler.can_handle(event):
                 return handler
         return self._handlers[-1]
+
+
+# Semantic aliases reflecting full domain taxonomy
+MaritimePortNormalizationHandler = OceanAISNormalizationHandler
+PortNormalizationHandler = OceanAISNormalizationHandler
+

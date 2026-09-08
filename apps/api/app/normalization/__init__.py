@@ -6,13 +6,23 @@ and status normalizers, domain handlers, and the end-to-end normalization pipeli
 
 from app.normalization.contract import (
     CorroboratingEvidence,
+    CorrelationConfidence,
+    CorrelationMethod,
     CorrelationStatus,
+    EntityReference,
+    EntityType,
     NormalizedRiskSignal,
     OperationalValues,
     SignalDomain,
     SignalEntityReferences,
     SignalStatus,
     SignalType,
+)
+from app.normalization.correlation import CrossSourceCorrelator
+from app.normalization.entity_resolver import (
+    EntityLookupProvider,
+    EntityNormalizer,
+    InMemoryEntityLookupProvider,
 )
 from app.normalization.handlers import (
     AirFreightNormalizationHandler,
@@ -21,10 +31,16 @@ from app.normalization.handlers import (
     GeneralNormalizationHandler,
     IntelligenceNewsNormalizationHandler,
     LogisticsTrackingNormalizationHandler,
+    MaritimePortNormalizationHandler,
     OceanAISNormalizationHandler,
+    PortNormalizationHandler,
     RailTransitNormalizationHandler,
     RoadTrafficNormalizationHandler,
     WeatherNormalizationHandler,
+)
+from app.normalization.identifiers import (
+    IdentifierNormalizer,
+    NormalizedIdentifier,
 )
 from app.normalization.pipeline import (
     BatchNormalizationResult,
@@ -42,9 +58,20 @@ __all__ = [
     "SignalType",
     "SignalStatus",
     "CorrelationStatus",
+    "EntityType",
+    "CorrelationConfidence",
+    "CorrelationMethod",
+    "EntityReference",
     "SignalEntityReferences",
     "CorroboratingEvidence",
     "OperationalValues",
+    # Identifiers & Resolution (Step 3)
+    "NormalizedIdentifier",
+    "IdentifierNormalizer",
+    "EntityLookupProvider",
+    "InMemoryEntityLookupProvider",
+    "EntityNormalizer",
+    "CrossSourceCorrelator",
     # Units & Status
     "UnitNormalizer",
     "UnitConversionResult",
@@ -55,6 +82,8 @@ __all__ = [
     "WeatherNormalizationHandler",
     "RoadTrafficNormalizationHandler",
     "OceanAISNormalizationHandler",
+    "MaritimePortNormalizationHandler",
+    "PortNormalizationHandler",
     "AirFreightNormalizationHandler",
     "RailTransitNormalizationHandler",
     "LogisticsTrackingNormalizationHandler",
@@ -66,3 +95,4 @@ __all__ = [
     "NormalizationResult",
     "BatchNormalizationResult",
 ]
+
