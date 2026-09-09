@@ -91,7 +91,7 @@ class StageTransitionValidator:
 
         if current_stage == AgentStage.TERMINATION:
             raise AgentStageTransitionError(
-                f"Illegal stage transition from terminal stage '{current_stage.value}': stage has no allowed outgoing transitions."
+                f"Illegal stage transition: Terminal stage '{current_stage.value}' has no allowed outgoing transitions."
             )
 
         # Bounded retry self-loop is allowed if explicitly flagged

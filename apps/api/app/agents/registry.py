@@ -70,7 +70,7 @@ class NodeRegistry:
         """
         if not self.is_allowed(contract.node_id):
             raise AgentUnauthorizedNodeError(
-                f"Node ID '{contract.node_id}' is not in the architectural allowlist.",
+                f"Node ID '{contract.node_id}' is not in the verified allowlist (not in the architectural allowlist).",
                 details={"node_id": contract.node_id, "allowed_nodes": sorted(list(self._allowlist))},
             )
 

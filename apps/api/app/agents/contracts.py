@@ -120,6 +120,23 @@ SENSITIVE_VALUE_PATTERNS = [
     re.compile(r"sk-[a-zA-Z0-9_\-]{10,}", re.IGNORECASE),
 ]
 
+FORBIDDEN_REASONING_PATTERNS = [
+    re.compile(r"chain_of_thought", re.IGNORECASE),
+    re.compile(r"private_reasoning", re.IGNORECASE),
+    re.compile(r"hidden_reasoning", re.IGNORECASE),
+    re.compile(r"internal_monologue", re.IGNORECASE),
+]
+
+
+def validate_no_reasoning_content(text: str, field_name: str = "field") -> None:
+    """Ensure no chain-of-thought or internal monologue reasoning is embedded in text values."""
+    if not text or not isinstance(text, str):
+        return
+    for pattern in FORBIDDEN_REASONING_PATTERNS:
+        if pattern.search(text):
+            raise AgentValidationError(
+                f"Prohibited chain-of-thought or reasoning content detected in '{field_name}'."
+            )
 
 
 def validate_no_sensitive_values(text: str, field_name: str = "field") -> None:
@@ -243,6 +260,8 @@ class AgentConflict(BaseModel):
     @classmethod
     def validate_description_safety(cls, v: str) -> str:
         validate_no_forbidden_keys({"description": v}, "AgentConflict.description")
+        validate_no_sensitive_values(v, "AgentConflict.description")
+        validate_no_reasoning_content(v, "AgentConflict.description")
         return v
 
 
@@ -264,6 +283,8 @@ class AgentLimitation(BaseModel):
     @classmethod
     def validate_desc_safety(cls, v: str) -> str:
         validate_no_forbidden_keys({"description": v}, "AgentLimitation.description")
+        validate_no_sensitive_values(v, "AgentLimitation.description")
+        validate_no_reasoning_content(v, "AgentLimitation.description")
         return v
 
 
@@ -603,7 +624,7 @@ def validate_state_update(
             new_val = actual_updates[ident_field]
             if current_val is not None and new_val != current_val:
                 raise AgentStateOwnershipViolationError(
-                    f"Immutable identity field '{ident_field}' cannot be mutated by node '{actual_node_id}'."
+                    f"Immutable identity field: Node '{actual_node_id}' attempted to mutate read-only identity field '{ident_field}'."
                 )
 
     # 4. Authoritative field ownership protection
@@ -790,6 +811,8 @@ class NodeContract(BaseModel):
     required_inputs: List[str] = Field(default_factory=list)
     output_keys: List[str] = Field(default_factory=list)
     allowed_outputs: List[str] = Field(default_factory=list)
+    output_fields: List[str] = Field(default_factory=list)
+    allowed_state_fields: List[str] = Field(default_factory=list)
     requires_evidence: bool = False
     minimum_evidence: int = Field(default=0, ge=0)
     required_evidence_types: List[str] = Field(default_factory=list)
@@ -809,11 +832,17 @@ class NodeContract(BaseModel):
             self.required_inputs = list(self.input_keys)
         elif self.required_inputs and not self.input_keys:
             self.input_keys = list(self.required_inputs)
-        # Sync output_keys and allowed_outputs
-        if self.output_keys and not self.allowed_outputs:
-            self.allowed_outputs = list(self.output_keys)
-        elif self.allowed_outputs and not self.output_keys:
-            self.output_keys = list(self.allowed_outputs)
+        # Sync output fields variants
+        outs = self.output_keys or self.allowed_outputs or self.output_fields or self.allowed_state_fields
+        if outs:
+            if not self.output_keys:
+                self.output_keys = list(outs)
+            if not self.allowed_outputs:
+                self.allowed_outputs = list(outs)
+            if not self.output_fields:
+                self.output_fields = list(outs)
+            if not self.allowed_state_fields:
+                self.allowed_state_fields = list(outs)
         # Sync is_side_effecting and side_effect_type
         if self.is_side_effecting:
             self.side_effect_type = ToolSideEffectType.SIDE_EFFECTING

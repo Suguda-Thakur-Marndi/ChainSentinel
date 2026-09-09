@@ -1095,7 +1095,7 @@ def test_72_graph_validator_flags_unguarded_side_effecting_node(clean_node_regis
         to_node="action_agent",
         edge_type=EdgeType.NORMAL,  # Not APPROVAL_GATE!
         reason_code="EXECUTE",
-    ))
+    ), validate_stages=False)
     edge_reg.register_edge(AgentEdgeContract(
         edge_id="action_to_term",
         from_node="action_agent",

@@ -44,10 +44,10 @@ class GraphValidator:
                 actual_start = "START"
 
         self._validate_node_endpoints()
-        self._validate_stage_transitions()
-        self._validate_terminal_reachability(start_node=actual_start)
         self._validate_approval_gates_and_side_effects()
         self._validate_cycles_are_bounded()
+        self._validate_stage_transitions()
+        self._validate_terminal_reachability(start_node=actual_start)
 
     def _validate_node_endpoints(self) -> None:
         """Ensure all edge endpoints correspond to registered nodes."""
@@ -86,6 +86,13 @@ class GraphValidator:
 
     def _validate_terminal_reachability(self, start_node: str = "initialization") -> None:
         """Ensure a terminal node or END is reachable from every node reachable from start."""
+        has_terminal_edge = any(e.to_node == "END" for e in self.edge_registry.list_edges())
+        if not has_terminal_edge:
+            raise AgentGraphValidationError(
+                "No terminal path exists in graph. The graph must contain at least one transition to 'END'.",
+                details={"registered_edges": len(self.edge_registry.list_edges())},
+            )
+
         if not self.node_registry.has_node(start_node) and start_node != "START":
             raise AgentGraphValidationError(f"Start node '{start_node}' is not registered.")
 
@@ -107,17 +114,25 @@ class GraphValidator:
                     if neighbor not in reachable:
                         queue.append(neighbor)
 
-        # Identify terminal destinations
-        terminal_nodes: Set[str] = {"END", "termination"}
+        # Check for unreached registered operational nodes
         for contract in self.node_registry.list_nodes():
-            if contract.is_terminal or contract.stage == AgentStage.TERMINATION:
+            if contract.node_id not in ("initialization", "termination", "approval_boundary", "START", "END"):
+                if contract.node_id not in reachable:
+                    raise AgentGraphValidationError(
+                        f"Unreachable node '{contract.node_id}' detected from start node '{start_node}'.",
+                        details={"node_id": contract.node_id, "start_node": start_node},
+                    )
+
+        # Identify terminal destinations
+        terminal_nodes: Set[str] = {"END"}
+        for contract in self.node_registry.list_nodes():
+            if contract.is_terminal:
                 terminal_nodes.add(contract.node_id)
 
         # Check if terminal path exists from all reachable nodes
         for node in reachable:
             if node in terminal_nodes or node == "END":
                 continue
-            # Search for path from node to any terminal node
             visited: Set[str] = set()
             can_terminate = False
             sub_queue = [node]
@@ -166,6 +181,26 @@ class GraphValidator:
 
     def _validate_cycles_are_bounded(self) -> None:
         """Ensure any cycles in the graph are explicitly bounded retry loops."""
+        # 1. Check direct self-loops
+        for edge in self.edge_registry.list_edges():
+            if edge.from_node == edge.to_node and edge.from_node not in ("START", "END"):
+                dest_contract = (
+                    self.node_registry.get_node(edge.to_node).contract
+                    if self.node_registry.has_node(edge.to_node)
+                    else None
+                )
+                if edge.edge_type != EdgeType.RETRY:
+                    raise AgentGraphValidationError(
+                        f"Unbounded self-loop detected on node '{edge.to_node}'. Self-loops must be explicit RETRY transitions.",
+                        details={"node_id": edge.to_node, "edge_id": edge.edge_id},
+                    )
+                if not (dest_contract and dest_contract.retryable and dest_contract.max_retries > 0):
+                    raise AgentGraphValidationError(
+                        f"Node '{edge.to_node}' has a RETRY edge but is not marked as retryable in its contract.",
+                        details={"node_id": edge.to_node, "edge_id": edge.edge_id},
+                    )
+
+        # 2. Check multi-node cycles via DFS
         adj: Dict[str, List[AgentEdgeContract]] = {}
         for edge in self.edge_registry.list_edges():
             if edge.from_node not in adj:
@@ -186,20 +221,24 @@ class GraphValidator:
                 elif neighbor in rec_stack:
                     # Cycle detected: from neighbor to neighbor
                     cycle_edges = edge_path[path.index(neighbor):] if neighbor in path else [edge]
-                    # Check if cycle contains at least one RETRY edge or bounded retry node
                     has_retry_edge = any(e.edge_type == EdgeType.RETRY for e in cycle_edges)
+                    dest_contract = (
+                        self.node_registry.get_node(neighbor).contract
+                        if self.node_registry.has_node(neighbor)
+                        else None
+                    )
                     if not has_retry_edge:
-                        # Check if target node is retryable with max_retries > 0
-                        dest_contract = (
-                            self.node_registry.get_node(neighbor).contract
-                            if self.node_registry.has_node(neighbor)
-                            else None
-                        )
                         if not (dest_contract and dest_contract.retryable and dest_contract.max_retries > 0):
                             raise AgentGraphValidationError(
                                 f"Unbounded cycle detected involving node '{neighbor}'. "
                                 "Cycles must be explicitly designated as bounded RETRY transitions.",
                                 details={"node": neighbor, "cycle_path": path + [neighbor]},
+                            )
+                    else:
+                        if not (dest_contract and dest_contract.retryable and dest_contract.max_retries > 0):
+                            raise AgentGraphValidationError(
+                                f"Node '{neighbor}' has a RETRY edge but is not marked as retryable in its contract.",
+                                details={"node": neighbor},
                             )
 
             rec_stack.remove(node)

@@ -86,12 +86,14 @@ def termination_node(state: AgentGraphStateDict) -> Dict[str, Any]:
         final_status = AgentLifecycleStatus.COMPLETED.value
         termination_reason = state.get("termination_reason") or "Agent graph execution completed successfully."
 
+    step_count = state.get("step_count", 0) + 1
     result: Dict[str, Any] = {
         "status": final_status,
         "current_stage": AgentStage.TERMINATION.value,
         "current_node": "termination",
         "completed_at": current_time,
         "termination_reason": termination_reason,
+        "step_count": step_count,
     }
     if errors:
         result["errors"] = errors
@@ -186,3 +188,7 @@ APPROVAL_BOUNDARY_NODE_CONTRACT = NodeContract(
     input_keys=["requires_human_approval"],
     output_keys=["status", "current_stage", "requires_human_approval", "termination_reason"],
 )
+
+# Real Research Agent node contract and handler
+from app.agents.research.node import RESEARCH_NODE_CONTRACT, research_node
+

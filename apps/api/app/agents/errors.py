@@ -211,7 +211,7 @@ class AgentApprovalBoundaryViolationError(AgentGraphError):
         )
 
 
-class AgentStateOwnershipViolationError(AgentGraphError):
+class AgentStateOwnershipViolationError(AgentValidationError):
     """Raised when an unauthorized node attempts to overwrite authoritative or protected state fields."""
 
     def __init__(
@@ -221,10 +221,9 @@ class AgentStateOwnershipViolationError(AgentGraphError):
     ) -> None:
         super().__init__(
             message=message,
-            classification=ErrorClassification.NON_RETRYABLE,
-            error_code="AGENT_STATE_OWNERSHIP_VIOLATION",
             details=details,
         )
+        self.error_code = "AGENT_STATE_OWNERSHIP_VIOLATION"
 
 
 class AgentStateSizeLimitError(AgentGraphError):
