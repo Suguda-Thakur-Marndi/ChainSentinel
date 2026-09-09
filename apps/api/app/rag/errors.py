@@ -218,3 +218,20 @@ class RAGPathTraversalError(RAGError):
             details=details,
         )
 
+
+class RAGEmbeddingError(RAGError):
+    """Raised when embedding generation fails at the provider layer or during vector processing."""
+
+    def __init__(
+        self,
+        message: str = "Embedding generation failed.",
+        details: Optional[Any] = None,
+    ):
+        super().__init__(
+            message=message,
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            code="EMBEDDING_GENERATION_FAILED",
+            details=details,
+        )
+
+

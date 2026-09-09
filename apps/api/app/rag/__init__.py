@@ -40,11 +40,21 @@ from app.rag.contracts import (
     generate_deterministic_retrieval_id,
     validate_no_secrets_in_metadata,
 )
+from app.rag.embeddings import (
+    TARGET_EMBEDDING_DIMENSION,
+    BaseEmbeddingProvider,
+    BedrockEmbeddingProvider,
+    LocalMockEmbeddingProvider,
+    OpenAIEmbeddingProvider,
+    compute_embedding_fingerprint,
+    get_embedding_provider,
+)
 from app.rag.errors import (
     RAGChunkNotFoundError,
     RAGDocumentNotFoundError,
     RAGDocumentTooLargeError,
     RAGEmbeddingDimensionError,
+    RAGEmbeddingError,
     RAGEmptyDocumentError,
     RAGError,
     RAGInvalidQueryError,
@@ -69,6 +79,13 @@ from app.rag.parsers import (
     normalize_file_type,
     validate_filename_safety,
 )
+from app.rag.retrieval import RAGRetrievalService
+from app.rag.vector_store import (
+    ChunkEmbeddingResult,
+    ChunkEmbeddingService,
+    extract_embedding_metadata,
+    extract_embedding_vector,
+)
 
 __all__ = [
     # Errors
@@ -79,6 +96,7 @@ __all__ = [
     "RAGDocumentNotFoundError",
     "RAGChunkNotFoundError",
     "RAGEmbeddingDimensionError",
+    "RAGEmbeddingError",
     "RAGProvenanceLineageError",
     "RAGSecurityPolicyViolationError",
     "RAGUnsupportedFormatError",
@@ -136,4 +154,18 @@ __all__ = [
     "DocumentIngestionPayload",
     "DocumentIngestionResult",
     "DocumentIngestionService",
+    # Embedding Providers & Vector Storage (Phase 8 Step 3)
+    "TARGET_EMBEDDING_DIMENSION",
+    "BaseEmbeddingProvider",
+    "LocalMockEmbeddingProvider",
+    "OpenAIEmbeddingProvider",
+    "BedrockEmbeddingProvider",
+    "get_embedding_provider",
+    "compute_embedding_fingerprint",
+    "ChunkEmbeddingResult",
+    "ChunkEmbeddingService",
+    "extract_embedding_vector",
+    "extract_embedding_metadata",
+    # Retrieval & Similarity Search (Phase 8 Step 4)
+    "RAGRetrievalService",
 ]
