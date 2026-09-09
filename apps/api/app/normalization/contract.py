@@ -24,8 +24,17 @@ from app.integrations.canonical import (
 )
 
 
-def _generate_signal_id() -> str:
+def _generate_signal_id(organization_id: Optional[str] = None, canonical_event_id: Optional[str] = None) -> str:
+    if canonical_event_id:
+        org = organization_id or "global"
+        return str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{org}:{canonical_event_id}"))
     return str(uuid.uuid4())
+
+
+def generate_deterministic_signal_id(organization_id: Optional[str], canonical_event_id: str) -> str:
+    """Generate a reproducible, deterministic UUIDv5 signal ID based on tenant and canonical event ID."""
+    org = organization_id or "global"
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{org}:{canonical_event_id}"))
 
 
 class SignalDomain(str, Enum):
@@ -297,6 +306,7 @@ class NormalizedRiskSignal(BaseModel):
     severity: EventSeverity = EventSeverity.INFO
     confidence: float = Field(default=0.8, ge=0.0, le=1.0)
     quality: EventQuality = EventQuality.VALID
+    quality_reasons: List[str] = Field(default_factory=list)
 
     # 3. Temporal Semantics (All timezone-aware UTC)
     event_time: datetime = Field(..., description="Timestamp when the underlying real-world event occurred.")
@@ -342,6 +352,10 @@ class NormalizedRiskSignal(BaseModel):
     canonical_attributes: Dict[str, Any] = Field(default_factory=dict)
     fingerprint: Optional[str] = None
 
+    # 9. Conflict Tracking & Finalization (Phase 6 Step 4)
+    has_conflict: bool = False
+    conflicts: List[Dict[str, Any]] = Field(default_factory=list)
+
     @field_validator("event_time", "observed_at", "received_at", "effective_from", "effective_to")
     @classmethod
     def ensure_utc(cls, v: Optional[datetime]) -> Optional[datetime]:
@@ -361,6 +375,7 @@ class NormalizedRiskSignal(BaseModel):
 
     def generate_fingerprint(self) -> str:
         """Generate a deterministic SHA-256 semantic fingerprint."""
+        org_id = self.organization_id or "global"
         lat_bucket = f"{self.latitude:.2f}" if self.latitude is not None else "none"
         lon_bucket = f"{self.longitude:.2f}" if self.longitude is not None else "none"
         time_bucket = self.event_time.strftime("%Y-%m-%d-%H") if self.event_time else "none"
@@ -375,7 +390,7 @@ class NormalizedRiskSignal(BaseModel):
             or "none"
         )
         token_str = (
-            f"{self.domain.value}|{self.signal_type.value}|{self.event_type}|"
+            f"{org_id}|{self.domain.value}|{self.signal_type.value}|{self.event_type}|"
             f"{lat_bucket}|{lon_bucket}|{time_bucket}|{primary_entity}"
         )
         return hashlib.sha256(token_str.encode("utf-8")).hexdigest()

@@ -1,7 +1,7 @@
 """Phase 6 Semantic Normalization Package.
 
 Provides strongly typed internal risk signal contracts, deterministic unit
-and status normalizers, domain handlers, and the end-to-end normalization pipeline.
+and status normalizers, domain handlers, quality validation, and the end-to-end normalization pipeline.
 """
 
 from app.normalization.contract import (
@@ -17,6 +17,7 @@ from app.normalization.contract import (
     SignalEntityReferences,
     SignalStatus,
     SignalType,
+    generate_deterministic_signal_id,
 )
 from app.normalization.correlation import CrossSourceCorrelator
 from app.normalization.entity_resolver import (
@@ -48,6 +49,11 @@ from app.normalization.pipeline import (
     NormalizationResult,
     NormalizationStatus,
 )
+from app.normalization.quality import (
+    NormalizationQualityReason,
+    QualityAssessmentResult,
+    SignalQualityValidator,
+)
 from app.normalization.status import StatusNormalizer
 from app.normalization.units import UnitConversionResult, UnitNormalizer
 
@@ -65,6 +71,7 @@ __all__ = [
     "SignalEntityReferences",
     "CorroboratingEvidence",
     "OperationalValues",
+    "generate_deterministic_signal_id",
     # Identifiers & Resolution (Step 3)
     "NormalizedIdentifier",
     "IdentifierNormalizer",
@@ -72,6 +79,10 @@ __all__ = [
     "InMemoryEntityLookupProvider",
     "EntityNormalizer",
     "CrossSourceCorrelator",
+    # Quality & Safety (Step 4)
+    "NormalizationQualityReason",
+    "QualityAssessmentResult",
+    "SignalQualityValidator",
     # Units & Status
     "UnitNormalizer",
     "UnitConversionResult",
@@ -95,4 +106,3 @@ __all__ = [
     "NormalizationResult",
     "BatchNormalizationResult",
 ]
-
