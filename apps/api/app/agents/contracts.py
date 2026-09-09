@@ -31,7 +31,7 @@ FORBIDDEN_STATE_KEY_PATTERNS = [
     re.compile(r"^private_reasoning$", re.IGNORECASE),
     re.compile(r"^hidden_reasoning$", re.IGNORECASE),
     re.compile(r"^internal_monologue$", re.IGNORECASE),
-    re.compile(r"password|secret|token|api_key|credentials|authorization", re.IGNORECASE),
+    re.compile(r"password|secret|token|api_key|private_key|credentials|authorization", re.IGNORECASE),
 ]
 
 
@@ -92,6 +92,9 @@ class LimitationCategory(str, Enum):
     UNSUPPORTED_MAPPING = "UNSUPPORTED_MAPPING"
     UNSAFE_SOURCE = "UNSAFE_SOURCE"
     TENANT_BOUNDARY_VIOLATION = "TENANT_BOUNDARY_VIOLATION"
+    PREDICTION_MODEL_UNAVAILABLE = "PREDICTION_MODEL_UNAVAILABLE"
+    INSUFFICIENT_FEATURES = "INSUFFICIENT_FEATURES"
+    HIGH_UNCERTAINTY = "HIGH_UNCERTAINTY"
 
 
 def validate_no_forbidden_keys(data: Any, path: str = "root") -> None:
@@ -368,6 +371,9 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "risk_assessment_id": {AgentStage.RISK_ASSESSMENT},
     "risk_assessment_reference": {AgentStage.RISK_ASSESSMENT},
     "risk_alert_references": {AgentStage.RISK_ASSESSMENT},
+    "prediction_id": {AgentStage.PREDICTION},
+    "prediction_reference": {AgentStage.PREDICTION},
+    "prediction_result": {AgentStage.PREDICTION},
     "recommendation_references": {AgentStage.DECISION},
     "requires_human_approval": {AgentStage.APPROVAL, AgentStage.INITIALIZATION},
     "approval_reference": {AgentStage.APPROVAL},
@@ -422,7 +428,12 @@ class AgentGraphState(BaseModel):
     risk_alert_references: List[str] = Field(default_factory=list)
     recommendation_references: List[str] = Field(default_factory=list)
 
-    # G. Structured Findings, Limitations & Conflicts
+    # G. Prediction References
+    prediction_id: Optional[str] = None
+    prediction_reference: Optional[Dict[str, Any]] = None
+    prediction_result: Optional[Dict[str, Any]] = None
+
+    # H. Structured Findings, Limitations & Conflicts
     findings: Dict[str, Any] = Field(default_factory=dict)
     structured_findings: List[AgentFinding] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
@@ -584,6 +595,11 @@ def validate_state_update(
     actual_node_id = node_id or writer_node_id or "unknown_node"
     actual_stage = stage or writer_stage or AgentStage.INITIALIZATION
 
+    def _get_val(state: Any, key: str) -> Any:
+        if isinstance(state, dict):
+            return state.get(key)
+        return getattr(state, key, None)
+
     # Check payload size cap (500KB)
     import json
     try:
@@ -612,18 +628,19 @@ def validate_state_update(
                             validate_no_sensitive_values(iv, str(ik))
 
     # 2. Strict tenant immutability
+    current_org = _get_val(current_state, "organization_id")
     if "organization_id" in actual_updates:
         new_org = str(actual_updates["organization_id"]).strip()
-        if new_org != current_state.organization_id:
+        if current_org and new_org != current_org:
             raise AgentTenantIsolationError(
                 f"Node '{actual_node_id}' attempted to mutate immutable organization_id "
-                f"from '{current_state.organization_id}' to '{new_org}'."
+                f"from '{current_org}' to '{new_org}'."
             )
 
     # 3. Read-only identity field protection
     for ident_field in IDENTITY_FIELDS:
         if ident_field in actual_updates and ident_field != "organization_id":
-            current_val = getattr(current_state, ident_field, None)
+            current_val = _get_val(current_state, ident_field)
             new_val = actual_updates[ident_field]
             if current_val is not None and new_val != current_val:
                 raise AgentStateOwnershipViolationError(
@@ -633,7 +650,7 @@ def validate_state_update(
     # 4. Authoritative field ownership protection
     for field_name, allowed_stages in AUTHORITATIVE_FIELD_OWNERS.items():
         if field_name in actual_updates and actual_updates[field_name] is not None:
-            current_val = getattr(current_state, field_name, None)
+            current_val = _get_val(current_state, field_name)
             if current_val != actual_updates[field_name] and actual_stage not in allowed_stages:
                 raise AgentStateOwnershipViolationError(
                     f"Node '{actual_node_id}' at stage '{actual_stage.value}' is not authorized to update authoritative field '{field_name}'. "
@@ -666,23 +683,32 @@ def apply_state_update(
         stage=actual_stage,
     )
 
-    data = current_state.model_dump()
+    if isinstance(current_state, dict):
+        data = dict(current_state)
+        current_node = data.get("current_node")
+        step_count = data.get("step_count", 0)
+        route_history = list(data.get("route_history", []))
+    else:
+        data = current_state.model_dump()
+        current_node = current_state.current_node
+        step_count = current_state.step_count
+        route_history = list(current_state.route_history)
+
     data.update(actual_updates)
     data["current_node"] = actual_node_id
     data["current_stage"] = actual_stage
 
     # Record deterministic route event if route changed
-    to_node = updates.get("next_node") or updates.get("selected_route")
-    if to_node and to_node != current_state.current_node:
+    to_node = actual_updates.get("next_node") or actual_updates.get("selected_route")
+    if to_node and to_node != current_node:
         event = RouteEvent(
-            from_node=node_id,
+            from_node=actual_node_id,
             to_node=to_node,
-            reason_code=str(updates.get("route_reason") or "EXPLICIT_TRANSITION"),
-            step_number=data.get("step_count", current_state.step_count),
+            reason_code=str(actual_updates.get("route_reason") or "EXPLICIT_TRANSITION"),
+            step_number=data.get("step_count", step_count),
         )
-        history = list(current_state.route_history)
-        history.append(event)
-        data["route_history"] = [h.model_dump() if isinstance(h, RouteEvent) else h for h in history]
+        route_history.append(event)
+        data["route_history"] = [h.model_dump() if isinstance(h, RouteEvent) else h for h in route_history]
 
     return AgentGraphState.model_validate(data)
 
@@ -719,6 +745,10 @@ class AgentGraphStateDict(TypedDict, total=False):
     risk_assessment: Optional[Dict[str, Any]]
     risk_alert_references: List[str]
     recommendation_references: List[str]
+    # Prediction
+    prediction_id: Optional[str]
+    prediction_reference: Optional[Dict[str, Any]]
+    prediction_result: Optional[Dict[str, Any]]
     # Findings
     findings: Dict[str, Any]
     structured_findings: List[Dict[str, Any]]

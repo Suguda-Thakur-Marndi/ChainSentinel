@@ -195,3 +195,6 @@ from app.agents.research.node import RESEARCH_NODE_CONTRACT, research_node
 # Real Risk Agent node contract and handler
 from app.agents.risk.node import RISK_NODE_CONTRACT, risk_node
 
+# Real Prediction Agent node contract and handler
+from app.agents.prediction.node import PREDICTION_NODE_CONTRACT, prediction_node
+
