@@ -380,3 +380,68 @@ class IncidentResponse(BaseModel):
 
 class IncidentListResponse(PaginatedResponse[IncidentResponse]):
     pass
+
+
+class RiskAlertResponse(BaseModel):
+    """Schema representing a deterministic operational risk alert."""
+    model_config = ConfigDict(from_attributes=True)
+
+    alert_id: str
+    organization_id: str
+    assessment_id: str
+    risk_id: Optional[str] = None
+    scope: Optional[str] = None
+    scope_entity_id: Optional[str] = None
+    alert_type: str
+    severity: str
+    previous_score: Optional[float] = None
+    current_score: float
+    score_delta: Optional[float] = None
+    previous_risk_level: Optional[str] = None
+    current_risk_level: Optional[str] = None
+    trigger_reason: str
+    factor_id: Optional[str] = None
+    evidence_ids: list[str] = Field(default_factory=list)
+    status: str
+    created_at: datetime
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class RiskAlertListResponse(PaginatedResponse[RiskAlertResponse]):
+    """Paginated list response for risk alerts."""
+    pass
+
+
+class RiskRecommendationResponse(BaseModel):
+    """Schema representing a deterministic operational recommendation."""
+    model_config = ConfigDict(from_attributes=True)
+
+    recommendation_id: str
+    organization_id: str
+    assessment_id: str
+    risk_id: Optional[str] = None
+    scope: Optional[str] = None
+    scope_entity_id: Optional[str] = None
+    recommendation_type: str
+    priority: str
+    status: str
+    title: str
+    rationale: str
+    factor_ids: list[str] = Field(default_factory=list)
+    evidence_ids: list[str] = Field(default_factory=list)
+    expected_objective: str
+    constraints: list[str] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
+    requires_human_approval: bool = True
+    confidence: Optional[float] = None
+    fingerprint: Optional[str] = None
+    created_at: datetime
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class RiskRecommendationListResponse(PaginatedResponse[RiskRecommendationResponse]):
+    """Paginated list response for risk recommendations."""
+    pass
+
+

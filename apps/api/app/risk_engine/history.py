@@ -227,13 +227,27 @@ class HistoricalRiskComparator:
     @classmethod
     def compare(
         cls,
-        current: Dict[str, Any],
-        previous: Optional[Dict[str, Any]] = None,
+        current: Union[RiskAssessment, Dict[str, Any]],
+        previous: Optional[Union[RiskAssessment, Dict[str, Any]]] = None,
     ) -> AssessmentComparison:
-        """Compare two assessment dictionary representations deterministically.
+        """Compare two assessment representations deterministically.
 
-        `current` and `previous` may be flat detail dictionaries or findings envelopes.
+        `current` and `previous` may be flat detail dictionaries, findings envelopes, or RiskAssessment domain models.
         """
+        def _to_dict(item: Any) -> Dict[str, Any]:
+            if hasattr(item, "model_dump"):
+                d = item.model_dump()
+                if hasattr(item, "score") and item.score is not None:
+                    d["score"] = item.score
+                if hasattr(item, "risk_level") and item.risk_level is not None:
+                    d["risk_level"] = item.risk_level.value if hasattr(item.risk_level, "value") else str(item.risk_level)
+                return d
+            return dict(item) if isinstance(item, dict) else {}
+
+        current = _to_dict(current)
+        if previous is not None:
+            previous = _to_dict(previous)
+
         curr_id = current.get("assessment_id") or current.get("id") or "unknown"
         curr_score = float(current.get("score") if current.get("score") is not None else 0.0)
         curr_level = current.get("risk_level") or "UNKNOWN"

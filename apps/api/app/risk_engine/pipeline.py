@@ -12,6 +12,8 @@ import time
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Set
 
+from pydantic import BaseModel, ConfigDict, Field
+
 from app.integrations.canonical import EventQuality, EventSourceType
 from app.normalization.contract import NormalizedRiskSignal
 from app.risk_engine.context import RiskEvaluationContext
@@ -342,3 +344,54 @@ class BaselineRiskEngine(RiskEngine):
             register_baseline_evaluators(reg)
         agg = aggregator or BaselineRiskScoreAggregator()
         super().__init__(registry=reg, aggregator=agg)
+
+    def evaluate_full(
+        self,
+        context: RiskEvaluationContext,
+        previous: Optional[RiskAssessment] = None,
+    ) -> RiskEvaluationResult:
+        """Execute end-to-end risk evaluation yielding assessment, alerts, recommendations, and comparison.
+
+        Pure-domain pipeline execution requiring no active database connection.
+        """
+        from app.risk_engine.alerts import RiskAlertEvaluator
+        from app.risk_engine.history import HistoricalRiskComparator
+        from app.risk_engine.recommendations import RiskRecommendationEvaluator
+
+        assessment = self.evaluate(context)
+
+        comparison = None
+        if previous is not None:
+            comparison = HistoricalRiskComparator.compare(current=assessment, previous=previous)
+
+        alerts = RiskAlertEvaluator.evaluate_alerts(current=assessment, previous=previous)
+        recommendations = RiskRecommendationEvaluator.evaluate_recommendations(
+            current=assessment,
+            previous=previous,
+            alerts=alerts,
+        )
+
+        return RiskEvaluationResult(
+            assessment=assessment,
+            alerts=alerts,
+            recommendations=recommendations,
+            comparison=comparison,
+        )
+
+
+class RiskEvaluationResult(BaseModel):
+    """Encapsulates the complete pure-domain end-to-end evaluation outcome.
+
+    Includes the calculated RiskAssessment, evaluated RiskAlerts,
+    derived operational RiskRecommendations, and optional AssessmentComparison.
+    """
+
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
+
+    assessment: RiskAssessment
+    alerts: List[Any] = Field(default_factory=list)
+    recommendations: List[Any] = Field(default_factory=list)
+    comparison: Optional[Any] = None
+
+
+RiskEvaluationResult.model_rebuild()

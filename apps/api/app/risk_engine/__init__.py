@@ -56,6 +56,7 @@ from app.risk_engine.pipeline import (
     BaselineRiskEngine,
     DefaultRiskScoreAggregator,
     RiskEngine,
+    RiskEvaluationResult,
     RiskScoreAggregatorProtocol,
 )
 from app.risk_engine.registry import (
@@ -72,6 +73,26 @@ from app.risk_engine.scoring import (
     BaselineRiskScoreAggregator,
     compute_factor_contribution,
     score_to_risk_level,
+)
+from app.risk_engine.alerts import (
+    AlertRuleConfig,
+    AlertSeverity,
+    AlertStatus,
+    RiskAlert,
+    RiskAlertEvaluator,
+    RiskAlertNotificationAdapter,
+    RiskAlertType,
+    compute_alert_id,
+)
+from app.risk_engine.recommendations import (
+    RecommendationPriority,
+    RecommendationRuleConfig,
+    RecommendationStatus,
+    RecommendationType,
+    RiskRecommendation,
+    RiskRecommendationAdapter,
+    RiskRecommendationEvaluator,
+    compute_recommendation_id,
 )
 
 __all__ = [
@@ -125,8 +146,27 @@ __all__ = [
     # Pipeline
     "RiskEngine",
     "BaselineRiskEngine",
+    "RiskEvaluationResult",
     "RiskScoreAggregatorProtocol",
     "DefaultRiskScoreAggregator",
+    # Alerts (Phase 7 Step 6)
+    "RiskAlertType",
+    "AlertSeverity",
+    "AlertStatus",
+    "RiskAlert",
+    "AlertRuleConfig",
+    "RiskAlertEvaluator",
+    "RiskAlertNotificationAdapter",
+    "compute_alert_id",
+    # Recommendations (Phase 7 Step 7)
+    "RecommendationType",
+    "RecommendationPriority",
+    "RecommendationStatus",
+    "RecommendationRuleConfig",
+    "RiskRecommendation",
+    "RiskRecommendationEvaluator",
+    "RiskRecommendationAdapter",
+    "compute_recommendation_id",
     # Errors
     "RiskEngineError",
     "RiskEngineInputError",
@@ -135,3 +175,4 @@ __all__ = [
     "InvalidSignalQualityError",
     "EvaluatorRegistrationError",
 ]
+

@@ -16,15 +16,19 @@ from app.api.deps import AuthenticatedContext, get_authenticated_context, requir
 from app.core.errors import InvalidFilterFieldError, NotFoundError
 from app.db.unit_of_work import UnitOfWork, get_uow
 from app.repositories.risk_repositories import RISK_ASSESSMENT_FILTER_ALLOWLIST
-from app.schemas.common import PaginationParams
+from app.schemas.common import PaginationMeta, PaginationParams
 from app.schemas.risk import (
     AssessmentComparisonResponse,
+    RiskAlertListResponse,
+    RiskAlertResponse,
     RiskAssessmentCreate,
     RiskAssessmentDetailResponse,
     RiskAssessmentListResponse,
     RiskAssessmentResponse,
     RiskEvaluationRequest,
     RiskHistorySummaryResponse,
+    RiskRecommendationListResponse,
+    RiskRecommendationResponse,
 )
 from app.services.risk_evaluation_service import RiskEvaluationService
 from app.services.risk_services import RiskAssessmentService
@@ -224,6 +228,166 @@ def compare_risk_assessments(
         assessment_id_2=other_id,
     )
     return AssessmentComparisonResponse.model_validate(comparison.model_dump())
+
+
+@router.get(
+    "/alerts",
+    response_model=RiskAlertListResponse,
+    status_code=status.HTTP_200_OK,
+    summary="List risk alerts",
+    description="Retrieve operational risk alerts for the authenticated organization.",
+    include_in_schema=False,
+)
+def list_risk_alerts(
+    assessment_id: Optional[str] = Query(None, description="Filter by assessment ID"),
+    severity: Optional[str] = Query(None, description="Filter by severity (INFO, WARNING, CRITICAL)"),
+    alert_type: Optional[str] = Query(None, description="Filter by alert type"),
+    is_read: Optional[bool] = Query(None, description="Filter by read/acknowledged status"),
+    page: int = Query(1, ge=1, description="Page number"),
+    limit: int = Query(20, ge=1, le=100, description="Items per page"),
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAlertListResponse:
+    """List risk alerts with safe tenant isolation, filtering, and pagination."""
+    items, total = service.list_alerts(
+        assessment_id=assessment_id,
+        severity=severity,
+        alert_type=alert_type,
+        is_read=is_read,
+        page=page,
+        limit=limit,
+    )
+    pages = (total + limit - 1) // limit if limit > 0 else 1
+    return RiskAlertListResponse(
+        items=[RiskAlertResponse.model_validate(a.model_dump()) for a in items],
+        pagination=PaginationMeta(total=total, page=page, limit=limit, pages=pages),
+    )
+
+
+@router.get(
+    "/alerts/{alert_id}",
+    response_model=RiskAlertResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get risk alert by ID",
+    description="Retrieve a single operational risk alert enforcing tenant isolation.",
+    include_in_schema=False,
+)
+def get_risk_alert(
+    alert_id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAlertResponse:
+    """Retrieve an individual risk alert."""
+    alert = service.get_alert(alert_id)
+    return RiskAlertResponse.model_validate(alert.model_dump())
+
+
+@router.patch(
+    "/alerts/{alert_id}/acknowledge",
+    response_model=RiskAlertResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Acknowledge risk alert",
+    description="Mark a risk alert as acknowledged/read within tenant boundary.",
+    include_in_schema=False,
+)
+def acknowledge_risk_alert(
+    alert_id: str,
+    is_read: bool = Query(True, description="Acknowledgment state"),
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAlertResponse:
+    """Acknowledge or resolve a risk alert."""
+    alert = service.acknowledge_alert(alert_id=alert_id, is_read=is_read)
+    return RiskAlertResponse.model_validate(alert.model_dump())
+
+
+@router.get(
+    "/{id}/alerts",
+    response_model=list[RiskAlertResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Get alerts for a risk assessment",
+    description="Retrieve all operational risk alerts triggered by a specific assessment.",
+    include_in_schema=False,
+)
+def get_assessment_alerts(
+    id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> list[RiskAlertResponse]:
+    """Retrieve alerts associated with a specific risk assessment."""
+    items, _ = service.list_alerts(assessment_id=id, limit=100)
+    return [RiskAlertResponse.model_validate(a.model_dump()) for a in items]
+
+
+@router.get(
+    "/recommendations",
+    response_model=RiskRecommendationListResponse,
+    status_code=status.HTTP_200_OK,
+    summary="List operational recommendations",
+    description="Retrieve operational risk recommendations for the authenticated organization.",
+    include_in_schema=False,
+)
+def list_risk_recommendations(
+    assessment_id: Optional[str] = Query(None, description="Filter by assessment ID"),
+    priority: Optional[str] = Query(None, description="Filter by priority (LOW, MEDIUM, HIGH, CRITICAL)"),
+    recommendation_type: Optional[str] = Query(None, description="Filter by recommendation type"),
+    status: Optional[str] = Query(None, description="Filter by recommendation status"),
+    page: int = Query(1, ge=1, description="Page number"),
+    limit: int = Query(20, ge=1, le=100, description="Items per page"),
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskRecommendationListResponse:
+    """List operational recommendations with safe tenant isolation, filtering, and pagination."""
+    items, total = service.list_recommendations(
+        assessment_id=assessment_id,
+        priority=priority,
+        recommendation_type=recommendation_type,
+        status=status,
+        page=page,
+        limit=limit,
+    )
+    pages = (total + limit - 1) // limit if limit > 0 else 1
+    return RiskRecommendationListResponse(
+        items=[RiskRecommendationResponse.model_validate(r.model_dump()) for r in items],
+        pagination=PaginationMeta(total=total, page=page, limit=limit, pages=pages),
+    )
+
+
+@router.get(
+    "/recommendations/{recommendation_id}",
+    response_model=RiskRecommendationResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get recommendation by ID",
+    description="Retrieve a single operational recommendation enforcing tenant isolation.",
+    include_in_schema=False,
+)
+def get_risk_recommendation(
+    recommendation_id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskRecommendationResponse:
+    """Retrieve an individual operational recommendation."""
+    rec = service.get_recommendation(recommendation_id)
+    return RiskRecommendationResponse.model_validate(rec.model_dump())
+
+
+@router.get(
+    "/{id}/recommendations",
+    response_model=list[RiskRecommendationResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Get recommendations for a risk assessment",
+    description="Retrieve all operational recommendations generated for a specific assessment.",
+    include_in_schema=False,
+)
+def get_assessment_recommendations(
+    id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> list[RiskRecommendationResponse]:
+    """Retrieve operational recommendations associated with a specific risk assessment."""
+    items, _ = service.list_recommendations(assessment_id=id, limit=100)
+    return [RiskRecommendationResponse.model_validate(r.model_dump()) for r in items]
+
 
 
 @router.get(
