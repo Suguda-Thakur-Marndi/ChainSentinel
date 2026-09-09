@@ -113,6 +113,7 @@ class WeatherRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -176,6 +177,7 @@ class RoadRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -247,6 +249,7 @@ class PortRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -319,6 +322,7 @@ class MaritimeRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -385,6 +389,7 @@ class AirRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -447,6 +452,7 @@ class RailRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -521,6 +527,7 @@ class LogisticsRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -580,6 +587,7 @@ class IntelligenceRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )
@@ -633,6 +641,7 @@ class GeneralRiskFactorEvaluator(BaseRiskFactorEvaluator):
             contribution=contribution,
             severity=severity,
             confidence=signal.confidence,
+            organization_id=context.organization_id,
             evidence=evidence,
             metadata=meta,
         )

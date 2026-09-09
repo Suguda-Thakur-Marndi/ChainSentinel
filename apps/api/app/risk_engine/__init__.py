@@ -10,12 +10,17 @@ from app.risk_engine.context import (
     generate_deterministic_evaluation_id,
 )
 from app.risk_engine.contract import (
+    AssessmentSourceSummary,
+    FactorContribution,
     RiskAssessment,
     RiskFactor,
     RiskLevel,
     RiskScore,
+    generate_assessment_fingerprint,
     generate_deterministic_assessment_id,
     generate_deterministic_factor_id,
+    select_primary_risk_driver,
+    sort_factors_deterministically,
 )
 from app.risk_engine.errors import (
     EvaluatorRegistrationError,
@@ -38,7 +43,9 @@ from app.risk_engine.evaluators import (
     register_baseline_evaluators,
 )
 from app.risk_engine.evidence import (
+    EvidenceRelevance,
     RiskEvidence,
+    derive_evidence_relevance,
     generate_deterministic_evidence_id,
 )
 from app.risk_engine.explainability import (
@@ -73,13 +80,20 @@ __all__ = [
     "RiskFactor",
     "RiskScore",
     "RiskAssessment",
+    "FactorContribution",
+    "AssessmentSourceSummary",
     "generate_deterministic_factor_id",
     "generate_deterministic_assessment_id",
+    "generate_assessment_fingerprint",
+    "sort_factors_deterministically",
+    "select_primary_risk_driver",
     # Context
     "RiskEvaluationContext",
     "generate_deterministic_evaluation_id",
     # Evidence
+    "EvidenceRelevance",
     "RiskEvidence",
+    "derive_evidence_relevance",
     "generate_deterministic_evidence_id",
     # Explainability
     "FactorExplanation",

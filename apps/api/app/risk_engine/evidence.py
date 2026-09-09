@@ -4,13 +4,25 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from enum import Enum
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.integrations.canonical import EventSourceType
+from app.integrations.canonical import EventQuality, EventSourceType
 from app.normalization.contract import NormalizedRiskSignal
-from app.risk_engine.errors import RiskEngineInputError
+from app.risk_engine.errors import RiskEngineInputError, TenantMismatchError
+
+
+class EvidenceRelevance(str, Enum):
+    """Deterministic relevance classification of evidence relative to evaluated risk factors."""
+
+    PRIMARY = "PRIMARY"          # Direct primary observation triggering the factor
+    SUPPORTING = "SUPPORTING"    # Contextual or adjacent route/network observation
+    CORROBORATING = "CORROBORATING"  # Independent external confirmation of the same condition
+    CONTEXTUAL = "CONTEXTUAL"    # Operational background or ambient conditions
+    CONFLICTING = "CONFLICTING"  # Contradictory provider observation
+    LIMITATION = "LIMITATION"    # Degraded or partial data explaining evaluation uncertainty
 
 
 def generate_deterministic_evidence_id(
@@ -24,6 +36,37 @@ def generate_deterministic_evidence_id(
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{org}:evidence:{signal_id}{prov}"))
 
 
+def derive_evidence_relevance(
+    signal: NormalizedRiskSignal,
+    factor_type: Optional[str] = None,
+    is_primary: bool = True,
+) -> EvidenceRelevance:
+    """Deterministically derive evidence relevance classification without generative models.
+
+    Derivation Rules:
+    1. Signals with unresolved conflicts -> CONFLICTING
+    2. Signals with INVALID quality -> LIMITATION
+    3. Signals with PARTIAL quality and secondary role -> LIMITATION
+    4. Direct domain observations evaluated as factor foundation -> PRIMARY
+    5. Independent corroborating observations -> CORROBORATING
+    6. Contextual observations -> SUPPORTING
+    """
+    if getattr(signal, "has_conflict", False) or (getattr(signal, "conflicts", None) and len(signal.conflicts) > 0):
+        return EvidenceRelevance.CONFLICTING
+
+    if signal.quality == EventQuality.INVALID:
+        return EvidenceRelevance.LIMITATION
+
+    if not is_primary:
+        if signal.quality == EventQuality.PARTIAL:
+            return EvidenceRelevance.LIMITATION
+        if len(getattr(signal, "supporting_sources", [])) > 0:
+            return EvidenceRelevance.CORROBORATING
+        return EvidenceRelevance.SUPPORTING
+
+    return EvidenceRelevance.PRIMARY
+
+
 class RiskEvidence(BaseModel):
     """Traceable evidence unit linking a RiskFactor back to its NormalizedRiskSignal lineage."""
 
@@ -31,11 +74,22 @@ class RiskEvidence(BaseModel):
 
     evidence_id: str = Field(..., min_length=1, description="Deterministic unique evidence identifier.")
     normalized_signal_id: str = Field(..., min_length=1, description="Lineage link to NormalizedRiskSignal.signal_id.")
+    organization_id: Optional[str] = Field(default=None, description="Tenant organization identifier.")
+    factor_id: Optional[str] = Field(default=None, description="Target factor identifier if linked.")
     source: str = Field(..., min_length=1, description="Primary external source name.")
     provider: str = Field(..., min_length=1, description="Ingestion provider name.")
     source_type: EventSourceType = Field(default=EventSourceType.REAL, description="Nature of observation (REAL, ESTIMATED, SIMULATED).")
     event_time: datetime = Field(..., description="Timestamp when the real-world condition occurred.")
-    relevance: float = Field(default=1.0, ge=0.0, le=1.0, description="Semantic relevance weight of this evidence to the factor.")
+    relevance: Union[EvidenceRelevance, float, str] = Field(
+        default=EvidenceRelevance.PRIMARY,
+        description="Deterministic evidence relevance classification or semantic weight.",
+    )
+    fingerprint: Optional[str] = Field(default=None, description="Deterministic semantic fingerprint.")
+    quality: Optional[EventQuality] = Field(default=None, description="Signal data quality state (VALID, PARTIAL, INVALID).")
+    has_conflict: bool = Field(default=False, description="Whether signal carries unresolved multi-source conflict.")
+    conflicts: List[Dict[str, Any]] = Field(default_factory=list, description="Preserved conflict details.")
+    location: Optional[Dict[str, Any]] = Field(default=None, description="Geographic location context where applicable.")
+    limitations: List[str] = Field(default_factory=list, description="Evidence-level caveats.")
     provenance: Dict[str, Any] = Field(default_factory=dict, description="Complete lineage metadata preserved from Phase 5 and 6.")
     supporting_sources: List[Dict[str, Any]] = Field(default_factory=list, description="Corroborating source evidence traces.")
     confidence: float = Field(default=1.0, ge=0.0, le=1.0, description="Certainty score of the underlying observation.")
@@ -54,7 +108,8 @@ class RiskEvidence(BaseModel):
         cls,
         signal: Any,
         organization_id: Optional[str] = None,
-        relevance: float = 1.0,
+        relevance: Optional[Union[EvidenceRelevance, float, str]] = None,
+        factor_id: Optional[str] = None,
     ) -> RiskEvidence:
         """Construct a strongly typed RiskEvidence from a Phase 6 NormalizedRiskSignal.
 
@@ -66,8 +121,18 @@ class RiskEvidence(BaseModel):
                 "Risk Engine boundary rejects unnormalized inputs."
             )
 
-        org_id = organization_id or signal.organization_id
+        org_id = organization_id or signal.organization_id or "global"
+        if organization_id and signal.organization_id and organization_id != signal.organization_id:
+            raise TenantMismatchError(
+                f"Tenant isolation violated in evidence creation: requested '{organization_id}' "
+                f"does not match signal organization '{signal.organization_id}'."
+            )
+
         ev_id = generate_deterministic_evidence_id(org_id, signal.signal_id, signal.provider)
+
+        resolved_relevance: Union[EvidenceRelevance, float, str] = (
+            relevance if relevance is not None else derive_evidence_relevance(signal, is_primary=True)
+        )
 
         provenance_data = {
             "canonical_event_id": signal.canonical_event_id,
@@ -101,14 +166,49 @@ class RiskEvidence(BaseModel):
         if getattr(signal, "conflicts", None):
             meta["conflicts"] = signal.conflicts
 
+        loc = None
+        if any([
+            signal.latitude is not None,
+            signal.longitude is not None,
+            signal.location_name,
+            signal.country_code,
+            signal.region,
+        ]):
+            loc = {
+                "latitude": signal.latitude,
+                "longitude": signal.longitude,
+                "location_name": signal.location_name,
+                "country_code": signal.country_code,
+                "region": signal.region,
+            }
+
+        evidence_limitations: List[str] = []
+        if signal.source_type == EventSourceType.SIMULATED:
+            evidence_limitations.append("Source is SIMULATED: synthetic scenario.")
+        elif signal.source_type == EventSourceType.ESTIMATED:
+            evidence_limitations.append("Source is ESTIMATED: modeled or inferred observation.")
+        if signal.quality == EventQuality.PARTIAL:
+            reasons_str = ", ".join(signal.quality_reasons) if signal.quality_reasons else "incomplete data"
+            evidence_limitations.append(f"Signal quality is PARTIAL: {reasons_str}.")
+        if getattr(signal, "has_conflict", False):
+            evidence_limitations.append("Signal subject to unresolved multi-source conflict.")
+
         return cls(
             evidence_id=ev_id,
             normalized_signal_id=signal.signal_id,
+            organization_id=org_id,
+            factor_id=factor_id,
             source=signal.source,
             provider=signal.provider,
             source_type=signal.source_type,
             event_time=signal.event_time,
-            relevance=relevance,
+            relevance=resolved_relevance,
+            fingerprint=signal.fingerprint,
+            quality=signal.quality,
+            has_conflict=getattr(signal, "has_conflict", False),
+            conflicts=list(getattr(signal, "conflicts", [])),
+            location=loc,
+            limitations=evidence_limitations,
             provenance=provenance_data,
             supporting_sources=corroborating,
             confidence=signal.confidence,
