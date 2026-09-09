@@ -192,3 +192,6 @@ APPROVAL_BOUNDARY_NODE_CONTRACT = NodeContract(
 # Real Research Agent node contract and handler
 from app.agents.research.node import RESEARCH_NODE_CONTRACT, research_node
 
+# Real Risk Agent node contract and handler
+from app.agents.risk.node import RISK_NODE_CONTRACT, risk_node
+
