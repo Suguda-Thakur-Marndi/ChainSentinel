@@ -45,9 +45,11 @@ PROHIBITED_METADATA_KEYS = {
 PROMPT_INJECTION_PATTERNS = [
     re.compile(r"ignore\s+(all\s+)?previous\s+instructions", re.IGNORECASE),
     re.compile(r"disregard\s+(all\s+)?prior\s+(rules|prompts|instructions)", re.IGNORECASE),
-    re.compile(r"system\s+prompt\s*:", re.IGNORECASE),
+    re.compile(r"disregard\s+(the\s+)?\w*\s*policy", re.IGNORECASE),
+    re.compile(r"system\s+(prompt|message)\s*:", re.IGNORECASE),
     re.compile(r"you\s+are\s+now\s+(an?\s+)?unrestricted", re.IGNORECASE),
     re.compile(r"override\s+instructions", re.IGNORECASE),
+    re.compile(r"call\s+(the\s+)?([a-z0-9_]+\s+)?([a-z0-9_]+_)?tool", re.IGNORECASE),
     re.compile(r"<script[\s>]", re.IGNORECASE),
     re.compile(r"eval\s*\(", re.IGNORECASE),
     re.compile(r"exec\s*\(", re.IGNORECASE),
@@ -104,6 +106,19 @@ def generate_deterministic_context_id(
         raise RAGTenantIsolationError("organization_id must be non-empty to generate context_id")
     sorted_chunks_key = ",".join(sorted(chunk_ids)) if chunk_ids else "empty"
     token = f"{organization_id.strip()}:rag_context:{retrieval_id.strip()}:{sorted_chunks_key}"
+    return str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
+
+
+def generate_deterministic_citation_id(
+    organization_id: str,
+    document_id: str,
+    chunk_id: str,
+    retrieval_id: str,
+) -> str:
+    """Generate a reproducible UUIDv5 citation identifier based on tenant, document, chunk, and retrieval."""
+    if not organization_id or not organization_id.strip():
+        raise RAGTenantIsolationError("organization_id must be non-empty to generate citation_id")
+    token = f"{organization_id.strip()}:citation:{document_id.strip()}:{chunk_id.strip()}:{retrieval_id.strip()}"
     return str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
 
 
@@ -170,6 +185,23 @@ class DistanceMetric(str, Enum):
     COSINE = "COSINE"
     DOT_PRODUCT = "DOT_PRODUCT"
     EUCLIDEAN = "EUCLIDEAN"
+
+
+class GroundingStatus(str, Enum):
+    """Authoritative deterministic grounding classification for a RAG context."""
+    GROUNDED = "GROUNDED"
+    PARTIALLY_GROUNDED = "PARTIALLY_GROUNDED"
+    UNGROUNDED = "UNGROUNDED"
+    UNSAFE_SOURCE = "UNSAFE_SOURCE"
+
+
+class GroundedItemType(str, Enum):
+    """Categorical classification of information elements within grounded context."""
+    RETRIEVED_FACT = "RETRIEVED_FACT"
+    SOURCE_METADATA = "SOURCE_METADATA"
+    CITATION = "CITATION"
+    LIMITATION = "LIMITATION"
+    UNSAFE_CONTENT = "UNSAFE_CONTENT"
 
 
 # ==============================================================================
@@ -665,6 +697,25 @@ class RAGContextCitation(BaseModel):
     source_url: Optional[str] = Field(None, max_length=500)
     s3_uri: Optional[str] = Field(None, max_length=500)
     excerpt: str = Field(..., min_length=1)
+    citation_id: Optional[str] = Field(None, max_length=64)
+    organization_id: Optional[str] = Field(None, max_length=64)
+
+
+class GroundedContextItem(BaseModel):
+    """Structured, attributed unit of contextual knowledge with strict provenance linkage."""
+    model_config = ConfigDict(extra="forbid")
+
+    item_id: str = Field(..., min_length=1, max_length=64)
+    item_type: GroundedItemType = GroundedItemType.RETRIEVED_FACT
+    content: str = Field(..., min_length=1)
+    chunk_id: str = Field(..., min_length=1, max_length=64)
+    document_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    citation_id: str = Field(..., min_length=1, max_length=64)
+    citation_key: str = Field(..., min_length=1, max_length=64)
+    provenance: RetrievalProvenance
+    is_safe: bool = True
+    prompt_injection_flags: List[str] = Field(default_factory=list)
 
 
 class DataTrustBoundary(BaseModel):
@@ -700,6 +751,9 @@ class RAGContext(BaseModel):
     total_tokens: int = Field(default=0, ge=0)
     assembled_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     trust_boundary: DataTrustBoundary = Field(default_factory=DataTrustBoundary)
+    grounding_status: GroundingStatus = Field(default=GroundingStatus.GROUNDED)
+    grounded_items: List[GroundedContextItem] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
 
     # Optional grounding references to Phase 6 and Phase 7 entities
     grounding_signal_id: Optional[str] = None
@@ -729,6 +783,21 @@ class RAGContext(BaseModel):
                 raise RAGProvenanceLineageError(
                     f"Citation {citation.citation_key} references chunk_id '{citation.chunk_id}' not present in source_chunks. Hallucinated sources are prohibited."
                 )
+            if citation.organization_id and citation.organization_id != self.organization_id:
+                raise RAGTenantIsolationError(
+                    f"Cross-tenant citation {citation.citation_key} belongs to '{citation.organization_id}', context scoped to '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation and provenance linkage across grounded items
+        for item in self.grounded_items:
+            if item.organization_id != self.organization_id:
+                raise RAGTenantIsolationError(
+                    f"Cross-tenant grounded item {item.item_id} in RAGContext scoped to '{self.organization_id}'."
+                )
+            if item.chunk_id not in valid_chunk_ids:
+                raise RAGProvenanceLineageError(
+                    f"Grounded item {item.item_id} references chunk_id '{item.chunk_id}' not present in source_chunks."
+                )
 
         return self
 
@@ -752,6 +821,7 @@ class RAGContext(BaseModel):
             )
 
         citations: List[RAGContextCitation] = []
+        grounded_items: List[GroundedContextItem] = []
         envelope_sections: List[str] = []
         total_tokens = 0
         all_injection_indicators: List[str] = []
@@ -759,10 +829,18 @@ class RAGContext(BaseModel):
         # Chunks are already deterministically sorted in result_set
         for idx, chunk in enumerate(result_set.chunks, start=1):
             citation_key = f"[CIT-{idx}]"
+            citation_id = generate_deterministic_citation_id(
+                organization_id=organization_id,
+                document_id=chunk.document_id,
+                chunk_id=chunk.chunk_id,
+                retrieval_id=result_set.retrieval_id,
+            )
             excerpt = chunk.content[:150].strip() + ("..." if len(chunk.content) > 150 else "")
 
             citation = RAGContextCitation(
                 citation_key=citation_key,
+                citation_id=citation_id,
+                organization_id=organization_id,
                 document_id=chunk.document_id,
                 chunk_id=chunk.chunk_id,
                 document_title=chunk.provenance.document_title,
@@ -778,6 +856,22 @@ class RAGContext(BaseModel):
             if injection_indicators:
                 chunk.prompt_injection_flags.extend(injection_indicators)
                 all_injection_indicators.extend(injection_indicators)
+
+            is_safe = len(chunk.prompt_injection_flags) == 0
+            item = GroundedContextItem(
+                item_id=f"ITEM-{idx}",
+                item_type=GroundedItemType.RETRIEVED_FACT if is_safe else GroundedItemType.UNSAFE_CONTENT,
+                content=chunk.content,
+                chunk_id=chunk.chunk_id,
+                document_id=chunk.document_id,
+                organization_id=organization_id,
+                citation_id=citation_id,
+                citation_key=citation_key,
+                provenance=chunk.provenance,
+                is_safe=is_safe,
+                prompt_injection_flags=list(chunk.prompt_injection_flags),
+            )
+            grounded_items.append(item)
 
             # Format data inside safe XML envelope
             chunk_ref = f"{citation_key} Doc:{chunk.provenance.document_title}#Chunk{chunk.provenance.chunk_index}"
@@ -798,9 +892,19 @@ class RAGContext(BaseModel):
             contains_instructions=False,
             sanitized=True,
             injection_risk_detected=len(all_injection_indicators) > 0,
-            detected_risk_indicators=list(set(all_injection_indicators)),
+            detected_risk_indicators=sorted(list(set(all_injection_indicators))),
             safety_envelope_format="XML_ENCLOSED_PASSIVE_DATA",
         )
+
+        # Determine grounding status
+        if len(result_set.chunks) == 0:
+            grounding_status = GroundingStatus.UNGROUNDED
+        elif all(len(c.prompt_injection_flags) > 0 for c in result_set.chunks):
+            grounding_status = GroundingStatus.UNSAFE_SOURCE
+        elif any(len(c.prompt_injection_flags) > 0 for c in result_set.chunks):
+            grounding_status = GroundingStatus.PARTIALLY_GROUNDED
+        else:
+            grounding_status = GroundingStatus.GROUNDED
 
         return cls(
             context_id=context_id,
@@ -812,6 +916,9 @@ class RAGContext(BaseModel):
             total_tokens=total_tokens,
             assembled_at=datetime.now(timezone.utc),
             trust_boundary=trust_boundary,
+            grounding_status=grounding_status,
+            grounded_items=grounded_items,
+            limitations=[],
             grounding_signal_id=grounding_signal_id,
             grounding_assessment_id=grounding_assessment_id,
         )

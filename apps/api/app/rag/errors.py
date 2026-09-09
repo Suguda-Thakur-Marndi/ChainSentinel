@@ -235,3 +235,19 @@ class RAGEmbeddingError(RAGError):
         )
 
 
+class RAGCitationIntegrityError(RAGProvenanceLineageError):
+    """Raised when citation integrity fails (hallucinated citation key, ungrounded excerpt, missing chunk)."""
+
+    def __init__(
+        self,
+        message: str = "Citation integrity violation detected.",
+        details: Optional[Any] = None,
+    ):
+        super().__init__(
+            message=message,
+            details=details,
+        )
+        self.code = "CITATION_INTEGRITY_VIOLATION"
+
+
+

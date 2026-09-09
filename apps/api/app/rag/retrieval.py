@@ -49,9 +49,10 @@ class RAGRetrievalService:
         self,
         session: Session,
         embedding_provider: Optional[BaseEmbeddingProvider] = None,
+        provider: Optional[BaseEmbeddingProvider] = None,
     ) -> None:
         self.session = session
-        self.embedding_provider = embedding_provider or LocalMockEmbeddingProvider()
+        self.embedding_provider = embedding_provider or provider or LocalMockEmbeddingProvider()
 
     def retrieve(
         self,
@@ -263,6 +264,9 @@ class RAGRetrievalService:
         actor_id: Optional[str] = None,
         grounding_signal_id: Optional[str] = None,
         grounding_assessment_id: Optional[str] = None,
+        anchor: Optional[Any] = None,
+        budget: Optional[Any] = None,
+        strict_anchor_validation: Optional[bool] = None,
     ) -> RAGContext:
         """Execute semantic retrieval and assemble a safe, XML-demarcated RAGContext for downstream agents."""
         result_set = self.retrieve(
@@ -270,10 +274,26 @@ class RAGRetrievalService:
             current_user_org_id=current_user_org_id,
             actor_id=actor_id,
         )
-        return RAGContext.assemble(
-            organization_id=query.organization_id,
-            query=query,
+        from app.rag.grounding import GroundingAnchor, RAGGroundingService
+
+        is_explicit_anchor = anchor is not None
+        resolved_anchor = anchor
+        if not resolved_anchor and (grounding_signal_id or grounding_assessment_id):
+            resolved_anchor = GroundingAnchor(
+                organization_id=query.organization_id,
+                signal_id=grounding_signal_id,
+                assessment_id=grounding_assessment_id,
+            )
+
+        is_strict = strict_anchor_validation if strict_anchor_validation is not None else is_explicit_anchor
+
+        grounding_service = RAGGroundingService(self.session)
+        return grounding_service.assemble_grounded_context(
             result_set=result_set,
-            grounding_signal_id=grounding_signal_id,
-            grounding_assessment_id=grounding_assessment_id,
+            query=query,
+            anchor=resolved_anchor,
+            budget=budget,
+            current_user_org_id=current_user_org_id,
+            actor_id=actor_id,
+            strict_anchor_validation=is_strict,
         )

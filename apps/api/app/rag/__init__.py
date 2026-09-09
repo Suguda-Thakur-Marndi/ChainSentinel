@@ -25,6 +25,9 @@ from app.rag.contracts import (
     EmbeddingMetadata,
     EmbeddingProvider,
     EmbeddingVector,
+    GroundedContextItem,
+    GroundedItemType,
+    GroundingStatus,
     RAGContext,
     RAGContextCitation,
     RetrievalFilter,
@@ -35,6 +38,7 @@ from app.rag.contracts import (
     detect_prompt_injection_indicators,
     format_rag_data_envelope,
     generate_deterministic_chunk_id,
+    generate_deterministic_citation_id,
     generate_deterministic_context_id,
     generate_deterministic_document_id,
     generate_deterministic_retrieval_id,
@@ -51,6 +55,7 @@ from app.rag.embeddings import (
 )
 from app.rag.errors import (
     RAGChunkNotFoundError,
+    RAGCitationIntegrityError,
     RAGDocumentNotFoundError,
     RAGDocumentTooLargeError,
     RAGEmbeddingDimensionError,
@@ -64,6 +69,13 @@ from app.rag.errors import (
     RAGSecurityPolicyViolationError,
     RAGTenantIsolationError,
     RAGUnsupportedFormatError,
+)
+from app.rag.grounding import (
+    CitationVerificationResult,
+    ContextBudgetConfig,
+    GroundingAnchor,
+    RAGGroundingService,
+    validate_citation_integrity,
 )
 from app.rag.ingestion import (
     DocumentIngestionPayload,
@@ -103,10 +115,13 @@ __all__ = [
     "RAGDocumentTooLargeError",
     "RAGEmptyDocumentError",
     "RAGPathTraversalError",
+    "RAGCitationIntegrityError",
     # Enums
     "DocumentStatus",
     "EmbeddingProvider",
     "DistanceMetric",
+    "GroundingStatus",
+    "GroundedItemType",
     # Document contracts
     "DocumentIdentity",
     "DocumentMetadata",
@@ -126,11 +141,13 @@ __all__ = [
     "RetrievalResultSet",
     # Context & Trust contracts
     "RAGContextCitation",
+    "GroundedContextItem",
     "DataTrustBoundary",
     "RAGContext",
     # Deterministic & Security utilities
     "generate_deterministic_document_id",
     "generate_deterministic_chunk_id",
+    "generate_deterministic_citation_id",
     "generate_deterministic_retrieval_id",
     "generate_deterministic_context_id",
     "format_rag_data_envelope",
@@ -168,4 +185,10 @@ __all__ = [
     "extract_embedding_metadata",
     # Retrieval & Similarity Search (Phase 8 Step 4)
     "RAGRetrievalService",
+    # Context Assembly, Grounding & Citation Integrity (Phase 8 Step 5)
+    "GroundingAnchor",
+    "ContextBudgetConfig",
+    "CitationVerificationResult",
+    "RAGGroundingService",
+    "validate_citation_integrity",
 ]
