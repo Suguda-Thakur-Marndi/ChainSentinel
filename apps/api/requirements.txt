@@ -10,3 +10,5 @@ httpx>=0.27.0
 python-dotenv>=1.0.1
 protobuf>=5.0.0
 gtfs-realtime-bindings>=2.0.0
+# Phase 9: LangGraph Agent Graph Architecture & Orchestration
+langgraph>=1.2.0

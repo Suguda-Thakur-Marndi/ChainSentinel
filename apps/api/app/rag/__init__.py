@@ -30,6 +30,8 @@ from app.rag.contracts import (
     GroundingStatus,
     RAGContext,
     RAGContextCitation,
+    RAGEvidenceBundle,
+    RAGEvidenceItem,
     RetrievalFilter,
     RetrievalProvenance,
     RetrievalQuery,
@@ -41,6 +43,8 @@ from app.rag.contracts import (
     generate_deterministic_citation_id,
     generate_deterministic_context_id,
     generate_deterministic_document_id,
+    generate_deterministic_evidence_bundle_id,
+    generate_deterministic_evidence_id,
     generate_deterministic_retrieval_id,
     validate_no_secrets_in_metadata,
 )
@@ -62,6 +66,7 @@ from app.rag.errors import (
     RAGEmbeddingError,
     RAGEmptyDocumentError,
     RAGError,
+    RAGEvidencePipelineError,
     RAGInvalidQueryError,
     RAGMalformedInputError,
     RAGPathTraversalError,
@@ -77,6 +82,7 @@ from app.rag.grounding import (
     RAGGroundingService,
     validate_citation_integrity,
 )
+from app.rag.pipeline import RAGEvidencePipelineService
 from app.rag.ingestion import (
     DocumentIngestionPayload,
     DocumentIngestionResult,
@@ -191,4 +197,11 @@ __all__ = [
     "CitationVerificationResult",
     "RAGGroundingService",
     "validate_citation_integrity",
+    # Research Evidence Pipeline & Hardening (Phase 8 Step 6)
+    "RAGEvidencePipelineError",
+    "RAGEvidenceItem",
+    "RAGEvidenceBundle",
+    "generate_deterministic_evidence_id",
+    "generate_deterministic_evidence_bundle_id",
+    "RAGEvidencePipelineService",
 ]

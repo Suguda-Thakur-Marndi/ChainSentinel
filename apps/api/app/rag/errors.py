@@ -250,4 +250,21 @@ class RAGCitationIntegrityError(RAGProvenanceLineageError):
         self.code = "CITATION_INTEGRITY_VIOLATION"
 
 
+class RAGEvidencePipelineError(RAGError):
+    """Raised when evidence packaging or end-to-end RAG pipeline integrity verification fails."""
+
+    def __init__(
+        self,
+        message: str = "RAG evidence pipeline execution failed.",
+        details: Optional[Any] = None,
+    ):
+        super().__init__(
+            message=message,
+            status_code=HTTP_422_UNPROCESSABLE,
+            code="EVIDENCE_PIPELINE_ERROR",
+            details=details,
+        )
+
+
+
 

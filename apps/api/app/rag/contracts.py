@@ -8,6 +8,7 @@ zero-hallucination guarantees.
 
 from __future__ import annotations
 
+import hashlib
 import math
 import re
 import uuid
@@ -19,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from app.rag.errors import (
     RAGEmbeddingDimensionError,
+    RAGEvidencePipelineError,
     RAGInvalidQueryError,
     RAGMalformedInputError,
     RAGProvenanceLineageError,
@@ -120,6 +122,35 @@ def generate_deterministic_citation_id(
         raise RAGTenantIsolationError("organization_id must be non-empty to generate citation_id")
     token = f"{organization_id.strip()}:citation:{document_id.strip()}:{chunk_id.strip()}:{retrieval_id.strip()}"
     return str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
+
+
+def generate_deterministic_evidence_id(
+    organization_id: str,
+    document_id: str,
+    chunk_id: str,
+    retrieval_id: str,
+    context_id: str,
+) -> str:
+    """Generate a reproducible UUIDv5 evidence identifier based strictly on stable lineage coordinates."""
+    if not organization_id or not organization_id.strip():
+        raise RAGTenantIsolationError("organization_id must be non-empty to generate evidence_id")
+    token = f"{organization_id.strip()}:evidence:{document_id.strip()}:{chunk_id.strip()}:{retrieval_id.strip()}:{context_id.strip()}"
+    return str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
+
+
+def generate_deterministic_evidence_bundle_id(
+    organization_id: str,
+    retrieval_id: str,
+    context_id: str,
+    evidence_ids: List[str],
+) -> str:
+    """Generate a reproducible UUIDv5 evidence bundle identifier based on tenant, retrieval, context, and sorted evidence IDs."""
+    if not organization_id or not organization_id.strip():
+        raise RAGTenantIsolationError("organization_id must be non-empty to generate bundle_id")
+    sorted_ev_token = ":".join(sorted(evidence_ids)) if evidence_ids else "empty"
+    token = f"{organization_id.strip()}:evidence_bundle:{retrieval_id.strip()}:{context_id.strip()}:{sorted_ev_token}"
+    return str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
+
 
 
 def format_rag_data_envelope(content: str, chunk_ref: str) -> str:
@@ -922,3 +953,121 @@ class RAGContext(BaseModel):
             grounding_signal_id=grounding_signal_id,
             grounding_assessment_id=grounding_assessment_id,
         )
+
+
+class RAGEvidenceItem(BaseModel):
+    """Structured, cited evidence item connecting RAG knowledge to downstream AI investigation and decision pipelines."""
+    model_config = ConfigDict(extra="forbid")
+
+    evidence_id: str = Field(..., min_length=1, max_length=64)
+    citation_id: str = Field(..., min_length=1, max_length=64)
+    citation_key: str = Field(..., min_length=1, max_length=32)
+    document_id: str = Field(..., min_length=1, max_length=64)
+    chunk_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    document_title: str = Field(..., min_length=1)
+    excerpt: str = Field(..., min_length=1)
+    source_url: Optional[str] = None
+    s3_uri: Optional[str] = None
+    item_type: GroundedItemType = Field(default=GroundedItemType.RETRIEVED_FACT)
+    is_safe: bool = True
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+    provenance: RetrievalProvenance
+    prompt_injection_flags: List[str] = Field(default_factory=list)
+    data_envelope: str = Field(default="")
+
+    @field_validator("organization_id", mode="before")
+    @classmethod
+    def validate_org_id(cls, v: Any) -> str:
+        if not v or not isinstance(v, str) or not v.strip():
+            raise RAGTenantIsolationError("organization_id must be non-empty in RAGEvidenceItem.")
+        return v.strip()
+
+    @model_validator(mode="after")
+    def validate_provenance_linkage(self) -> RAGEvidenceItem:
+        if self.organization_id != self.provenance.organization_id:
+            raise RAGTenantIsolationError(
+                f"RAGEvidenceItem org '{self.organization_id}' does not match provenance org '{self.provenance.organization_id}'."
+            )
+        if self.chunk_id != self.provenance.chunk_id:
+            raise RAGProvenanceLineageError(
+                f"RAGEvidenceItem chunk_id '{self.chunk_id}' does not match provenance chunk_id '{self.provenance.chunk_id}'."
+            )
+        if self.document_id != self.provenance.document_id:
+            raise RAGProvenanceLineageError(
+                f"RAGEvidenceItem doc_id '{self.document_id}' does not match provenance doc_id '{self.provenance.document_id}'."
+            )
+        return self
+
+
+class RAGEvidenceBundle(BaseModel):
+    """Authoritative, tamper-evident evidence package ready for downstream AI research agents."""
+    model_config = ConfigDict(extra="forbid")
+
+    bundle_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    query_text: str = Field(..., min_length=1)
+    context_id: str = Field(..., min_length=1, max_length=64)
+    retrieval_id: str = Field(..., min_length=1, max_length=64)
+    grounding_status: GroundingStatus = Field(default=GroundingStatus.GROUNDED)
+    evidence_items: List[RAGEvidenceItem] = Field(default_factory=list)
+    citations: List[RAGContextCitation] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+    trust_boundary: DataTrustBoundary = Field(default_factory=DataTrustBoundary)
+    grounding_anchor: Optional[Any] = None
+    assembled_text: str = Field(default="")
+    total_evidence_units: int = Field(default=0, ge=0)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    bundle_fingerprint: str = Field(default="")
+
+    @field_validator("organization_id", mode="before")
+    @classmethod
+    def validate_org_id(cls, v: Any) -> str:
+        if not v or not isinstance(v, str) or not v.strip():
+            raise RAGTenantIsolationError("organization_id must be non-empty in RAGEvidenceBundle.")
+        return v.strip()
+
+    @model_validator(mode="after")
+    def validate_bundle_invariants(self) -> RAGEvidenceBundle:
+        # 1. Tenancy validation across all components
+        for item in self.evidence_items:
+            if item.organization_id != self.organization_id:
+                raise RAGTenantIsolationError(
+                    f"Cross-tenant evidence item '{item.evidence_id}' belongs to '{item.organization_id}', bundle scoped to '{self.organization_id}'."
+                )
+        for cit in self.citations:
+            if cit.organization_id and cit.organization_id != self.organization_id:
+                raise RAGTenantIsolationError(
+                    f"Cross-tenant citation '{cit.citation_key}' belongs to '{cit.organization_id}', bundle scoped to '{self.organization_id}'."
+                )
+        if self.grounding_anchor:
+            anchor_org = getattr(self.grounding_anchor, "organization_id", None) or (
+                self.grounding_anchor.get("organization_id") if isinstance(self.grounding_anchor, dict) else None
+            )
+            if anchor_org and anchor_org != self.organization_id:
+                raise RAGTenantIsolationError(
+                    f"Cross-tenant grounding anchor belongs to '{anchor_org}', bundle scoped to '{self.organization_id}'."
+                )
+
+        # 2. Strict 1:1 Citation <-> Evidence item correspondence
+        if len(self.evidence_items) != len(self.citations):
+            raise RAGEvidencePipelineError(
+                f"1:1 correspondence violation: bundle has {len(self.evidence_items)} evidence items and {len(self.citations)} citations."
+            )
+        cit_keys = {c.citation_key for c in self.citations}
+        cit_ids = {c.citation_id for c in self.citations if c.citation_id}
+        for item in self.evidence_items:
+            if item.citation_key not in cit_keys and item.citation_id not in cit_ids:
+                raise RAGProvenanceLineageError(
+                    f"Evidence item '{item.evidence_id}' references citation key '{item.citation_key}' not present in bundle citations."
+                )
+
+        # 3. Compute deterministic fingerprint if not explicitly supplied
+        if not self.bundle_fingerprint:
+            sorted_evidence_ids = sorted([item.evidence_id for item in self.evidence_items])
+            sorted_cit_keys = sorted([c.citation_key for c in self.citations])
+            fp_raw = f"{self.bundle_id}:{self.organization_id}:{self.retrieval_id}:{self.context_id}:{self.grounding_status.value}:{':'.join(sorted_evidence_ids)}:{':'.join(sorted_cit_keys)}"
+            object.__setattr__(self, "bundle_fingerprint", hashlib.sha256(fp_raw.encode("utf-8")).hexdigest())
+
+        return self
+
