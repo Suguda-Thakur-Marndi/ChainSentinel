@@ -175,6 +175,131 @@ class RiskAssessmentRepository(BaseRepository[RiskAssessment]):
     def __init__(self, session: Session):
         super().__init__(RiskAssessment, session)
 
+    def get_assessment(self, org_id: str, assessment_id: str) -> Optional[RiskAssessment]:
+        """Retrieve a risk assessment strictly scoped to the tenant organization."""
+        stmt = select(RiskAssessment).where(
+            RiskAssessment.id == assessment_id,
+            RiskAssessment.org_id == org_id,
+        )
+        return self.session.scalars(stmt).first()
+
+    def find_by_fingerprint(self, org_id: str, fingerprint: str) -> Optional[RiskAssessment]:
+        """Find an existing assessment by deterministic semantic fingerprint within tenant boundary."""
+        try:
+            stmt = select(RiskAssessment).where(
+                RiskAssessment.org_id == org_id,
+                RiskAssessment.findings["deterministic_fingerprint"].as_string() == fingerprint,
+            )
+            found = self.session.scalars(stmt).first()
+            if found is not None:
+                return found
+        except Exception:
+            pass
+
+        # Fallback inspection over recent tenant assessments
+        stmt = (
+            select(RiskAssessment)
+            .where(RiskAssessment.org_id == org_id)
+            .order_by(RiskAssessment.created_at.desc())
+        )
+        for item in self.session.scalars(stmt).all():
+            if (item.findings or {}).get("deterministic_fingerprint") == fingerprint:
+                return item
+        return None
+
+    def get_latest_for_risk(self, org_id: str, risk_id: str) -> Optional[RiskAssessment]:
+        """Retrieve the latest assessment evaluation for a specific risk entity in tenant scope."""
+        stmt = (
+            select(RiskAssessment)
+            .where(RiskAssessment.org_id == org_id, RiskAssessment.risk_id == risk_id)
+            .order_by(RiskAssessment.created_at.desc())
+        )
+        return self.session.scalars(stmt).first()
+
+    def get_latest_for_entity(
+        self,
+        org_id: str,
+        scope: str,
+        scope_entity_id: str,
+    ) -> Optional[RiskAssessment]:
+        """Retrieve the latest assessment for a given scope and target entity ID in tenant scope."""
+        stmt = (
+            select(RiskAssessment)
+            .where(RiskAssessment.org_id == org_id)
+            .order_by(RiskAssessment.created_at.desc())
+        )
+        for item in self.session.scalars(stmt).all():
+            f = item.findings or {}
+            if (
+                f.get("scope", "").upper() == scope.upper()
+                and f.get("scope_entity_id") == scope_entity_id
+            ):
+                return item
+        return None
+
+    def get_latest_for_org(
+        self,
+        org_id: str,
+        scope: Optional[str] = None,
+    ) -> Optional[RiskAssessment]:
+        """Retrieve the most recent assessment for the organization, optionally filtered by scope."""
+        stmt = (
+            select(RiskAssessment)
+            .where(RiskAssessment.org_id == org_id)
+            .order_by(RiskAssessment.created_at.desc())
+        )
+        if not scope:
+            return self.session.scalars(stmt).first()
+
+        for item in self.session.scalars(stmt).all():
+            if (item.findings or {}).get("scope", "").upper() == scope.upper():
+                return item
+        return None
+
+    def list_assessments_for_org(
+        self,
+        org_id: str,
+        risk_id: Optional[str] = None,
+        assessor_type: Optional[str] = None,
+        page: int = 1,
+        limit: int = 20,
+        sort_param: Optional[str] = None,
+        search: Optional[str] = None,
+    ) -> tuple[list[RiskAssessment], int]:
+        """List tenant risk assessments with filters, search, pagination, and sorting."""
+        base_stmt = select(RiskAssessment).where(RiskAssessment.org_id == org_id)
+        count_stmt = (
+            select(func.count())
+            .select_from(RiskAssessment)
+            .where(RiskAssessment.org_id == org_id)
+        )
+
+        filters: dict[str, Any] = {}
+        if risk_id:
+            filters["risk_id"] = risk_id
+        if assessor_type:
+            filters["assessor_type"] = assessor_type
+
+        base_stmt = apply_filters(base_stmt, RiskAssessment, filters, RISK_ASSESSMENT_FILTER_ALLOWLIST)
+        count_stmt = apply_filters(count_stmt, RiskAssessment, filters, RISK_ASSESSMENT_FILTER_ALLOWLIST)
+
+        base_stmt = apply_search(base_stmt, RiskAssessment, search, RISK_ASSESSMENT_SEARCH_COLUMNS)
+        count_stmt = apply_search(count_stmt, RiskAssessment, search, RISK_ASSESSMENT_SEARCH_COLUMNS)
+
+        base_stmt = apply_sorting(
+            base_stmt,
+            RiskAssessment,
+            sort_param,
+            RISK_ASSESSMENT_SORT_ALLOWLIST,
+            default_field="created_at",
+            default_desc=True,
+        )
+        base_stmt = apply_pagination(base_stmt, page, limit)
+
+        total = self.session.scalar(count_stmt) or 0
+        items = list(self.session.scalars(base_stmt).all())
+        return items, total
+
 
 class IncidentRepository(BaseRepository[Incident]):
     """Data access repository for Incident entities with tenant isolation and status management."""

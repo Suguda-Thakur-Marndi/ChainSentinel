@@ -103,6 +103,41 @@ class RiskEvidence(BaseModel):
             return v.replace(tzinfo=timezone.utc)
         return v.astimezone(timezone.utc)
 
+    @property
+    def signal_id(self) -> str:
+        """Convenience alias for normalized_signal_id."""
+        return self.normalized_signal_id
+
+    @property
+    def observed_at(self) -> datetime:
+        """Convenience alias for event_time."""
+        return self.event_time
+
+    @property
+    def location_name(self) -> Optional[str]:
+        """Convenience accessor for location name."""
+        return self.location.get("location_name") if isinstance(self.location, dict) else None
+
+    @property
+    def latitude(self) -> Optional[float]:
+        """Convenience accessor for latitude."""
+        return self.location.get("latitude") if isinstance(self.location, dict) else None
+
+    @property
+    def longitude(self) -> Optional[float]:
+        """Convenience accessor for longitude."""
+        return self.location.get("longitude") if isinstance(self.location, dict) else None
+
+    @property
+    def domain(self) -> SignalDomain:
+        """Convenience accessor for signal domain."""
+        from app.normalization.contract import SignalDomain
+        d = self.metadata.get("domain", "LOGISTICS")
+        try:
+            return SignalDomain(d)
+        except Exception:
+            return SignalDomain.LOGISTICS
+
     @classmethod
     def from_normalized_signal(
         cls,

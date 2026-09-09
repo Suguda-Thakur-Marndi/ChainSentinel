@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Any, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.normalization.contract import EntityType, NormalizedRiskSignal
 from app.schemas.common import PaginatedResponse
 
 
@@ -25,6 +26,7 @@ class RiskTrend(str, Enum):
 class AssessorType(str, Enum):
     AI_AGENT = "AI_AGENT"
     HUMAN_ANALYST = "HUMAN_ANALYST"
+    DETERMINISTIC_ENGINE = "DETERMINISTIC_ENGINE"
 
 
 class IncidentStatus(str, Enum):
@@ -158,6 +160,49 @@ class RiskAssessmentResponse(BaseModel):
 
 class RiskAssessmentListResponse(PaginatedResponse[RiskAssessmentResponse]):
     pass
+
+
+class RiskEvaluationRequest(BaseModel):
+    """Client request for deterministic risk evaluation over normalized signals."""
+    model_config = ConfigDict(extra="forbid")
+
+    scope: str = Field(default="GLOBAL", max_length=50, description="Evaluation scope (GLOBAL, SHIPMENT, SUPPLIER, PORT, ROUTE)")
+    scope_entity_id: Optional[str] = Field(None, max_length=64, description="Target entity ID if scope is specific entity")
+    scope_entity_type: Optional[EntityType] = Field(None, description="Target entity type")
+    risk_id: Optional[str] = Field(None, max_length=64, description="Optional associated Risk entity ID")
+    signals: list[NormalizedRiskSignal] = Field(default_factory=list, description="List of Phase 6 NormalizedRiskSignals to evaluate")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Operational metadata or correlation details")
+
+
+class RiskAssessmentDetailResponse(BaseModel):
+    """Comprehensive detail response representing completed RiskAssessment with full traceability."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    assessment_id: str
+    org_id: Optional[str] = None
+    risk_id: str
+    assessor_type: str
+    assessor_id: Optional[str] = None
+    methodology: Optional[str] = None
+    score: float
+    risk_level: Optional[str] = None
+    probability: Optional[float] = None  # Always None in Phase 7
+    impact: Optional[float] = None       # Always None in Phase 7
+    confidence: float
+    primary_factor_id: Optional[str] = None
+    primary_driver: Optional[dict[str, Any]] = None
+    factor_contributions: list[dict[str, Any]] = Field(default_factory=list)
+    factors: list[dict[str, Any]] = Field(default_factory=list)
+    evidence: list[dict[str, Any]] = Field(default_factory=list)
+    source_summary: Optional[dict[str, Any]] = None
+    limitations: list[str] = Field(default_factory=list)
+    conflicts: list[dict[str, Any]] = Field(default_factory=list)
+    source_signals: list[str] = Field(default_factory=list)
+    explanation: Optional[dict[str, Any]] = None
+    fingerprint: Optional[str] = None
+    findings: dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime
 
 
 # Incident

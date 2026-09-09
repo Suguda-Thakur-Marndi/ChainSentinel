@@ -9,18 +9,21 @@ Endpoints:
 - GET /api/v1/risk-assessments/{id} (Protected, Viewer+: get single evaluation assessment by ID)
 """
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, Query, Request, Response, status
 
 from app.api.deps import AuthenticatedContext, get_authenticated_context, require_role
-from app.core.errors import InvalidFilterFieldError
+from app.core.errors import InvalidFilterFieldError, NotFoundError
 from app.db.unit_of_work import UnitOfWork, get_uow
 from app.repositories.risk_repositories import RISK_ASSESSMENT_FILTER_ALLOWLIST
 from app.schemas.common import PaginationParams
 from app.schemas.risk import (
     RiskAssessmentCreate,
+    RiskAssessmentDetailResponse,
     RiskAssessmentListResponse,
     RiskAssessmentResponse,
+    RiskEvaluationRequest,
 )
+from app.services.risk_evaluation_service import RiskEvaluationService
 from app.services.risk_services import RiskAssessmentService
 
 router = APIRouter()
@@ -38,6 +41,14 @@ def get_risk_assessment_service(
     return RiskAssessmentService(uow=uow, context=context)
 
 
+def get_risk_evaluation_service(
+    context: AuthenticatedContext = Depends(get_authenticated_context),
+    uow: UnitOfWork = Depends(get_uow),
+) -> RiskEvaluationService:
+    """Dependency injecting configured RiskEvaluationService."""
+    return RiskEvaluationService(uow=uow, context=context)
+
+
 @router.get(
     "",
     response_model=RiskAssessmentListResponse,
@@ -49,7 +60,7 @@ def list_risk_assessments(
     request: Request,
     params: PaginationParams = Depends(),
     risk_id: Optional[str] = Query(None, description="Filter by evaluated risk ID"),
-    assessor_type: Optional[str] = Query(None, description="Filter by assessor type (AI_AGENT, HUMAN_ANALYST)"),
+    assessor_type: Optional[str] = Query(None, description="Filter by assessor type (AI_AGENT, HUMAN_ANALYST, DETERMINISTIC_ENGINE)"),
     search: Optional[str] = Query(None, description="Substring search across methodology, assessor_type, assessor_id"),
     sort: Optional[str] = Query(None, description="Sort expression (e.g. created_at, -created_at, score, -score, confidence, -confidence)"),
     context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
@@ -83,6 +94,81 @@ def create_risk_assessment(
 ) -> RiskAssessmentResponse:
     """Record an immutable risk evaluation record."""
     return service.create_assessment(body)
+
+
+@router.post(
+    "/evaluate",
+    response_model=RiskAssessmentDetailResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Evaluate risk with deterministic engine",
+    description="Execute the deterministic Phase 7 Risk Engine on normalized risk signals and transactionally persist the assessment. Requires Analyst role or higher.",
+    include_in_schema=False,
+)
+def evaluate_risk(
+    body: RiskEvaluationRequest,
+    response: Response,
+    context: AuthenticatedContext = Depends(require_role(*MUTATION_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAssessmentDetailResponse:
+    """Evaluate and persist deterministic risk assessment."""
+    _, detail_dict, is_idempotent = service.evaluate_and_persist(
+        signals=body.signals,
+        scope=body.scope,
+        scope_entity_id=body.scope_entity_id,
+        scope_entity_type=body.scope_entity_type,
+        risk_id=body.risk_id,
+        metadata=body.metadata,
+    )
+    if is_idempotent:
+        response.status_code = status.HTTP_200_OK
+    return RiskAssessmentDetailResponse.model_validate(detail_dict)
+
+
+@router.get(
+    "/latest",
+    response_model=RiskAssessmentDetailResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get latest risk assessment",
+    description="Retrieve the most recent risk assessment evaluation record within the tenant boundary.",
+    include_in_schema=False,
+)
+def get_latest_risk_assessment(
+    scope: Optional[str] = Query(None, description="Filter by evaluation scope (GLOBAL, SHIPMENT, etc.)"),
+    scope_entity_id: Optional[str] = Query(None, description="Filter by scope entity ID"),
+    risk_id: Optional[str] = Query(None, description="Filter by evaluated risk ID"),
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAssessmentDetailResponse:
+    """Retrieve the latest risk assessment for the tenant partition."""
+    latest = service.get_latest_assessment(
+        scope=scope,
+        scope_entity_id=scope_entity_id,
+        risk_id=risk_id,
+    )
+    if not latest:
+        raise NotFoundError(
+            message="No risk assessments found matching criteria for this organization.",
+            code="ASSESSMENT_NOT_FOUND",
+        )
+    return RiskAssessmentDetailResponse.model_validate(latest)
+
+
+@router.get(
+    "/{id}/detail",
+    response_model=RiskAssessmentDetailResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get full risk assessment details",
+    description="Retrieve complete RiskAssessment detail with factor contributions, evidence traces, and source summary.",
+    include_in_schema=False,
+)
+def get_risk_assessment_detail(
+    id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskAssessmentDetailResponse:
+    """Retrieve full detail representation for a risk assessment."""
+    detail = service.get_assessment_detail(id)
+    return RiskAssessmentDetailResponse.model_validate(detail)
 
 
 @router.get(
