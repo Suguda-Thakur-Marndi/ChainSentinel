@@ -86,7 +86,7 @@ class RiskEngine:
         2. Validate & Deduplicate Normalized Signals
         3. Route Signals to Applicable Factor Evaluators
         4. Collect Risk Factors & Associate Traceable Evidence
-        5. Aggregate Composite RiskScore (Step 1 Stub)
+        5. Aggregate Composite RiskScore (Aggregator Protocol)
         6. Generate Deterministic RiskExplanation
         7. Assemble & Return Authoritative RiskAssessment
         """
@@ -143,7 +143,7 @@ class RiskEngine:
                             if ev.evidence_id not in all_evidence_map:
                                 all_evidence_map[ev.evidence_id] = ev
 
-        # Stage 5: Score Aggregation (Stub in Step 1)
+        # Stage 5: Score Aggregation
         sorted_evidence = [all_evidence_map[k] for k in sorted(all_evidence_map.keys())]
         overall_score = self.aggregator.aggregate(
             factors=evaluated_factors,
@@ -157,6 +157,8 @@ class RiskEngine:
             evidence=sorted_evidence,
             conflicts=conflict_records if conflict_records else None,
             limitations=limitations if limitations else None,
+            score=overall_score.score,
+            risk_level=overall_score.risk_level,
         )
 
         # Stage 7: Deterministic Assessment Assembly
@@ -169,6 +171,12 @@ class RiskEngine:
 
         elapsed_ms = (time.perf_counter() - start_time) * 1000.0
 
+        is_baseline = self.aggregator.__class__.__name__ == "BaselineRiskScoreAggregator"
+        scoring_algo = "2.0-baseline-deterministic" if is_baseline else (
+            "UNCOMMITTED_STEP1_STUB" if isinstance(self.aggregator, DefaultRiskScoreAggregator) else type(self.aggregator).__name__
+        )
+        pipeline_ver = "2.0-baseline" if is_baseline else "2.0-step1"
+
         metadata: Dict[str, Any] = {
             "evaluation_duration_ms": round(elapsed_ms, 2),
             "signal_count": len(signals),
@@ -178,8 +186,8 @@ class RiskEngine:
             "simulated_count": simulated_signals_count,
             "correlation_id": context.correlation_id,
             "trace_id": context.trace_id,
-            "pipeline_version": "2.0-step1",
-            "scoring_algorithm": "UNCOMMITTED_STEP1_STUB",
+            "pipeline_version": pipeline_ver,
+            "scoring_algorithm": scoring_algo,
         }
         metadata.update(context.metadata)
 
@@ -201,3 +209,22 @@ class RiskEngine:
             source_signals=source_signal_ids,
             metadata=metadata,
         )
+
+
+class BaselineRiskEngine(RiskEngine):
+    """Phase 7 Step 2 baseline Risk Engine pre-configured with 9 baseline domain evaluators."""
+
+    def __init__(
+        self,
+        registry: Optional[RiskFactorRegistry] = None,
+        aggregator: Optional[RiskScoreAggregatorProtocol] = None,
+    ) -> None:
+        from app.risk_engine.evaluators import register_baseline_evaluators
+        from app.risk_engine.scoring import BaselineRiskScoreAggregator
+
+        reg = registry or RiskFactorRegistry()
+        if len(reg.list_evaluators()) == 0:
+            register_baseline_evaluators(reg)
+        agg = aggregator or BaselineRiskScoreAggregator()
+        super().__init__(registry=reg, aggregator=agg)
+

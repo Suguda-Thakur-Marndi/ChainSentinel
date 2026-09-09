@@ -72,6 +72,8 @@ class RiskExplanation(BaseModel):
         conflicts: Optional[List[Dict[str, Any]]] = None,
         limitations: Optional[List[str]] = None,
         custom_summary: Optional[str] = None,
+        score: Optional[float] = None,
+        risk_level: Optional[RiskLevel] = None,
     ) -> "RiskExplanation":
         """Generate a reproducible, deterministic risk explanation without generative AI."""
         factor_exps: List[FactorExplanation] = []
@@ -99,18 +101,26 @@ class RiskExplanation(BaseModel):
         if custom_summary:
             summary = custom_summary
         elif not factors:
-            summary = "No active risk factors identified in evaluation context."
+            score_desc = f" (Score: {score:.1f}, Level: {risk_level.value})" if score is not None and risk_level else ""
+            summary = f"No active risk factors identified in evaluation context{score_desc}."
         else:
             high_critical = [f for f in factors if f.severity in (RiskLevel.HIGH, RiskLevel.CRITICAL)]
+            top_f = max(factors, key=lambda f: f.contribution if f.contribution is not None else 0.0)
+            score_prefix = (
+                f"Overall Risk Score: {score:.1f} ({risk_level.value if risk_level else 'UNRATED'}). "
+                if score is not None
+                else ""
+            )
             if high_critical:
                 summary = (
-                    f"Evaluated {len(factors)} risk factor(s) with {len(high_critical)} "
-                    f"elevated severity concern(s) across {len(evidence)} evidence trace(s)."
+                    f"{score_prefix}Evaluated {len(factors)} risk factor(s) with {len(high_critical)} "
+                    f"elevated severity concern(s). Primary driver: '{top_f.name}' "
+                    f"(contribution: {top_f.contribution})."
                 )
             else:
                 summary = (
-                    f"Evaluated {len(factors)} standard risk factor(s) "
-                    f"supported by {len(evidence)} evidence trace(s)."
+                    f"{score_prefix}Evaluated {len(factors)} standard risk factor(s) "
+                    f"supported by {len(evidence)} evidence trace(s). Primary driver: '{top_f.name}'."
                 )
 
         return cls(
@@ -121,3 +131,4 @@ class RiskExplanation(BaseModel):
             limitations=limits,
             unresolved_conflicts=unresolved,
         )
+
