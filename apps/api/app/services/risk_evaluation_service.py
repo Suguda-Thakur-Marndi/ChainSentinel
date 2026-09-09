@@ -15,6 +15,11 @@ from app.models.risk import RiskFactor as ORMRiskFactor
 from app.normalization.contract import EntityType, NormalizedRiskSignal
 from app.risk_engine.context import RiskEvaluationContext
 from app.risk_engine.contract import RiskAssessment
+from app.risk_engine.history import (
+    AssessmentComparison,
+    HistoricalRiskComparator,
+    RiskHistorySummary,
+)
 from app.risk_engine.persistence import RiskAssessmentPersistenceAdapter
 from app.risk_engine.pipeline import BaselineRiskEngine
 from app.services.audit_service import AuditService
@@ -246,3 +251,78 @@ class RiskEvaluationService(BaseService[ORMRiskAssessment]):
             return None
 
         return RiskAssessmentPersistenceAdapter.to_detail_dict(orm_assessment)
+
+    def get_history(
+        self,
+        scope: Optional[str] = None,
+        scope_entity_id: Optional[str] = None,
+        risk_id: Optional[str] = None,
+        start_time: Optional[datetime] = None,
+        end_time: Optional[datetime] = None,
+        limit: int = 50,
+    ) -> RiskHistorySummary:
+        """Retrieve chronological assessment history and calculate deterministic trends.
+
+        Enforces server-side tenant isolation, read-only immutability, and safe pagination.
+        """
+        org_id = self._enforce_tenant_scope()
+        orm_assessments = self.uow.risk_assessments.get_assessment_history(
+            org_id=org_id,
+            risk_id=risk_id,
+            scope=scope,
+            scope_entity_id=scope_entity_id,
+            start_time=start_time,
+            end_time=end_time,
+            limit=limit,
+            ascending=True,  # Chronological order
+        )
+
+        details = [RiskAssessmentPersistenceAdapter.to_detail_dict(a) for a in orm_assessments]
+
+        return HistoricalRiskComparator.summarize_history(
+            org_id=org_id,
+            assessments=details,
+            entity_scope=scope,
+            entity_id=scope_entity_id or risk_id,
+        )
+
+    def compare_assessments(
+        self,
+        assessment_id_1: str,
+        assessment_id_2: str,
+    ) -> AssessmentComparison:
+        """Compare two specific risk assessments deterministically within the tenant boundary.
+
+        The earlier assessment is treated as previous and the later as current.
+        Enforces tenant isolation: both assessments must belong to the caller's organization.
+        """
+        org_id = self._enforce_tenant_scope()
+
+        orm_1 = self.uow.risk_assessments.get_assessment(org_id=org_id, assessment_id=assessment_id_1)
+        if not orm_1:
+            raise NotFoundError(
+                message=f"RiskAssessment with ID '{assessment_id_1}' not found.",
+                code="RESOURCE_NOT_FOUND",
+                details={"assessment_id": assessment_id_1, "organization_id": org_id},
+            )
+
+        orm_2 = self.uow.risk_assessments.get_assessment(org_id=org_id, assessment_id=assessment_id_2)
+        if not orm_2:
+            raise NotFoundError(
+                message=f"RiskAssessment with ID '{assessment_id_2}' not found.",
+                code="RESOURCE_NOT_FOUND",
+                details={"assessment_id": assessment_id_2, "organization_id": org_id},
+            )
+
+        detail_1 = RiskAssessmentPersistenceAdapter.to_detail_dict(orm_1)
+        detail_2 = RiskAssessmentPersistenceAdapter.to_detail_dict(orm_2)
+
+        time_1 = detail_1.get("created_at") or orm_1.created_at
+        time_2 = detail_2.get("created_at") or orm_2.created_at
+
+        if time_1 <= time_2:
+            previous_detail, current_detail = detail_1, detail_2
+        else:
+            previous_detail, current_detail = detail_2, detail_1
+
+        return HistoricalRiskComparator.compare(current=current_detail, previous=previous_detail)

@@ -205,6 +205,136 @@ class RiskAssessmentDetailResponse(BaseModel):
     created_at: datetime
 
 
+class FactorChangeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    factor_id: str
+    factor_type: str
+    name: str
+    previous_severity: Optional[str] = None
+    current_severity: Optional[str] = None
+    severity_changed: bool = False
+    previous_confidence: Optional[float] = None
+    current_confidence: Optional[float] = None
+    confidence_delta: float = 0.0
+    previous_contribution: Optional[float] = None
+    current_contribution: Optional[float] = None
+    contribution_delta: float = 0.0
+    status: str
+
+
+class EvidenceChangesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    previous_evidence_count: int = 0
+    current_evidence_count: int = 0
+    evidence_count_delta: int = 0
+    previous_source_count: int = 0
+    current_source_count: int = 0
+    source_count_delta: int = 0
+    previous_corroborating_count: int = 0
+    current_corroborating_count: int = 0
+    corroborating_count_delta: int = 0
+    details: list[str] = Field(default_factory=list)
+
+
+class SourceChangesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    previous_independent_sources: int = 0
+    current_independent_sources: int = 0
+    independent_sources_delta: int = 0
+    previous_real_sources: int = 0
+    current_real_sources: int = 0
+    real_sources_delta: int = 0
+    previous_estimated_sources: int = 0
+    current_estimated_sources: int = 0
+    estimated_sources_delta: int = 0
+    previous_simulated_sources: int = 0
+    current_simulated_sources: int = 0
+    simulated_sources_delta: int = 0
+    added_providers: list[str] = Field(default_factory=list)
+    removed_providers: list[str] = Field(default_factory=list)
+
+
+class ConflictChangesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    status: str = "NO_CHANGE"
+    previous_conflict_count: int = 0
+    current_conflict_count: int = 0
+    conflict_count_delta: int = 0
+    details: list[str] = Field(default_factory=list)
+
+
+class QualityChangesResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    status: str = "UNCHANGED"
+    previous_valid_count: int = 0
+    current_valid_count: int = 0
+    previous_partial_count: int = 0
+    current_partial_count: int = 0
+    new_limitations: list[str] = Field(default_factory=list)
+    resolved_limitations: list[str] = Field(default_factory=list)
+
+
+class AssessmentComparisonResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    previous_assessment_id: Optional[str] = None
+    current_assessment_id: str
+    previous_evaluated_at: Optional[datetime] = None
+    current_evaluated_at: datetime
+    previous_score: Optional[float] = None
+    current_score: float
+    score_delta: float = 0.0
+    previous_risk_level: Optional[str] = None
+    current_risk_level: str
+    risk_level_changed: bool = False
+    previous_primary_factor_id: Optional[str] = None
+    current_primary_factor_id: Optional[str] = None
+    primary_driver_change_status: str = "SAME"
+    previous_primary_driver: Optional[dict[str, Any]] = None
+    current_primary_driver: Optional[dict[str, Any]] = None
+    direction: str = "STABLE"
+    factor_changes: list[FactorChangeResponse] = Field(default_factory=list)
+    evidence_changes: EvidenceChangesResponse = Field(default_factory=EvidenceChangesResponse)
+    source_changes: SourceChangesResponse = Field(default_factory=SourceChangesResponse)
+    conflict_changes: ConflictChangesResponse = Field(default_factory=ConflictChangesResponse)
+    quality_changes: QualityChangesResponse = Field(default_factory=QualityChangesResponse)
+    explanation: str = ""
+
+
+class RiskHistorySummaryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    organization_id: str
+    entity_scope: str = "GLOBAL"
+    entity_id: Optional[str] = None
+    assessment_count: int = 0
+    first_assessment_id: Optional[str] = None
+    latest_assessment_id: Optional[str] = None
+    first_score: Optional[float] = None
+    latest_score: Optional[float] = None
+    score_delta: Optional[float] = None
+    minimum_score: Optional[float] = None
+    maximum_score: Optional[float] = None
+    average_score: Optional[float] = None
+    first_risk_level: Optional[str] = None
+    latest_risk_level: Optional[str] = None
+    trend: str = "INSUFFICIENT_HISTORY"
+    primary_driver: Optional[dict[str, Any]] = None
+    driver_changes_count: int = 0
+    conflict_count: int = 0
+    source_summary: Optional[dict[str, Any]] = None
+    history_start: Optional[datetime] = None
+    history_end: Optional[datetime] = None
+    assessments: list[dict[str, Any]] = Field(default_factory=list)
+    transitions: list[AssessmentComparisonResponse] = Field(default_factory=list)
+    overall_comparison: Optional[AssessmentComparisonResponse] = None
+
+
 # Incident
 class IncidentCreate(BaseModel):
     model_config = ConfigDict(extra="forbid")

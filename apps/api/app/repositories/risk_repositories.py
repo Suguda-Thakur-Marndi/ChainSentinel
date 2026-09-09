@@ -256,6 +256,53 @@ class RiskAssessmentRepository(BaseRepository[RiskAssessment]):
                 return item
         return None
 
+    def get_assessment_history(
+        self,
+        org_id: str,
+        risk_id: Optional[str] = None,
+        scope: Optional[str] = None,
+        scope_entity_id: Optional[str] = None,
+        start_time: Optional[datetime] = None,
+        end_time: Optional[datetime] = None,
+        limit: int = 50,
+        ascending: bool = True,
+    ) -> list[RiskAssessment]:
+        """Retrieve deterministic chronological assessment history for tenant partition.
+
+        Enforces server-side tenant isolation, date range filtering, and deterministic
+        ordering (created_at ASC, id ASC).
+        """
+        stmt = select(RiskAssessment).where(RiskAssessment.org_id == org_id)
+
+        if risk_id:
+            stmt = stmt.where(RiskAssessment.risk_id == risk_id)
+        if start_time:
+            stmt = stmt.where(RiskAssessment.created_at >= start_time)
+        if end_time:
+            stmt = stmt.where(RiskAssessment.created_at <= end_time)
+
+        # Deterministic ordering: primary created_at, secondary id tie-breaker
+        if ascending:
+            stmt = stmt.order_by(RiskAssessment.created_at.asc(), RiskAssessment.id.asc())
+        else:
+            stmt = stmt.order_by(RiskAssessment.created_at.desc(), RiskAssessment.id.asc())
+
+        bounded_limit = max(1, min(limit, 100))
+        candidates = list(self.session.scalars(stmt).all())
+
+        results: list[RiskAssessment] = []
+        for item in candidates:
+            f = item.findings or {}
+            if scope and f.get("scope", "").upper() != scope.upper():
+                continue
+            if scope_entity_id and str(f.get("scope_entity_id")) != str(scope_entity_id):
+                continue
+            results.append(item)
+            if len(results) >= bounded_limit:
+                break
+
+        return results
+
     def list_assessments_for_org(
         self,
         org_id: str,

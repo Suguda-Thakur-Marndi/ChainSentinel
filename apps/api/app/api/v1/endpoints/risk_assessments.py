@@ -8,6 +8,7 @@ Endpoints:
 - POST /api/v1/risk-assessments (Protected, Analyst+: record new evaluation assessment)
 - GET /api/v1/risk-assessments/{id} (Protected, Viewer+: get single evaluation assessment by ID)
 """
+from datetime import datetime
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, Request, Response, status
 
@@ -17,11 +18,13 @@ from app.db.unit_of_work import UnitOfWork, get_uow
 from app.repositories.risk_repositories import RISK_ASSESSMENT_FILTER_ALLOWLIST
 from app.schemas.common import PaginationParams
 from app.schemas.risk import (
+    AssessmentComparisonResponse,
     RiskAssessmentCreate,
     RiskAssessmentDetailResponse,
     RiskAssessmentListResponse,
     RiskAssessmentResponse,
     RiskEvaluationRequest,
+    RiskHistorySummaryResponse,
 )
 from app.services.risk_evaluation_service import RiskEvaluationService
 from app.services.risk_services import RiskAssessmentService
@@ -169,6 +172,58 @@ def get_risk_assessment_detail(
     """Retrieve full detail representation for a risk assessment."""
     detail = service.get_assessment_detail(id)
     return RiskAssessmentDetailResponse.model_validate(detail)
+
+
+@router.get(
+    "/history",
+    response_model=RiskHistorySummaryResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get risk assessment history and trend summary",
+    description="Retrieve chronological assessment history and deterministic trend analysis within tenant boundary.",
+    include_in_schema=False,
+)
+def get_risk_assessment_history(
+    scope: Optional[str] = Query(None, description="Optional evaluation scope (GLOBAL, SHIPMENT, SUPPLIER, PORT, ROUTE)"),
+    scope_entity_id: Optional[str] = Query(None, description="Target entity ID"),
+    risk_id: Optional[str] = Query(None, description="Optional parent risk ID"),
+    start_time: Optional[datetime] = Query(None, description="Filter evaluations on or after timestamp"),
+    end_time: Optional[datetime] = Query(None, description="Filter evaluations on or before timestamp"),
+    limit: int = Query(50, ge=1, le=100, description="Maximum history items to retrieve (1-100)"),
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> RiskHistorySummaryResponse:
+    """Retrieve deterministic historical risk summary and trends for an entity or scope."""
+    history_summary = service.get_history(
+        scope=scope,
+        scope_entity_id=scope_entity_id,
+        risk_id=risk_id,
+        start_time=start_time,
+        end_time=end_time,
+        limit=limit,
+    )
+    return RiskHistorySummaryResponse.model_validate(history_summary.model_dump())
+
+
+@router.get(
+    "/{id}/compare/{other_id}",
+    response_model=AssessmentComparisonResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Compare two risk assessments",
+    description="Perform deterministic comparative analysis between two assessments within tenant boundary.",
+    include_in_schema=False,
+)
+def compare_risk_assessments(
+    id: str,
+    other_id: str,
+    context: AuthenticatedContext = Depends(require_role(*READ_ROLES)),
+    service: RiskEvaluationService = Depends(get_risk_evaluation_service),
+) -> AssessmentComparisonResponse:
+    """Compare two risk assessments deterministically."""
+    comparison = service.compare_assessments(
+        assessment_id_1=id,
+        assessment_id_2=other_id,
+    )
+    return AssessmentComparisonResponse.model_validate(comparison.model_dump())
 
 
 @router.get(
