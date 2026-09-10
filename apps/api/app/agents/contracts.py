@@ -56,11 +56,18 @@ class AgentStage(str, Enum):
     RISK_ASSESSMENT = "RISK_ASSESSMENT"
     PREDICTION = "PREDICTION"
     SCENARIO_ANALYSIS = "SCENARIO_ANALYSIS"
+    SCENARIO = "SCENARIO_ANALYSIS"
     DECISION = "DECISION"
     APPROVAL = "APPROVAL"
     ACTION = "ACTION"
     VERIFICATION = "VERIFICATION"
     TERMINATION = "TERMINATION"
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        if isinstance(value, str) and value.upper() == "SCENARIO":
+            return cls.SCENARIO_ANALYSIS
+        return super()._missing_(value)
 
 
 class ToolSideEffectType(str, Enum):
@@ -68,6 +75,7 @@ class ToolSideEffectType(str, Enum):
 
     READ_ONLY = "READ_ONLY"
     SIDE_EFFECTING = "SIDE_EFFECTING"
+    HUMAN_GOVERNED = "HUMAN_GOVERNED"
 
 
 class ConflictResolutionStatus(str, Enum):
@@ -374,9 +382,17 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "prediction_id": {AgentStage.PREDICTION},
     "prediction_reference": {AgentStage.PREDICTION},
     "prediction_result": {AgentStage.PREDICTION},
+    "scenario_id": {AgentStage.SCENARIO_ANALYSIS},
+    "scenario_reference": {AgentStage.SCENARIO_ANALYSIS},
+    "scenario_result": {AgentStage.SCENARIO_ANALYSIS},
+    "decision_id": {AgentStage.DECISION},
+    "decision_reference": {AgentStage.DECISION},
+    "decision_result": {AgentStage.DECISION},
     "recommendation_references": {AgentStage.DECISION},
     "requires_human_approval": {AgentStage.APPROVAL, AgentStage.INITIALIZATION},
+    "approval_id": {AgentStage.APPROVAL},
     "approval_reference": {AgentStage.APPROVAL},
+    "approval_result": {AgentStage.APPROVAL},
     "approval_status": {AgentStage.APPROVAL},
     "side_effect_allowed": {AgentStage.APPROVAL},
     "completed_at": {AgentStage.TERMINATION},
@@ -433,7 +449,17 @@ class AgentGraphState(BaseModel):
     prediction_reference: Optional[Dict[str, Any]] = None
     prediction_result: Optional[Dict[str, Any]] = None
 
-    # H. Structured Findings, Limitations & Conflicts
+    # H. Scenario References
+    scenario_id: Optional[str] = None
+    scenario_reference: Optional[Dict[str, Any]] = None
+    scenario_result: Optional[Dict[str, Any]] = None
+
+    # I. Decision References
+    decision_id: Optional[str] = None
+    decision_reference: Optional[Dict[str, Any]] = None
+    decision_result: Optional[Dict[str, Any]] = None
+
+    # J. Structured Findings, Limitations & Conflicts
     findings: Dict[str, Any] = Field(default_factory=dict)
     structured_findings: List[AgentFinding] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
@@ -455,7 +481,9 @@ class AgentGraphState(BaseModel):
 
     # J. Governance & Approval
     requires_human_approval: bool = False
+    approval_id: Optional[str] = None
     approval_reference: Optional[str] = None
+    approval_result: Optional[Dict[str, Any]] = None
     side_effect_allowed: bool = False
     approval_status: Optional[str] = None
 
@@ -521,6 +549,42 @@ class AgentGraphState(BaseModel):
             if prefix.startswith("org_") and prefix != self.organization_id:
                 raise AgentTenantIsolationError(
                     f"Cross-tenant approval reference '{self.approval_reference}' does not match state tenant '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation on scenario result / reference
+        if self.scenario_result and isinstance(self.scenario_result, dict):
+            scen_org = self.scenario_result.get("organization_id")
+            if scen_org and scen_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant scenario result belongs to '{scen_org}', state scoped to '{self.organization_id}'."
+                )
+        if self.scenario_reference and isinstance(self.scenario_reference, dict):
+            scen_ref_org = self.scenario_reference.get("organization_id")
+            if scen_ref_org and scen_ref_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant scenario reference belongs to '{scen_ref_org}', state scoped to '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation on decision result / reference
+        if self.decision_result and isinstance(self.decision_result, dict):
+            dec_org = self.decision_result.get("organization_id")
+            if dec_org and dec_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant decision result belongs to '{dec_org}', state scoped to '{self.organization_id}'."
+                )
+        if self.decision_reference and isinstance(self.decision_reference, dict):
+            dec_ref_org = self.decision_reference.get("organization_id")
+            if dec_ref_org and dec_ref_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant decision reference belongs to '{dec_ref_org}', state scoped to '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation on approval result / reference
+        if self.approval_result and isinstance(self.approval_result, dict):
+            appr_org = self.approval_result.get("organization_id")
+            if appr_org and appr_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant approval result belongs to '{appr_org}', state scoped to '{self.organization_id}'."
                 )
 
         # 5. Enforce approval boundary on termination if human approval is required
@@ -622,7 +686,9 @@ def validate_state_update(
             validate_no_sensitive_values(v, str(k))
         elif isinstance(v, list):
             for item in v:
-                if isinstance(item, dict):
+                if isinstance(item, str):
+                    validate_no_sensitive_values(item, str(k))
+                elif isinstance(item, dict):
                     for ik, iv in item.items():
                         if isinstance(iv, str):
                             validate_no_sensitive_values(iv, str(ik))
@@ -749,6 +815,14 @@ class AgentGraphStateDict(TypedDict, total=False):
     prediction_id: Optional[str]
     prediction_reference: Optional[Dict[str, Any]]
     prediction_result: Optional[Dict[str, Any]]
+    # Scenario
+    scenario_id: Optional[str]
+    scenario_reference: Optional[Dict[str, Any]]
+    scenario_result: Optional[Dict[str, Any]]
+    # Decision
+    decision_id: Optional[str]
+    decision_reference: Optional[Dict[str, Any]]
+    decision_result: Optional[Dict[str, Any]]
     # Findings
     findings: Dict[str, Any]
     structured_findings: List[Dict[str, Any]]
@@ -768,7 +842,9 @@ class AgentGraphStateDict(TypedDict, total=False):
     errors: List[Dict[str, Any]]
     # Governance
     requires_human_approval: bool
+    approval_id: Optional[str]
     approval_reference: Optional[str]
+    approval_result: Optional[Dict[str, Any]]
     side_effect_allowed: bool
     approval_status: Optional[str]
     # Termination
@@ -881,6 +957,8 @@ class NodeContract(BaseModel):
             self.side_effect_type = ToolSideEffectType.SIDE_EFFECTING
         elif self.side_effect_type == ToolSideEffectType.SIDE_EFFECTING:
             self.is_side_effecting = True
+        elif self.side_effect_type == ToolSideEffectType.HUMAN_GOVERNED:
+            self.is_side_effecting = False
         return self
 
     @property

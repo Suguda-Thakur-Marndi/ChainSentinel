@@ -198,3 +198,13 @@ from app.agents.risk.node import RISK_NODE_CONTRACT, risk_node
 # Real Prediction Agent node contract and handler
 from app.agents.prediction.node import PREDICTION_NODE_CONTRACT, prediction_node
 
+# Real Scenario Agent node contract and handler
+from app.agents.scenario.node import SCENARIO_NODE_CONTRACT, scenario_node
+
+# Real Decision Agent node contract and handler
+from app.agents.decision.node import DECISION_NODE_CONTRACT, decision_node
+
+# Real Human Approval Agent node contract and handler
+from app.agents.approval.node import HUMAN_APPROVAL_NODE_CONTRACT, human_approval_node
+
+

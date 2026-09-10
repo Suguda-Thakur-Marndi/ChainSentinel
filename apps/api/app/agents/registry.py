@@ -16,6 +16,7 @@ PERMISSIBLE_NODE_IDS: Set[str] = {
     "initialization",
     "termination",
     "approval_boundary",
+    "human_approval",
     "research_agent",
     "risk_agent",
     "prediction_agent",

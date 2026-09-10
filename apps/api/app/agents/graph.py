@@ -29,9 +29,11 @@ from app.agents.errors import (
 )
 from app.agents.nodes import (
     APPROVAL_BOUNDARY_NODE_CONTRACT,
+    HUMAN_APPROVAL_NODE_CONTRACT,
     INITIALIZATION_NODE_CONTRACT,
     TERMINATION_NODE_CONTRACT,
     approval_boundary_node,
+    human_approval_node,
     initialization_node,
     termination_node,
 )
@@ -72,6 +74,8 @@ class AgentGraphBuilder:
             self.registry.register_node(TERMINATION_NODE_CONTRACT, termination_node)
         if not self.registry.has_node("approval_boundary"):
             self.registry.register_node(APPROVAL_BOUNDARY_NODE_CONTRACT, approval_boundary_node)
+        if not self.registry.has_node("human_approval"):
+            self.registry.register_node(HUMAN_APPROVAL_NODE_CONTRACT, human_approval_node)
 
     def _ensure_foundational_edges_registered(self) -> None:
         """Register default foundational edges if not already present."""
@@ -187,41 +191,112 @@ def execute_agent_graph(
     context: AgentExecutionContext,
     builder: Optional[AgentGraphBuilder] = None,
     checkpointer: Optional[Any] = None,
+    checkpoint_manager: Optional[Any] = None,
+    uow: Optional[Any] = None,
 ) -> AgentGraphState:
-    """Execute a single end-to-end agent graph run with tenant validation and telemetry.
+    """Execute a single end-to-end agent graph run with tenant validation, checkpointing, and telemetry.
     
     Raises:
         AgentTenantIsolationError: On tenant mismatch between context and state.
         AgentGraphError: On internal graph or routing failures.
     """
-    # 1. Enforce tenant boundary
-    validate_tenant_isolation(
-        context_organization_id=context.organization_id,
-        state_organization_id=state.organization_id,
-        evidence_bundle_org=state.evidence_bundle.organization_id if state.evidence_bundle else None,
-        risk_assessment_org=state.risk_assessment.organization_id if state.risk_assessment else None,
-        evidence_references=state.evidence_references,
-        risk_alert_references=state.risk_alert_references,
-        recommendation_references=state.recommendation_references,
-        approval_reference=state.approval_reference,
+    start_time = time.perf_counter()
+    from app.agents.observability import (
+        AgentRunTelemetry,
+        global_metrics_collector,
+    )
+    from app.agents.recovery import (
+        RecoveryDecision,
+        RecoveryPolicy,
+        compute_state_hash,
     )
 
-
-    start_time = time.perf_counter()
-    graph_builder = builder or AgentGraphBuilder()
-    compiled_app = graph_builder.build(checkpointer=checkpointer)
-
-    # 2. Serialize initial Pydantic state to typed dictionary
-    initial_payload = state.model_dump(mode="json")
-    thread_config = {"configurable": {"thread_id": state.run_id}}
+    input_state_hash = compute_state_hash(state)
 
     try:
+        # 1. Enforce tenant boundary & trace alignment
+        if context.organization_id != state.organization_id:
+            global_metrics_collector.record_security_failure()
+            raise AgentTenantIsolationError(
+                f"Tenant mismatch: Context organization '{context.organization_id}' does not match state organization '{state.organization_id}'."
+            )
+
+        if context.trace_id != state.trace_id:
+            global_metrics_collector.record_security_failure()
+            raise AgentTenantIsolationError(
+                f"Context trace_id '{context.trace_id}' does not match state trace_id '{state.trace_id}'."
+            )
+
+        validate_tenant_isolation(
+            context_organization_id=context.organization_id,
+            state_organization_id=state.organization_id,
+            evidence_bundle_org=state.evidence_bundle.organization_id if state.evidence_bundle else None,
+            risk_assessment_org=state.risk_assessment.organization_id if state.risk_assessment else None,
+            prediction_org=(
+                state.prediction_result.get("organization_id")
+                if isinstance(state.prediction_result, dict)
+                else None
+            ),
+            scenario_org=(
+                state.scenario_result.get("organization_id")
+                if isinstance(state.scenario_result, dict)
+                else None
+            ),
+            decision_org=(
+                state.decision_result.get("organization_id")
+                if isinstance(state.decision_result, dict)
+                else None
+            ),
+            approval_org=(
+                state.approval_result.get("organization_id")
+                if isinstance(state.approval_result, dict)
+                else None
+            ),
+            evidence_references=state.evidence_references,
+            risk_alert_references=state.risk_alert_references,
+            recommendation_references=state.recommendation_references,
+            approval_reference=state.approval_reference,
+        )
+
+        graph_builder = builder or AgentGraphBuilder()
+        compiled_app = graph_builder.build(checkpointer=checkpointer)
+
+        if checkpoint_manager is not None:
+            checkpoint_manager.save_checkpoint(state.run_id, state, step=state.step_count)
+
+        # Emit audit log: GRAPH_STARTED
+        if uow is not None and hasattr(uow, "audit_logs"):
+            try:
+                from app.services.audit_service import AuditService
+                AuditService.log_event(
+                    uow=uow,
+                    action="GRAPH_STARTED",
+                    resource_type="AGENT_GRAPH",
+                    org_id=state.organization_id,
+                    actor_id=state.actor_id,
+                    resource_id=state.run_id,
+                    status="SUCCESS",
+                    after_data={"stage": state.current_stage.value, "input_state_hash": input_state_hash},
+                    request_id=state.request_id,
+                )
+            except Exception:
+                pass
+
+        # 2. Serialize initial Pydantic state to typed dictionary
+        initial_payload = state.model_dump(mode="json")
+        thread_config = {"configurable": {"thread_id": state.run_id}}
         # 3. Invoke compiled graph
         result_dict = compiled_app.invoke(initial_payload, config=thread_config)
         duration_ms = (time.perf_counter() - start_time) * 1000
 
         # 4. Validate and construct resulting AgentGraphState
         final_state = AgentGraphState.model_validate(result_dict)
+        output_state_hash = compute_state_hash(final_state)
+
+        if checkpoint_manager is not None:
+            checkpoint_manager.save_checkpoint(final_state.run_id, final_state, step=final_state.step_count)
+
+        global_metrics_collector.record_graph_execution(final_state.status.value, duration_ms)
 
         AgentObservability.record_node_execution(
             run_id=final_state.run_id,
@@ -235,10 +310,52 @@ def execute_agent_graph(
             status=final_state.status.value,
             step_count=final_state.step_count,
         )
+
+        run_telemetry = AgentRunTelemetry(
+            organization_id=final_state.organization_id,
+            agent_run_id=final_state.run_id,
+            execution_id=final_state.run_id,
+            request_id=final_state.request_id,
+            correlation_id=final_state.correlation_id,
+            trace_id=final_state.trace_id,
+            node_id="graph_orchestrator",
+            stage=final_state.current_stage.value,
+            attempt=1,
+            status=final_state.status.value,
+            duration_ms=round(duration_ms, 2),
+            retry_count=final_state.retry_count,
+            selected_route=final_state.selected_route,
+            input_state_hash=input_state_hash,
+            output_state_hash=output_state_hash,
+            metadata={"step_count": final_state.step_count},
+        )
+        AgentObservability.record_run_telemetry(run_telemetry)
+
+        # Emit audit log: GRAPH_TERMINATED / GRAPH_COMPLETED
+        if uow is not None and hasattr(uow, "audit_logs"):
+            try:
+                from app.services.audit_service import AuditService
+                action = "GRAPH_TERMINATED" if final_state.status.value == "TERMINATED" else "GRAPH_SUCCEEDED"
+                AuditService.log_event(
+                    uow=uow,
+                    action=action,
+                    resource_type="AGENT_GRAPH",
+                    org_id=final_state.organization_id,
+                    actor_id=final_state.actor_id,
+                    resource_id=final_state.run_id,
+                    status="SUCCESS",
+                    after_data={"stage": final_state.current_stage.value, "output_state_hash": output_state_hash},
+                    request_id=final_state.request_id,
+                )
+            except Exception:
+                pass
+
         return final_state
 
     except AgentGraphError as age:
         duration_ms = (time.perf_counter() - start_time) * 1000
+        global_metrics_collector.record_graph_execution("FAILED", duration_ms)
+
         AgentObservability.record_node_execution(
             run_id=state.run_id,
             organization_id=state.organization_id,
@@ -251,10 +368,49 @@ def execute_agent_graph(
             status="FAILED",
             error_code=age.error_code,
         )
+
+        run_telemetry = AgentRunTelemetry(
+            organization_id=state.organization_id,
+            agent_run_id=state.run_id,
+            execution_id=state.run_id,
+            request_id=state.request_id,
+            correlation_id=state.correlation_id,
+            trace_id=state.trace_id,
+            node_id="graph_orchestrator",
+            stage=state.current_stage.value,
+            attempt=1,
+            status="FAILED",
+            duration_ms=round(duration_ms, 2),
+            error_code=age.error_code,
+            error_category=age.category.value,
+            input_state_hash=input_state_hash,
+            metadata={"error_message": age.message},
+        )
+        AgentObservability.record_run_telemetry(run_telemetry)
+
+        if uow is not None and hasattr(uow, "audit_logs"):
+            try:
+                from app.services.audit_service import AuditService
+                AuditService.log_event(
+                    uow=uow,
+                    action="GRAPH_FAILED",
+                    resource_type="AGENT_GRAPH",
+                    org_id=state.organization_id,
+                    actor_id=state.actor_id,
+                    resource_id=state.run_id,
+                    status="FAILURE",
+                    after_data={"error_code": age.error_code, "category": age.category.value},
+                    request_id=state.request_id,
+                )
+            except Exception:
+                pass
+
         raise
 
     except Exception as exc:
         duration_ms = (time.perf_counter() - start_time) * 1000
+        global_metrics_collector.record_graph_execution("FAILED", duration_ms)
+
         AgentObservability.record_node_execution(
             run_id=state.run_id,
             organization_id=state.organization_id,
@@ -271,3 +427,4 @@ def execute_agent_graph(
             f"Unexpected error during agent graph execution: {str(exc)}",
             details={"raw_error": str(exc)},
         ) from exc
+

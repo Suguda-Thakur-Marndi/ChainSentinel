@@ -116,7 +116,7 @@ class GraphValidator:
 
         # Check for unreached registered operational nodes
         for contract in self.node_registry.list_nodes():
-            if contract.node_id not in ("initialization", "termination", "approval_boundary", "START", "END"):
+            if contract.node_id not in ("initialization", "termination", "approval_boundary", "human_approval", "START", "END"):
                 if contract.node_id not in reachable:
                     raise AgentGraphValidationError(
                         f"Unreachable node '{contract.node_id}' detected from start node '{start_node}'.",

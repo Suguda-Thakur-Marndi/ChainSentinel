@@ -37,6 +37,10 @@ def validate_tenant_isolation(
     state_organization_id: str,
     evidence_bundle_org: Optional[str] = None,
     risk_assessment_org: Optional[str] = None,
+    prediction_org: Optional[str] = None,
+    scenario_org: Optional[str] = None,
+    decision_org: Optional[str] = None,
+    approval_org: Optional[str] = None,
     evidence_references: Optional[List[str]] = None,
     risk_alert_references: Optional[List[str]] = None,
     recommendation_references: Optional[List[str]] = None,
@@ -70,6 +74,30 @@ def validate_tenant_isolation(
     if risk_assessment_org and risk_assessment_org.strip() != ctx_org:
         raise AgentTenantIsolationError(
             f"Cross-tenant risk assessment detected from foreign tenant: assessment belongs to '{risk_assessment_org}', "
+            f"execution scoped to '{ctx_org}'."
+        )
+
+    if prediction_org and prediction_org.strip() != ctx_org:
+        raise AgentTenantIsolationError(
+            f"Cross-tenant prediction detected from foreign tenant: prediction belongs to '{prediction_org}', "
+            f"execution scoped to '{ctx_org}'."
+        )
+
+    if scenario_org and scenario_org.strip() != ctx_org:
+        raise AgentTenantIsolationError(
+            f"Cross-tenant scenario detected from foreign tenant: scenario belongs to '{scenario_org}', "
+            f"execution scoped to '{ctx_org}'."
+        )
+
+    if decision_org and decision_org.strip() != ctx_org:
+        raise AgentTenantIsolationError(
+            f"Cross-tenant decision detected from foreign tenant: decision belongs to '{decision_org}', "
+            f"execution scoped to '{ctx_org}'."
+        )
+
+    if approval_org and approval_org.strip() != ctx_org:
+        raise AgentTenantIsolationError(
+            f"Cross-tenant approval detected from foreign tenant: approval belongs to '{approval_org}', "
             f"execution scoped to '{ctx_org}'."
         )
 
