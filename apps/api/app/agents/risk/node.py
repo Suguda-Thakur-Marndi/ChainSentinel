@@ -10,6 +10,7 @@ Side effects: READ_ONLY (Risk Engine evaluation is an internal business operatio
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import time
 from typing import Any, Dict, Optional
 
@@ -21,8 +22,47 @@ from app.agents.contracts import (
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.research.contract import ResearchFinding, ResearchResult
 from app.agents.risk.agent import RiskAgent
+from app.agents.risk.claude_service import ClaudeRiskExplanationService
 from app.agents.risk.contract import RiskAgentRequest, RiskAgentResult, generate_deterministic_risk_request_id
 from app.agents.risk.errors import InvalidRiskRequestError, RiskTenantIsolationError
+from app.agents.security import sanitize_sensitive_data
+from app.core.logging import get_logger
+
+logger = get_logger("agents.risk.node")
+
+
+def _emit_risk_audit(
+    action: str,
+    organization_id: str,
+    assessment_id: str,
+    status: str = "SUCCESS",
+    details: Optional[Dict[str, Any]] = None,
+    uow: Optional[Any] = None,
+) -> None:
+    """Emit a risk explanation audit event via structured logs and UnitOfWork if available."""
+    clean_details = sanitize_sensitive_data(details or {})
+    logger.info(
+        "AUDIT_EVENT: action=%s org=%s assessment_id=%s status=%s details=%s",
+        action,
+        organization_id,
+        assessment_id,
+        status,
+        clean_details,
+    )
+    if uow is not None and hasattr(uow, "audit_logs"):
+        try:
+            from app.services.audit_service import AuditService
+            AuditService.log_event(
+                uow=uow,
+                action=action,
+                resource_type="RISK_AGENT",
+                org_id=organization_id,
+                resource_id=assessment_id,
+                status=status,
+                after_data=clean_details,
+            )
+        except Exception as audit_err:
+            logger.warning("Failed to persist risk audit log via UoW: %s", audit_err)
 
 try:
     from app.agents.contracts import AgentNodeContract
@@ -63,6 +103,7 @@ RISK_NODE_CONTRACT = AgentNodeContract(
         "risk_assessment_reference",
         "risk_assessment",
         "risk_alert_references",
+        "risk_explanation",
         "structured_findings",
         "limitations",
         "warnings",
@@ -169,6 +210,7 @@ def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
     correlation_id = state.get("correlation_id", "")
     trace_id = state.get("trace_id", "")
     objective = state.get("objective", "")
+    warnings: List[str] = list(state.get("warnings", []))
 
     try:
         if not organization_id or not organization_id.strip():
@@ -229,13 +271,93 @@ def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
                 factor_count=result.factor_count,
             )
 
+        # 4b. Generate Claude Risk Explanation (Phase 10 Step 4)
+        use_claude = state.get("use_claude", True)
+        explanation_payload: Optional[Dict[str, Any]] = None
+        uow = state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+
+        assessment = result.assessment
+        if use_claude and assessment is not None and result.status != "INSUFFICIENT_EVIDENCE":
+            llm_provider = state.get("llm_provider")
+            explanation_service = ClaudeRiskExplanationService(llm_provider=llm_provider)
+            _emit_risk_audit(
+                action="RISK_LLM_EXPLANATION_STARTED",
+                organization_id=organization_id,
+                assessment_id=result.assessment_id,
+                status="STARTED",
+                details={"assessment_id": result.assessment_id, "score": result.risk_score, "level": result.risk_level},
+                uow=uow,
+            )
+            try:
+                explanation_result = explanation_service.execute(
+                    assessment=assessment,
+                    research_result=research_result,
+                    evidence_bundle=state.get("evidence_bundle"),
+                    objective=objective,
+                    correlation_id=correlation_id,
+                    trace_id=trace_id,
+                    agent_run_id=run_id,
+                    fail_closed=False,
+                )
+                explanation_payload = explanation_result.model_dump(mode="json")
+                if explanation_result.status.value == "AVAILABLE":
+                    _emit_risk_audit(
+                        action="RISK_LLM_EXPLANATION_SUCCEEDED",
+                        organization_id=organization_id,
+                        assessment_id=result.assessment_id,
+                        status="SUCCESS",
+                        details={"status": explanation_result.status.value, "fingerprint": explanation_result.fingerprint},
+                        uow=uow,
+                    )
+                else:
+                    _emit_risk_audit(
+                        action="RISK_LLM_EXPLANATION_REJECTED" if "REJECTED" in explanation_result.status.value else "RISK_LLM_EXPLANATION_FAILED",
+                        organization_id=organization_id,
+                        assessment_id=result.assessment_id,
+                        status="FAILED",
+                        details={"status": explanation_result.status.value, "summary": explanation_result.summary},
+                        uow=uow,
+                    )
+                    warnings.append(f"Risk explanation unavailable: {explanation_result.summary}")
+            except Exception as exp_err:
+                # Failure isolation: NEVER fail the authoritative risk assessment because LLM failed!
+                _emit_risk_audit(
+                    action="RISK_LLM_EXPLANATION_FAILED",
+                    organization_id=organization_id,
+                    assessment_id=result.assessment_id,
+                    status="FAILED",
+                    details={"error": str(exp_err)},
+                    uow=uow,
+                )
+                warnings.append(f"Risk explanation generation failed: {exp_err}")
+                explanation_payload = {
+                    "assessment_id": result.assessment_id,
+                    "organization_id": organization_id,
+                    "status": "UNAVAILABLE",
+                    "summary": f"Risk explanation unavailable: {exp_err}",
+                    "risk_level_statement": f"Authoritative risk level: {result.risk_level or 'UNSPECIFIED'}",
+                    "score_statement": f"Authoritative composite score: {result.risk_score if result.risk_score is not None else 'N/A'}",
+                    "key_drivers": [],
+                    "evidence_explanations": [],
+                    "uncertainty_analysis": "LLM explanation could not be completed.",
+                    "conflict_explanations": [],
+                    "limitations": ["LLM explanation failed; authoritative assessment remains valid."],
+                    "citations": [],
+                    "fingerprint": "unavailable",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "provenance": {"reason": str(exp_err)},
+                }
+
         # 5. Build state update payload (only RISK_ASSESSMENT-owned fields)
         step_count = state.get("step_count", 0) + 1
 
         existing_limitations = list(state.get("limitations", []))
         new_limitations = [lim.model_dump(mode="json") for lim in result.limitations]
 
-        warnings = list(state.get("warnings", []))
         if result.status == "INSUFFICIENT_EVIDENCE":
             warnings.append(
                 "Risk evaluation completed with INSUFFICIENT_EVIDENCE: "
@@ -254,6 +376,7 @@ def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
             "risk_assessment": risk_assessment_reference.model_dump(mode="json")
             if risk_assessment_reference else None,
             "risk_alert_references": result.alert_ids,
+            "risk_explanation": explanation_payload,
             "limitations": existing_limitations + new_limitations,
             "warnings": warnings,
             "findings": {

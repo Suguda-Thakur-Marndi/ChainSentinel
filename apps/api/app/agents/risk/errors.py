@@ -133,3 +133,101 @@ class UnsupportedFindingMappingError(RiskAgentError):
             error_code="UNSUPPORTED_FINDING_MAPPING",
             details=details,
         )
+
+
+class RiskExplanationError(RiskAgentError):
+    """Base exception for all Claude Risk Explanation operations."""
+
+    def __init__(
+        self,
+        message: str,
+        classification: ErrorClassification = ErrorClassification.NON_RETRYABLE,
+        error_code: str = "RISK_EXPLANATION_ERROR",
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=classification,
+            error_code=error_code,
+            details=details,
+        )
+
+
+class RiskScoreContradictionError(RiskExplanationError):
+    """Raised when Claude explanation contradicts authoritative Phase 7 risk score or level."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RISK_SCORE_CONTRADICTION",
+            details=details,
+        )
+
+
+class RiskFactorContradictionError(RiskExplanationError):
+    """Raised when Claude references fabricated or non-existent risk factors."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RISK_FACTOR_CONTRADICTION",
+            details=details,
+        )
+
+
+class RiskExplanationCitationIntegrityError(RiskExplanationError):
+    """Raised when Claude explanation cites evidence IDs not in the authoritative assessment or bundle."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RISK_EXPLANATION_CITATION_INTEGRITY_ERROR",
+            details=details,
+        )
+
+
+class RiskExplanationGroundingError(RiskExplanationError):
+    """Raised when an explanation statement is presented as factual without supporting evidence."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RISK_EXPLANATION_GROUNDING_ERROR",
+            details=details,
+        )
+
+
+class RiskExplanationLLMError(RiskExplanationError):
+    """Raised when the LLM invocation, network, or schema parsing fails."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RISK_EXPLANATION_LLM_ERROR",
+            details=details,
+        )

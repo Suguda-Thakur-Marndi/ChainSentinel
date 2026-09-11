@@ -124,6 +124,7 @@ class RiskAgentResult(BaseModel):
     limitations: List[AgentLimitation] = Field(default_factory=list)
 
     # Provenance and traceability
+    assessment: Optional[Any] = None
     provenance: Dict[str, Any] = Field(default_factory=dict)
     evaluated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

@@ -22,6 +22,7 @@ from app.agents.contracts import (
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.prediction.adapter import PredictionFeatureExtractor
 from app.agents.prediction.agent import PredictionAgent
+from app.agents.prediction.claude_service import ClaudePredictionExplanationService
 from app.agents.prediction.contract import (
     PredictionRequest,
     PredictionResult,
@@ -30,6 +31,45 @@ from app.agents.prediction.contract import (
 )
 from app.agents.prediction.errors import InvalidPredictionRequestError, PredictionTenantIsolationError
 from app.agents.prediction.service import BasePredictionService, UnavailablePredictionService
+from app.agents.security import sanitize_sensitive_data
+from app.core.logging import get_logger
+
+logger = get_logger("agents.prediction.node")
+
+
+def _emit_prediction_audit(
+    action: str,
+    organization_id: str,
+    prediction_id: str,
+    status: str = "SUCCESS",
+    details: Optional[Dict[str, Any]] = None,
+    uow: Optional[Any] = None,
+) -> None:
+    """Emit a prediction explanation audit event via structured logs and UnitOfWork if available."""
+    clean_details = sanitize_sensitive_data(details or {})
+    logger.info(
+        "AUDIT_EVENT: action=%s org=%s prediction_id=%s status=%s details=%s",
+        action,
+        organization_id,
+        prediction_id,
+        status,
+        clean_details,
+    )
+    if uow is not None and hasattr(uow, "audit_logs"):
+        try:
+            from app.services.audit_service import AuditService
+            AuditService.log_event(
+                uow=uow,
+                action=action,
+                resource_type="PREDICTION_AGENT",
+                org_id=organization_id,
+                resource_id=prediction_id,
+                status=status,
+                after_data=clean_details,
+            )
+        except Exception as audit_err:
+            logger.warning("Failed to persist prediction audit log via UoW: %s", audit_err)
+
 
 try:
     from app.agents.contracts import AgentNodeContract
@@ -67,6 +107,7 @@ PREDICTION_NODE_CONTRACT = AgentNodeContract(
         "prediction_id",
         "prediction_reference",
         "prediction_result",
+        "prediction_explanation",
         "structured_findings",
         "limitations",
         "warnings",
@@ -189,12 +230,115 @@ def prediction_node(
 
         step_count = state.get("step_count", 0) + 1
 
+        # 6b. Generate Claude Prediction Explanation (Phase 10 Step 6)
+        use_claude = state.get("use_claude", True)
+        explanation_payload: Optional[Dict[str, Any]] = None
+        uow = state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+
+        warnings = list(state.get("warnings", []))
+
+        if use_claude:
+            llm_provider = state.get("llm_provider")
+            explanation_service = ClaudePredictionExplanationService(llm_provider=llm_provider)
+            _emit_prediction_audit(
+                action="PREDICTION_LLM_EXPLANATION_STARTED",
+                organization_id=org_id.strip(),
+                prediction_id=result.prediction_id,
+                status="STARTED",
+                details={
+                    "prediction_id": result.prediction_id,
+                    "target": result.target,
+                    "status": result.status,
+                    "predicted_value": result.predicted_value,
+                    "trace_id": trace_id,
+                },
+                uow=uow,
+            )
+            try:
+                explanation_result = explanation_service.execute(
+                    prediction=result,
+                    risk_assessment=state.get("risk_assessment")
+                    or (state.get("risk_assessment_reference") if isinstance(state.get("risk_assessment_reference"), dict) else None),
+                    research_result=state.get("research_result"),
+                    evidence_bundle=state.get("evidence_bundle"),
+                    objective=objective,
+                    correlation_id=correlation_id,
+                    trace_id=trace_id,
+                    agent_run_id=run_id,
+                    fail_closed=False,
+                )
+                explanation_payload = explanation_result.model_dump(mode="json")
+                if explanation_result.status.value == "AVAILABLE":
+                    _emit_prediction_audit(
+                        action="PREDICTION_LLM_EXPLANATION_SUCCEEDED",
+                        organization_id=org_id.strip(),
+                        prediction_id=result.prediction_id,
+                        status="SUCCESS",
+                        details={
+                            "status": explanation_result.status.value,
+                            "fingerprint": explanation_result.fingerprint,
+                            "trace_id": trace_id,
+                        },
+                        uow=uow,
+                    )
+                else:
+                    _emit_prediction_audit(
+                        action=(
+                            "PREDICTION_LLM_EXPLANATION_REJECTED"
+                            if explanation_result.status.value in ("INVALID", "UNSAFE")
+                            else "PREDICTION_LLM_EXPLANATION_FAILED"
+                        ),
+                        organization_id=org_id.strip(),
+                        prediction_id=result.prediction_id,
+                        status="FAILED",
+                        details={
+                            "status": explanation_result.status.value,
+                            "summary": explanation_result.summary,
+                            "trace_id": trace_id,
+                        },
+                        uow=uow,
+                    )
+                    warnings.append(f"Prediction explanation unavailable: {explanation_result.summary}")
+            except Exception as exp_err:
+                # Failure isolation: NEVER fail the authoritative prediction result because LLM failed!
+                _emit_prediction_audit(
+                    action="PREDICTION_LLM_EXPLANATION_FAILED",
+                    organization_id=org_id.strip(),
+                    prediction_id=result.prediction_id,
+                    status="FAILED",
+                    details={"error": str(exp_err), "trace_id": trace_id},
+                    uow=uow,
+                )
+                warnings.append(f"Prediction explanation generation failed: {exp_err}")
+                explanation_payload = {
+                    "prediction_id": result.prediction_id,
+                    "organization_id": org_id.strip(),
+                    "status": "UNAVAILABLE",
+                    "summary": f"Prediction explanation unavailable: {exp_err}",
+                    "prediction_statement": "Authoritative prediction preserved; explanation unavailable.",
+                    "status_statement": result.status,
+                    "feature_explanations": [],
+                    "uncertainty_explanation": "Uncertainty explanation unavailable.",
+                    "risk_relationship": "Risk relationship unavailable.",
+                    "evidence_explanations": [],
+                    "limitations": ["LLM explanation failed; authoritative prediction remains valid."],
+                    "citations": [],
+                    "fingerprint": "fallback_unavailable",
+                    "provenance": {"error": str(exp_err), "status": "UNAVAILABLE"},
+                }
+
         update_payload: Dict[str, Any] = {
             "prediction_id": result.prediction_id,
             "prediction_reference": prediction_reference,
             "prediction_result": result.model_dump(mode="json"),
+            "prediction_explanation": explanation_payload,
             "structured_findings": updated_structured_findings,
             "limitations": updated_limitations,
+            "warnings": warnings,
             "findings": current_findings,
             "current_stage": AgentStage.PREDICTION.value,
             "current_node": "prediction_agent",

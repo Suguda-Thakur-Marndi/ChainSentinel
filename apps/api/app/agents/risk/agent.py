@@ -219,6 +219,7 @@ class RiskAgent:
             alert_ids=alert_ids,
             recommendation_ids=recommendation_ids,
             limitations=all_limitations,
+            assessment=assessment,
             provenance={
                 "research_id": request.research_id or "",
                 "evidence_bundle_id": request.evidence_bundle_id or "",

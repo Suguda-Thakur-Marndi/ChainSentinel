@@ -1598,6 +1598,7 @@ def test_88_research_node_execution_updates_state() -> None:
         "current_node": "research_agent",
         "step_count": 1,
         "evidence_bundle": bundle,
+        "use_claude": False,
     }
     update = research_node(state)
 
@@ -1751,6 +1752,7 @@ def test_95_research_node_emits_telemetry(monkeypatch: pytest.MonkeyPatch) -> No
         "objective": "Investigate weather impacts.",
         "current_stage": AgentStage.RESEARCH.value,
         "evidence_bundle": bundle,
+        "use_claude": False,
     }
     research_node(state)
 

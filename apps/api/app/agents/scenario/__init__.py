@@ -7,6 +7,19 @@ LangGraph execution node, and typed exceptions.
 from __future__ import annotations
 
 from app.agents.scenario.agent import ScenarioAgent
+from app.agents.scenario.claude_contract import (
+    ClaudeAssumptionExplanation,
+    ClaudeScenarioExplanation,
+    ClaudeScenarioParameterExplanation,
+    ScenarioConstraintExplanationInput,
+    ScenarioExplanationInput,
+    ScenarioExplanationResult,
+    ScenarioExplanationStatus,
+    ScenarioParameterExplanationInput,
+    ScenarioTriggerExplanationInput,
+    compute_scenario_explanation_fingerprint,
+)
+from app.agents.scenario.claude_service import ClaudeScenarioExplanationService
 from app.agents.scenario.contract import (
     ScenarioConstraint,
     ScenarioDefinition,
@@ -24,8 +37,27 @@ from app.agents.scenario.errors import (
     InvalidScenarioParameterError,
     InvalidScenarioRequestError,
     ScenarioAgentError,
+    ScenarioCapacityImpactFabricationError,
+    ScenarioCostFabricationError,
+    ScenarioDurationFabricationError,
+    ScenarioEntityFabricationError,
+    ScenarioETAFabricationError,
+    ScenarioExplanationCitationIntegrityError,
+    ScenarioExplanationError,
+    ScenarioExplanationGroundingError,
+    ScenarioExplanationLLMError,
     ScenarioGenerationError,
+    ScenarioInventoryImpactFabricationError,
+    ScenarioOptimizationFabricationError,
+    ScenarioParameterContradictionError,
+    ScenarioParameterFabricationError,
+    ScenarioProbabilityFabricationError,
+    ScenarioSimulationFabricationError,
+    ScenarioSimulationOutputFabricationError,
+    ScenarioStatusContradictionError,
     ScenarioTenantIsolationError,
+    ScenarioTypeContradictionError,
+    ScenarioValueContradictionError,
     UnsupportedScenarioTypeError,
 )
 from app.agents.scenario.generator import ScenarioGenerator
@@ -43,6 +75,19 @@ __all__ = [
     "ScenarioResult",
     "generate_deterministic_scenario_id",
     "compute_scenario_fingerprint",
+    # Claude Explanation Contracts
+    "ScenarioExplanationStatus",
+    "ScenarioParameterExplanationInput",
+    "ScenarioTriggerExplanationInput",
+    "ScenarioConstraintExplanationInput",
+    "ScenarioExplanationInput",
+    "ClaudeScenarioParameterExplanation",
+    "ClaudeAssumptionExplanation",
+    "ClaudeScenarioExplanation",
+    "ScenarioExplanationResult",
+    "compute_scenario_explanation_fingerprint",
+    # Claude Explanation Service
+    "ClaudeScenarioExplanationService",
     # Errors
     "ScenarioAgentError",
     "InvalidScenarioRequestError",
@@ -51,6 +96,25 @@ __all__ = [
     "UnsupportedScenarioTypeError",
     "InsufficientEvidenceError",
     "ScenarioGenerationError",
+    "ScenarioExplanationError",
+    "ScenarioTypeContradictionError",
+    "ScenarioParameterContradictionError",
+    "ScenarioValueContradictionError",
+    "ScenarioStatusContradictionError",
+    "ScenarioParameterFabricationError",
+    "ScenarioProbabilityFabricationError",
+    "ScenarioCostFabricationError",
+    "ScenarioDurationFabricationError",
+    "ScenarioETAFabricationError",
+    "ScenarioInventoryImpactFabricationError",
+    "ScenarioCapacityImpactFabricationError",
+    "ScenarioSimulationFabricationError",
+    "ScenarioSimulationOutputFabricationError",
+    "ScenarioOptimizationFabricationError",
+    "ScenarioEntityFabricationError",
+    "ScenarioExplanationCitationIntegrityError",
+    "ScenarioExplanationGroundingError",
+    "ScenarioExplanationLLMError",
     # Generator
     "ScenarioGenerator",
     # Agent
@@ -59,3 +123,4 @@ __all__ = [
     "SCENARIO_NODE_CONTRACT",
     "scenario_node",
 ]
+

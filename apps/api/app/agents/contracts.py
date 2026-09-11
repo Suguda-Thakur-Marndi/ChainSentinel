@@ -379,15 +379,19 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "risk_assessment_id": {AgentStage.RISK_ASSESSMENT},
     "risk_assessment_reference": {AgentStage.RISK_ASSESSMENT},
     "risk_alert_references": {AgentStage.RISK_ASSESSMENT},
+    "risk_explanation": {AgentStage.RISK_ASSESSMENT},
     "prediction_id": {AgentStage.PREDICTION},
     "prediction_reference": {AgentStage.PREDICTION},
     "prediction_result": {AgentStage.PREDICTION},
+    "prediction_explanation": {AgentStage.PREDICTION},
     "scenario_id": {AgentStage.SCENARIO_ANALYSIS},
     "scenario_reference": {AgentStage.SCENARIO_ANALYSIS},
     "scenario_result": {AgentStage.SCENARIO_ANALYSIS},
+    "scenario_explanation": {AgentStage.SCENARIO_ANALYSIS},
     "decision_id": {AgentStage.DECISION},
     "decision_reference": {AgentStage.DECISION},
     "decision_result": {AgentStage.DECISION},
+    "decision_explanation": {AgentStage.DECISION},
     "recommendation_references": {AgentStage.DECISION},
     "requires_human_approval": {AgentStage.APPROVAL, AgentStage.INITIALIZATION},
     "approval_id": {AgentStage.APPROVAL},
@@ -442,22 +446,26 @@ class AgentGraphState(BaseModel):
     risk_assessment_reference: Optional[RiskAssessmentReference] = None
     risk_assessment: Optional[RiskAssessmentReference] = None
     risk_alert_references: List[str] = Field(default_factory=list)
+    risk_explanation: Optional[Dict[str, Any]] = None
     recommendation_references: List[str] = Field(default_factory=list)
 
     # G. Prediction References
     prediction_id: Optional[str] = None
     prediction_reference: Optional[Dict[str, Any]] = None
     prediction_result: Optional[Dict[str, Any]] = None
+    prediction_explanation: Optional[Dict[str, Any]] = None
 
     # H. Scenario References
     scenario_id: Optional[str] = None
     scenario_reference: Optional[Dict[str, Any]] = None
     scenario_result: Optional[Dict[str, Any]] = None
+    scenario_explanation: Optional[Dict[str, Any]] = None
 
     # I. Decision References
     decision_id: Optional[str] = None
     decision_reference: Optional[Dict[str, Any]] = None
     decision_result: Optional[Dict[str, Any]] = None
+    decision_explanation: Optional[Dict[str, Any]] = None
 
     # J. Structured Findings, Limitations & Conflicts
     findings: Dict[str, Any] = Field(default_factory=dict)
@@ -810,19 +818,23 @@ class AgentGraphStateDict(TypedDict, total=False):
     risk_assessment_reference: Optional[Dict[str, Any]]
     risk_assessment: Optional[Dict[str, Any]]
     risk_alert_references: List[str]
+    risk_explanation: Optional[Dict[str, Any]]
     recommendation_references: List[str]
     # Prediction
     prediction_id: Optional[str]
     prediction_reference: Optional[Dict[str, Any]]
     prediction_result: Optional[Dict[str, Any]]
+    prediction_explanation: Optional[Dict[str, Any]]
     # Scenario
     scenario_id: Optional[str]
     scenario_reference: Optional[Dict[str, Any]]
     scenario_result: Optional[Dict[str, Any]]
+    scenario_explanation: Optional[Dict[str, Any]]
     # Decision
     decision_id: Optional[str]
     decision_reference: Optional[Dict[str, Any]]
     decision_result: Optional[Dict[str, Any]]
+    decision_explanation: Optional[Dict[str, Any]]
     # Findings
     findings: Dict[str, Any]
     structured_findings: List[Dict[str, Any]]

@@ -1,12 +1,28 @@
-"""Public interface for the RiskWise Decision Agent (Phase 9 Step 8).
+"""Public interface for the RiskWise Decision Agent (Phase 9 Step 8 & Phase 10 Step 7).
 
 Exports strongly typed decision contracts, deterministic rule engine, orchestration agent,
-LangGraph execution node, and typed exceptions.
+LangGraph execution node, Claude explanation contracts & service, and typed exceptions.
 """
 
 from __future__ import annotations
 
 from app.agents.decision.agent import DecisionAgent
+from app.agents.decision.claude_contract import (
+    ClaudeCandidateTradeoff,
+    ClaudeDecisionExplanation,
+    DecisionCandidateExplanationInput,
+    DecisionConstraintExplanationInput,
+    DecisionExplanationInput,
+    DecisionExplanationResult,
+    DecisionExplanationStatus,
+    DecisionRationaleExplanationInput,
+    compute_decision_explanation_fingerprint,
+)
+from app.agents.decision.claude_service import (
+    ClaudeDecisionExplanationService,
+    DECISION_EXPLANATION_PROMPT_VERSION,
+    MAX_DECISION_EXPLANATION_CONTEXT_CHARS,
+)
 from app.agents.decision.contract import (
     DecisionBasis,
     DecisionCandidate,
@@ -21,10 +37,23 @@ from app.agents.decision.contract import (
     generate_deterministic_decision_id,
 )
 from app.agents.decision.errors import (
+    DecisionActionContradictionError,
     DecisionAgentError,
+    DecisionApprovalViolationError,
     DecisionAuthorizationError,
+    DecisionCandidateContradictionError,
+    DecisionExecutionViolationError,
+    DecisionExplanationCitationIntegrityError,
+    DecisionExplanationError,
+    DecisionExplanationGroundingError,
+    DecisionExplanationLLMError,
     DecisionGenerationError,
+    DecisionOptionFabricationError,
+    DecisionOptimizationFabricationError,
+    DecisionQuantitativeFabricationError,
+    DecisionStatusContradictionError,
     DecisionTenantIsolationError,
+    DecisionValueContradictionError,
     InsufficientEvidenceError,
     InvalidDecisionCandidateError,
     InvalidDecisionRequestError,
@@ -50,6 +79,20 @@ __all__ = [
     "DecisionResult",
     "generate_deterministic_decision_id",
     "compute_decision_fingerprint",
+    # Claude Explanation Contracts
+    "DecisionExplanationStatus",
+    "DecisionCandidateExplanationInput",
+    "DecisionConstraintExplanationInput",
+    "DecisionRationaleExplanationInput",
+    "DecisionExplanationInput",
+    "ClaudeCandidateTradeoff",
+    "ClaudeDecisionExplanation",
+    "DecisionExplanationResult",
+    "compute_decision_explanation_fingerprint",
+    # Claude Explanation Service
+    "ClaudeDecisionExplanationService",
+    "DECISION_EXPLANATION_PROMPT_VERSION",
+    "MAX_DECISION_EXPLANATION_CONTEXT_CHARS",
     # Rule Engine
     "DecisionRuleEngine",
     "RULE_VERSION",
@@ -70,4 +113,17 @@ __all__ = [
     "UnsupportedDecisionTypeError",
     "DecisionGenerationError",
     "DecisionAuthorizationError",
+    "DecisionExplanationError",
+    "DecisionValueContradictionError",
+    "DecisionStatusContradictionError",
+    "DecisionActionContradictionError",
+    "DecisionCandidateContradictionError",
+    "DecisionOptionFabricationError",
+    "DecisionApprovalViolationError",
+    "DecisionExecutionViolationError",
+    "DecisionOptimizationFabricationError",
+    "DecisionQuantitativeFabricationError",
+    "DecisionExplanationCitationIntegrityError",
+    "DecisionExplanationGroundingError",
+    "DecisionExplanationLLMError",
 ]

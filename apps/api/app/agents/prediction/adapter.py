@@ -65,6 +65,8 @@ class PredictionFeatureExtractor:
                 )
 
             risk_score = risk_ref.get("risk_score")
+            if risk_score is None and isinstance(risk_ref.get("overall_score"), dict):
+                risk_score = risk_ref["overall_score"].get("score")
             risk_level = risk_ref.get("risk_level")
             factor_count = risk_ref.get("factor_count", 0)
             risk_ev_ids = risk_ref.get("evidence_ids") or state.get("evidence_references", [])

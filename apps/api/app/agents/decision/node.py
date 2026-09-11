@@ -21,6 +21,7 @@ from app.agents.contracts import (
     validate_state_update,
 )
 from app.agents.decision.agent import DecisionAgent
+from app.agents.decision.claude_service import ClaudeDecisionExplanationService
 from app.agents.decision.contract import (
     DecisionRequest,
     DecisionResult,
@@ -29,6 +30,45 @@ from app.agents.decision.contract import (
 from app.agents.decision.errors import DecisionTenantIsolationError
 from app.agents.decision.rules import DecisionRuleEngine
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
+from app.agents.security import sanitize_sensitive_data
+from app.core.logging import get_logger
+
+logger = get_logger("agents.decision.node")
+
+
+def _emit_decision_audit(
+    action: str,
+    organization_id: str,
+    decision_id: str,
+    status: str = "SUCCESS",
+    details: Optional[Dict[str, Any]] = None,
+    uow: Optional[Any] = None,
+) -> None:
+    """Emit a decision explanation audit event via structured logs and UnitOfWork if available."""
+    clean_details = sanitize_sensitive_data(details or {})
+    logger.info(
+        "AUDIT_EVENT: action=%s org=%s decision_id=%s status=%s details=%s",
+        action,
+        organization_id,
+        decision_id,
+        status,
+        clean_details,
+    )
+    if uow is not None and hasattr(uow, "audit_logs"):
+        try:
+            from app.services.audit_service import AuditService
+            AuditService.log_event(
+                uow=uow,
+                action=action,
+                resource_type="DECISION_AGENT",
+                org_id=organization_id,
+                resource_id=decision_id,
+                status=status,
+                after_data=clean_details,
+            )
+        except Exception as audit_err:
+            logger.warning("Failed to persist decision audit log via UoW: %s", audit_err)
+
 
 DECISION_NODE_CONTRACT = AgentNodeContract(
     node_id="decision_agent",
@@ -65,6 +105,7 @@ DECISION_NODE_CONTRACT = AgentNodeContract(
         "decision_id",
         "decision_reference",
         "decision_result",
+        "decision_explanation",
         "recommendation_references",
         "requires_human_approval",
         "structured_findings",
@@ -158,6 +199,90 @@ def decision_node(
         agent = DecisionAgent(rule_engine=rule_engine)
         result, findings = agent.execute(request)
 
+        # 3b. Generate Claude Decision Explanation (Phase 10 Step 7)
+        use_claude = state.get("use_claude", True)
+        explanation_payload: Optional[Dict[str, Any]] = None
+        uow = state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+
+        warnings = list(state.get("warnings", []))
+        if use_claude and result.candidates:
+            llm_provider = state.get("llm_provider")
+            explanation_service = ClaudeDecisionExplanationService(llm_provider=llm_provider)
+            _emit_decision_audit(
+                action="DECISION_LLM_EXPLANATION_STARTED",
+                organization_id=org_id.strip(),
+                decision_id=result.decision_id,
+                status="STARTED",
+                details={
+                    "decision_id": result.decision_id,
+                    "decision_type": request.decision_type.value,
+                    "fingerprint": result.fingerprint,
+                    "candidate_count": len(result.candidates),
+                },
+                uow=uow,
+            )
+            try:
+                explanation_result = explanation_service.execute(
+                    decision=result,
+                    scenario_result=scen_res or scen_def,
+                    risk_assessment=state.get("risk_assessment")
+                    or (state.get("risk_assessment_reference") if isinstance(state.get("risk_assessment_reference"), dict) else None),
+                    prediction_result=state.get("prediction_result")
+                    or (state.get("prediction_reference") if isinstance(state.get("prediction_reference"), dict) else None),
+                    research_result=state.get("research_result"),
+                    evidence_bundle=state.get("evidence_bundle"),
+                    objective=objective,
+                    correlation_id=correlation_id,
+                    trace_id=trace_id,
+                    agent_run_id=run_id,
+                    fail_closed=False,
+                )
+                explanation_payload = explanation_result.model_dump(mode="json")
+                if explanation_result.status.value == "AVAILABLE":
+                    _emit_decision_audit(
+                        action="DECISION_LLM_EXPLANATION_SUCCEEDED",
+                        organization_id=org_id.strip(),
+                        decision_id=result.decision_id,
+                        status="SUCCESS",
+                        details={
+                            "status": explanation_result.status.value,
+                            "fingerprint": explanation_result.fingerprint,
+                        },
+                        uow=uow,
+                    )
+                else:
+                    _emit_decision_audit(
+                        action=(
+                            "DECISION_LLM_EXPLANATION_REJECTED"
+                            if explanation_result.status.value in ("INVALID", "UNSAFE")
+                            else "DECISION_LLM_EXPLANATION_FAILED"
+                        ),
+                        organization_id=org_id.strip(),
+                        decision_id=result.decision_id,
+                        status="FAILED",
+                        details={
+                            "status": explanation_result.status.value,
+                            "summary": explanation_result.summary,
+                        },
+                        uow=uow,
+                    )
+                    warnings.append(f"Decision explanation unavailable: {explanation_result.summary}")
+            except Exception as exp_err:
+                # Failure isolation: NEVER fail the authoritative DecisionResult because LLM failed!
+                _emit_decision_audit(
+                    action="DECISION_LLM_EXPLANATION_FAILED",
+                    organization_id=org_id.strip(),
+                    decision_id=result.decision_id,
+                    status="FAILED",
+                    details={"error": str(exp_err)},
+                    uow=uow,
+                )
+                warnings.append(f"Decision explanation generation failed: {exp_err}")
+
         # 4. Assemble state update
         existing_findings = list(state.get("structured_findings", []))
         findings_serialized = [f.model_dump(mode="json") for f in findings]
@@ -192,6 +317,7 @@ def decision_node(
             "decision_id": result.decision_id,
             "decision_reference": decision_reference,
             "decision_result": result.model_dump(mode="json"),
+            "decision_explanation": explanation_payload,
             "structured_findings": updated_structured_findings,
             "limitations": updated_limitations,
             "findings": current_findings,
@@ -200,7 +326,6 @@ def decision_node(
             "step_count": step_count,
         }
 
-        warnings = list(state.get("warnings", []))
         if requires_approval:
             warnings.append("Decision candidate requires human approval before execution.")
             update_payload["selected_route"] = "approval_boundary"

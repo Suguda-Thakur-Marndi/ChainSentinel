@@ -12,3 +12,7 @@ protobuf>=5.0.0
 gtfs-realtime-bindings>=2.0.0
 # Phase 9: LangGraph Agent Graph Architecture & Orchestration
 langgraph>=1.2.0
+
+# Phase 10: AWS Bedrock + Claude Foundation
+boto3>=1.34.0
+botocore>=1.34.0

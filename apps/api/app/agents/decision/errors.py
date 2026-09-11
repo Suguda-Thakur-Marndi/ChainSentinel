@@ -132,3 +132,174 @@ class DecisionAuthorizationError(DecisionAgentError):
             details=details,
             retryable=False,
         )
+
+
+# ==============================================================================
+# Phase 10 Step 7 Typed Domain Error Extensions for Decision Explanation
+# ==============================================================================
+
+class DecisionExplanationError(DecisionAgentError):
+    """Base exception for all Decision Explanation Layer failures."""
+
+    def __init__(
+        self,
+        message: str,
+        error_code: str = "DECISION_EXPLANATION_ERROR",
+        details: Optional[Dict[str, Any]] = None,
+        retryable: bool = False,
+    ) -> None:
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            details=details,
+            retryable=retryable,
+        )
+
+
+class DecisionValueContradictionError(DecisionExplanationError):
+    """Raised when Claude contradicts or alters authoritative decision values."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_VALUE_CONTRADICTION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionStatusContradictionError(DecisionExplanationError):
+    """Raised when Claude claims a decision status contradicting authoritative status."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_STATUS_CONTRADICTION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionActionContradictionError(DecisionExplanationError):
+    """Raised when Claude asserts an action type contradicting authoritative candidate."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_ACTION_CONTRADICTION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionCandidateContradictionError(DecisionExplanationError):
+    """Raised when Claude contradicts the selected candidate or candidate set."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_CANDIDATE_CONTRADICTION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionOptionFabricationError(DecisionExplanationError):
+    """Raised when Claude invents candidates or options not present in authoritative decision."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_OPTION_FABRICATION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionApprovalViolationError(DecisionExplanationError):
+    """Raised when Claude claims approval was granted, bypasses approval, or claims authority to approve."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_APPROVAL_VIOLATION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionExecutionViolationError(DecisionExplanationError):
+    """Raised when Claude claims an operational action was executed or dispatches commands."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_EXECUTION_VIOLATION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionOptimizationFabricationError(DecisionExplanationError):
+    """Raised when Claude fabricates mathematical optimization (OR-Tools, LP, MIP, solver claims)."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_OPTIMIZATION_FABRICATION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionQuantitativeFabricationError(DecisionExplanationError):
+    """Raised when Claude invents quantitative metrics, savings, costs, or probabilities without grounding."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_QUANTITATIVE_FABRICATION",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionExplanationCitationIntegrityError(DecisionExplanationError):
+    """Raised when Claude cites an ungrounded or non-existent evidence or candidate ID."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_CITATION_INTEGRITY_ERROR",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionExplanationGroundingError(DecisionExplanationError):
+    """Raised when a rationale or trade-off claim lacks required supporting evidence or references."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_GROUNDING_ERROR",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionExplanationLLMError(DecisionExplanationError):
+    """Raised when Claude invocation, parsing, or token budgeting encounters a failure."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+        retryable: bool = False,
+    ) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_LLM_ERROR",
+            details=details,
+            retryable=retryable,
+        )

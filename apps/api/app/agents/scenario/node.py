@@ -9,6 +9,7 @@ Side effects: READ_ONLY (scenario definitions have zero operational side effects
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import time
 from typing import Any, Dict, List, Optional
 
@@ -21,6 +22,7 @@ from app.agents.contracts import (
 )
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.scenario.agent import ScenarioAgent
+from app.agents.scenario.claude_service import ClaudeScenarioExplanationService
 from app.agents.scenario.contract import (
     ScenarioParameter,
     ScenarioRequest,
@@ -29,6 +31,44 @@ from app.agents.scenario.contract import (
 )
 from app.agents.scenario.errors import ScenarioTenantIsolationError
 from app.agents.scenario.generator import ScenarioGenerator
+from app.agents.security import sanitize_sensitive_data
+from app.core.logging import get_logger
+
+logger = get_logger("agents.scenario.node")
+
+
+def _emit_scenario_audit(
+    action: str,
+    organization_id: str,
+    scenario_id: str,
+    status: str = "SUCCESS",
+    details: Optional[Dict[str, Any]] = None,
+    uow: Optional[Any] = None,
+) -> None:
+    """Emit a scenario explanation audit event via structured logs and UnitOfWork if available."""
+    clean_details = sanitize_sensitive_data(details or {})
+    logger.info(
+        "AUDIT_EVENT: action=%s org=%s scenario_id=%s status=%s details=%s",
+        action,
+        organization_id,
+        scenario_id,
+        status,
+        clean_details,
+    )
+    if uow is not None and hasattr(uow, "audit_logs"):
+        try:
+            from app.services.audit_service import AuditService
+            AuditService.log_event(
+                uow=uow,
+                action=action,
+                resource_type="SCENARIO_AGENT",
+                org_id=organization_id,
+                resource_id=scenario_id,
+                status=status,
+                after_data=clean_details,
+            )
+        except Exception as audit_err:
+            logger.warning("Failed to persist scenario audit log via UoW: %s", audit_err)
 
 
 SCENARIO_NODE_CONTRACT = AgentNodeContract(
@@ -62,6 +102,7 @@ SCENARIO_NODE_CONTRACT = AgentNodeContract(
         "scenario_id",
         "scenario_reference",
         "scenario_result",
+        "scenario_explanation",
         "structured_findings",
         "limitations",
         "warnings",
@@ -140,6 +181,108 @@ def scenario_node(
         agent = ScenarioAgent(generator=generator)
         result, findings = agent.execute(request)
 
+        # 3b. Generate Claude Scenario Explanation (Phase 10 Step 5)
+        use_claude = state.get("use_claude", True)
+        explanation_payload: Optional[Dict[str, Any]] = None
+        uow = state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+
+        scenario = result.scenario_definition
+        warnings = list(state.get("warnings", []))
+        if use_claude and scenario is not None and result.status == "READY":
+            llm_provider = state.get("llm_provider")
+            explanation_service = ClaudeScenarioExplanationService(llm_provider=llm_provider)
+            _emit_scenario_audit(
+                action="SCENARIO_LLM_EXPLANATION_STARTED",
+                organization_id=org_id.strip(),
+                scenario_id=result.scenario_id,
+                status="STARTED",
+                details={
+                    "scenario_id": result.scenario_id,
+                    "scenario_type": request.scenario_type.value,
+                    "fingerprint": result.fingerprint,
+                },
+                uow=uow,
+            )
+            try:
+                explanation_result = explanation_service.execute(
+                    scenario=scenario,
+                    risk_assessment=state.get("risk_assessment")
+                    or (state.get("risk_assessment_reference") if isinstance(state.get("risk_assessment_reference"), dict) else None),
+                    prediction_result=state.get("prediction_result")
+                    or (state.get("prediction_reference") if isinstance(state.get("prediction_reference"), dict) else None),
+                    research_result=state.get("research_result"),
+                    evidence_bundle=state.get("evidence_bundle"),
+                    objective=objective,
+                    correlation_id=correlation_id,
+                    trace_id=trace_id,
+                    agent_run_id=run_id,
+                    fail_closed=False,
+                )
+                explanation_payload = explanation_result.model_dump(mode="json")
+                if explanation_result.status.value == "AVAILABLE":
+                    _emit_scenario_audit(
+                        action="SCENARIO_LLM_EXPLANATION_SUCCEEDED",
+                        organization_id=org_id.strip(),
+                        scenario_id=result.scenario_id,
+                        status="SUCCESS",
+                        details={
+                            "status": explanation_result.status.value,
+                            "fingerprint": explanation_result.fingerprint,
+                        },
+                        uow=uow,
+                    )
+                else:
+                    _emit_scenario_audit(
+                        action=(
+                            "SCENARIO_LLM_EXPLANATION_REJECTED"
+                            if explanation_result.status.value in ("INVALID", "UNSAFE")
+                            else "SCENARIO_LLM_EXPLANATION_FAILED"
+                        ),
+                        organization_id=org_id.strip(),
+                        scenario_id=result.scenario_id,
+                        status="FAILED",
+                        details={
+                            "status": explanation_result.status.value,
+                            "summary": explanation_result.summary,
+                        },
+                        uow=uow,
+                    )
+                    warnings.append(f"Scenario explanation unavailable: {explanation_result.summary}")
+            except Exception as exp_err:
+                # Failure isolation: NEVER fail the authoritative scenario definition because LLM failed!
+                _emit_scenario_audit(
+                    action="SCENARIO_LLM_EXPLANATION_FAILED",
+                    organization_id=org_id.strip(),
+                    scenario_id=result.scenario_id,
+                    status="FAILED",
+                    details={"error": str(exp_err)},
+                    uow=uow,
+                )
+                warnings.append(f"Scenario explanation generation failed: {exp_err}")
+                explanation_payload = {
+                    "scenario_id": result.scenario_id,
+                    "organization_id": org_id.strip(),
+                    "status": "UNAVAILABLE",
+                    "summary": f"Scenario explanation unavailable: {exp_err}",
+                    "scenario_purpose": "Operational what-if scenario explanation unavailable.",
+                    "scenario_type_statement": f"Authoritative scenario type: {scenario.scenario_type.value if hasattr(scenario.scenario_type, 'value') else scenario.scenario_type}",
+                    "parameter_explanations": [],
+                    "assumption_explanations": [],
+                    "risk_relationship": "Explanation unavailable; authoritative risk assessment remains intact.",
+                    "prediction_relationship": "Explanation unavailable; authoritative prediction remains intact.",
+                    "evidence_explanations": [],
+                    "uncertainty_analysis": "LLM explanation could not be completed.",
+                    "limitations": ["LLM explanation failed; authoritative scenario remains valid."],
+                    "citations": [],
+                    "fingerprint": "unavailable",
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "provenance": {"reason": str(exp_err)},
+                }
+
         # 4. Assemble state update
         existing_findings = list(state.get("structured_findings", []))
         findings_serialized = [f.model_dump(mode="json") for f in findings]
@@ -171,8 +314,10 @@ def scenario_node(
             "scenario_id": result.scenario_id,
             "scenario_reference": scenario_reference,
             "scenario_result": result.model_dump(mode="json"),
+            "scenario_explanation": explanation_payload,
             "structured_findings": updated_structured_findings,
             "limitations": updated_limitations,
+            "warnings": warnings,
             "findings": current_findings,
             "current_stage": AgentStage.SCENARIO_ANALYSIS.value,
             "current_node": "scenario_agent",

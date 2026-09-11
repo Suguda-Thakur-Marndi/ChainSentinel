@@ -111,3 +111,52 @@ class ResearchTenantIsolationError(ResearchError):
             error_code="RESEARCH_TENANT_ISOLATION_ERROR",
             details=details,
         )
+
+
+class ResearchCitationIntegrityError(ResearchError):
+    """Raised when an LLM finding or conflict references a hallucinated, unverified, or cross-tenant citation/evidence ID."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RESEARCH_CITATION_INTEGRITY_ERROR",
+            details=details,
+        )
+
+
+class ResearchGroundingError(ResearchError):
+    """Raised when an ungrounded or unsupported claim is represented as a verified fact."""
+
+    def __init__(
+        self,
+        message: str,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.NON_RETRYABLE,
+            error_code="RESEARCH_GROUNDING_ERROR",
+            details=details,
+        )
+
+
+class ResearchLLMError(ResearchError):
+    """Raised when LLM invocation, parsing, or schema validation encounters a failure."""
+
+    def __init__(
+        self,
+        message: str,
+        retryable: bool = False,
+        details: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(
+            message=message,
+            classification=ErrorClassification.RETRYABLE if retryable else ErrorClassification.NON_RETRYABLE,
+            error_code="RESEARCH_LLM_ERROR",
+            details=details,
+        )
