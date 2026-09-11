@@ -3,16 +3,27 @@ from __future__ import annotations
 
 import time
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from app.digital_twin.contracts import DigitalTwinSnapshot
+from app.simulation.config import (
+    DEFAULT_MAX_DEPTH,
+    DEFAULT_MAX_EDGES,
+    DEFAULT_MAX_EFFECTS,
+    DEFAULT_MAX_NODES,
+)
 from app.simulation.contracts import (
+    SimulationEntityImpact,
+    SimulationImpact,
     SimulationInput,
     SimulationOutcome,
+    SimulationPropagation,
     SimulationProvenance,
+    SimulationRequest,
     SimulationResult,
     SimulationScenario,
     SimulationStatus,
+    SimulationSummary,
 )
 from app.simulation.errors import (
     SimulationError,
@@ -23,6 +34,10 @@ from app.simulation.errors import (
 from app.simulation.fingerprints import (
     compute_simulation_fingerprint,
     compute_simulation_id,
+)
+from app.simulation.integration import (
+    SimulationMLIntegration,
+    SimulationRiskIntegration,
 )
 from app.simulation.metrics import SimulationMetricsCalculator
 from app.simulation.observability import SimulationObservability
@@ -38,7 +53,7 @@ class SimulationEngine:
     def execute_simulation(
         snapshot: DigitalTwinSnapshot,
         scenario: SimulationScenario,
-        sim_input: Optional[SimulationInput] = None,
+        sim_input: Optional[Union[SimulationInput, SimulationRequest]] = None,
         request_id: Optional[str] = None,
     ) -> SimulationResult:
         """Execute a complete, deterministic, and isolated scenario simulation."""
@@ -92,11 +107,14 @@ class SimulationEngine:
                 max_effects=sim_input.max_effects,
             )
             effects, nodes_visited, edges_traversed = prop_engine.propagate(state)
+            entity_impacts = prop_engine.entity_impacts
+            propagation_summary = prop_engine.propagation_summary
 
-            # 7. Evaluate baseline vs simulated risk read-only if requested
+            # 7. Evaluate baseline vs simulated risk in read-only mode if requested
             baseline_risk, simulated_risk = None, None
             if sim_input.evaluate_risk:
-                baseline_risk, simulated_risk = SimulationEngine._evaluate_risk_scores(snapshot, state)
+                base_r, sim_r, _, _ = SimulationRiskIntegration.evaluate_risk_delta(snapshot, state)
+                baseline_risk, simulated_risk = base_r, sim_r
 
             # 8. Compute standardized metrics & outcome
             metrics_dict, outcome = SimulationMetricsCalculator.calculate_metrics(
@@ -106,7 +124,17 @@ class SimulationEngine:
                 simulated_risk_score=simulated_risk,
             )
 
-            # 9. Build execution provenance
+            # 9. Optional ML delay enrichment for affected shipments
+            if getattr(sim_input, "evaluate_ml", False):
+                for effect in effects:
+                    if effect.affected_entity_type == "SHIPMENT":
+                        SimulationMLIntegration.predict_shipment_delay_impact(
+                            shipment_id=effect.affected_entity_id,
+                            baseline_delay_minutes=0.0,
+                            added_transit_minutes=effect.magnitude or 0.0,
+                        )
+
+            # 10. Build execution provenance
             provenance = SimulationProvenance(
                 base_snapshot_fingerprint=snapshot.twin_fingerprint,
                 base_snapshot_id=snapshot.twin_id,
@@ -123,6 +151,21 @@ class SimulationEngine:
 
             duration_ms = (time.perf_counter() - start_time) * 1000.0
 
+            summary = SimulationSummary(
+                simulation_id=sim_id,
+                scenario_id=scenario.scenario_id,
+                organization_id=scenario.organization_id,
+                status=SimulationStatus.COMPLETED,
+                severity=outcome.severity,
+                affected_nodes_count=outcome.affected_nodes_count,
+                affected_edges_count=outcome.affected_edges_count,
+                affected_shipments_count=outcome.affected_shipments_count,
+                total_added_delay_minutes=outcome.total_added_delay_minutes,
+                risk_delta=outcome.risk_delta,
+                execution_duration_ms=round(duration_ms, 2),
+                simulation_fingerprint=sim_fingerprint,
+            )
+
             result = SimulationResult(
                 simulation_id=sim_id,
                 scenario_id=scenario.scenario_id,
@@ -131,8 +174,12 @@ class SimulationEngine:
                 simulation_fingerprint=sim_fingerprint,
                 status=SimulationStatus.COMPLETED,
                 outcome=outcome,
+                impact=outcome,
+                summary=summary,
                 changes=list(scenario.changes),
                 effects=effects,
+                entity_impacts=entity_impacts,
+                propagation=propagation_summary,
                 metrics=metrics_dict,
                 provenance=provenance,
                 executed_at=datetime.utcnow(),
@@ -175,34 +222,3 @@ class SimulationEngine:
                 request_id=request_id,
             )
             raise SimulationError(f"Simulation execution failed: {str(e)}")
-
-    @staticmethod
-    def _evaluate_risk_scores(
-        snapshot: DigitalTwinSnapshot,
-        state: SimulationState,
-    ) -> Tuple[Optional[float], Optional[float]]:
-        """Calculate read-only baseline and simulated risk scores without DB mutation."""
-        # Baseline risk derived from node health scores
-        nodes_with_health = [n for n in snapshot.nodes.values() if n.health_score is not None]
-        if nodes_with_health:
-            baseline_avg_health = sum(n.health_score for n in nodes_with_health) / len(nodes_with_health)
-            baseline_risk = max(0.0, min(100.0, 100.0 - baseline_avg_health))
-        else:
-            baseline_risk = 20.0  # Operational baseline
-
-        # Simulated risk incorporates disruptions, outages, and delays
-        disruption_penalty = 0.0
-        for n in state.nodes.values():
-            if not n.is_available:
-                disruption_penalty += 15.0
-            elif n.effective_delay_minutes > 0.0:
-                disruption_penalty += min(10.0, n.effective_delay_minutes / 60.0)
-
-        for e in state.edges.values():
-            if not e.is_available:
-                disruption_penalty += 10.0
-            elif e.added_transit_time_minutes > 0.0:
-                disruption_penalty += min(5.0, e.added_transit_time_minutes / 60.0)
-
-        simulated_risk = max(0.0, min(100.0, baseline_risk + disruption_penalty))
-        return round(baseline_risk, 2), round(simulated_risk, 2)

@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+web/node_modules/
 apps/web/node_modules/
 .pnp
 .pnp.*
@@ -11,13 +12,16 @@ apps/web/node_modules/
 
 # Next.js & Frontend Build Outputs
 .next/
+web/.next/
 apps/web/.next/
 out/
+web/out/
 apps/web/out/
 build/
 dist/
 *.tsbuildinfo
 next-env.d.ts
+web/next-env.d.ts
 apps/web/next-env.d.ts
 .vercel/
 
@@ -26,8 +30,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+api/.pytest_cache/
 apps/api/.pytest_cache/
 .venv/
+api/.venv/
 apps/api/.venv/
 venv/
 env/
@@ -35,6 +41,7 @@ env/
 .coverage
 htmlcov/
 storage/
+api/storage/
 apps/api/storage/
 *.joblib
 

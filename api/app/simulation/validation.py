@@ -2,14 +2,22 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Union
 
 from app.digital_twin.contracts import DigitalTwinSnapshot
+from app.simulation.config import (
+    HARD_MAX_DEPTH,
+    HARD_MAX_EDGES,
+    HARD_MAX_EFFECTS,
+    HARD_MAX_NODES,
+    MAX_SCENARIO_CHANGES,
+)
 from app.simulation.contracts import (
     SimulationChange,
     SimulationChangeType,
     SimulationChangeUnit,
     SimulationInput,
+    SimulationRequest,
     SimulationScenario,
 )
 from app.simulation.errors import (
@@ -17,13 +25,6 @@ from app.simulation.errors import (
     SimulationTenantIsolationError,
     SimulationValidationError,
 )
-
-# Hard resource limits to prevent denial of service or unbounded execution
-MAX_SCENARIO_CHANGES = 50
-HARD_MAX_DEPTH = 10
-HARD_MAX_NODES = 1000
-HARD_MAX_EDGES = 2000
-HARD_MAX_EFFECTS = 500
 
 
 class SimulationValidator:
@@ -70,7 +71,7 @@ class SimulationValidator:
             if target not in seen_targets:
                 seen_targets[target] = set()
 
-            # Disallow conflicting duplicate change types on the exact same target entity
+            # Disallow conflicting redundant change types on the exact same target entity
             if change.change_type in seen_targets[target]:
                 raise SimulationValidationError(
                     f"Conflicting redundant change: entity '{target}' already has a '{change.change_type.value}' change declared"
@@ -101,7 +102,11 @@ class SimulationValidator:
 
         # 1. Target entity must exist in the snapshot
         target_found = False
-        if change.change_type in (SimulationChangeType.NODE_UNAVAILABLE, SimulationChangeType.CAPACITY_REDUCTION, SimulationChangeType.CAPACITY_INCREASE):
+        if change.change_type in (
+            SimulationChangeType.NODE_UNAVAILABLE,
+            SimulationChangeType.CAPACITY_REDUCTION,
+            SimulationChangeType.CAPACITY_INCREASE,
+        ):
             if change.target_entity_id in snapshot.nodes:
                 target_found = True
             else:
@@ -110,7 +115,10 @@ class SimulationValidator:
                     if node.source_entity_id == change.target_entity_id:
                         target_found = True
                         break
-        elif change.change_type in (SimulationChangeType.EDGE_UNAVAILABLE, SimulationChangeType.TRANSIT_TIME_INCREASE):
+        elif change.change_type in (
+            SimulationChangeType.EDGE_UNAVAILABLE,
+            SimulationChangeType.TRANSIT_TIME_INCREASE,
+        ):
             if change.target_entity_id in snapshot.edges:
                 target_found = True
             else:
@@ -120,7 +128,7 @@ class SimulationValidator:
                         target_found = True
                         break
         else:
-            # DELAY, DEMAND_CHANGE, INVENTORY_CHANGE can target nodes, shipments, or products
+            # DELAY, DELAY_INCREASE, DEMAND_CHANGE, INVENTORY_CHANGE can target nodes, shipments, or products
             if change.target_entity_id in snapshot.nodes or change.target_entity_id in snapshot.edges:
                 target_found = True
             else:
@@ -148,9 +156,9 @@ class SimulationValidator:
             if change.magnitude < 0.0:
                 raise SimulationValidationError(f"CAPACITY_INCREASE magnitude cannot be negative, got {change.magnitude}")
 
-        elif change.change_type == SimulationChangeType.DELAY:
+        elif change.change_type in (SimulationChangeType.DELAY, SimulationChangeType.DELAY_INCREASE):
             if change.magnitude < 0.0:
-                raise SimulationValidationError(f"DELAY magnitude cannot be negative, got {change.magnitude}")
+                raise SimulationValidationError(f"{change.change_type.value} magnitude cannot be negative, got {change.magnitude}")
 
         elif change.change_type == SimulationChangeType.TRANSIT_TIME_INCREASE:
             if change.magnitude < 0.0:
@@ -164,7 +172,7 @@ class SimulationValidator:
                 )
 
     @staticmethod
-    def validate_simulation_input(sim_input: SimulationInput) -> None:
+    def validate_simulation_input(sim_input: Union[SimulationInput, SimulationRequest]) -> None:
         """Validate execution parameters and resource limits."""
         if sim_input.max_depth > HARD_MAX_DEPTH:
             raise SimulationResourceLimitError(

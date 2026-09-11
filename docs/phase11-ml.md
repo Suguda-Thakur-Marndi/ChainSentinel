@@ -182,7 +182,7 @@ If Organization A attempts to load Organization B's registered model, `MLTenantI
 6. **Authoritative Return**: Returns typed `PredictionResult` adhering strictly to the Phase 9 contract.
 
 ### 7.2 Integration with LangGraph & Claude Explanation
-In `apps/api/app/agents/prediction/node.py`:
+In `api/app/agents/prediction/node.py`:
 - The LangGraph prediction node dynamically instantiates `MLPredictionService(registry=global_registry)`.
 - If ML prediction succeeds, `PredictionResult` is placed into the agent state.
 - Downstream in `prediction_explanation_node`, `ClaudePredictionExplanationService` takes the authoritative `PredictionResult` and generates contextual explanations for supply chain analysts. Claude never calculates or alters predictions.
@@ -193,7 +193,7 @@ In `apps/api/app/agents/prediction/node.py`:
 
 - **Database Invariant**: Exactly **34 tables** remain in `Base.metadata.tables`. **0 migrations** and **0 schema changes** were made in Phase 11. Model artifacts and registry metadata are persisted in the configured storage layer without requiring unnecessary database tables.
 - **API Invariant**: Exactly **60 OpenAPI routes** remain. No public administrative endpoints (`/ml/train`, `/ml/artifacts`) were exposed. Training and model registration remain internal services.
-- **Frontend Invariant**: `apps/web` was not modified (0 changes).
+- **Frontend Invariant**: `web` was not modified (0 changes).
 
 ---
 

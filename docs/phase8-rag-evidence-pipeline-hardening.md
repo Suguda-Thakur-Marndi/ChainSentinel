@@ -142,7 +142,7 @@ Domain-specific exceptions inheriting from `RAGError` (HTTP 400–422) provide f
 ---
 
 ## 10. Test Suite Validation
-A comprehensive test suite in `apps/api/tests/test_phase8_rag_evidence_pipeline.py` covers 66 test cases across 9 functional categories:
+A comprehensive test suite in `api/tests/test_phase8_rag_evidence_pipeline.py` covers 66 test cases across 9 functional categories:
 
 | Test Group | Test Focus | Tests | Status |
 |---|---|---|---|

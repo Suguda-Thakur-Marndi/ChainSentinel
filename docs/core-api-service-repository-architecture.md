@@ -3,7 +3,7 @@
 **Document Version:** 2.0.0  
 **Phase:** Phase 4 — Core APIs (Step 2 — Service Layer & Repository Foundations)  
 **Status:** IMPLEMENTED & VALIDATED  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -66,7 +66,7 @@ RiskWise 2.0 follows an enterprise, layered clean architecture designed to decou
 
 The repository layer abstracts data access for SQLAlchemy 2.0 entities. It provides standard CRUD methods without coupling callers to raw SQL queries or session details:
 
-### Location: `apps/api/app/repositories/base.py`
+### Location: `api/app/repositories/base.py`
 
 ```python
 class BaseRepository(Generic[ModelType]):
@@ -95,7 +95,7 @@ class BaseRepository(Generic[ModelType]):
 
 The service layer contains business workflows, lifecycle rules, cross-table coordination, and authorization checks. Routers must never execute raw database operations directly.
 
-### Location: `apps/api/app/services/base.py`
+### Location: `api/app/services/base.py`
 
 ```python
 class BaseService(Generic[ModelType]):
@@ -131,7 +131,7 @@ class BaseService(Generic[ModelType]):
 
 The Unit of Work pattern coordinates database transactions and repositories across an atomic business workflow.
 
-### Location: `apps/api/app/db/unit_of_work.py`
+### Location: `api/app/db/unit_of_work.py`
 
 ```python
 class UnitOfWork:
@@ -229,7 +229,7 @@ RiskWise contains shared reference catalogs that must **not** be partitioned by 
 | **TENANT** | 24 | `suppliers`, `shipments`, `risks`, `inventory` | Strictly scoped via `model.org_id == context.organization_id`. |
 | **CHILD** | 8 | `shipment_events`, `approvals`, `simulations` | Hierarchically scoped through foreign key relationship to parent tenant record. |
 
-In `apps/api/app/repositories/query_utils.py`, `apply_tenant_isolation` inspects `get_resource_scope(model)`. If the scope is `GLOBAL`, tenant filtering is safely skipped.
+In `api/app/repositories/query_utils.py`, `apply_tenant_isolation` inspects `get_resource_scope(model)`. If the scope is `GLOBAL`, tenant filtering is safely skipped.
 
 ---
 
@@ -260,7 +260,7 @@ Collections implement the Phase 4 Step 1 standard:
 
 Filtering utilizes explicit allowlists mapping query parameters to SQLAlchemy model columns.
 
-### Location: `apps/api/app/repositories/query_utils.py`
+### Location: `api/app/repositories/query_utils.py`
 
 - **Exact Equality:** `status="IN_TRANSIT"` -> `stmt.where(Model.status == "IN_TRANSIT")`
 - **Timestamp Ranges:**
@@ -330,7 +330,7 @@ All domain exceptions inherit from `AppError` and produce the standardized error
 
 ## 14. Concurrency Controls
 
-Foundations for concurrency management are established in `apps/api/app/services/concurrency.py`:
+Foundations for concurrency management are established in `api/app/services/concurrency.py`:
 
 1. **Pessimistic Row Locking:**
    ```python
@@ -351,7 +351,7 @@ Foundations for concurrency management are established in `apps/api/app/services
 
 ## 15. Audit Hooks
 
-Audit logging is centralized in `apps/api/app/services/audit_service.py`.
+Audit logging is centralized in `api/app/services/audit_service.py`.
 
 ### Security & Sanitization:
 The audit logger recursively scrubs credentials and secrets before writing to the database:

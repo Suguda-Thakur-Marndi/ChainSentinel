@@ -153,13 +153,13 @@ Retrieved document content is untrusted external data. It must never automatical
 ## 9. API / OpenAPI Impact
 
 - **OpenAPI Invariant Preserved**: Exactly 60 paths, 96 operations, and 104 schemas.
-- **Zero Public Endpoints Added**: Step 1 defines internal domain architecture and contracts. No new endpoints were added to `apps/api/app/api/v1/router.py`, preserving the existing baseline.
+- **Zero Public Endpoints Added**: Step 1 defines internal domain architecture and contracts. No new endpoints were added to `api/app/api/v1/router.py`, preserving the existing baseline.
 
 ---
 
 ## 10. Automated Testing & Verification
 
-A dedicated test suite was implemented in `apps/api/tests/test_phase8_rag_contracts.py` containing **27 focused unit and contract tests**:
+A dedicated test suite was implemented in `api/tests/test_phase8_rag_contracts.py` containing **27 focused unit and contract tests**:
 1. `test_document_identity_and_metadata_creation`: Validates document identity and metadata instantiation.
 2. `test_chunk_identity_and_contract_creation`: Validates chunk identity and contract instantiation.
 3. `test_embedding_vector_mathematical_operations`: Validates cosine similarity, L2 distance, and dot product.

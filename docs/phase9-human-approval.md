@@ -176,7 +176,7 @@ Approval requires an explicit decision event:
 ---
 
 ## 13. Approval Service
-`HumanApprovalService` (`apps/api/app/agents/approval/service.py`) encapsulates all domain logic:
+`HumanApprovalService` (`api/app/agents/approval/service.py`) encapsulates all domain logic:
 - `create_pending_approval(request, uow)`
 - `approve(approval_id, actor, request, comments, uow)`
 - `reject(approval_id, actor, request, comments, uow)`
@@ -307,7 +307,7 @@ Upon explicit human `REJECT`:
 ---
 
 ## 27. Tests
-A comprehensive test suite in `apps/api/tests/test_phase9_approval_agent.py` contains 133 focused tests:
+A comprehensive test suite in `api/tests/test_phase9_approval_agent.py` contains 133 focused tests:
 - Contracts Validation: 15 tests
 - Lifecycle Transitions: 12 tests
 - Mandatory No Auto-Approval: 8 tests

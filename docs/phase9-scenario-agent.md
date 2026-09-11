@@ -30,7 +30,7 @@ flowchart TD
         ScenNode --> TermNode["termination_node"]
     end
 
-    subgraph ScenarioCore["apps/api/app/agents/scenario/"]
+    subgraph ScenarioCore["api/app/agents/scenario/"]
         ScenAgent["ScenarioAgent"]
         ScenGen["ScenarioGenerator (Deterministic)"]
         ScenReq["ScenarioRequest (Validated)"]
@@ -49,7 +49,7 @@ flowchart TD
     ScenRes --> ScenNode
 ```
 
-The Scenario Agent is encapsulated in `apps/api/app/agents/scenario/`:
+The Scenario Agent is encapsulated in `api/app/agents/scenario/`:
 - `contract.py`: Pydantic V2 immutable domain contracts (`ScenarioRequest`, `ScenarioDefinition`, `ScenarioParameter`, `ScenarioTrigger`, `ScenarioConstraint`, `ScenarioResult`).
 - `generator.py`: Deterministic scenario transformation engine with zero heuristics and zero probability invention.
 - `agent.py`: Orchestration agent validating requests, coordinating generation, and constructing structured `AgentFinding` records.

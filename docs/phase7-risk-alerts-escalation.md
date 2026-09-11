@@ -36,7 +36,7 @@ API Endpoints & Client Notifications
 
 ## 3. Alert Contract
 
-The domain contract is formalized in `apps/api/app/risk_engine/alerts.py`:
+The domain contract is formalized in `api/app/risk_engine/alerts.py`:
 
 ```python
 class RiskAlert(BaseModel):
@@ -274,7 +274,7 @@ Integrated into existing endpoints with backward compatibility:
 
 ## 22. Testing Summary
 
-- **Phase 7 Step 6 Focused Suite:** 76 tests (`apps/api/tests/test_phase7_risk_alerts_escalation.py`) — 100% passing.
+- **Phase 7 Step 6 Focused Suite:** 76 tests (`api/tests/test_phase7_risk_alerts_escalation.py`) — 100% passing.
 - **Phase 7 Cumulative Suite:** 390 tests (Steps 1–6) — 100% passing.
 - **Full Test Suite:** 1,328 passed, 1 skipped, 0 failures across the entire application.
 

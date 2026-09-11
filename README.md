@@ -628,19 +628,19 @@ The backend connects to PostgreSQL via `DATABASE_URL` specified in `.env` (using
 DATABASE_URL=postgresql+psycopg://<user>:<password>@<host>:<port>/<dbname>
 ```
 
-Alembic manages migrations from `apps/api/` using configuration in `apps/api/alembic.ini`:
+Alembic manages migrations from `api/` using configuration in `api/alembic.ini`:
 
 ```bash
-cd apps/api
+cd api
 alembic upgrade head
 ```
 
-### 3. Backend Development (`apps/api`)
+### 3. Backend Development (`api`)
 
 Activate the Python virtual environment and launch the FastAPI development server:
 
 ```bash
-cd apps/api
+cd api
 
 # On Linux / macOS:
 source .venv/bin/activate
@@ -658,12 +658,12 @@ uvicorn app.main:app --reload --port 8000
 - **Interactive Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **OpenAPI 3.1 JSON Specification**: [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
 
-### 4. Frontend Development (`apps/web`)
+### 4. Frontend Development (`web`)
 
 Install dependencies and start the Next.js development server:
 
 ```bash
-cd apps/web
+cd web
 npm install
 npm run dev
 ```
@@ -679,14 +679,14 @@ RiskWise 2.0 maintains a rigorous automated testing discipline with **4,211 auto
 ### Run All Backend Tests (Full Regression Suite)
 
 ```bash
-cd apps/api
+cd api
 pytest tests/ -v
 ```
 
 ### Run Subsystem-Specific Test Suites
 
 ```bash
-cd apps/api
+cd api
 
 # Phase 12: Digital Twin Graph Foundation (150 tests)
 pytest tests/ -k "phase12" -v    # Cross-platform (or `pytest tests/test_phase12_*.py -v` on bash)
@@ -707,10 +707,10 @@ pytest tests/ -k "phase8" -v     # Cross-platform (or `pytest tests/test_phase8_
 pytest tests/ -k "phase7" -v     # Cross-platform (or `pytest tests/test_phase7_*.py -v` on bash)
 ```
 
-### Frontend Validation (`apps/web`)
+### Frontend Validation (`web`)
 
 ```bash
-cd apps/web
+cd web
 npx tsc --noEmit       # TypeScript type checking
 npm run lint           # ESLint code quality check
 npm run build          # Production Next.js bundle compilation

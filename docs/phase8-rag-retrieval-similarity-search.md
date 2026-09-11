@@ -188,7 +188,7 @@ Every retrieval execution emits an append-only, immutable `AuditLog` record:
 
 ## 12. Automated Testing & Verification
 
-A dedicated test suite was implemented in `apps/api/tests/test_phase8_rag_retrieval_similarity_search.py` containing **25 focused tests**:
+A dedicated test suite was implemented in `api/tests/test_phase8_rag_retrieval_similarity_search.py` containing **25 focused tests**:
 1. `test_valid_retrieval_query_happy_path`: Valid semantic retrieval query happy path with relevance scoring.
 2. `test_empty_query_rejected`: Empty or whitespace-only query rejection (`RAGInvalidQueryError`).
 3. `test_top_k_boundaries_and_rejection`: Top-k boundary enforcement ($1 \le k \le 100$).

@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-This document certifies the comprehensive verification, security hardening, and test validation of the RiskWise 2.0 authentication subsystem across the backend (`apps/api`), frontend (`apps/web`), and integration boundaries.
+This document certifies the comprehensive verification, security hardening, and test validation of the RiskWise 2.0 authentication subsystem across the backend (`api`), frontend (`web`), and integration boundaries.
 
 The authentication subsystem enforces:
 1. **Google OAuth 2.0 / OpenID Connect (OIDC)** authorization code flow with anti-CSRF state token verification.
@@ -26,7 +26,7 @@ The authentication subsystem enforces:
 | Component | Specification / Version | Role / Details |
 | :--- | :--- | :--- |
 | **Backend Runtime** | Python 3.13.14 / FastAPI / Starlette | REST API and OAuth orchestration |
-| **Test Runner (Backend)** | Pytest 9.1.1 (`apps/api/.venv`) | 97 passed unit and integration tests |
+| **Test Runner (Backend)** | Pytest 9.1.1 (`api/.venv`) | 97 passed unit and integration tests |
 | **Database Engine** | SQLite (in-memory test isolation) / PostgreSQL Base.metadata | Phase 2 schema parity verification (34 tables) |
 | **Session Cache** | MemorySessionStore (in-process fallback) / Redis | Server-side session management with 7-day TTL |
 | **Frontend Runtime** | Node.js 24 / Next.js 16.3.4 (Turbopack) / React 19 / TypeScript | Modern responsive web application |
@@ -37,7 +37,7 @@ The authentication subsystem enforces:
 
 ## 3. Backend Tests
 
-All 29 specific test scenarios specified in the Phase 3 Step 7 mandate were implemented in `apps/api/tests/test_auth_final_validation.py` and passed without errors:
+All 29 specific test scenarios specified in the Phase 3 Step 7 mandate were implemented in `api/tests/test_auth_final_validation.py` and passed without errors:
 
 | ID | Test Scenario | Description | Status |
 | :--- | :--- | :--- | :--- |
@@ -75,7 +75,7 @@ All 29 specific test scenarios specified in the Phase 3 Step 7 mandate were impl
 
 ## 4. Frontend Tests
 
-Frontend tests implemented in `apps/web/tests/auth-integration.test.ts` and automated build verifications passed cleanly:
+Frontend tests implemented in `web/tests/auth-integration.test.ts` and automated build verifications passed cleanly:
 
 | ID | Test Scenario | Verified Behavior | Status |
 | :--- | :--- | :--- | :--- |
@@ -153,7 +153,7 @@ Multi-tenant isolation ensures data segmentation across different enterprise acc
 ## 9. Security Tests
 
 ### A. Zero Client-Side Secret / Token Storage
-- Search across `apps/web/app/` and `apps/web/lib/` for `localStorage` and `sessionStorage` yielded **0 occurrences**.
+- Search across `web/app/` and `web/lib/` for `localStorage` and `sessionStorage` yielded **0 occurrences**.
 - All authentication state is derived dynamically from `GET /api/v1/auth/me` with credentials (`credentials: "include"`).
 - Status: **PASS**
 
@@ -226,7 +226,7 @@ The `/auth` interface was inspected across standard device breakpoints:
 ## 15. Database Parity Verification
 
 - **Schema Modifications:** NONE. Zero tables were dropped, altered, or created in Phase 3.
-- **Alembic Migrations:** Zero migrations were created (`apps/api/alembic/versions/` contains only `.gitkeep`).
+- **Alembic Migrations:** Zero migrations were created (`api/alembic/versions/` contains only `.gitkeep`).
 - **Models Parity:** All 34 models from Phase 2 maintain exact schema parity as verified by `test_database_validation.py`.
 - Status: **PASS**
 

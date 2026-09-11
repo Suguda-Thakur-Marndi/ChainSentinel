@@ -10,7 +10,7 @@ This integration strictly adheres to the provider-agnostic ingestion architectur
 OpenSky Network (REST GET /states/all)
     │  (OAuth2 Client Credentials: POST /protocol/openid-connect/token)
     ▼
-OpenSkyAdapter (apps/api/app/integrations/providers/opensky.py)
+OpenSkyAdapter (api/app/integrations/providers/opensky.py)
     │
     ▼
 RawEvent (Envelope with Raw Payload & Deterministic SHA-256 Fingerprint)
@@ -131,7 +131,7 @@ OpenSky returns a top-level JSON object containing a Unix timestamp and a two-di
 ## 3. RiskWise Implementation Behavior
 
 ### 3.1 Dedicated Provider Adapter: `OpenSkyAdapter`
-Located at `apps/api/app/integrations/providers/opensky.py`:
+Located at `api/app/integrations/providers/opensky.py`:
 - Inherits from `BaseProviderAdapter`.
 - `provider_name = "opensky"`
 - `provider_type = ProviderType.AIR`
@@ -169,7 +169,7 @@ Located at `apps/api/app/integrations/providers/opensky.py`:
 - Nullability is preserved. No dummy coordinates (0.0, 0.0) or fake altitudes are fabricated when telemetry is missing.
 
 ### 3.6 Canonical Event Taxonomy Mapping
-- Mapped to `CanonicalEventType.LOCATION_UPDATE` from the existing canonical taxonomy in `apps/api/app/integrations/canonical.py`.
+- Mapped to `CanonicalEventType.LOCATION_UPDATE` from the existing canonical taxonomy in `api/app/integrations/canonical.py`.
 - **Informational Default**: Routine aircraft positions remain `EventSeverity.INFO` with operational status `"AIRBORNE"` or `"ON_GROUND"`. Routine aircraft movements are never artificially classified as supply chain risks.
 - **Emergency Squawk Code Elevation**:
   - `squawk == "7700"`: General Emergency -> `EventSeverity.CRITICAL`, `status = "EMERGENCY"`
@@ -234,7 +234,7 @@ OpenSky Network is a crowdsourced ADS-B receiver network. The following data cat
 
 ## 5. Verification & Test Suite Summary
 
-The integration is verified by 57 focused unit tests in `apps/api/tests/test_opensky_integration.py` using `httpx.MockTransport` (0 external network requests):
+The integration is verified by 57 focused unit tests in `api/tests/test_opensky_integration.py` using `httpx.MockTransport` (0 external network requests):
 
 1. **Initialization & Capabilities**: Adapter instantiation, type verification, capability flags.
 2. **Configuration & Credentials**: Client ID / secret resolution, missing credentials rejection.

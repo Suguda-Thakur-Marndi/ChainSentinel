@@ -1,7 +1,7 @@
 """Application-level service orchestrating what-if simulation workflows."""
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from sqlalchemy.orm import Session
 
 from app.digital_twin.contracts import DigitalTwinSnapshot
@@ -9,6 +9,7 @@ from app.digital_twin.service import DigitalTwinService
 from app.simulation.contracts import (
     SimulationComparison,
     SimulationInput,
+    SimulationRequest,
     SimulationResult,
     SimulationScenario,
 )
@@ -67,7 +68,7 @@ class SimulationService:
         db: Session,
         organization_id: str,
         scenario_id: str,
-        sim_input: Optional[SimulationInput] = None,
+        sim_input: Optional[Union[SimulationInput, SimulationRequest]] = None,
         snapshot: Optional[DigitalTwinSnapshot] = None,
         request_id: Optional[str] = None,
     ) -> SimulationResult:

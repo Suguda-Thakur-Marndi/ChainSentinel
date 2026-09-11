@@ -13,7 +13,7 @@
 
 RiskWise ingests signals across heterogeneous provider formats (weather radar, TomTom traffic, AISStream maritime NMEA/JSON, flight trackers, carrier webhooks, and intelligence feeds). To prevent coupling downstream risk engines, simulations, and decision agents to provider schemas, Step 2 implements `CanonicalExternalEvent`:
 
-- **Location**: [`apps/api/app/integrations/canonical.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/canonical.py)
+- **Location**: [`api/app/integrations/canonical.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/canonical.py)
 - **Primary Schema Structure**:
 
 ```python
@@ -152,7 +152,7 @@ External events often arrive before their association with internal RiskWise ent
 
 ## 8. Normalizer Interface
 
-Decoupled normalizer abstraction defined in [`apps/api/app/integrations/normalizers.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/normalizers.py):
+Decoupled normalizer abstraction defined in [`api/app/integrations/normalizers.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/normalizers.py):
 
 ```python
 class BaseEventNormalizer(ABC):
@@ -260,8 +260,8 @@ Validation outcomes are categorized under `EventQuality`:
 - The existing `shipment_events` table contains a non-nullable foreign key `shipment_id: Mapped[str] = mapped_column(String(64), ForeignKey("shipments.id"), nullable=False)`.
 
 ### Persistence Strategy
-1. **Application-Layer Storage**: Canonical events are managed via [`CanonicalEventStorage`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/boundaries.py#L93-L122) and [`InMemoryCanonicalEventStorage`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/boundaries.py#L125-L177).
-2. **Correlated Bridge**: [`ShipmentEventBridge`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/boundaries.py#L180-L224) converts canonical events into database `ShipmentEvent` records **if and only if** `shipment_id` is correlated.
+1. **Application-Layer Storage**: Canonical events are managed via [`CanonicalEventStorage`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/boundaries.py#L93-L122) and [`InMemoryCanonicalEventStorage`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/boundaries.py#L125-L177).
+2. **Correlated Bridge**: [`ShipmentEventBridge`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/boundaries.py#L180-L224) converts canonical events into database `ShipmentEvent` records **if and only if** `shipment_id` is correlated.
 3. **Uncorrelated Event Buffer**: Uncorrelated events (e.g. ambient weather, AIS pings) remain staged in canonical storage for correlation resolution without forcing invalid relational inserts.
 4. **Zero Migrations**: This design maintains **zero DDL, zero migrations, and zero schema drift**.
 
@@ -269,7 +269,7 @@ Validation outcomes are categorized under `EventQuality`:
 
 ## 16. Security & Credential Protection
 
-- **No Secrets in Canonical Models**: Normalization strictly invokes [`SecretResolver.sanitize_payload()`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/config.py#L97-L110) across raw payloads, normalized attributes, and provider metadata.
+- **No Secrets in Canonical Models**: Normalization strictly invokes [`SecretResolver.sanitize_payload()`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/config.py#L97-L110) across raw payloads, normalized attributes, and provider metadata.
 - **Redaction Rules**: Any key matching `api_key`, `token`, `secret`, `password`, `auth`, or `credential` is recursively replaced with `[REDACTED]`.
 - **Multi-Tenant Isolation**: Events belonging to specific organizations are tagged with `org_id`. Ingestion logs do not print raw authorization headers.
 
@@ -277,7 +277,7 @@ Validation outcomes are categorized under `EventQuality`:
 
 ## 17. Testing Strategy & Validation
 
-Comprehensive test suite in [`apps/api/tests/test_canonical_external_events.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/tests/test_canonical_external_events.py):
+Comprehensive test suite in [`api/tests/test_canonical_external_events.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/tests/test_canonical_external_events.py):
 
 - **Test Count**: 27 unit tests (100% pass rate in 1.23s).
 - **Validation Matrix**:

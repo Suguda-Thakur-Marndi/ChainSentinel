@@ -22,7 +22,7 @@ This step serves as the secure, deterministic, and tenant-isolated scaffolding f
 
 ## 3. Dependency Changes
 
-- Added `langgraph>=1.2.0` to `apps/api/requirements.txt` under a dedicated `# Phase 9: LangGraph Agent Graph Architecture & Orchestration` comment.
+- Added `langgraph>=1.2.0` to `api/requirements.txt` under a dedicated `# Phase 9: LangGraph Agent Graph Architecture & Orchestration` comment.
 - Zero unrelated AI packages added. No OpenAI, Anthropic, or Bedrock dependencies introduced.
 
 ---
@@ -58,7 +58,7 @@ The graph architecture follows a deterministic flow from `START` to `END`:
 
 ## 5. State Contract
 
-The state contract is defined in `apps/api/app/agents/contracts.py`:
+The state contract is defined in `api/app/agents/contracts.py`:
 
 - **`AgentGraphState` (Pydantic Model)**:
   - **Operational Identity**: `run_id`, `organization_id`, `actor_id`, `request_id`, `correlation_id`, `trace_id`.
@@ -97,7 +97,7 @@ Defined as `NodeContract`:
 
 ## 8. Node Registry
 
-Defined as `NodeRegistry` in `apps/api/app/agents/registry.py`:
+Defined as `NodeRegistry` in `api/app/agents/registry.py`:
 - **Explicit Allowlist**: Only node IDs registered in `PERMISSIBLE_NODE_IDS` (`initialization`, `termination`, `approval_boundary`, `research_placeholder`, `risk_placeholder`, `prediction_placeholder`, `scenario_placeholder`, `decision_placeholder`, `action_placeholder`, `verification_placeholder`) can be registered.
 - **Duplicate Prevention**: Rejects duplicate registrations with `AgentValidationError`.
 - **Arbitrary Code Execution Shield**: Rejects non-allowlisted node names with `AgentUnauthorizedNodeError` and requires handlers to be callable functions.
@@ -106,7 +106,7 @@ Defined as `NodeRegistry` in `apps/api/app/agents/registry.py`:
 
 ## 9. Routing Contract
 
-Defined as `RouteEvaluator` in `apps/api/app/agents/routing.py`:
+Defined as `RouteEvaluator` in `api/app/agents/routing.py`:
 - Returns structured `RouteDecision` containing `next_node`, `reason_code`, `confidence`, `evidence_references`, and `termination_flag`.
 - **Fail-Closed Rule**: If an unauthorized, unknown, or unregistered node is selected in `selected_route`, an `AgentInvalidRouteError` is raised immediately.
 - **Circuit Breaker**: Automatically routes to `termination` if `step_count >= max_steps`, if unhandled errors exist, or if `requires_human_approval` is active.
@@ -127,7 +127,7 @@ Explicit lifecycle states defined in `AgentLifecycleStatus`:
 
 ## 11. Error / Recovery Contract
 
-Defined in `apps/api/app/agents/errors.py`:
+Defined in `api/app/agents/errors.py`:
 - **Classification**: `ErrorClassification.RETRYABLE` vs `ErrorClassification.NON_RETRYABLE`.
 - **Security & Tenancy Fail-Closed**:
   - `AgentTenantIsolationError`: NON_RETRYABLE.
@@ -162,7 +162,7 @@ Defined in `apps/api/app/agents/errors.py`:
 
 ## 14. Tool Boundary
 
-Defined as `ToolDefinition` in `apps/api/app/agents/contracts.py`:
+Defined as `ToolDefinition` in `api/app/agents/contracts.py`:
 - `tool_name`, `description`, `input_schema`, `output_schema`, `side_effect_type` (`READ_ONLY` vs `SIDE_EFFECTING`), `allowed_stages`, `tenant_scoped`, `requires_audit`.
 - Arbitrary user-supplied tool names or execution of arbitrary code are prohibited.
 
@@ -178,7 +178,7 @@ Defined as `ToolDefinition` in `apps/api/app/agents/contracts.py`:
 
 ## 16. Tenant Isolation
 
-- Enforced by `validate_tenant_isolation` in `apps/api/app/agents/security.py`.
+- Enforced by `validate_tenant_isolation` in `api/app/agents/security.py`.
 - Invariant:
   $$\text{Authenticated Org} == \text{Context Org} == \text{State Org} == \text{Evidence Bundle Org} == \text{Risk Assessment Org}$$
 - Any mismatch raises `AgentTenantIsolationError` and fails closed immediately.
@@ -187,7 +187,7 @@ Defined as `ToolDefinition` in `apps/api/app/agents/contracts.py`:
 
 ## 17. Observability
 
-- Centralized in `AgentObservability` (`apps/api/app/agents/observability.py`).
+- Centralized in `AgentObservability` (`api/app/agents/observability.py`).
 - Emits structured telemetry records (`NodeExecutionTelemetry`): `run_id`, `organization_id`, `actor_id`, `request_id`, `correlation_id`, `trace_id`, `node_name`, `duration_ms`, `status`, `error_code`, `step_count`.
 - Automatic recursive credential and secret scrubbing on all logged payloads.
 - Strictly never logs chain-of-thought, internal monologues, or authorization headers.
@@ -219,7 +219,7 @@ Defined as `ToolDefinition` in `apps/api/app/agents/contracts.py`:
 
 ## 21. Testing
 
-- Dedicated Step 1 test suite: `apps/api/tests/test_phase9_langgraph_architecture_contracts.py`.
+- Dedicated Step 1 test suite: `api/tests/test_phase9_langgraph_architecture_contracts.py`.
 - **Total Tests**: 64 focused unit tests (exceeding the 50+ target).
 - **Coverage**: Groups A through L fully covered (State contracts, Execution context, Node registry, Graph construction, Routing, Termination, Errors, Evidence boundary, Tool boundary, Approval boundary, Observability, Architectural constraints).
 - **Pass Rate**: 100% (64 / 64 passed in 0.90s).

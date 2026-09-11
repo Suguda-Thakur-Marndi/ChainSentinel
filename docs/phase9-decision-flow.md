@@ -271,7 +271,7 @@ In `decision_node`, execution telemetry is emitted in a `finally` block via `Age
 ---
 
 ## 21. LangGraph Integration & Node Registration
-Registered node in `apps/api/app/agents/node_contracts.py` and `apps/api/app/agents/nodes.py`:
+Registered node in `api/app/agents/node_contracts.py` and `api/app/agents/nodes.py`:
 - `node_id`: `"decision_agent"`
 - `stage`: `AgentStage.DECISION`
 - `side_effect_type`: `SideEffectType.READ_ONLY`
@@ -323,7 +323,7 @@ The Decision Agent has zero operational side effects:
 ---
 
 ## 26. Tests
-A dedicated test suite `apps/api/tests/test_phase9_decision_agent.py` contains **151 unit and integration tests** covering:
+A dedicated test suite `api/tests/test_phase9_decision_agent.py` contains **151 unit and integration tests** covering:
 - Contracts and Pydantic validation (Group 1)
 - Candidates formulation and parameters (Group 2)
 - Structured rationales and auditability (Group 3)

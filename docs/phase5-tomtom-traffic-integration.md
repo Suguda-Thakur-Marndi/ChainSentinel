@@ -17,7 +17,7 @@ TomTom-specific JSON response structures are **strictly confined** to the provid
 ```
 TomTom Traffic APIs (Flow Segment Data v4 / Incident Details v5)
          ↓
-TomTomAdapter (apps/api/app/integrations/providers/tomtom.py)
+TomTomAdapter (api/app/integrations/providers/tomtom.py)
          ↓
 RawEvent (Stored in RawEventStorage with sanitized raw_payload)
          ↓
@@ -209,7 +209,7 @@ Implemented in `TomTomAdapter.health_check()`:
 
 ## 9. Testing & Validation Summary
 
-Verified by 40 focused unit tests in `apps/api/tests/test_tomtom_integration.py` using `httpx.MockTransport` with zero live network calls:
+Verified by 40 focused unit tests in `api/tests/test_tomtom_integration.py` using `httpx.MockTransport` with zero live network calls:
 1. Adapter initialization & metadata
 2. Provider capability inspection
 3. Configuration loading

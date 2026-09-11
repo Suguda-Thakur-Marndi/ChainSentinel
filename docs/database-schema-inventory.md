@@ -453,7 +453,7 @@ Comparison between the planned Phase 2 models and the discovered database schema
 
 ## 8. Current SQLAlchemy Model Comparison
 
-- **Active Python Source Models:** Fully restored and mapped across 9 modular files in `apps/api/app/models/`:
+- **Active Python Source Models:** Fully restored and mapped across 9 modular files in `api/app/models/`:
   - `tenancy.py`: `Organization`, `User`
   - `network.py`: `Supplier`, `SupplierSite`, `Factory`, `Warehouse`, `Port`, `Carrier`, `Product`, `Route`
   - `logistics.py`: `Shipment`, `ShipmentEvent`, `Inventory`, `InventoryMovement`
@@ -472,9 +472,9 @@ Comparison between the planned Phase 2 models and the discovered database schema
 
 ## 9. Alembic Status
 
-- **Configuration File:** `apps/api/alembic.ini` configured with `script_location = alembic`.
+- **Configuration File:** `api/alembic.ini` configured with `script_location = alembic`.
 - **Target Metadata:** Bound to `app.db.base.Base.metadata` via `app.models` import in `alembic/env.py`.
-- **Migration Script Directory:** `apps/api/alembic/versions/` (contains only `.gitkeep`).
+- **Migration Script Directory:** `api/alembic/versions/` (contains only `.gitkeep`).
 - **Current Revision in Migrations:** `None` (0 migration files generated or applied).
 - **Active Metadata Table Count:** `34` tables registered.
 
@@ -484,7 +484,7 @@ Comparison between the planned Phase 2 models and the discovered database schema
 
 1. **SQLAlchemy 2.0 Models Recreated in Source:** Completed in Phase 2 Step 2 across all 9 domain modules.
 2. **Model Metadata Registration:** Completed in Phase 2 Step 2 (`Base.metadata.tables` contains 34 tables).
-3. **Alembic Environment Integration:** Completed (`apps/api/alembic/env.py` imports `app.models` and binds `target_metadata`).
+3. **Alembic Environment Integration:** Completed (`api/alembic/env.py` imports `app.models` and binds `target_metadata`).
 4. **Baseline Migration Preparation:** Ready for baseline stamping in Step 5/deployment inside AWS VPC.
 
 ---
@@ -493,12 +493,12 @@ Comparison between the planned Phase 2 models and the discovered database schema
 
 ### Alembic Current Revision & Heads
 - **Current Revision:** `None` (0 migrations applied or recorded in repository)
-- **Available Heads:** `None` (0 migration scripts in `apps/api/alembic/versions/`)
+- **Available Heads:** `None` (0 migration scripts in `api/alembic/versions/`)
 - **Migration History Status:** Clean / Uninitialized in version control (tracked via `.gitkeep`)
 
 ### Metadata Status
 - **Base Metadata Source:** `app.db.base.Base.metadata`
-- **Model Discovery:** `apps/api/alembic/env.py` explicitly imports `app.models`
+- **Model Discovery:** `api/alembic/env.py` explicitly imports `app.models`
 - **Active Registered Tables:** Exactly **34** tables registered in `Base.metadata.tables`
 
 ### Schema Comparison Result

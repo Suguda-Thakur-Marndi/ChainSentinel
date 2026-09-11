@@ -3,7 +3,7 @@
 **Document Version:** 1.0.0  
 **Status:** IMPLEMENTED & VALIDATED  
 **Phase:** Phase 4 — Core APIs (Step 6 — Risk APIs)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -144,35 +144,35 @@ All state-changing operations emit immutable audit records using the centralized
 
 ## 8. Test Coverage & Validation Metrics
 
-A dedicated test suite in `apps/api/tests/test_risk_api.py` verifies all 26 contract criteria:
+A dedicated test suite in `api/tests/test_risk_api.py` verifies all 26 contract criteria:
 
 ```
-apps/api/tests/test_risk_api.py::test_1_authentication_required PASSED
-apps/api/tests/test_risk_api.py::test_2_rbac_enforcement PASSED
-apps/api/tests/test_risk_api.py::test_3_tenant_isolation PASSED
-apps/api/tests/test_risk_api.py::test_4_cross_tenant_parent_reference_rejection PASSED
-apps/api/tests/test_risk_api.py::test_5_risk_factor_creation PASSED
-apps/api/tests/test_risk_api.py::test_6_risk_factor_retrieval PASSED
-apps/api/tests/test_risk_api.py::test_7_risk_factor_listing PASSED
-apps/api/tests/test_risk_api.py::test_8_risk_factor_filtering PASSED
-apps/api/tests/test_risk_api.py::test_9_risk_factor_sorting PASSED
-apps/api/tests/test_risk_api.py::test_10_risk_factor_search_and_wildcard_escaping PASSED
-apps/api/tests/test_risk_api.py::test_11_risk_crud PASSED
-apps/api/tests/test_risk_api.py::test_12_risk_forbidden_hard_delete PASSED
-apps/api/tests/test_risk_api.py::test_13_risk_numeric_bounds_validation PASSED
-apps/api/tests/test_risk_api.py::test_14_risk_assessment_creation PASSED
-apps/api/tests/test_risk_api.py::test_15_risk_assessment_retrieval PASSED
-apps/api/tests/test_risk_api.py::test_16_assessment_immutability_rules PASSED
-apps/api/tests/test_risk_api.py::test_17_incident_creation PASSED
-apps/api/tests/test_risk_api.py::test_18_incident_retrieval PASSED
-apps/api/tests/test_risk_api.py::test_19_incident_listing PASSED
-apps/api/tests/test_risk_api.py::test_20_incident_update PASSED
-apps/api/tests/test_risk_api.py::test_21_incident_lifecycle_auto_resolution PASSED
-apps/api/tests/test_risk_api.py::test_22_server_controlled_field_protection PASSED
-apps/api/tests/test_risk_api.py::test_23_standardized_error_envelopes PASSED
-apps/api/tests/test_risk_api.py::test_24_audit_logging_behavior PASSED
-apps/api/tests/test_risk_api.py::test_25_openapi_route_registration_and_uniqueness PASSED
-apps/api/tests/test_risk_api.py::test_26_risk_factor_deletion PASSED
+api/tests/test_risk_api.py::test_1_authentication_required PASSED
+api/tests/test_risk_api.py::test_2_rbac_enforcement PASSED
+api/tests/test_risk_api.py::test_3_tenant_isolation PASSED
+api/tests/test_risk_api.py::test_4_cross_tenant_parent_reference_rejection PASSED
+api/tests/test_risk_api.py::test_5_risk_factor_creation PASSED
+api/tests/test_risk_api.py::test_6_risk_factor_retrieval PASSED
+api/tests/test_risk_api.py::test_7_risk_factor_listing PASSED
+api/tests/test_risk_api.py::test_8_risk_factor_filtering PASSED
+api/tests/test_risk_api.py::test_9_risk_factor_sorting PASSED
+api/tests/test_risk_api.py::test_10_risk_factor_search_and_wildcard_escaping PASSED
+api/tests/test_risk_api.py::test_11_risk_crud PASSED
+api/tests/test_risk_api.py::test_12_risk_forbidden_hard_delete PASSED
+api/tests/test_risk_api.py::test_13_risk_numeric_bounds_validation PASSED
+api/tests/test_risk_api.py::test_14_risk_assessment_creation PASSED
+api/tests/test_risk_api.py::test_15_risk_assessment_retrieval PASSED
+api/tests/test_risk_api.py::test_16_assessment_immutability_rules PASSED
+api/tests/test_risk_api.py::test_17_incident_creation PASSED
+api/tests/test_risk_api.py::test_18_incident_retrieval PASSED
+api/tests/test_risk_api.py::test_19_incident_listing PASSED
+api/tests/test_risk_api.py::test_20_incident_update PASSED
+api/tests/test_risk_api.py::test_21_incident_lifecycle_auto_resolution PASSED
+api/tests/test_risk_api.py::test_22_server_controlled_field_protection PASSED
+api/tests/test_risk_api.py::test_23_standardized_error_envelopes PASSED
+api/tests/test_risk_api.py::test_24_audit_logging_behavior PASSED
+api/tests/test_risk_api.py::test_25_openapi_route_registration_and_uniqueness PASSED
+api/tests/test_risk_api.py::test_26_risk_factor_deletion PASSED
 ```
 
 ### Full Regression Suite Results

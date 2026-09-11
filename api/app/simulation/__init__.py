@@ -1,10 +1,24 @@
 """RiskWise 2.0 Simulation Engine (Phase 13).
 
 Provides deterministic what-if supply chain simulation, graph effect propagation,
-and scenario comparison on top of the Phase 12 Digital Twin.
+scenario comparison, and read-only risk/ML enrichment on top of the Phase 12 Digital Twin.
 """
 from __future__ import annotations
 
+from app.simulation.config import (
+    DEFAULT_MAX_DEPTH,
+    DEFAULT_MAX_EDGES,
+    DEFAULT_MAX_EFFECTS,
+    DEFAULT_MAX_NODES,
+    HARD_MAX_DEPTH,
+    HARD_MAX_EDGES,
+    HARD_MAX_EFFECTS,
+    HARD_MAX_NODES,
+    MAX_SCENARIO_CHANGES,
+    SIMULATION_ENGINE_VERSION,
+    SOURCE_TYPE_SIMULATED,
+    SimulationConfig,
+)
 from app.simulation.contracts import (
     MetricAvailability,
     SimulationChange,
@@ -12,13 +26,19 @@ from app.simulation.contracts import (
     SimulationChangeUnit,
     SimulationComparison,
     SimulationEffect,
+    SimulationEntityImpact,
+    SimulationErrorContract,
+    SimulationImpact,
     SimulationInput,
     SimulationMetric,
     SimulationOutcome,
+    SimulationPropagation,
     SimulationProvenance,
+    SimulationRequest,
     SimulationResult,
     SimulationScenario,
     SimulationStatus,
+    SimulationSummary,
 )
 from app.simulation.engine import SimulationEngine
 from app.simulation.errors import (
@@ -39,6 +59,10 @@ from app.simulation.fingerprints import (
     compute_simulation_fingerprint,
     compute_simulation_id,
 )
+from app.simulation.integration import (
+    SimulationMLIntegration,
+    SimulationRiskIntegration,
+)
 from app.simulation.metrics import SimulationMetricsCalculator
 from app.simulation.observability import SimulationObservability
 from app.simulation.propagation import SimulationPropagationEngine
@@ -58,11 +82,17 @@ __all__ = [
     "SimulationChange",
     "SimulationScenario",
     "SimulationEffect",
+    "SimulationEntityImpact",
+    "SimulationPropagation",
     "SimulationMetric",
     "SimulationOutcome",
+    "SimulationImpact",
+    "SimulationSummary",
     "SimulationInput",
+    "SimulationRequest",
     "SimulationResult",
     "SimulationComparison",
+    "SimulationErrorContract",
     # Errors
     "SimulationError",
     "SimulationValidationError",
@@ -79,6 +109,22 @@ __all__ = [
     "compute_change_fingerprint",
     "compute_scenario_fingerprint",
     "compute_simulation_fingerprint",
+    # Configuration
+    "SimulationConfig",
+    "MAX_SCENARIO_CHANGES",
+    "HARD_MAX_DEPTH",
+    "HARD_MAX_NODES",
+    "HARD_MAX_EDGES",
+    "HARD_MAX_EFFECTS",
+    "DEFAULT_MAX_DEPTH",
+    "DEFAULT_MAX_NODES",
+    "DEFAULT_MAX_EDGES",
+    "DEFAULT_MAX_EFFECTS",
+    "SOURCE_TYPE_SIMULATED",
+    "SIMULATION_ENGINE_VERSION",
+    # Integrations
+    "SimulationRiskIntegration",
+    "SimulationMLIntegration",
     # Components
     "SimulationScenarioBuilder",
     "SimulationValidator",

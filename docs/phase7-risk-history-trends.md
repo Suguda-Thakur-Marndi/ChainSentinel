@@ -26,7 +26,7 @@ Historical information is derived exclusively from existing persisted `RiskAsses
 ---
 
 ## 3. Repository Design
-Historical retrieval is provided by extending `RiskAssessmentRepository` in `apps/api/app/repositories/risk_repositories.py`:
+Historical retrieval is provided by extending `RiskAssessmentRepository` in `api/app/repositories/risk_repositories.py`:
 
 ```python
 def get_assessment_history(
@@ -60,7 +60,7 @@ Under no circumstances does ordering rely on database insertion sequence, UUID g
 ---
 
 ## 5. Assessment Comparison
-Pairwise assessment comparison is encapsulated in `HistoricalRiskComparator.compare(previous, current)` within `apps/api/app/risk_engine/history.py`.
+Pairwise assessment comparison is encapsulated in `HistoricalRiskComparator.compare(previous, current)` within `api/app/risk_engine/history.py`.
 
 The comparison contract (`AssessmentComparison`) captures:
 - Identifiers: `previous_assessment_id`, `current_assessment_id`.
@@ -264,7 +264,7 @@ Exposes two endpoints under `/api/v1/risk-assessments`:
 ---
 
 ## 22. Testing
-Test coverage includes 66 new focused tests in `apps/api/tests/test_phase7_risk_history_trends.py`:
+Test coverage includes 66 new focused tests in `api/tests/test_phase7_risk_history_trends.py`:
 - **Repository Tests (10 tests):** History retrieval, org filtering, scope filtering, date range filtering, bounded limits, deterministic ordering, empty and single assessment handling.
 - **Comparison Core Tests (8 tests):** Score deltas, risk level transitions, primary driver changes, direction classification.
 - **Factor Comparison Tests (6 tests):** Factor additions, removals, severity/confidence/contribution changes, unchanged factors.

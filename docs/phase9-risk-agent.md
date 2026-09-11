@@ -48,7 +48,7 @@ The **Risk Agent** is the second operational node in the RiskWise 2.0 LangGraph 
 ## 3. Package Structure
 
 ```
-apps/api/app/agents/risk/
+api/app/agents/risk/
 ├── __init__.py      # Exports: risk_node, RISK_NODE_CONTRACT, RiskAgent, RiskAgentRequest, RiskAgentResult
 ├── contract.py      # RiskAgentRequest, RiskAgentResult, generate_deterministic_risk_request_id()
 ├── adapter.py       # FINDING_TO_SIGNAL_MAP, ResearchRiskAdapter, RiskEngineAdapter
@@ -185,13 +185,13 @@ RISK_NODE_CONTRACT = AgentNodeContract(
 
 - **PostgreSQL Tables**: Exactly **34 tables** (0 migrations added, 0 schema drift).
 - **Public API / OpenAPI**: Exactly **60 paths / 96 operations / 104 schemas** (zero public endpoints added).
-- **Phase 7 Risk Engine Code**: **0 lines modified** (`git diff apps/api/app/risk_engine/` is completely empty).
+- **Phase 7 Risk Engine Code**: **0 lines modified** (`git diff api/app/risk_engine/` is completely empty).
 
 ---
 
 ## 11. Verification & Test Coverage
 
-### Focused Test Suite: `apps/api/tests/test_phase9_risk_agent.py`
+### Focused Test Suite: `api/tests/test_phase9_risk_agent.py`
 - **Total Tests**: 95 focused unit and integration tests.
 - **Pass Rate**: 100% (95/95 passed in 1.75s).
 - **Distribution**:

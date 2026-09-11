@@ -4,6 +4,7 @@ Provides deterministic, immutable, and strictly validated data structures for:
 - Hypothetical scenario changes (Node/Edge outages, Delays, Capacity adjustments)
 - Explainable effect propagation
 - Metric calculation & comparisons
+- Entity-level impact tracking
 - Provenance and audit tracking
 """
 from __future__ import annotations
@@ -20,6 +21,7 @@ class SimulationChangeType(str, Enum):
     NODE_UNAVAILABLE = "NODE_UNAVAILABLE"
     EDGE_UNAVAILABLE = "EDGE_UNAVAILABLE"
     DELAY = "DELAY"
+    DELAY_INCREASE = "DELAY_INCREASE"
     CAPACITY_REDUCTION = "CAPACITY_REDUCTION"
     CAPACITY_INCREASE = "CAPACITY_INCREASE"
     TRANSIT_TIME_INCREASE = "TRANSIT_TIME_INCREASE"
@@ -124,6 +126,35 @@ class SimulationEffect(BaseModel):
     is_simulated: bool = True
 
 
+class SimulationEntityImpact(BaseModel):
+    """Detailed operational impact evaluated on a single supply chain entity."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    entity_id: str = Field(..., min_length=1, max_length=64)
+    entity_type: str = Field(..., min_length=1, max_length=64)
+    impact_type: str = Field(..., min_length=1, max_length=64)
+    is_direct: bool = Field(default=False)
+    effective_delay_minutes: float = Field(default=0.0, ge=0.0)
+    capacity_lost: Optional[float] = None
+    is_available: bool = True
+    propagation_depth: int = Field(default=0, ge=0)
+    simulated_tags: List[str] = Field(default_factory=list)
+
+
+class SimulationPropagation(BaseModel):
+    """Deterministic graph propagation summary and execution trace."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    origin_nodes: List[str] = Field(default_factory=list)
+    max_depth_reached: int = Field(default=0, ge=0)
+    nodes_visited_count: int = Field(default=0, ge=0)
+    edges_traversed_count: int = Field(default=0, ge=0)
+    effects_generated_count: int = Field(default=0, ge=0)
+    propagation_paths: List[List[str]] = Field(default_factory=list)
+
+
 class SimulationMetric(BaseModel):
     """Standardized comparative metric representing baseline vs simulated state."""
 
@@ -145,7 +176,13 @@ class SimulationOutcome(BaseModel):
     affected_nodes_count: int = Field(default=0, ge=0)
     affected_edges_count: int = Field(default=0, ge=0)
     affected_shipments_count: int = Field(default=0, ge=0)
+    affected_warehouses_count: int = Field(default=0, ge=0)
+    affected_suppliers_count: int = Field(default=0, ge=0)
+    affected_factories_count: int = Field(default=0, ge=0)
     total_added_delay_minutes: float = Field(default=0.0, ge=0.0)
+    average_delay_minutes: Optional[float] = None
+    maximum_delay_minutes: Optional[float] = None
+    unavailable_capacity_units: Optional[float] = None
     inventory_exposure_units: Optional[float] = None
     baseline_risk_score: Optional[float] = Field(None, ge=0.0, le=100.0)
     simulated_risk_score: Optional[float] = Field(None, ge=0.0, le=100.0)
@@ -153,12 +190,52 @@ class SimulationOutcome(BaseModel):
     severity: str = Field(default="LOW", max_length=50)
 
 
+# SimulationImpact contract alias/equivalent for SimulationOutcome
+SimulationImpact = SimulationOutcome
+
+
+class SimulationSummary(BaseModel):
+    """Compact summary of an executed simulation run for reporting and audit."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    simulation_id: str = Field(..., min_length=1, max_length=64)
+    scenario_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    status: SimulationStatus
+    severity: str = Field(default="LOW", max_length=50)
+    affected_nodes_count: int = Field(default=0, ge=0)
+    affected_edges_count: int = Field(default=0, ge=0)
+    affected_shipments_count: int = Field(default=0, ge=0)
+    total_added_delay_minutes: float = Field(default=0.0, ge=0.0)
+    risk_delta: Optional[float] = None
+    execution_duration_ms: float = Field(default=0.0, ge=0.0)
+    simulation_fingerprint: str = Field(..., min_length=64, max_length=64)
+
+
 class SimulationInput(BaseModel):
     """Execution input payload to trigger scenario simulation."""
 
     model_config = ConfigDict(extra="forbid")
 
-    scenario: SimulationScenario
+    scenario: Optional[SimulationScenario] = None
+    scenario_id: Optional[str] = Field(None, max_length=64)
+    max_depth: int = Field(default=5, ge=1, le=10)
+    max_nodes: int = Field(default=200, ge=1, le=1000)
+    max_edges: int = Field(default=500, ge=1, le=2000)
+    max_effects: int = Field(default=100, ge=1, le=500)
+    evaluate_risk: bool = True
+    evaluate_ml: bool = False
+
+
+# SimulationRequest alias and contract
+class SimulationRequest(BaseModel):
+    """Execution request specification for what-if scenario simulations."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    scenario: Optional[SimulationScenario] = None
+    scenario_id: Optional[str] = Field(None, max_length=64)
     max_depth: int = Field(default=5, ge=1, le=10)
     max_nodes: int = Field(default=200, ge=1, le=1000)
     max_edges: int = Field(default=500, ge=1, le=2000)
@@ -179,8 +256,12 @@ class SimulationResult(BaseModel):
     simulation_fingerprint: str = Field(..., min_length=64, max_length=64)
     status: SimulationStatus
     outcome: SimulationOutcome
+    impact: Optional[SimulationImpact] = None
+    summary: Optional[SimulationSummary] = None
     changes: List[SimulationChange] = Field(default_factory=list)
     effects: List[SimulationEffect] = Field(default_factory=list)
+    entity_impacts: List[SimulationEntityImpact] = Field(default_factory=list)
+    propagation: Optional[SimulationPropagation] = None
     metrics: Dict[str, SimulationMetric] = Field(default_factory=dict)
     provenance: SimulationProvenance
     executed_at: datetime = Field(default_factory=datetime.utcnow)
@@ -197,3 +278,14 @@ class SimulationComparison(BaseModel):
     scenario_b_id: str
     metric_comparisons: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
     summary_findings: List[str] = Field(default_factory=list)
+
+
+class SimulationErrorContract(BaseModel):
+    """Typed serializable error representation for audit and API responses."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    error_code: str
+    message: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    details: Dict[str, Any] = Field(default_factory=dict)

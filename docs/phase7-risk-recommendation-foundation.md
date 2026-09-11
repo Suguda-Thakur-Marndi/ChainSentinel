@@ -309,7 +309,7 @@ If any step fails, the entire transaction is rolled back, preventing orphaned or
 
 ## 22. API Integration
 
-Exposed through `apps/api/app/api/v1/endpoints/risk_assessments.py`:
+Exposed through `api/app/api/v1/endpoints/risk_assessments.py`:
 
 - `GET /api/v1/risk-assessments/recommendations`: List recommendations with tenant bounding, filtering by priority, type, and pagination.
 - `GET /api/v1/risk-assessments/recommendations/{recommendation_id}`: Retrieve a single recommendation with strict tenant isolation (returns 404 for cross-tenant access).
@@ -351,7 +351,7 @@ Every recommendation creation writes an `AuditLog` entry:
 
 ## 26. Testing
 
-An extensive test suite validates Step 7 with 84 focused tests in `apps/api/tests/test_phase7_risk_recommendation_foundation.py`:
+An extensive test suite validates Step 7 with 84 focused tests in `api/tests/test_phase7_risk_recommendation_foundation.py`:
 
 - **Contract Tests (12 tests)**: Model construction, enum boundaries, field validation, and deterministic hashing.
 - **Rule Tests (16 tests)**: Low, Medium, High, and Critical thresholds; critical factors, port, road, weather, rail, air, carrier, supplier, inventory disruptions; increasing trends; signal conflicts; and evidence quality degradation.

@@ -2,13 +2,15 @@
 from __future__ import annotations
 
 from collections import deque
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from app.simulation.contracts import (
     SimulationChange,
     SimulationChangeType,
     SimulationChangeUnit,
     SimulationEffect,
+    SimulationEntityImpact,
+    SimulationPropagation,
 )
 from app.simulation.effects import SimulationEffectFactory
 from app.simulation.errors import SimulationResourceLimitError
@@ -31,12 +33,18 @@ class SimulationPropagationEngine:
         self.max_nodes = max_nodes
         self.max_edges = max_edges
         self.max_effects = max_effects
+        self.entity_impacts: List[SimulationEntityImpact] = []
+        self.propagation_summary: Optional[SimulationPropagation] = None
 
     def propagate(self, state: SimulationState) -> Tuple[List[SimulationEffect], int, int]:
         """Execute bounded BFS effect propagation across the isolated simulation state."""
         effects: List[SimulationEffect] = []
         visited_nodes: Set[str] = set()
         traversed_edges: Set[str] = set()
+        recorded_impacts: Dict[str, SimulationEntityImpact] = {}
+        propagation_paths: List[List[str]] = []
+        all_origin_nodes: List[str] = []
+        max_depth_reached = 0
 
         for change in state.applied_changes:
             if len(effects) >= self.max_effects:
@@ -48,12 +56,41 @@ class SimulationPropagationEngine:
                 if len(effects) < self.max_effects:
                     effects.append(pe)
 
+            # Record direct entity impact
+            target_nid = state.resolve_node_id(change.target_entity_id)
+            if target_nid and target_nid in state.nodes:
+                target_node = state.nodes[target_nid]
+                cap_lost = None
+                if target_node.baseline_capacity is not None and target_node.capacity is not None:
+                    cap_lost = max(0.0, target_node.baseline_capacity - target_node.capacity)
+                recorded_impacts[target_nid] = SimulationEntityImpact(
+                    entity_id=target_nid,
+                    entity_type=target_node.node_type,
+                    impact_type=f"DIRECT_{change.change_type.value}",
+                    is_direct=True,
+                    effective_delay_minutes=target_node.effective_delay_minutes,
+                    capacity_lost=cap_lost,
+                    is_available=target_node.is_available,
+                    propagation_depth=0,
+                    simulated_tags=sorted(target_node.simulated_tags),
+                )
+
             # 2. Identify start nodes for downstream propagation
             start_nodes = self._resolve_propagation_origins(change, state)
+            for onode in sorted(start_nodes):
+                if onode not in all_origin_nodes:
+                    all_origin_nodes.append(onode)
 
             for origin_node_id in sorted(start_nodes):
                 if len(effects) >= self.max_effects:
                     break
+
+                # If node has no outgoing edges, explicitly mark as having no known dependencies
+                outgoing = state.outgoing_edges.get(origin_node_id, [])
+                if not outgoing:
+                    origin_node = state.nodes.get(origin_node_id)
+                    if origin_node:
+                        origin_node.simulated_tags.add("NO_KNOWN_DEPENDENCY")
 
                 # Queue elements: (node_id, current_depth, path, accumulated_delay_mins)
                 initial_delay = state.nodes[origin_node_id].effective_delay_minutes
@@ -74,6 +111,7 @@ class SimulationPropagationEngine:
                         )
 
                     current_node_id, depth, path, acc_delay = queue.popleft()
+                    max_depth_reached = max(max_depth_reached, depth)
 
                     if depth >= self.max_depth:
                         continue
@@ -94,6 +132,7 @@ class SimulationPropagationEngine:
 
                         dest_node = state.nodes[dest_node_id]
                         new_path = path + [edge_id, dest_node_id]
+                        propagation_paths.append(new_path)
                         edge_delay = edge.added_transit_time_minutes
                         new_delay = acc_delay + edge_delay
 
@@ -166,11 +205,38 @@ class SimulationPropagationEngine:
                                 )
                                 effects.append(eff)
 
+                        # Track propagated entity impact
+                        if dest_node_id not in recorded_impacts:
+                            cap_lost = None
+                            if dest_node.baseline_capacity is not None and dest_node.capacity is not None:
+                                cap_lost = max(0.0, dest_node.baseline_capacity - dest_node.capacity)
+                            recorded_impacts[dest_node_id] = SimulationEntityImpact(
+                                entity_id=dest_node_id,
+                                entity_type=dest_node.node_type,
+                                impact_type="PROPAGATED_DISRUPTION",
+                                is_direct=False,
+                                effective_delay_minutes=dest_node.effective_delay_minutes,
+                                capacity_lost=cap_lost,
+                                is_available=dest_node.is_available,
+                                propagation_depth=depth + 1,
+                                simulated_tags=sorted(dest_node.simulated_tags),
+                            )
+
                         # Cycle prevention: only enqueue if not visited in this change traversal
                         if dest_node_id not in visited_in_change:
                             visited_in_change.add(dest_node_id)
                             visited_nodes.add(dest_node_id)
                             queue.append((dest_node_id, depth + 1, new_path, new_delay))
+
+        self.entity_impacts = sorted(recorded_impacts.values(), key=lambda x: x.entity_id)
+        self.propagation_summary = SimulationPropagation(
+            origin_nodes=all_origin_nodes,
+            max_depth_reached=max_depth_reached,
+            nodes_visited_count=len(visited_nodes),
+            edges_traversed_count=len(traversed_edges),
+            effects_generated_count=len(effects),
+            propagation_paths=propagation_paths[:50],  # bounded sample for audit
+        )
 
         return effects, len(visited_nodes), len(traversed_edges)
 
@@ -237,8 +303,8 @@ class SimulationPropagationEngine:
 
         edge_id = state.resolve_edge_id(change.target_entity_id)
         if edge_id and edge_id in state.edges:
-            # Propagate from the destination of the edge
+            # Propagate from the origin of the edge so the edge itself and its destination are evaluated
             edge = state.edges[edge_id]
-            origins.add(edge.to_node_id)
+            origins.add(edge.from_node_id)
 
         return origins

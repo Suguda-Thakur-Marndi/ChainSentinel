@@ -2,8 +2,7 @@
 
 > **Project:** RiskWise / ChainSentinel  
 > **Type:** Monorepo - Autonomous Multi-Agent Supply Chain Risk & Logistics Intelligence Platform  
-> **Exclusions:** Build artifacts & dependencies (
-ode_modules/, .venv/, .next/, __pycache__/, .git/, .pytest_cache/, .turbo/)
+> **Exclusions:** Build artifacts & dependencies (`node_modules/`, `.venv/`, `.next/`, `__pycache__/`, `.git/`, `.pytest_cache/`, `.turbo/`)
 
 ---
 
@@ -11,18 +10,18 @@ ode_modules/, .venv/, .next/, __pycache__/, .git/, .pytest_cache/, .turbo/)
 
 | Category | Metric |
 | :--- | :--- |
-| **Total Tracked Directories** | 91 |
-| **Total Tracked Files** | 652 |
+| **Total Tracked Directories** | `91` |
+| **Total Tracked Files** | `653` |
 | **Backend Stack** | Python 3.13, FastAPI, SQLAlchemy 2, Alembic, Pydantic v2, Redis, Celery |
 | **Frontend Stack** | Next.js 15+ (App Router), React 19, TypeScript, Tailwind CSS, Lucide Icons |
 | **Intelligence Stack** | LangGraph, AWS Bedrock (Claude 3.5 Sonnet), Scikit-Learn, NetworkX / Digital Twin, Simulation Engine |
-| **Primary Workspaces** | pi/ (Backend), web/ (Frontend), docs/ (Architecture & Specs), .agents/ (Agent Skills) |
+| **Primary Workspaces** | `api/` (Backend), `web/` (Frontend), `docs/` (Architecture & Specs), `.agents/` (Agent Skills) |
 
 ---
 
 ## 🌳 Full Project Structure Tree
 
-`
+```
 riskwise/
 ├── .agents/
 │   └── skills/
@@ -726,6 +725,7 @@ riskwise/
 │       ├── retrain_m1.joblib
 │       ├── retrain_m2.joblib
 │       └── shipment_delay_ridge_1.0.0_org_acme.joblib
+├── tools_fix_folder.py
 └── web/
     ├── AGENTS.md
     ├── CLAUDE.md
@@ -767,72 +767,69 @@ riskwise/
     │   └── auth-integration.test.ts
     ├── tsconfig.json
     └── tsconfig.tsbuildinfo
-`
+```
 
 ---
 
 ## 🏛️ Deep-Dive Architecture Breakdown
 
-### 1. pi/ — Backend API & Intelligence Engine
+### 1. `api/` — Backend API & Intelligence Engine
 
 The backend is built with **FastAPI** using a modular Clean / Hexagonal Architecture separating schemas, models, repositories, and business services:
 
-- **lembic/**: Database schema migration scripts and revisions managed via SQLAlchemy (env.py, script.py.mako, ersions/).
-- **pp/agents/**: Autonomous multi-agent network orchestrated via LangGraph:
-  - pproval/: Human-in-the-loop workflows, governance, escalation approval matrices.
-  - decision/: Automated risk-mitigation decision formulation and prioritization.
-  - prediction/: Disruption predictions, delay forecasting, and anomaly detection.
-  - 
-esearch/: Intelligence gathering from news, maritime, aviation, and weather APIs.
-  - 
-isk/: Multi-dimensional risk analysis (financial, operational, geopolitical, environmental).
-  - scenario/: Stress-testing and 'what-if' simulation agent graphs.
-- **pp/api/**: HTTP layer:
-  - 1/endpoints/: Modular REST endpoints for authentication, suppliers, logistics, risks, inventory, decisions, agents, digital twin, and simulation.
-- **pp/core/**: Application configuration (Pydantic Settings), JWT authentication, security utilities, and logging.
-- **pp/db/**: Database connection sessions, SQLAlchemy async engine, base declarative model.
-- **pp/digital_twin/**: Digital twin engine modeling physical supply chain entities (factories, ports, transit routes, inventory nodes) as an active graph (Phase 12).
-- **pp/simulation/**: Bounded what-if scenario simulation engine computing graph disruption propagation, scenario cascades, recovery metrics, and deterministic SHA-256 fingerprints (Phase 13).
-- **pp/integrations/**: Third-party external data ingestion adapters:
+- **`alembic/`**: Database schema migration scripts and revisions managed via SQLAlchemy (`env.py`, `script.py.mako`, `versions/`).
+- **`app/agents/`**: Autonomous multi-agent network orchestrated via LangGraph:
+  - `approval/`: Human-in-the-loop workflows, governance, escalation approval matrices.
+  - `decision/`: Automated risk-mitigation decision formulation and prioritization.
+  - `prediction/`: Disruption predictions, delay forecasting, and anomaly detection.
+  - `research/`: Intelligence gathering from news, maritime, aviation, and weather APIs.
+  - `risk/`: Multi-dimensional risk analysis (financial, operational, geopolitical, environmental).
+  - `scenario/`: Stress-testing and 'what-if' simulation agent graphs.
+- **`app/api/`**: HTTP layer:
+  - `v1/endpoints/`: Modular REST endpoints for authentication, suppliers, logistics, risks, inventory, decisions, agents, digital twin, and simulation.
+- **`app/core/`**: Application configuration (Pydantic Settings), JWT authentication, security utilities, and logging.
+- **`app/db/`**: Database connection sessions, SQLAlchemy async engine, base declarative model.
+- **`app/digital_twin/`**: Digital twin engine modeling physical supply chain entities (factories, ports, transit routes, inventory nodes) as an active graph (Phase 12).
+- **`app/simulation/`**: Bounded what-if scenario simulation engine computing graph disruption propagation, scenario cascades, recovery metrics, and deterministic SHA-256 fingerprints (Phase 13).
+- **`app/integrations/`**: Third-party external data ingestion adapters:
   - Telemetry: AISStream (vessels), OpenSky (air freight), TomTom (road traffic), OpenWeather (severe weather alerts), Karrio (multi-carrier freight tracking), Rail.
-- **pp/llm/**: Large language model integration layer supporting AWS Bedrock (Claude 3.5 Sonnet) with prompt versioning and structured output parsing.
-- **pp/ml/**: Machine learning sub-framework:
-  - datasets/: Dataset definitions and feature extractors.
-  - eatures/: Feature store calculations and real-time transformations.
-  - inference/: Prediction pipelines and low-latency inference services.
-  - models/: Trained model definitions (XGBoost, Random Forest, Ridge).
-  - 
-egistry/: Model versioning and checkpoint management.
-  - 	raining/: Training harnesses and evaluation pipelines.
-- **pp/models/**: SQLAlchemy ORM models representing entities (Users, Suppliers, Shipments, Nodes, Risks, Audits, Policies, Scenarios).
-- **pp/normalization/**: Entity resolution, coordinate mapping, supplier deduplication, and raw event normalization.
-- **pp/rag/**: Retrieval-Augmented Generation subsystem:
+- **`app/llm/`**: Large language model integration layer supporting AWS Bedrock (Claude 3.5 Sonnet) with prompt versioning and structured output parsing.
+- **`app/ml/`**: Machine learning sub-framework:
+  - `datasets/`: Dataset definitions and feature extractors.
+  - `features/`: Feature store calculations and real-time transformations.
+  - `inference/`: Prediction pipelines and low-latency inference services.
+  - `models/`: Trained model definitions (XGBoost, Random Forest, Ridge).
+  - `registry/`: Model versioning and checkpoint management.
+  - `training/`: Training harnesses and evaluation pipelines.
+- **`app/models/`**: SQLAlchemy ORM models representing entities (Users, Suppliers, Shipments, Nodes, Risks, Audits, Policies, Scenarios).
+- **`app/normalization/`**: Entity resolution, coordinate mapping, supplier deduplication, and raw event normalization.
+- **`app/rag/`**: Retrieval-Augmented Generation subsystem:
   - Vector embeddings, document chunking, context assembly, grounding evidence, and hybrid search.
-- **pp/repositories/**: Repository layer abstracting database queries away from services.
-- **pp/risk_engine/**: Real-time risk evaluation engine calculating composite multi-factor risk scores and dispatching alerts.
-- **pp/schemas/**: Pydantic v2 schemas validating request/response bodies and internal contracts.
-- **pp/services/**: Core business domain services binding repositories, external integrations, and agent workflows.
-- **	ests/**: Comprehensive test suite covering units, schemas, services, API endpoints, authentication, digital twin (Phase 12), and simulation (Phase 13).
+- **`app/repositories/`**: Repository layer abstracting database queries away from services.
+- **`app/risk_engine/`**: Real-time risk evaluation engine calculating composite multi-factor risk scores and dispatching alerts.
+- **`app/schemas/`**: Pydantic v2 schemas validating request/response bodies and internal contracts.
+- **`app/services/`**: Core business domain services binding repositories, external integrations, and agent workflows.
+- **`tests/`**: Comprehensive test suite covering units, schemas, services, API endpoints, authentication, digital twin (Phase 12), and simulation (Phase 13).
 
-### 2. web/ — Frontend Web Application
+### 2. `web/` — Frontend Web Application
 
 The frontend is a modern web application built on **Next.js 15 (App Router)** and **React 19**:
 
-- **pp/**: Next.js App Router root:
+- **`app/`**: Next.js App Router root:
   - Route groups and pages for the supply chain dashboard, shipment tracking, risk monitor, agent command center, digital twin, and simulation view.
-  - Global styles (globals.css) and root layouts.
-- **components/**: Reusable UI components:
+  - Global styles (`globals.css`) and root layouts.
+- **`components/`**: Reusable UI components:
   - Interactive risk cards, heatmaps, agent conversation streams, geospatial charts, modals, and telemetry graphs.
-- **lib/**: Frontend utility functions, API clients, React hooks, state management, and constant definitions.
-- **public/**: Static assets, SVG icons, brand graphics, and logos.
-- **	ests/**: Frontend component and integration tests.
+- **`lib/`**: Frontend utility functions, API clients, React hooks, state management, and constant definitions.
+- **`public/`**: Static assets, SVG icons, brand graphics, and logos.
+- **`tests/`**: Frontend component and integration tests.
 
-### 3. docs/ — Project Architecture & Specifications
+### 3. `docs/` — Project Architecture & Specifications
 
 Extensive engineering documentation detailing the multi-phase implementation roadmap:
 
-- **Core Architecture:** RiskWise_2.0_Technical_Project_Spec.md, DESIGN.md, RiskWise_2.0_UI_UX_Design_System.md.
-- **API & Database Contracts:** core-api-contract.md, core-api-service-repository-architecture.md, database-schema-inventory.md.
+- **Core Architecture:** `RiskWise_2.0_Technical_Project_Spec.md`, `DESIGN.md`, `RiskWise_2.0_UI_UX_Design_System.md`.
+- **API & Database Contracts:** `core-api-contract.md`, `core-api-service-repository-architecture.md`, `database-schema-inventory.md`.
 - **Phase Implementation Guides:**
   - **Phase 4:** Core API final validation & hardening.
   - **Phase 5:** External data ingestion (AISStream, OpenSky, OpenWeather, TomTom, Freight).
@@ -845,23 +842,22 @@ Extensive engineering documentation detailing the multi-phase implementation roa
   - **Phase 12:** Supply chain Digital Twin simulation and network modeling.
   - **Phase 13:** Bounded what-if Simulation Engine, disruption cascade propagation, and scenario analysis.
 
-### 4. .agents/ — Agent Customizations & Skills
+### 4. `.agents/` — Agent Customizations & Skills
 
 Workspace-specific AI agent extensions and design system toolkits:
 
-- **skills/banner-design/**: Creative banner and social asset generator.
-- **skills/brand/**: Corporate identity, messaging framework, and voice guidelines.
-- **skills/design/**: Comprehensive design tokens, CIP mockups, and logo specifications.
-- **skills/design-system/**: Multi-tier design token architecture and styling tokens.
-- **skills/slides/**: HTML presentation and pitch deck builders.
-- **skills/ui-styling/**: Radix UI + Tailwind CSS component patterns.
-- **skills/ui-ux-pro-max/**: Extensive UI/UX catalogs, palettes, font pairings, and stack-specific rules.
+- **`skills/banner-design/`**: Creative banner and social asset generator.
+- **`skills/brand/`**: Corporate identity, messaging framework, and voice guidelines.
+- **`skills/design/`**: Comprehensive design tokens, CIP mockups, and logo specifications.
+- **`skills/design-system/`**: Multi-tier design token architecture and styling tokens.
+- **`skills/slides/`**: HTML presentation and pitch deck builders.
+- **`skills/ui-styling/`**: Radix UI + Tailwind CSS component patterns.
+- **`skills/ui-ux-pro-max/`**: Extensive UI/UX catalogs, palettes, font pairings, and stack-specific rules.
 
 ### 5. Root Configuration & Storage
 
-- **storage/**: Local cache and persistence for trained ML models (ml_artifacts/*.joblib).
-- **Root configs:** .env, .env.example, .gitignore, AGENTS.md, CLAUDE.md, credentials.json, older.md, README.md, 
-isk-wise.pem.
+- **`storage/`**: Local cache and persistence for trained ML models (`ml_artifacts/*.joblib`).
+- **Root configs:** `.env`, `.env.example`, `.gitignore`, `AGENTS.md`, `CLAUDE.md`, `credentials.json`, `folder.md`, `README.md`, `risk-wise.pem`.
 
 ---
 

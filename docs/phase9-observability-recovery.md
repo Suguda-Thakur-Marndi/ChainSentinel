@@ -212,7 +212,7 @@ Public-safe structured failure response preserving diagnostics without leaking s
 
 ## 11. Testing & Verification
 
-The Step 10 test suite (`apps/api/tests/test_phase9_step10_observability_recovery.py`) contains **137 focused automated tests** covering sections A through P:
+The Step 10 test suite (`api/tests/test_phase9_step10_observability_recovery.py`) contains **137 focused automated tests** covering sections A through P:
 - **A. Trace Propagation** (Tests 1–10)
 - **B. Node Telemetry** (Tests 11–20)
 - **C. Error Classification** (Tests 21–35)

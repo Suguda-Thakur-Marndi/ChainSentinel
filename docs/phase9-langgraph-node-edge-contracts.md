@@ -173,7 +173,7 @@ The `GraphValidator` statically verifies graph topology before compilation:
 - Tested and verified on installed LangGraph with in-memory checkpointer.
 
 ## 22. Tests
-A focused suite of 104 tests in `apps/api/tests/test_phase9_langgraph_node_edge_contracts.py` validates:
+A focused suite of 104 tests in `api/tests/test_phase9_langgraph_node_edge_contracts.py` validates:
 - Node contracts, registration, allowlists, and role requirements (Tests 1–25).
 - Edge contracts, types, registration, and duplicate rejection (Tests 26–37).
 - Stage transitions and topological enforcement (Tests 28–36).

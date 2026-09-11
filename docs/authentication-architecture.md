@@ -3,7 +3,7 @@
 > **Status:** Draft / Architectural Specification  
 > **Phase:** Phase 2 — Step 1  
 > **Date:** September 2026  
-> **Target Services:** `apps/api` (FastAPI), `apps/web` (Next.js 16 App Router), PostgreSQL 16 (AWS RDS)
+> **Target Services:** `api` (FastAPI), `web` (Next.js 16 App Router), PostgreSQL 16 (AWS RDS)
 
 ---
 
@@ -21,7 +21,7 @@ The primary goal of the RiskWise 2.0 authentication architecture is to provide a
 
 ## 2. Existing Database Findings & Gap Analysis
 
-An inspection of the existing database models (`apps/api/app/models/tenancy.py` and `governance.py`) reveals the current database schema state for `organizations` and `users`.
+An inspection of the existing database models (`api/app/models/tenancy.py` and `governance.py`) reveals the current database schema state for `organizations` and `users`.
 
 ### 2.1 The Existing `organizations` Schema
 The `organizations` table acts as the multi-tenant root entity:
@@ -103,8 +103,8 @@ RiskWise implements Google OAuth 2.0 with Proof Key for Code Exchange (PKCE) and
 sequenceDiagram
     autonumber
     actor User as User Browser
-    participant Web as Next.js (apps/web)
-    participant API as FastAPI (apps/api)
+    participant Web as Next.js (web)
+    participant API as FastAPI (api)
     participant Google as Google Accounts OAuth 2.0
     participant DB as PostgreSQL 16
 
@@ -145,7 +145,7 @@ For users authenticating with native credentials, RiskWise specifies a hardened 
 sequenceDiagram
     autonumber
     actor User as User Browser
-    participant API as FastAPI (apps/api)
+    participant API as FastAPI (api)
     participant DB as PostgreSQL 16
 
     Note over User,API: Sign In Flow

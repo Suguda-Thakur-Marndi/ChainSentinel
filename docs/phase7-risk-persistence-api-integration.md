@@ -64,9 +64,9 @@ The runtime flow guarantees that:
 
 ## 2. Persistence Boundary
 
-The persistence boundary is strictly maintained by `RiskAssessmentPersistenceAdapter` (`apps/api/app/risk_engine/persistence.py`).
+The persistence boundary is strictly maintained by `RiskAssessmentPersistenceAdapter` (`api/app/risk_engine/persistence.py`).
 
-- **Domain Independence**: Domain classes in `apps/api/app/risk_engine/contract.py`, `evidence.py`, `scoring.py`, and `explainability.py` do not import SQLAlchemy or depend on database sessions.
+- **Domain Independence**: Domain classes in `api/app/risk_engine/contract.py`, `evidence.py`, `scoring.py`, and `explainability.py` do not import SQLAlchemy or depend on database sessions.
 - **Bi-directional Mapping**:
   - `to_orm(assessment: RiskAssessment, risk_id: str)`: Transforms the in-memory domain assessment into database ORM entities (`app.models.risk.RiskAssessment` and `app.models.risk.RiskFactor`), serializing structured findings (contributions, primary driver, evidence, limitations, source summary, fingerprint).
   - `from_orm(orm_assessment: ORMRiskAssessment, orm_factors: List[ORMRiskFactor])`: Fully reconstructs the immutable domain `RiskAssessment` object with original identities, scores, factors, and evidence items.
@@ -214,7 +214,7 @@ Idempotency is achieved using the deterministic SHA-256 assessment fingerprint c
 
 ## 11. API Integration
 
-Endpoints are integrated into the existing `/api/v1/risk-assessments` router (`apps/api/app/api/v1/endpoints/risk_assessments.py`):
+Endpoints are integrated into the existing `/api/v1/risk-assessments` router (`api/app/api/v1/endpoints/risk_assessments.py`):
 
 1. **`POST /api/v1/risk-assessments/evaluate`**:
    - Evaluates a list of `NormalizedRiskSignal`s with the deterministic engine and persists the result.
@@ -365,12 +365,12 @@ Database internal errors and credentials are never leaked in error messages.
 
 Step 4 implementation is backed by a comprehensive automated test suite:
 
-- **Step 4 Focused Tests (`apps/api/tests/test_phase7_risk_persistence_api.py`)**:
+- **Step 4 Focused Tests (`api/tests/test_phase7_risk_persistence_api.py`)**:
   - **64 tests passed** (0 failures).
   - Covers: Repository methods, Adapter mapping, Bi-directional linkage, Secret scrubbing, Transaction rollback on failure, UnitOfWork safety, Idempotent deduplication, Cross-tenant isolation matrix, RBAC permissions, API evaluation, API retrieval, Bounded scoring, Determinism, and Security.
-- **Phase 7 Step 3 Tests (`apps/api/tests/test_phase7_risk_evidence_assessment.py`)**: 61 passed.
-- **Phase 7 Step 2 Tests (`apps/api/tests/test_phase7_baseline_scoring.py`)**: 65 passed.
-- **Phase 7 Step 1 Tests (`apps/api/tests/test_phase7_risk_engine_contracts.py`)**: 58 passed.
+- **Phase 7 Step 3 Tests (`api/tests/test_phase7_risk_evidence_assessment.py`)**: 61 passed.
+- **Phase 7 Step 2 Tests (`api/tests/test_phase7_baseline_scoring.py`)**: 65 passed.
+- **Phase 7 Step 1 Tests (`api/tests/test_phase7_risk_engine_contracts.py`)**: 58 passed.
 - **Phase 6 Tests (`test_phase6_*.py`)**: 152 passed.
 - **Phase 5 Tests (`test_phase5_final_validation.py`, `test_canonical_external_events.py`)**: 63 passed.
 - **Phase 4 API Regression Tests (`test_risk_api.py`)**: 26 passed.

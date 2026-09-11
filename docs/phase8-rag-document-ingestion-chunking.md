@@ -136,7 +136,7 @@ Implemented in `DeterministicChunker` (`app/rag/chunking.py`):
 
 ## 9. Automated Testing & Verification
 
-The dedicated test suite `apps/api/tests/test_phase8_rag_ingestion_chunking.py` contains **22 focused unit and integration tests**:
+The dedicated test suite `api/tests/test_phase8_rag_ingestion_chunking.py` contains **22 focused unit and integration tests**:
 - Format parsing tests: plain text, markdown, json, csv, html, pdf (6 tests).
 - Boundary tests: unsupported formats, empty documents, oversized payloads, path traversal (4 tests).
 - Chunking tests: small documents, large documents, reproducibility, heading propagation, unicode safety (5 tests).

@@ -4,7 +4,7 @@
 **Document Version:** 1.0.0  
 **Status:** COMPLETED & VERIFIED — READY FOR PRODUCTION  
 **Phase:** Phase 4 — Core APIs (Step 8 — Final Core API Validation & Hardening)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 **Test Suite Summary:** 279 passed, 1 skipped (live RDS probe guard), 0 failures across all 16 test modules.
 
 ---
@@ -289,21 +289,21 @@ Programmatic validation of `app.openapi()` confirmed:
 ================================ test session starts =================================
 collected 280 items
 
-apps/api/tests/test_auth_config.py ......................... [ 10%]
-apps/api/tests/test_auth_final_validation.py ............... [ 23%]
-apps/api/tests/test_crud.py ................................ [ 31%]
-apps/api/tests/test_database_validation.py ................. [ 42%]
-apps/api/tests/test_decision_governance_api.py ............. [ 53%]
-apps/api/tests/test_inventory_api.py ....................... [ 64%]
-apps/api/tests/test_logistics_api.py ....................... [ 75%]
-apps/api/tests/test_main.py ................................ [ 77%]
-apps/api/tests/test_models.py .............................. [ 79%]
-apps/api/tests/test_phase4_final_validation.py ............. [ 83%]
-apps/api/tests/test_risk_api.py ............................ [ 91%]
-apps/api/tests/test_schemas.py ............................. [ 94%]
-apps/api/tests/test_service_repository_foundations.py ...... [ 97%]
-apps/api/tests/test_sessions_and_auth.py ................... [ 99%]
-apps/api/tests/test_supplier_api.py ........................ [100%]
+api/tests/test_auth_config.py ......................... [ 10%]
+api/tests/test_auth_final_validation.py ............... [ 23%]
+api/tests/test_crud.py ................................ [ 31%]
+api/tests/test_database_validation.py ................. [ 42%]
+api/tests/test_decision_governance_api.py ............. [ 53%]
+api/tests/test_inventory_api.py ....................... [ 64%]
+api/tests/test_logistics_api.py ....................... [ 75%]
+api/tests/test_main.py ................................ [ 77%]
+api/tests/test_models.py .............................. [ 79%]
+api/tests/test_phase4_final_validation.py ............. [ 83%]
+api/tests/test_risk_api.py ............................ [ 91%]
+api/tests/test_schemas.py ............................. [ 94%]
+api/tests/test_service_repository_foundations.py ...... [ 97%]
+api/tests/test_sessions_and_auth.py ................... [ 99%]
+api/tests/test_supplier_api.py ........................ [100%]
 
 ================== 279 passed, 1 skipped in 42.72s ===================
 ```

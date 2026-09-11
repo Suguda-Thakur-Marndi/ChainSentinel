@@ -551,13 +551,13 @@ def test_alembic_metadata_registered_tables():
     assert set(Base.metadata.tables.keys()) == EXPECTED_34_TABLES
 
     # Verify alembic.ini configuration
-    ini_path = pathlib.Path("apps/api/alembic.ini") if pathlib.Path("apps/api/alembic.ini").exists() else pathlib.Path("alembic.ini")
+    ini_path = pathlib.Path("api/alembic.ini") if pathlib.Path("api/alembic.ini").exists() else pathlib.Path("alembic.ini")
     assert ini_path.exists(), "alembic.ini must exist"
     cfg = Config(str(ini_path))
     assert cfg.get_main_option("script_location") == "alembic"
 
     # Verify alembic/env.py specifies target_metadata = Base.metadata and imports app.models
-    env_path = pathlib.Path("apps/api/alembic/env.py") if pathlib.Path("apps/api/alembic/env.py").exists() else pathlib.Path("alembic/env.py")
+    env_path = pathlib.Path("api/alembic/env.py") if pathlib.Path("api/alembic/env.py").exists() else pathlib.Path("alembic/env.py")
     assert env_path.exists(), "alembic/env.py must exist"
     env_source = env_path.read_text(encoding="utf-8")
     assert "target_metadata = Base.metadata" in env_source

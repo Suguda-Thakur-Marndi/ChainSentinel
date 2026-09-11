@@ -29,6 +29,7 @@ class SimulatedNodeState:
     health_score: Optional[float] = None
     properties: Dict[str, Any] = field(default_factory=dict)
     simulated_tags: Set[str] = field(default_factory=set)
+    source_type: str = "SIMULATED"
 
     @classmethod
     def from_twin_node(cls, node: TwinNodeContract) -> SimulatedNodeState:
@@ -47,6 +48,7 @@ class SimulatedNodeState:
             effective_delay_minutes=float(node.properties.get("delay_minutes") or 0.0),
             health_score=node.health_score,
             properties=copy.deepcopy(node.properties),
+            source_type="SIMULATED",
         )
 
 
@@ -69,6 +71,7 @@ class SimulatedEdgeState:
     properties: Dict[str, Any] = field(default_factory=dict)
     source_reference: Optional[str] = None
     simulated_tags: Set[str] = field(default_factory=set)
+    source_type: str = "SIMULATED"
 
     @classmethod
     def from_twin_edge(cls, edge: TwinEdgeContract) -> SimulatedEdgeState:
@@ -87,6 +90,7 @@ class SimulatedEdgeState:
             risk_score=edge.risk_score,
             properties=copy.deepcopy(edge.properties),
             source_reference=edge.source_reference,
+            source_type="SIMULATED",
         )
 
 
@@ -183,8 +187,8 @@ class SimulationState:
             edge.status = "SIMULATED_UNAVAILABLE"
             edge.simulated_tags.add("OUTAGE")
 
-        # 3. DELAY
-        elif change.change_type == SimulationChangeType.DELAY:
+        # 3. DELAY / DELAY_INCREASE
+        elif change.change_type in (SimulationChangeType.DELAY, SimulationChangeType.DELAY_INCREASE):
             node_id = self.resolve_node_id(change.target_entity_id)
             if node_id and node_id in self.nodes:
                 node = self.nodes[node_id]
@@ -199,7 +203,9 @@ class SimulationState:
                     edge.added_transit_time_minutes += delay_mins
                     edge.simulated_tags.add("DELAYED")
                 else:
-                    raise SimulationStateError(f"Target entity '{change.target_entity_id}' for DELAY not found")
+                    raise SimulationStateError(
+                        f"Target entity '{change.target_entity_id}' for {change.change_type.value} not found"
+                    )
 
         # 4. CAPACITY_REDUCTION
         elif change.change_type == SimulationChangeType.CAPACITY_REDUCTION:
@@ -213,7 +219,9 @@ class SimulationState:
                     node.capacity = node.baseline_capacity * reduction_factor
                 else:
                     node.capacity = max(0.0, node.baseline_capacity - change.magnitude)
-            node.simulated_tags.add("CAPACITY_REDUCED")
+                node.simulated_tags.add("CAPACITY_REDUCED")
+            else:
+                node.simulated_tags.add("CAPACITY_NOT_AVAILABLE")
 
         # 5. CAPACITY_INCREASE
         elif change.change_type == SimulationChangeType.CAPACITY_INCREASE:
@@ -227,7 +235,9 @@ class SimulationState:
                     node.capacity = node.baseline_capacity * increase_factor
                 else:
                     node.capacity = node.baseline_capacity + change.magnitude
-            node.simulated_tags.add("CAPACITY_INCREASED")
+                node.simulated_tags.add("CAPACITY_INCREASED")
+            else:
+                node.simulated_tags.add("CAPACITY_NOT_AVAILABLE")
 
         # 6. TRANSIT_TIME_INCREASE
         elif change.change_type == SimulationChangeType.TRANSIT_TIME_INCREASE:

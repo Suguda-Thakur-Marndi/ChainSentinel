@@ -29,7 +29,7 @@ The Simulation Engine evaluates hypothetical disruptions, delays, capacity shift
 ## 3. Architecture & Components
 
 ```
-apps/api/app/simulation/
+api/app/simulation/
 ├── __init__.py          # Public API exports
 ├── contracts.py         # Strongly-typed Pydantic contracts & schemas
 ├── errors.py            # Simulation-specific typed exception hierarchy
@@ -132,7 +132,7 @@ If underlying authoritative data is missing for a metric, it is explicitly flagg
 
 ## 10. Persistence & Schema Integrity
 
-- Reuses existing PostgreSQL tables: `scenarios` and `simulations` (`apps/api/app/models/simulation.py`).
+- Reuses existing PostgreSQL tables: `scenarios` and `simulations` (`api/app/models/simulation.py`).
 - Zero Alembic migrations required.
 - Idempotent and transactional operations.
 

@@ -149,8 +149,8 @@ The full CRUD lifecycle established in Step 5 was tested on an isolated in-memor
 
 ## 8. Alembic
 
-- **Alembic Configuration:** `apps/api/alembic.ini` configured with `script_location = alembic` and `prepend_sys_path = .`.
-- **Environment Script:** `apps/api/alembic/env.py` imports `app.models` and binds `target_metadata = Base.metadata`.
+- **Alembic Configuration:** `api/alembic.ini` configured with `script_location = alembic` and `prepend_sys_path = .`.
+- **Environment Script:** `api/alembic/env.py` imports `app.models` and binds `target_metadata = Base.metadata`.
 - **CLI Commands Verified:**
   - `alembic heads`: Exits with code `0`.
   - `alembic history`: Exits with code `0`.
@@ -188,7 +188,7 @@ Comparison between the authoritative PostgreSQL schema specification and SQLAlch
 ## 11. Security
 
 An automated security audit of the repository and database layer was conducted:
-- **Hardcoded Credentials:** 0 passwords, API keys, AWS secret access keys, or private keys exist in `apps/api/app/` source code.
+- **Hardcoded Credentials:** 0 passwords, API keys, AWS secret access keys, or private keys exist in `api/app/` source code.
 - **Pattern Matching Scan:** Scans for `AKIA...` access key patterns and `BEGIN RSA PRIVATE KEY` returned 0 matches.
 - **File Exclusion:** `.gitignore` excludes `.env`, `.env.*`, `credentials.json`, `*.pem`, and `*.key`.
 - **Exception Sanitization:** Connection status and error handlers never print passwords, tokens, or connection strings in logs, exceptions, or HTTP responses.
@@ -200,7 +200,7 @@ An automated security audit of the repository and database layer was conducted:
 The backend database test suite was executed using pytest:
 
 ```
-Command: apps\api\.venv\Scripts\python.exe -m pytest apps/api/tests -v
+Command: apps\api\.venv\Scripts\python.exe -m pytest api/tests -v
 ```
 
 ### Summary
@@ -212,7 +212,7 @@ Command: apps\api\.venv\Scripts\python.exe -m pytest apps/api/tests -v
 - **Pass Rate:** 100% of runnable tests
 
 ### Test Suite Breakdown
-1. `apps/api/tests/test_database_validation.py` (32 tests):
+1. `api/tests/test_database_validation.py` (32 tests):
    - Engine & SELECT 1 execution
    - Session lifecycle & connection security
    - Metadata registration for all 34 tables
@@ -228,18 +228,18 @@ Command: apps\api\.venv\Scripts\python.exe -m pytest apps/api/tests -v
    - Performance sanity check (< 1.0s for 10 queries)
    - Accidental secrets audit
    - Phase 3 Google Authentication foundation
-2. `apps/api/tests/test_crud.py` (4 tests):
+2. `api/tests/test_crud.py` (4 tests):
    - Supplier CRUD lifecycle
    - Shipment CRUD lifecycle
    - ShipmentEvent association
    - Repository error rollback
-3. `apps/api/tests/test_models.py` (5 tests):
+3. `api/tests/test_models.py` (5 tests):
    - Model imports
    - Base metadata table set
    - Primary keys
    - Tenant isolation FKs
    - Safe connection check
-4. `apps/api/tests/test_main.py` (7 tests):
+4. `api/tests/test_main.py` (7 tests):
    - Root endpoint, health checks, OpenAPI schema, Swagger docs
 
 ---

@@ -3,7 +3,7 @@
 **Document Version:** 1.0.0  
 **Status:** IMPLEMENTED & VALIDATED  
 **Phase:** Phase 4 — Core APIs (Step 5 — Inventory APIs)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -139,31 +139,31 @@ State-changing operations are logged using the centralized `AuditService.log_eve
 
 ## 10. Comprehensive Test Coverage & Validation Results
 
-A dedicated test suite was built in `apps/api/tests/test_inventory_api.py` covering all 22 required test cases:
+A dedicated test suite was built in `api/tests/test_inventory_api.py` covering all 22 required test cases:
 
 ```
-apps/api/tests/test_inventory_api.py::test_1_authentication_required PASSED
-apps/api/tests/test_inventory_api.py::test_2_rbac_enforcement PASSED
-apps/api/tests/test_inventory_api.py::test_3_organization_isolation PASSED
-apps/api/tests/test_inventory_api.py::test_4_cross_tenant_product_rejection PASSED
-apps/api/tests/test_inventory_api.py::test_5_cross_tenant_facility_rejection PASSED
-apps/api/tests/test_inventory_api.py::test_6_inventory_creation PASSED
-apps/api/tests/test_inventory_api.py::test_7_inventory_retrieval PASSED
-apps/api/tests/test_inventory_api.py::test_8_inventory_listing PASSED
-apps/api/tests/test_inventory_api.py::test_9_pagination_validation PASSED
-apps/api/tests/test_inventory_api.py::test_10_filtering PASSED
-apps/api/tests/test_inventory_api.py::test_11_sorting_and_invalid_sort PASSED
-apps/api/tests/test_inventory_api.py::test_12_search_and_wildcard_escaping PASSED
-apps/api/tests/test_inventory_api.py::test_13_update_behavior PASSED
-apps/api/tests/test_inventory_api.py::test_14_server_controlled_field_injection PASSED
-apps/api/tests/test_inventory_api.py::test_15_invalid_quantity_handling PASSED
-apps/api/tests/test_inventory_api.py::test_16_inventory_movement_creation_and_reconciliation PASSED
-apps/api/tests/test_inventory_api.py::test_17_movement_cross_tenant_reference_rejection PASSED
-apps/api/tests/test_inventory_api.py::test_18_append_only_and_immutability_rules PASSED
-apps/api/tests/test_inventory_api.py::test_19_insufficient_stock_protection PASSED
-apps/api/tests/test_inventory_api.py::test_20_audit_logging_behavior PASSED
-apps/api/tests/test_inventory_api.py::test_21_standardized_error_envelope PASSED
-apps/api/tests/test_inventory_api.py::test_22_openapi_route_registration_and_uniqueness PASSED
+api/tests/test_inventory_api.py::test_1_authentication_required PASSED
+api/tests/test_inventory_api.py::test_2_rbac_enforcement PASSED
+api/tests/test_inventory_api.py::test_3_organization_isolation PASSED
+api/tests/test_inventory_api.py::test_4_cross_tenant_product_rejection PASSED
+api/tests/test_inventory_api.py::test_5_cross_tenant_facility_rejection PASSED
+api/tests/test_inventory_api.py::test_6_inventory_creation PASSED
+api/tests/test_inventory_api.py::test_7_inventory_retrieval PASSED
+api/tests/test_inventory_api.py::test_8_inventory_listing PASSED
+api/tests/test_inventory_api.py::test_9_pagination_validation PASSED
+api/tests/test_inventory_api.py::test_10_filtering PASSED
+api/tests/test_inventory_api.py::test_11_sorting_and_invalid_sort PASSED
+api/tests/test_inventory_api.py::test_12_search_and_wildcard_escaping PASSED
+api/tests/test_inventory_api.py::test_13_update_behavior PASSED
+api/tests/test_inventory_api.py::test_14_server_controlled_field_injection PASSED
+api/tests/test_inventory_api.py::test_15_invalid_quantity_handling PASSED
+api/tests/test_inventory_api.py::test_16_inventory_movement_creation_and_reconciliation PASSED
+api/tests/test_inventory_api.py::test_17_movement_cross_tenant_reference_rejection PASSED
+api/tests/test_inventory_api.py::test_18_append_only_and_immutability_rules PASSED
+api/tests/test_inventory_api.py::test_19_insufficient_stock_protection PASSED
+api/tests/test_inventory_api.py::test_20_audit_logging_behavior PASSED
+api/tests/test_inventory_api.py::test_21_standardized_error_envelope PASSED
+api/tests/test_inventory_api.py::test_22_openapi_route_registration_and_uniqueness PASSED
 ```
 
 ### Full Regression Suite Results

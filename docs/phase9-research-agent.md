@@ -11,7 +11,7 @@ The Research Agent is the **first operational node** in the RiskWise 2.0 LangGra
 ## Module Layout
 
 ```
-apps/api/app/agents/research/
+api/app/agents/research/
 +-- __init__.py        # Public surface: research_node, RESEARCH_NODE_CONTRACT, ResearchAgent
 +-- contract.py        # ResearchRequest, ResearchResult, ResearchFinding, ResearchNodeOutput
 +-- evidence.py        # EvidenceValidator (tenant isolation + quarantine)
@@ -94,7 +94,7 @@ duration_ms, status (SUCCESS/FAILED), and error_code on failure.
 
 ## Tests
 
-**106 tests** in `apps/api/tests/test_phase9_research_agent.py`
+**106 tests** in `api/tests/test_phase9_research_agent.py`
 
 - Full regression: **2030 passed, 1 skipped, 0 failed**
 

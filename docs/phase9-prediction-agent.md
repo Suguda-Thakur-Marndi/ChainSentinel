@@ -324,7 +324,7 @@ Every execution of `prediction_node` emits a structured `NodeExecutionTelemetry`
 
 ## 20. LangGraph Node Registration
 
-- Registered in `apps/api/app/agents/nodes.py`:
+- Registered in `api/app/agents/nodes.py`:
   - `PREDICTION_NODE_CONTRACT`
   - `prediction_node`
 - Stage: `AgentStage.PREDICTION`
@@ -350,7 +350,7 @@ Every execution of `prediction_node` emits a structured `NodeExecutionTelemetry`
 
 ## 23. Test Coverage
 
-Comprehensive test suite in `apps/api/tests/test_phase9_prediction_agent.py`:
+Comprehensive test suite in `api/tests/test_phase9_prediction_agent.py`:
 - **108 tests** across 11 groups:
   1. PredictionRequest Contracts (10 tests)
   2. PredictionFeature Contracts (12 tests)

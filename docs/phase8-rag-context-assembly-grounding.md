@@ -61,14 +61,14 @@ Grounded Context Items + Citations (LLM-Ready RAGContext)
 
 ## 3. Core Models & Contracts
 
-### `GroundingStatus` (`apps/api/app/rag/contracts.py`)
+### `GroundingStatus` (`api/app/rag/contracts.py`)
 Deterministic 4-state evaluation:
 - `GROUNDED`: All retrieved chunks are verified safe and fully cite authentic evidence.
 - `PARTIALLY_GROUNDED`: Some evidence was retrieved safely, but certain items are truncated by budget or mixed with hostile chunks.
 - `UNGROUNDED`: Zero chunks retrieved or evidence missing.
 - `UNSAFE_SOURCE`: All retrieved evidence contains detected prompt injection or instructional patterns.
 
-### `GroundedContextItem` (`apps/api/app/rag/contracts.py`)
+### `GroundedContextItem` (`api/app/rag/contracts.py`)
 Structured evidence items categorizing retrieved data:
 - `item_id`: Stable identifier.
 - `item_type`: `GroundedItemType` (`RETRIEVED_FACT`, `SOURCE_METADATA`, `CITATION`, `LIMITATION`, `UNSAFE_CONTENT`).
@@ -78,12 +78,12 @@ Structured evidence items categorizing retrieved data:
 - `provenance`: Full `RetrievalProvenance` object.
 - `is_safe`: Boolean flag (`False` if injection detected).
 
-### `generate_deterministic_citation_id` (`apps/api/app/rag/contracts.py`)
+### `generate_deterministic_citation_id` (`api/app/rag/contracts.py`)
 Generates UUIDv5 using namespace `6ba7b810-9dad-11d1-80b4-00c04fd430c8` and format:
 `"{organization_id}:citation:{document_id}:{chunk_id}:{retrieval_id}"`
 Never includes timestamps, random UUIDs, or model outputs.
 
-### `validate_citation_integrity` (`apps/api/app/rag/grounding.py`)
+### `validate_citation_integrity` (`api/app/rag/grounding.py`)
 Strict citation verification function:
 ```python
 validate_citation_integrity(
@@ -100,7 +100,7 @@ Rejects:
 - Citations to filtered-out chunks.
 - Citations with fabricated excerpt text.
 
-### `GroundingAnchor` (`apps/api/app/rag/grounding.py`)
+### `GroundingAnchor` (`api/app/rag/grounding.py`)
 Encapsulates domain entity coordinates to tie contextual knowledge to authoritative RiskWise business entities:
 - `organization_id`: Tenant boundary identifier (mandatory).
 - `signal_id`: Associated `NormalizedRiskSignal` ID (optional).
@@ -109,7 +109,7 @@ Encapsulates domain entity coordinates to tie contextual knowledge to authoritat
 - `entity_id`: Entity database primary key.
 - `extra_anchors`: Additional structured anchors (scrubbed against credential leakage).
 
-### `ContextBudgetConfig` (`apps/api/app/rag/grounding.py`)
+### `ContextBudgetConfig` (`api/app/rag/grounding.py`)
 Governs token limits, chunk counts, and truncation rules:
 - `max_context_tokens`: Token budget ceiling (default: 4000, bounds: 10..32000).
 - `max_chunks`: Maximum chunks to include (default: 10, bounds: 1..50).
@@ -166,7 +166,7 @@ All metadata is validated through `validate_no_secrets_in_metadata()` to guarant
 ## 7. Verification & Test Suite
 
 The Phase 8 Step 5 test suite is implemented in:
-`apps/api/tests/test_phase8_rag_context_assembly_grounding.py`
+`api/tests/test_phase8_rag_context_assembly_grounding.py`
 
 Total Tests: **58 passed**, covering 11 groups:
 - **Group A**: Context Assembly (happy path, empty retrieval, single result, deterministic ranking preservation, metadata preservation)

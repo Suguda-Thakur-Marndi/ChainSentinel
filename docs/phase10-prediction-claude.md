@@ -130,7 +130,7 @@ Audit events include tenant `organization_id`, `prediction_id`, status, trace id
 
 ## 9. Test Coverage & Verification
 
-Phase 10 Step 6 is verified by **136 automated tests** in `apps/api/tests/test_phase10_step6_prediction_explanation_claude.py`, covering:
+Phase 10 Step 6 is verified by **136 automated tests** in `api/tests/test_phase10_step6_prediction_explanation_claude.py`, covering:
 - Group A: Prediction Input Contract (Immutability, type safety)
 - Group B: Immutable Snapshot Construction
 - Group C: Value Authority & Anti-Tamper

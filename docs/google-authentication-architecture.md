@@ -2,7 +2,7 @@
 
 > **Phase:** Phase 3 — Google Authentication: Step 1  
 > **Status:** Architectural Specification & Identity Mapping Complete  
-> **Target Services:** `apps/api` (FastAPI), `apps/web` (Next.js 16 App Router), PostgreSQL 16 (AWS RDS)  
+> **Target Services:** `api` (FastAPI), `web` (Next.js 16 App Router), PostgreSQL 16 (AWS RDS)  
 > **Scope:** Architecture, Identity & Tenant Mapping, Security Contracts, API Design  
 > **Database Execution:** **INSPECTION ONLY** (0 DDL, 0 DML, 0 migrations executed)
 
@@ -24,7 +24,7 @@ The primary goal of the RiskWise 2.0 authentication architecture is to provide a
 ## 2. Existing User Model
 
 ### 2.1 Database & SQLAlchemy Model Inspection
-Inspection of the actual PostgreSQL database schema and SQLAlchemy 2.0 model in `apps/api/app/models/tenancy.py`:
+Inspection of the actual PostgreSQL database schema and SQLAlchemy 2.0 model in `api/app/models/tenancy.py`:
 
 ```python
 class User(Base):
@@ -71,7 +71,7 @@ class User(Base):
 ## 3. Existing Organization Model
 
 ### 3.1 Database & SQLAlchemy Model Inspection
-Inspection of `organizations` in `apps/api/app/models/tenancy.py`:
+Inspection of `organizations` in `api/app/models/tenancy.py`:
 
 ```python
 class Organization(Base):
@@ -158,7 +158,7 @@ When an unauthenticated Google user signs in for the first time, the system exec
 sequenceDiagram
     autonumber
     actor User as User Browser
-    participant API as FastAPI (apps/api)
+    participant API as FastAPI (api)
     participant Google as Google Accounts
     participant DB as PostgreSQL 16
 
@@ -239,7 +239,7 @@ RiskWise requires only minimal standard OpenID Connect (OIDC) identity scopes:
 > **No Unnecessary Scopes:** In compliance with the principle of least privilege, RiskWise does **not** request access to sensitive Google scopes (e.g., Google Drive, Gmail, Calendar, Contacts, or YouTube).
 
 ### 8.3 Required Environment Variables
-The application consumes OAuth credentials strictly through environment variables configured in `apps/api`:
+The application consumes OAuth credentials strictly through environment variables configured in `api`:
 
 ```env
 # Google OAuth 2.0 Server-Side Credentials
@@ -525,7 +525,7 @@ To ensure zero vulnerabilities, the implementation of Google OAuth must satisfy 
 ## 15. Frontend Contract
 
 ### 15.1 Authentication View (`/auth`)
-The initial authentication page in `apps/web` will reside at route `/auth`:
+The initial authentication page in `web` will reside at route `/auth`:
 
 - **Views Supported:**
   - "Sign In" view
@@ -571,11 +571,11 @@ The initial authentication page in `apps/web` will reside at route `/auth`:
 ## 18. Frontend Authentication
 
 > **Phase:** Phase 3 — Google Authentication: Step 5  
-> **Status:** Implemented & Verified in `apps/web` (Next.js 16 App Router)  
+> **Status:** Implemented & Verified in `web` (Next.js 16 App Router)  
 > **Primary Route:** `/auth`  
 
 ### 18.1 Route & View Architecture
-The RiskWise authentication interface is implemented at route `/auth` (`apps/web/app/auth/page.tsx`) using Next.js 16 App Router, React 19, and Tailwind CSS v4:
+The RiskWise authentication interface is implemented at route `/auth` (`web/app/auth/page.tsx`) using Next.js 16 App Router, React 19, and Tailwind CSS v4:
 - **Single Viewport Experience:** Focused, zero-scroll desktop experience with precision visual hierarchy, liquid-metal styling, and subtle ambient lighting.
 - **Client-Side Suspense:** The core authentication interactive content (`AuthContent`) is wrapped in a `<Suspense>` boundary to guarantee static optimization and safe resolution of `useSearchParams()`.
 - **Mode Switcher (`AuthModeSwitch`):** Implements an accessible tablist (`role="tablist"`, `role="tab"`) toggling between:
@@ -584,7 +584,7 @@ The RiskWise authentication interface is implemented at route `/auth` (`apps/web
 - **Backend-Truth Compliance:** Because the backend exclusively supports Google OAuth SSO, the interface accurately communicates Google Workspace SSO as the active provider and never displays simulated email/password inputs or fake handlers.
 
 ### 18.2 Google Authentication Button Flow
-The primary interaction mechanism is the `GoogleAuthButton` (`apps/web/components/auth/GoogleAuthButton.tsx`):
+The primary interaction mechanism is the `GoogleAuthButton` (`web/components/auth/GoogleAuthButton.tsx`):
 1. **User Action:** User clicks "Continue with Google" (or "Sign up with Google Workspace").
 2. **Double-Click Prevention & Progress UX:** Button instantly transitions to a disabled loading state displaying an animated spinner (`Loader2`) and the message `"Connecting to Google…"`, setting `aria-busy="true"`.
 3. **Endpoint Resolution:** Constructs the real backend URL using `process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"`.
@@ -610,7 +610,7 @@ To eliminate unnecessary authentication friction:
 3. **Unauthenticated (HTTP 401 / Network Error):** The auth card renders normally.
 
 ### 18.4 Error Handling & User Experience
-The `AuthErrorBanner` (`apps/web/components/auth/AuthErrorBanner.tsx`) provides accessible, sanitized feedback without exposing internal stack traces, tokens, or infrastructure details:
+The `AuthErrorBanner` (`web/components/auth/AuthErrorBanner.tsx`) provides accessible, sanitized feedback without exposing internal stack traces, tokens, or infrastructure details:
 - **Screen Reader Accessibility:** Uses `role="alert"`, `aria-live="assertive"`, and `tabIndex={-1}` to immediately notify assistive technology.
 - **Backend Error Code Mapping:**
   - `invalid_state`: "Your authentication session timed out or security verification failed. Please try again."
@@ -640,11 +640,11 @@ The frontend requires only a single public environment variable:
 
 > **Phase:** Phase 3 — Google Authentication: Step 6  
 > **Status:** Completed, Verified & Tested  
-> **Target Subsystems:** `apps/web` (Next.js 16 App Router) ↔ `apps/api` (FastAPI 0.115)  
+> **Target Subsystems:** `web` (Next.js 16 App Router) ↔ `api` (FastAPI 0.115)  
 
 ### 19.1 Frontend API Configuration
 - **Base URL Resolution:** Resolved dynamically from `process.env.NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8000` in development). Never hardcoded.
-- **Client Implementation (`apps/web/lib/api/client.ts`):** Single unified `apiClient` instance enforcing:
+- **Client Implementation (`web/lib/api/client.ts`):** Single unified `apiClient` instance enforcing:
   - `credentials: "include"` on all HTTP requests to guarantee cross-origin transmission of the browser's HttpOnly `riskwise_session` cookie.
   - Standardized JSON serialization, headers (`Accept: application/json`), and error parsing.
   - `ApiClientError` normalization capturing HTTP status, detail, and error codes.
@@ -654,9 +654,9 @@ The frontend requires only a single public environment variable:
 ```
 User (Browser)
     ↓  Click "Continue with Google"
-Next.js (apps/web)
+Next.js (web)
     ↓  Navigation to `${NEXT_PUBLIC_API_URL}/api/v1/auth/google?return_to=...`
-FastAPI Gateway (apps/api)
+FastAPI Gateway (api)
     ↓  302 Redirect to Google Accounts Consent
 Google Accounts (OIDC)
     ↓  User grants consent & Google redirects to callback
@@ -667,14 +667,14 @@ FastAPI Session Service
     ↓  Issues Set-Cookie: riskwise_session=...; HttpOnly; SameSite=Lax; Path=/
 FastAPI Gateway
     ↓  302 Redirect to Frontend (`/` or validated return_to)
-Next.js AuthProvider (apps/web)
+Next.js AuthProvider (web)
     ↓  GET /api/v1/auth/me (credentials: "include")
     ↓  Resolves User + Organization + Role + Capabilities
 Authenticated Application Active
 ```
 
 ### 19.3 Session Restoration & `/api/v1/auth/me`
-On application startup, the centralized `AuthProvider` (`apps/web/lib/auth/AuthContext.tsx`) automatically initiates session restoration:
+On application startup, the centralized `AuthProvider` (`web/lib/auth/AuthContext.tsx`) automatically initiates session restoration:
 - Calls `GET /api/v1/auth/me` with `credentials: "include"`.
 - **Response Mapping:**
   ```json
@@ -711,7 +711,7 @@ Frontend logout is bound directly to the real backend revocation endpoint:
 5. The browser navigates immediately to `/auth`.
 
 ### 19.5 Protected Routes & Guard Architecture
-Protected routes are guarded by `<ProtectedRoute>` (`apps/web/components/auth/ProtectedRoute.tsx`):
+Protected routes are guarded by `<ProtectedRoute>` (`web/components/auth/ProtectedRoute.tsx`):
 - **Unauthenticated Access:** Seamlessly redirects unauthenticated users to `/auth?return_to=${encodeURIComponent(pathname)}`.
 - **Session Expiration:** When an authenticated request fails with `401 Unauthorized`, `apiClient` triggers `notifyUnauthorized()`, clearing client state and redirecting to `/auth?error=session_expired`. Redirect loops are strictly avoided by checking `pathname !== "/auth"`.
 - **Granular RBAC Authorization (403):** Supports optional `requiredRole` and `requiredPermission` parameters. If a user lacks the required role or permission:

@@ -69,7 +69,7 @@ No stage in the risk evaluation pipeline may bypass the evidence chain. Evaluato
 
 ## 3. Evidence Contract
 
-The `RiskEvidence` contract (`apps/api/app/risk_engine/evidence.py`) represents an immutable, traceable evidence unit linking an evaluated `RiskFactor` back to its `NormalizedRiskSignal` lineage:
+The `RiskEvidence` contract (`api/app/risk_engine/evidence.py`) represents an immutable, traceable evidence unit linking an evaluated `RiskFactor` back to its `NormalizedRiskSignal` lineage:
 
 - `evidence_id`: UUIDv5 generated deterministically from `organization_id`, `signal_id`, and `provider`.
 - `normalized_signal_id`: Foreign lineage key referencing `NormalizedRiskSignal.signal_id`.
@@ -105,7 +105,7 @@ A risk factor cannot exist without traceable evidence unless explicitly modeled 
 
 ## 5. Score Traceability & FactorContribution
 
-The `RiskScore` contract (`apps/api/app/risk_engine/contract.py`) explains how each factor influenced the final score via `FactorContribution`:
+The `RiskScore` contract (`api/app/risk_engine/contract.py`) explains how each factor influenced the final score via `FactorContribution`:
 - `factor_id`: Identifier of contributing factor.
 - `factor_type`: Category classification.
 - `name`: Human-readable title.
@@ -125,7 +125,7 @@ $$S_{\text{final}} = \min(100.0, S_1 + \sum_{k=2}^N \Delta S_k)$$
 
 ## 6. Assessment Contract
 
-`RiskAssessment` (`apps/api/app/risk_engine/contract.py`) serves as the authoritative, comprehensive evaluation snapshot:
+`RiskAssessment` (`api/app/risk_engine/contract.py`) serves as the authoritative, comprehensive evaluation snapshot:
 - `assessment_id`: Deterministic UUIDv5 based on tenant, scope, signal IDs, and evaluation hour.
 - `organization_id`: Tenant scope.
 - `evaluated_at`: Timezone-aware UTC instant of evaluation.
@@ -245,7 +245,7 @@ Operational tracing fields (`correlation_id`, `trace_id`, `evaluation_duration_m
 
 ## 16. Explanation Integration
 
-`RiskExplanation` (`apps/api/app/risk_engine/explainability.py`) generates structured, human-readable summaries using deterministic rule-based formatting:
+`RiskExplanation` (`api/app/risk_engine/explainability.py`) generates structured, human-readable summaries using deterministic rule-based formatting:
 - Score and categorical risk level.
 - Primary risk driver with factor contribution.
 - Factor explanations with exact rank, weighted contribution, and supporting evidence IDs.

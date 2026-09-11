@@ -238,7 +238,7 @@ fingerprint = hashlib.sha256(raw_key.encode("utf-8")).hexdigest()
 
 ## 10. Verification & Test Suite Summary
 
-A comprehensive, self-contained unit test suite was implemented in `apps/api/tests/test_rail_integration.py`.
+A comprehensive, self-contained unit test suite was implemented in `api/tests/test_rail_integration.py`.
 
 - **Total Rail Unit Tests**: **59 passed, 0 failed, 0 skipped**
 - **Cumulative Phase 5 Steps 1–7 Tests**: **287 passed, 0 failed**

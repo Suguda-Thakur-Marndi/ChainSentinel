@@ -3,7 +3,7 @@
 **Document Version:** 2.0.0  
 **Status:** DESIGNED / APPROVED FOR IMPLEMENTATION  
 **Phase:** Phase 4 — Core APIs (Step 1 — Core API Contract & Resource Design)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -12,11 +12,11 @@
 The RiskWise 2.0 Core API Contract provides a strictly typed, multi-tenant, role-governed REST API designed to power real-time supply chain risk intelligence, predictive tracking, multi-agent autonomous investigations, digital twin graphs, and human-in-the-loop governance.
 
 ### Architectural Separation of Concerns
-1. **HTTP Layer (`apps/api/app/api/`):** FastAPI routers validate HTTP payloads, headers, query parameters, cookies, and enforce dependency injection (`AuthenticatedContext`, `require_role`).
-2. **Contract / Schema Layer (`apps/api/app/schemas/`):** Pydantic v2 schemas define strict request and response boundaries. Database models are **never** exposed directly over the wire. Server-controlled fields (`id`, `org_id`, `created_at`, `updated_at`) are strictly forbidden in client write requests (`extra = "forbid"`).
-3. **Service Layer (`apps/api/app/services/`):** Encapsulates business validation, workflow orchestration, audit logging, transaction boundaries, and state machines.
-4. **Data Access Layer (`apps/api/app/repositories/`):** Executes scoped queries against SQLAlchemy 2.0 sessions, applying mandatory tenant isolation predicates (`org_id == context.organization_id`).
-5. **Database Layer (`apps/api/app/models/`):** 34 authoritative PostgreSQL tables established in Phase 2.
+1. **HTTP Layer (`api/app/api/`):** FastAPI routers validate HTTP payloads, headers, query parameters, cookies, and enforce dependency injection (`AuthenticatedContext`, `require_role`).
+2. **Contract / Schema Layer (`api/app/schemas/`):** Pydantic v2 schemas define strict request and response boundaries. Database models are **never** exposed directly over the wire. Server-controlled fields (`id`, `org_id`, `created_at`, `updated_at`) are strictly forbidden in client write requests (`extra = "forbid"`).
+3. **Service Layer (`api/app/services/`):** Encapsulates business validation, workflow orchestration, audit logging, transaction boundaries, and state machines.
+4. **Data Access Layer (`api/app/repositories/`):** Executes scoped queries against SQLAlchemy 2.0 sessions, applying mandatory tenant isolation predicates (`org_id == context.organization_id`).
+5. **Database Layer (`api/app/models/`):** 34 authoritative PostgreSQL tables established in Phase 2.
 
 ---
 

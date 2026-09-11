@@ -3,7 +3,7 @@
 **Document Version:** 1.0.0  
 **Status:** IMPLEMENTED & VALIDATED  
 **Phase:** Phase 4 — Core APIs (Step 4 — Logistics APIs)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -187,7 +187,7 @@ Every mutating operation (`CREATE`, `UPDATE`) records an immutable event in `aud
 
 ### Test Suite Summary
 - **Baseline Test Suite:** 155 tests (154 passed, 1 skipped)
-- **New Logistics API Tests:** 35 comprehensive tests in `apps/api/tests/test_logistics_api.py`
+- **New Logistics API Tests:** 35 comprehensive tests in `api/tests/test_logistics_api.py`
 - **Total Test Suite:** 190 tests
 - **Results:**
   - **189 Passed**

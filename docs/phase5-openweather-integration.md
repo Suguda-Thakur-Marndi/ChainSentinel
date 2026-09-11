@@ -7,8 +7,8 @@ This document defines the production integration architecture, data contracts, n
 ## 1. Executive Summary & Context
 
 Phase 5 Step 3 integrates OpenWeather as the primary external meteorological provider within the RiskWise 2.0 signal ingestion ecosystem. It strictly builds upon:
-- **Phase 5 Step 1 (`apps/api/app/integrations/base.py`, `boundaries.py`, `service.py`)**: Provider abstractions, raw boundaries, secret resolution, bounded exponential retry, token rate-limiting, and deterministic idempotency deduplication.
-- **Phase 5 Step 2 (`apps/api/app/integrations/canonical.py`, `normalizers.py`)**: The provider-agnostic `CanonicalExternalEvent` taxonomy, quality evaluation (`VALID`, `PARTIAL`, `INVALID`), and `ShipmentEventBridge`.
+- **Phase 5 Step 1 (`api/app/integrations/base.py`, `boundaries.py`, `service.py`)**: Provider abstractions, raw boundaries, secret resolution, bounded exponential retry, token rate-limiting, and deterministic idempotency deduplication.
+- **Phase 5 Step 2 (`api/app/integrations/canonical.py`, `normalizers.py`)**: The provider-agnostic `CanonicalExternalEvent` taxonomy, quality evaluation (`VALID`, `PARTIAL`, `INVALID`), and `ShipmentEventBridge`.
 
 ### Core Architectural Invariant
 Provider-specific OpenWeather JSON response structures are **strictly confined** to the provider adapter and `RawEvent` storage boundaries. Downstream risk scoring engines, supply chain graph resolvers, and analytics services **never** consume OpenWeather payloads directly; they interact exclusively with normalized `CanonicalExternalEvent` models.
@@ -16,7 +16,7 @@ Provider-specific OpenWeather JSON response structures are **strictly confined**
 ```
 OpenWeather HTTP API
          ↓
-OpenWeatherAdapter (apps/api/app/integrations/providers/openweather.py)
+OpenWeatherAdapter (api/app/integrations/providers/openweather.py)
          ↓
 RawEvent (Stored in RawEventStorage with sanitized raw_payload)
          ↓
@@ -255,7 +255,7 @@ Every invocation orchestrated via `IngestionService.ingest("openweather", ...)` 
 
 ## 11. Testing & Validation Summary
 
-The OpenWeather integration is verified by 35 focused, deterministic unit tests in `apps/api/tests/test_openweather_integration.py` using `httpx.MockTransport` with zero live network calls:
+The OpenWeather integration is verified by 35 focused, deterministic unit tests in `api/tests/test_openweather_integration.py` using `httpx.MockTransport` with zero live network calls:
 1. Adapter initialization & capability inspection
 2. Configuration loading and overrides
 3. Missing API key rejection

@@ -229,7 +229,7 @@ In addition to scheduled polling, Karrio provides push-based webhook delivery (`
 
 ## 12. Verification & Test Suite Summary
 
-Implemented in `apps/api/tests/test_karrio_integration.py`:
+Implemented in `api/tests/test_karrio_integration.py`:
 
 - **Total Dedicated Tests**: **65 passed, 0 failed**
 - **Cumulative Phase 5 Tests (Steps 1–8)**: **352 passed, 0 failed**

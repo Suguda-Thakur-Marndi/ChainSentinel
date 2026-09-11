@@ -181,7 +181,7 @@ The research node emits structured audit events via the platform audit mechanism
 
 ## 8. Test Verification Matrix
 
-All 136 tests in `apps/api/tests/test_phase10_step3_research_agent_claude.py` run offline with zero internet access:
+All 136 tests in `api/tests/test_phase10_step3_research_agent_claude.py` run offline with zero internet access:
 
 | Section | Description | Tests | Status |
 |:---|:---|:---:|:---:|

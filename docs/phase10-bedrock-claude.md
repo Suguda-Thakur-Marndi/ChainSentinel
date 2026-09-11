@@ -209,7 +209,7 @@ Every domain explanation workflow emits structured lifecycle audit events:
 
 - **Database:** Zero schema modifications. Exactly 34 tables maintained. Zero new Alembic migrations.
 - **Public API:** Zero public LLM or explanation endpoints exposed. OpenAPI route count remains identical.
-- **Frontend:** Zero modifications to `apps/web`.
+- **Frontend:** Zero modifications to `web`.
 - **Testing:** 100% deterministic test execution using `DeterministicMockLLMProvider` without live AWS dependencies.
 
 ---

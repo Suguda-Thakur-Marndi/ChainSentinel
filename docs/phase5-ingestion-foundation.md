@@ -56,7 +56,7 @@ External Provider (e.g. Weather, Traffic, AIS, Logistics)
 
 The adapter layer decouples transport protocols (REST, WebSockets, Polling, Webhooks) from internal services using `BaseProviderAdapter`:
 
-- **Location**: [`apps/api/app/integrations/base.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/base.py)
+- **Location**: [`api/app/integrations/base.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/base.py)
 - **Primary Properties**:
   - `provider_name: str`: Unique provider identifier (e.g. `mock_weather`, `tomtom`, `aisstream`).
   - `provider_type: ProviderType`: Domain enum (`WEATHER`, `ROAD_TRAFFIC`, `OCEAN_AIS`, `AIR`, `RAIL`, `LOGISTICS_TRACKING`, `NEWS_RESEARCH`, `CUSTOM`).
@@ -73,7 +73,7 @@ The adapter layer decouples transport protocols (REST, WebSockets, Polling, Webh
 
 The registry provides thread-safe lifecycle and adapter factory capabilities:
 
-- **Location**: [`apps/api/app/integrations/registry.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/registry.py)
+- **Location**: [`api/app/integrations/registry.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/registry.py)
 - **Responsibilities**:
   - Registers adapter classes and default configurations.
   - Rejects duplicate provider registrations unless explicit `overwrite=True` is supplied.
@@ -87,7 +87,7 @@ The registry provides thread-safe lifecycle and adapter factory capabilities:
 
 Provider behavior is strongly typed via Pydantic v2 schemas:
 
-- **Location**: [`apps/api/app/integrations/config.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/config.py)
+- **Location**: [`api/app/integrations/config.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/config.py)
 - **Fields**:
   - `provider_name: str`: Validated non-empty string.
   - `provider_type: ProviderType`: Classification enum.
@@ -116,7 +116,7 @@ RiskWise enforces a zero-trust credential architecture:
 
 Transient network failures and rate limits are managed via bounded exponential backoff:
 
-- **Location**: [`apps/api/app/integrations/retry.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/retry.py)
+- **Location**: [`api/app/integrations/retry.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/retry.py)
 - **Retryable Errors**: `ProviderTimeoutError`, `ProviderConnectionError`, transient `ProviderResponseError` (HTTP 502/503/504), OS/Socket errors.
 - **Non-Retryable Errors**: `ProviderAuthenticationError`, `ProviderValidationError`, `ProviderPermanentError`, `ProviderDisabledError`, `DuplicateEventError`.
 - **Delay Calculation**: $delay = \min(initial \times factor^{attempt}, max\_delay)$ with full random jitter ($\pm 25\%$).
@@ -128,7 +128,7 @@ Transient network failures and rate limits are managed via bounded exponential b
 
 Providers frequently redeliver duplicate events during polling or webhook retries:
 
-- **Location**: [`apps/api/app/integrations/idempotency.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/idempotency.py)
+- **Location**: [`api/app/integrations/idempotency.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/idempotency.py)
 - **Primary Deduplication**: If `provider_event_id` is present:
   $$\text{key} = \text{provider} + \text{provider\_event\_id}$$
 - **Deterministic Fallback**: If no provider event ID exists:
@@ -143,9 +143,9 @@ Providers frequently redeliver duplicate events during polling or webhook retrie
 
 Preserving un-normalized raw data is critical for auditability, bug replay, and downstream algorithmic tuning:
 
-- **Model**: `RawEvent` in [`apps/api/app/integrations/base.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/base.py).
+- **Model**: `RawEvent` in [`api/app/integrations/base.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/base.py).
 - **Attributes**: `event_id`, `provider_name`, `provider_type`, `provider_event_id`, `fingerprint`, `source_timestamp`, `ingested_at`, `raw_payload`, `metadata`, `org_id`, `event_type`.
-- **Abstraction**: `RawEventStorage` / `InMemoryRawEventStorage` in [`apps/api/app/integrations/boundaries.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/boundaries.py).
+- **Abstraction**: `RawEventStorage` / `InMemoryRawEventStorage` in [`api/app/integrations/boundaries.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/boundaries.py).
 - **Strict Boundary**: No canonical normalization (e.g. mapping to `ShipmentEvent` or `Incident`) occurs at this boundary.
 
 ---
@@ -154,7 +154,7 @@ Preserving un-normalized raw data is critical for auditability, bug replay, and 
 
 The central coordinator is `IngestionService`:
 
-- **Location**: [`apps/api/app/integrations/service.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/service.py)
+- **Location**: [`api/app/integrations/service.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/service.py)
 - **Execution Lifecycle**:
   1. Generates `ingestion_run_id`, `request_id`, and `correlation_id`.
   2. Resolves provider adapter and active configuration.
@@ -232,7 +232,7 @@ Diagnostics are supported via `check_health(provider_name)`:
 
 Periodic data retrieval is decoupled from provider business logic:
 
-- **Location**: [`apps/api/app/integrations/boundaries.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/boundaries.py)
+- **Location**: [`api/app/integrations/boundaries.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/boundaries.py)
 - **Interface**: `IngestionScheduler` with job descriptor `ScheduledIngestionJob`.
 - **Future Integration**: Seamlessly maps to EventBridge scheduled rules, SQS queues, or ECS Fargate workers without requiring Celery.
 
@@ -251,7 +251,7 @@ Push-based signal ingestion is abstracted via `WebhookReceiver`:
 
 Client-side rate limiting and provider quota enforcement are managed by `ProviderRateLimiter`:
 
-- **Location**: [`apps/api/app/integrations/rate_limiter.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/app/integrations/rate_limiter.py)
+- **Location**: [`api/app/integrations/rate_limiter.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/app/integrations/rate_limiter.py)
 - **Design**: Thread-safe sliding window and token bucket algorithm.
 - **Windows**: Supports per-minute and per-hour windows.
 - **Cooldown**: Supports explicit provider backoff cooldowns when `Retry-After` headers are received.
@@ -270,7 +270,7 @@ Client-side rate limiting and provider quota enforcement are managed by `Provide
 
 A dedicated unit test suite validates all 25 core foundation requirements:
 
-- **Test Suite**: [`apps/api/tests/test_ingestion_foundation.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/apps/api/tests/test_ingestion_foundation.py)
+- **Test Suite**: [`api/tests/test_ingestion_foundation.py`](file:///c:/Users/sugud/OneDrive/Documents/riskwise/api/tests/test_ingestion_foundation.py)
 - **Coverage**:
   1. Provider registration
   2. Duplicate registration rejection

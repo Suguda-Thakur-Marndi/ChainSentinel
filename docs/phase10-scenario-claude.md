@@ -251,7 +251,7 @@ If Claude times out, is throttled, encounters network errors, or produces invali
 
 ## 14. Testing & Verification
 
-The test suite in `apps/api/tests/test_phase10_step5_scenario_explanation_claude.py` provides 170 comprehensive tests covering:
+The test suite in `api/tests/test_phase10_step5_scenario_explanation_claude.py` provides 170 comprehensive tests covering:
 - Scenario input contracts and immutable snapshot creation
 - Parameter authority and contradiction detection
 - Scenario type and reference consistency

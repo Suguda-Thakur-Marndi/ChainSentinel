@@ -248,7 +248,7 @@ All audit logs recursively scrub credential keys and mask secrets (`sanitize_pay
 
 ## 9. Verification & Test Suite
 
-The test suite in `apps/api/tests/test_phase10_step7_scenario_explanation_claude.py` comprises **118 focused tests** across sections A through P:
+The test suite in `api/tests/test_phase10_step7_scenario_explanation_claude.py` comprises **118 focused tests** across sections A through P:
 
 | Section | Focus Area | Test Count | Status |
 | :--- | :--- | :--- | :--- |
@@ -275,7 +275,7 @@ The test suite in `apps/api/tests/test_phase10_step7_scenario_explanation_claude
 - Phase 10 Full Suite (Steps 1–7): **888 passed** (100%).
 - Zero database migrations created.
 - Zero public Claude endpoints exposed.
-- Zero changes to frontend `apps/web`.
+- Zero changes to frontend `web`.
 
 ---
 

@@ -3,7 +3,7 @@
 **Document Version:** 1.0.0  
 **Status:** COMPLETED & VALIDATED  
 **Phase:** Phase 4 — Core APIs (Step 7 — Decision & Governance APIs)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -58,13 +58,13 @@ The Step 7 implementation delivers **23 production endpoints** under `/api/v1`, 
 
 All 5 new repositories inherit from `BaseRepository[T]` and are registered with `UnitOfWork`:
 
-1. **`RecommendationRepository` (`apps/api/app/repositories/governance_repositories.py`)**:
+1. **`RecommendationRepository` (`api/app/repositories/governance_repositories.py`)**:
    - Explicit SEARCH allowlist: `title`, `rationale`
    - Explicit SORT allowlist: `created_at`, `confidence`, `estimated_cost`, `title`, `status`
    - Explicit FILTER allowlist: `incident_id`, `status`
    - Concurrency locking helper: `get_for_update(id, org_id)` (`SELECT ... FOR UPDATE`)
 
-2. **`ApprovalRepository` (`apps/api/app/repositories/governance_repositories.py`)**:
+2. **`ApprovalRepository` (`api/app/repositories/governance_repositories.py`)**:
    - Child entity scoped hierarchically through `recommendation.org_id`
    - Explicit SEARCH allowlist: `decision`, `comments`
    - Explicit SORT allowlist: `decided_at`, `decision`
@@ -72,13 +72,13 @@ All 5 new repositories inherit from `BaseRepository[T]` and are registered with 
    - Scoped lookup helpers: `get_approval_in_org(id, org_id)`, `list_approvals_for_org(...)`
    - Immutability guards: `update()` and `delete()` raise `ImmutableResourceError`
 
-3. **`ActionRepository` (`apps/api/app/repositories/governance_repositories.py`)**:
+3. **`ActionRepository` (`api/app/repositories/governance_repositories.py`)**:
    - Explicit SEARCH allowlist: `action_type`, `target_entity_type`, `target_entity_id`
    - Explicit SORT allowlist: `executed_at`, `status`, `action_type`
    - Explicit FILTER allowlist: `status`, `action_type`, `target_entity_type`, `recommendation_id`
    - Concurrency locking helper: `get_for_update(id, org_id)`
 
-4. **`VerificationResultRepository` (`apps/api/app/repositories/governance_repositories.py`)**:
+4. **`VerificationResultRepository` (`api/app/repositories/governance_repositories.py`)**:
    - Child entity scoped hierarchically through `action.org_id`
    - Explicit SEARCH allowlist: `observation_summary`
    - Explicit SORT allowlist: `verified_at`, `verified`, `risk_score_after`
@@ -86,14 +86,14 @@ All 5 new repositories inherit from `BaseRepository[T]` and are registered with 
    - Scoped lookup helpers: `get_result_in_org(id, org_id)`, `get_by_action_id_in_org(action_id, org_id)`, `list_results_for_org(...)`
    - Immutability guards: `update()` and `delete()` raise `ImmutableResourceError`
 
-5. **`NotificationRepository` (`apps/api/app/repositories/governance_repositories.py`)**:
+5. **`NotificationRepository` (`api/app/repositories/governance_repositories.py`)**:
    - Explicit SEARCH allowlist: `title`, `summary`, `category`
    - Explicit SORT allowlist: `created_at`, `severity`, `category`
    - Explicit FILTER allowlist: `category`, `severity`, `is_read`, `user_id`
    - User/Broadcast scoping: `list_for_user(org_id, user_id, ...)` matches `user_id == context.user_id` or `user_id IS NULL`
    - Atomic batch update: `mark_all_read_for_user(org_id, user_id)`
 
-6. **`AuditLogRepository` (`apps/api/app/repositories/audit_log.py`)**:
+6. **`AuditLogRepository` (`api/app/repositories/audit_log.py`)**:
    - Immutable append-only audit trail query repository with filtering by `actor_type`, `action`, `resource_type`, `status`, and sorting by `timestamp`.
 
 ---
@@ -152,17 +152,17 @@ The services encapsulate all state transitions, relationship checks, and audit e
 
 ## 6. Verification & Test Results
 
-A comprehensive, dedicated test suite was implemented in `apps/api/tests/test_decision_governance_api.py`.
+A comprehensive, dedicated test suite was implemented in `api/tests/test_decision_governance_api.py`.
 
 ### Test Suite Execution
 ```bash
-apps/api/.venv/Scripts/python.exe -m pytest apps/api/tests/test_decision_governance_api.py -v
+api/.venv/Scripts/python.exe -m pytest api/tests/test_decision_governance_api.py -v
 ```
 **Results:** **30 passed in 7.70s (100% pass rate)**
 
 ### Full Regression Test Suite
 ```bash
-apps/api/.venv/Scripts/python.exe -m pytest apps/api/tests -q
+api/.venv/Scripts/python.exe -m pytest api/tests -q
 ```
 **Results:** **267 passed, 1 skipped (live RDS network probe guard) in 42.54s**  
 - **0 regressions**

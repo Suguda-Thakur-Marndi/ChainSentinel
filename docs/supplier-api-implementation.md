@@ -3,7 +3,7 @@
 **Document Version:** 2.0.0  
 **Status:** IMPLEMENTED & VALIDATED  
 **Phase:** Phase 4 — Core APIs (Step 3 — Supplier APIs)  
-**Authoritative Backend:** FastAPI (`apps/api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
+**Authoritative Backend:** FastAPI (`api`), SQLAlchemy 2.0, PostgreSQL 16 (RDS `ap-southeast-2`), Redis/Valkey Session Cache  
 
 ---
 
@@ -209,7 +209,7 @@ Mutations emit an immutable record into the `audit_logs` table:
 
 ## 10. Automated Test Coverage
 
-The Supplier API implementation is validated by **21 security, multi-tenancy, and domain tests** in `apps/api/tests/test_supplier_api.py`:
+The Supplier API implementation is validated by **21 security, multi-tenancy, and domain tests** in `api/tests/test_supplier_api.py`:
 
 | # | Test Name | Assertion / Scenario |
 | :--- | :--- | :--- |

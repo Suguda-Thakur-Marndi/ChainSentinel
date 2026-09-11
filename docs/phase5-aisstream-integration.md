@@ -10,7 +10,7 @@ This integration strictly enforces the provider-agnostic ingestion architecture 
 AISStream (WebSocket)
     │
     ▼
-AISStreamAdapter (apps/api/app/integrations/providers/aisstream.py)
+AISStreamAdapter (api/app/integrations/providers/aisstream.py)
     │
     ▼
 RawEvent (Envelope with Raw Payload & Deterministic SHA-256 Fingerprint)
@@ -121,7 +121,7 @@ For static metadata (`MessageType = "ShipStaticData"`):
 
 ## 3. Dedicated Provider Adapter (`AISStreamAdapter`)
 
-Located at: `apps/api/app/integrations/providers/aisstream.py`.
+Located at: `api/app/integrations/providers/aisstream.py`.
 
 Subclasses `BaseProviderAdapter` and implements:
 - **`provider_name`**: `"aisstream"`
