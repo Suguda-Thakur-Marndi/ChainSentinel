@@ -298,3 +298,35 @@ class DigitalTwinQueryService:
             edge_ids=[],
             hop_count=0,
         )
+
+    def query(
+        self,
+        query: TwinQuery,
+        correlation_id: Optional[str] = None,
+        request_id: Optional[str] = None,
+        uow: Any = None,
+    ) -> TwinSubgraph | List[TwinNodeContract]:
+        """Execute a general bounded query against the Digital Twin snapshot.
+
+        - If node_id is provided, performs a bounded BFS subgraph traversal.
+        - Otherwise, filters and returns matching nodes according to node_types and bounds.
+        """
+        if query.node_id:
+            return self.get_subgraph(
+                root_node_id=query.node_id,
+                max_depth=query.max_depth,
+                max_nodes=query.max_nodes,
+                max_edges=query.max_edges,
+                correlation_id=correlation_id,
+                request_id=request_id,
+                uow=uow,
+            )
+
+        matching: List[TwinNodeContract] = []
+        for node in self._snapshot.nodes.values():
+            if query.node_types is None or node.node_type in query.node_types:
+                matching.append(node)
+                if len(matching) >= query.max_nodes:
+                    break
+        return matching
+

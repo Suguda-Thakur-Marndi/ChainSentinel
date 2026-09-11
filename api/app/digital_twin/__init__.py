@@ -6,6 +6,12 @@ authoritative operational supply chain network.
 
 from app.digital_twin.builder import DigitalTwinBuilder
 from app.digital_twin.contracts import (
+    DigitalTwinEdge,
+    DigitalTwinNode,
+    DigitalTwinPath,
+    DigitalTwinProvenance,
+    DigitalTwinQuery,
+    DigitalTwinResult,
     DigitalTwinSnapshot,
     TwinEdgeContract,
     TwinNodeContract,
@@ -54,6 +60,13 @@ __all__ = [
     "compute_edge_fingerprint",
     "compute_source_fingerprint",
     "compute_twin_fingerprint",
+    "DigitalTwinNode",
+    "DigitalTwinEdge",
+    "DigitalTwinSnapshot",
+    "DigitalTwinQuery",
+    "DigitalTwinPath",
+    "DigitalTwinResult",
+    "DigitalTwinProvenance",
     "TwinNodeContract",
     "TwinEdgeContract",
     "DigitalTwinSnapshot",

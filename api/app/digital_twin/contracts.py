@@ -16,6 +16,20 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.schemas.digital_twin import TwinNodeType, TwinEdgeType
 
 
+class DigitalTwinProvenance(BaseModel):
+    """Authoritative source provenance descriptor for nodes and edges."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    source_entity_type: str = Field(..., min_length=1, max_length=64)
+    source_entity_id: str = Field(..., min_length=1, max_length=64)
+    source_system: str = Field(default="INTERNAL_DB", min_length=1, max_length=64)
+    source_timestamp: Optional[datetime] = None
+    source_reference: Optional[str] = Field(None, max_length=255)
+    confidence_score: Optional[float] = Field(default=1.0, ge=0.0, le=1.0)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
 class TwinNodeContract(BaseModel):
     """Strongly typed representation of an operational twin node."""
 
@@ -33,7 +47,20 @@ class TwinNodeContract(BaseModel):
     status: Optional[str] = Field(None, max_length=64)
     properties: Dict[str, Any] = Field(default_factory=dict)
     source_timestamp: Optional[datetime] = None
+    provenance: Optional[DigitalTwinProvenance] = None
     fingerprint: str = Field(..., min_length=64, max_length=64, description="SHA-256 hex digest")
+
+    @property
+    def provenance_info(self) -> DigitalTwinProvenance:
+        if self.provenance is not None:
+            return self.provenance
+        return DigitalTwinProvenance(
+            source_entity_type=self.source_entity_type,
+            source_entity_id=self.source_entity_id,
+            source_system="INTERNAL_DB",
+            source_timestamp=self.source_timestamp,
+            metadata=dict(self.properties),
+        )
 
 
 class TwinEdgeContract(BaseModel):
@@ -52,7 +79,20 @@ class TwinEdgeContract(BaseModel):
     risk_score: Optional[float] = Field(None, ge=0.0, le=100.0)
     properties: Dict[str, Any] = Field(default_factory=dict)
     source_reference: Optional[str] = Field(None, max_length=255)
+    provenance: Optional[DigitalTwinProvenance] = None
     fingerprint: str = Field(..., min_length=64, max_length=64, description="SHA-256 hex digest")
+
+    @property
+    def provenance_info(self) -> DigitalTwinProvenance:
+        if self.provenance is not None:
+            return self.provenance
+        return DigitalTwinProvenance(
+            source_entity_type="EDGE",
+            source_entity_id=self.edge_id,
+            source_system="INTERNAL_DB",
+            source_reference=self.source_reference,
+            metadata=dict(self.properties),
+        )
 
 
 class DigitalTwinSnapshot(BaseModel):
@@ -122,3 +162,12 @@ class TwinPathResult(BaseModel):
     node_ids: List[str] = Field(default_factory=list)
     edge_ids: List[str] = Field(default_factory=list)
     hop_count: int = Field(default=0, ge=0)
+
+
+# Exact Phase 12 Conceptual Specification Aliases
+DigitalTwinNode = TwinNodeContract
+DigitalTwinEdge = TwinEdgeContract
+DigitalTwinQuery = TwinQuery
+DigitalTwinPath = TwinPathResult
+DigitalTwinResult = TwinValidationResult
+
