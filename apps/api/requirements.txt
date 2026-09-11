@@ -16,3 +16,8 @@ langgraph>=1.2.0
 # Phase 10: AWS Bedrock + Claude Foundation
 boto3>=1.34.0
 botocore>=1.34.0
+
+# Phase 11: Machine Learning Foundation & Models
+scikit-learn>=1.5.0
+numpy>=1.26.0
+joblib>=1.4.0

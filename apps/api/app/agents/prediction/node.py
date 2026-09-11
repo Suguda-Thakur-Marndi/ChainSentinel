@@ -147,7 +147,18 @@ def prediction_node(
     trace_id = state.get("trace_id", "")
     objective = state.get("objective", "")
 
-    prediction_svc = service or UnavailablePredictionService()
+    prediction_svc = service or state.get("prediction_service")
+    if prediction_svc is None:
+        try:
+            from app.ml.inference import MLPredictionService
+            from app.ml.registry import default_model_registry
+            ml_svc = MLPredictionService(registry=default_model_registry)
+            if ml_svc.is_available():
+                prediction_svc = ml_svc
+            else:
+                prediction_svc = UnavailablePredictionService()
+        except Exception:
+            prediction_svc = UnavailablePredictionService()
 
     try:
         if not org_id or not org_id.strip():

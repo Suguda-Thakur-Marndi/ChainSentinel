@@ -34,6 +34,8 @@ env/
 *.egg-info/
 .coverage
 htmlcov/
+apps/api/storage/
+*.joblib
 
 # Sensitive Files, Credentials & Environment Secrets
 .env
