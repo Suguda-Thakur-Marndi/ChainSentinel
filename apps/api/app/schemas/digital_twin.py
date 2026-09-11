@@ -10,9 +10,14 @@ from app.schemas.common import PaginatedResponse
 # Enums
 class TwinNodeType(str, Enum):
     SUPPLIER = "SUPPLIER"
+    SUPPLIER_SITE = "SUPPLIER_SITE"
     FACTORY = "FACTORY"
     WAREHOUSE = "WAREHOUSE"
     PORT = "PORT"
+    CARRIER = "CARRIER"
+    ROUTE = "ROUTE"
+    SHIPMENT = "SHIPMENT"
+    PRODUCT = "PRODUCT"
     CUSTOMER = "CUSTOMER"
     CUSTOM = "CUSTOM"
 
@@ -21,6 +26,11 @@ class TwinEdgeType(str, Enum):
     FLOW = "FLOW"
     TRANSPORT = "TRANSPORT"
     DEPENDENCY = "DEPENDENCY"
+    LOCATED_AT = "LOCATED_AT"
+    OPERATES = "OPERATES"
+    CONNECTS = "CONNECTS"
+    CARRIES = "CARRIES"
+    SUPPLIES = "SUPPLIES"
 
 
 # TwinNode
