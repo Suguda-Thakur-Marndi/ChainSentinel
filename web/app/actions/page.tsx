@@ -1,25 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Activity,
-  AlertOctagon,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Layers,
   RefreshCw,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
+import { Column, DataTable } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { ActionExecutionStatus, ActionResponse } from "@/lib/api/types";
+import type { ActionResponse } from "@/lib/api/types";
 
 export default function ActionsPage() {
   const router = useRouter();
@@ -27,7 +19,7 @@ export default function ActionsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchActions = async () => {
+  const fetchActions = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -38,11 +30,11 @@ export default function ActionsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchActions();
-  }, []);
+  }, [fetchActions]);
 
   const columns: Column<ActionResponse>[] = [
     {
@@ -71,10 +63,23 @@ export default function ActionsPage() {
       sortable: true,
       render: (row) => {
         let variant: "success" | "warning" | "error" | "info" | "neutral" = "info";
-        if (row.status === "SUCCEEDED" || row.status === "SUBMITTED") variant = "success";
-        else if (row.status === "FAILED" || row.status === "TIMEOUT") variant = "error";
-        else if (row.status === "EXECUTING" || row.status === "VALIDATING") variant = "warning";
-        return <StatusBadge status={row.status} variant={variant} />;
+        if (row.status === "SUCCEEDED") {
+          variant = "success";
+        } else if (row.status === "SUBMITTED") {
+          variant = "info";
+        } else if (row.status === "FAILED" || row.status === "TIMEOUT") {
+          variant = "error";
+        } else if (row.status === "EXECUTING" || row.status === "VALIDATING" || row.status === "PENDING") {
+          variant = "warning";
+        }
+        return (
+          <div className="flex items-center gap-1.5">
+            <StatusBadge status={row.status} variant={variant} />
+            {row.status === "SUBMITTED" && (
+              <span className="text-[10px] text-amber-400/90 font-mono">(Unverified)</span>
+            )}
+          </div>
+        );
       },
     },
     {
@@ -93,7 +98,7 @@ export default function ActionsPage() {
       sortable: true,
       render: (row) => (
         <span className="font-mono text-[11px] text-slate-400">
-          {new Date(row.executed_at).toLocaleString()}
+          {row.executed_at ? new Date(row.executed_at).toLocaleString() : "—"}
         </span>
       ),
     },
@@ -136,7 +141,7 @@ export default function ActionsPage() {
                 Queued → Validation → Approval Binding → Idempotency → Execution → Adapter Ack
               </span>
             </div>
-            <span className="text-amber-400/90 font-mono text-[11px]">
+            <span className="text-amber-400/90 font-mono text-[11px] font-semibold">
               SUBMITTED != VERIFIED
             </span>
           </div>

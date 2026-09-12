@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import {
 
@@ -34,11 +34,7 @@ export default function EvaluationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -51,12 +47,16 @@ export default function EvaluationPage() {
       if (suitesRes.status === "fulfilled") setSuites(suitesRes.value);
       if (datasetsRes.status === "fulfilled") setDatasets(datasetsRes.value);
       if (runsRes.status === "fulfilled") setRuns(runsRes.value);
-    } catch (err: any) {
-      setError(err?.message || "Failed to load evaluation metadata");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load evaluation metadata");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleRunSuite = async (suiteType: EvaluationSuiteType) => {
     setRunningSuite(suiteType);
@@ -66,8 +66,8 @@ export default function EvaluationPage() {
       // Refresh runs list
       const updatedRuns = await apiClient.evaluations.listRuns({ limit: 20 });
       setRuns(updatedRuns);
-    } catch (err: any) {
-      alert(`Evaluation run error: ${err?.message || err}`);
+    } catch (err: unknown) {
+      alert(`Evaluation run error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setRunningSuite(null);
     }
@@ -77,8 +77,8 @@ export default function EvaluationPage() {
     try {
       const report = await apiClient.evaluations.getReport(runId);
       setSelectedReport(report);
-    } catch (err: any) {
-      alert(`Could not load report: ${err?.message || err}`);
+    } catch (err: unknown) {
+      alert(`Could not load report: ${err instanceof Error ? err.message : String(err)}`);
     }
   };
 
@@ -281,7 +281,7 @@ export default function EvaluationPage() {
                 {runs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
-                      No evaluation runs recorded yet. Click "Run Suite" above to benchmark.
+                      No evaluation runs recorded yet. Click &quot;Run Suite&quot; above to benchmark.
                     </td>
                   </tr>
                 ) : (

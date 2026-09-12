@@ -70,4 +70,22 @@ def get_optimization_evaluation_cases() -> List[EvaluationCase]:
             version="1.0.0",
             tags=["optimization", "infeasible"],
         ),
+        EvaluationCase(
+            case_id="opt-case-004",
+            suite_type=EvaluationSuiteType.OPTIMIZATION_EVALUATION,
+            category=DatasetCategory.BOUNDARY,
+            name="Unbounded Problem Rejection Invariant",
+            description="Unbounded linear formulation must never be claimed as a valid optimal solution.",
+            input_data={
+                "solver_exit_condition": "UNBOUNDED",
+                "solution_found": False,
+            },
+            expected_output={
+                "reported_status": "UNBOUNDED",
+                "is_optimal": False,
+                "is_valid_solution": False,
+            },
+            version="1.0.0",
+            tags=["optimization", "unbounded", "invariants"],
+        ),
     ]

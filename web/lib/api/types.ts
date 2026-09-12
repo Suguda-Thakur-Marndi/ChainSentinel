@@ -279,37 +279,118 @@ export interface DisruptionEvent {
   severity: number;
 }
 
+export type SimulationChangeType =
+  | "NODE_UNAVAILABLE"
+  | "EDGE_UNAVAILABLE"
+  | "DELAY"
+  | "DELAY_INCREASE"
+  | "CAPACITY_REDUCTION"
+  | "CAPACITY_INCREASE"
+  | "TRANSIT_TIME_INCREASE"
+  | "DEMAND_CHANGE"
+  | "INVENTORY_CHANGE";
+
+export type SimulationChangeUnit =
+  | "MINUTES"
+  | "HOURS"
+  | "DAYS"
+  | "PERCENT"
+  | "UNITS"
+  | "CURRENCY"
+  | "RATIO"
+  | "BOOLEAN";
+
+export interface SimulationChange {
+  change_id: string;
+  change_type: SimulationChangeType;
+  target_entity_type: string;
+  target_entity_id: string;
+  magnitude: number;
+  unit: SimulationChangeUnit;
+  duration_minutes?: number | null;
+  start_time?: string | null;
+  end_time?: string | null;
+  reason?: string | null;
+  source_type: "SIMULATED";
+}
+
 export interface SimulationScenario {
   scenario_id: string;
   organization_id: string;
-  twin_version?: string;
   name: string;
-  description?: string;
-  disruptions: DisruptionEvent[];
+  description?: string | null;
+  base_snapshot_fingerprint: string;
+  changes: SimulationChange[];
+  parameters?: Record<string, unknown>;
   created_at?: string;
+  fingerprint: string;
+  // UI helper fields
+  twin_version?: string;
+  disruptions?: DisruptionEvent[];
+}
+
+export interface SimulationEffect {
+  effect_id: string;
+  originating_change_id: string;
+  affected_entity_id: string;
+  affected_entity_type: string;
+  effect_type: string;
+  magnitude?: number | null;
+  unit?: SimulationChangeUnit | null;
+  propagation_path?: string[];
+  rule_applied: string;
+  description: string;
+  confidence_score: number;
+  is_simulated: boolean;
+}
+
+export interface SimulationEntityImpact {
+  entity_id: string;
+  entity_type: string;
+  impact_type: string;
+  is_direct: boolean;
+  effective_delay_minutes: number;
+  capacity_lost?: number | null;
+  is_available: boolean;
+  propagation_depth: number;
+  simulated_tags?: string[];
 }
 
 export interface SimulationResult {
-  result_id: string;
+  simulation_id: string;
   scenario_id: string;
   organization_id: string;
-  status: "COMPLETED" | "RUNNING" | "FAILED";
-  impact_score: number;
-  affected_nodes: string[];
-  affected_edges: string[];
-  affected_shipments: string[];
-  cost_impact_usd: number;
-  delay_impact_hours: number;
-  unmet_demand_units?: number;
+  status: "COMPLETED" | "RUNNING" | "FAILED" | "PENDING" | "NOT_AVAILABLE";
+  effects?: SimulationEffect[];
+  metrics?: Record<string, unknown>;
+  entity_impacts?: SimulationEntityImpact[];
+  propagation?: Record<string, unknown>;
+  runtime_ms?: number;
+  fingerprint?: string;
   created_at: string;
+  // Compatibility aliases for UI
+  result_id?: string;
+  impact_score?: number;
+  affected_nodes?: string[];
+  affected_edges?: string[];
+  affected_shipments?: string[];
+  cost_impact_usd?: number;
+  delay_impact_hours?: number;
+  unmet_demand_units?: number;
 }
 
 export interface SimulationComparison {
   scenario_a: SimulationResult;
   scenario_b: SimulationResult;
-  delta_impact_score: number;
-  delta_cost_usd: number;
-  delta_delay_hours: number;
+  delta_impact_score?: number;
+  delta_cost_usd?: number;
+  delta_delay_hours?: number;
+  comparison_metrics?: Record<string, unknown>;
+}
+
+export interface SimulationInput {
+  twin_version?: string;
+  parameters?: Record<string, unknown>;
 }
 
 // ==========================================
@@ -403,6 +484,7 @@ export interface DecisionResult {
 }
 
 export interface DecisionRequest {
+  organization_id?: string;
   incident_id?: string | null;
   risk_id?: string | null;
   simulation_result_id?: string | null;
@@ -432,6 +514,65 @@ export interface ApprovalCreate {
   recommendation_id: string;
   decision: ApprovalDecision;
   comments?: string | null;
+}
+
+export interface HumanDecisionRequest {
+  decision: "APPROVE" | "REJECT";
+  comments?: string | null;
+}
+
+export interface SignoffCommentRequest {
+  comments?: string | null;
+}
+
+export interface PendingApprovalItem {
+  id: string;
+  decision_id: string;
+  title: string;
+  rationale: string;
+  urgency: string;
+  impact_level: string;
+  status: string;
+  requires_role: string;
+  deadline?: string | null;
+  created_at: string;
+  organization_id: string;
+  candidate_summary?: Record<string, unknown>;
+}
+
+export interface PendingApprovalListResponse {
+  items: PendingApprovalItem[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export interface ApprovalDossier {
+  id: string;
+  decision_id: string;
+  organization_id: string;
+  status: string;
+  title: string;
+  rationale: string;
+  recommendation_summary: string;
+  urgency: string;
+  impact_level: string;
+  risk_assessment?: Record<string, unknown>;
+  simulation_outcomes?: Record<string, unknown>;
+  optimization_metrics?: Record<string, unknown>;
+  tradeoffs?: Array<Record<string, unknown>>;
+  claude_explanation?: {
+    summary?: string;
+    rationale?: string;
+    caveats?: string[];
+    is_authoritative: false;
+  } | null;
+  fingerprint: string;
+  audit_trail?: Array<Record<string, unknown>>;
+  decided_by?: string | null;
+  decided_at?: string | null;
+  comments?: string | null;
+  requires_role: string;
 }
 
 // ==========================================
@@ -472,6 +613,43 @@ export interface ActionCreate {
   execution_payload?: Record<string, unknown>;
 }
 
+export interface ActionCommand {
+  action_id?: string | null;
+  decision_id: string;
+  approval_id: string;
+  candidate_id?: string | null;
+  organization_id: string;
+  action_type: string;
+  target_entity_type: string;
+  target_entity_id: string;
+  parameters?: Record<string, unknown>;
+  idempotency_key: string;
+  trace_id: string;
+  run_id?: string | null;
+  requested_at?: string;
+  expiration_timestamp?: string | null;
+  approval_fingerprint?: string | null;
+  actor?: string | null;
+  policy_version?: string;
+}
+
+export interface ActionResult {
+  action_id: string;
+  decision_id: string;
+  approval_id: string;
+  organization_id: string;
+  action_type: string;
+  target_entity_type: string;
+  target_entity_id: string;
+  status: ActionExecutionStatus;
+  result_payload: Record<string, unknown>;
+  executed_at: string;
+  duration_ms: number;
+  idempotency_key: string;
+  trace_id: string;
+  is_simulated: boolean;
+}
+
 // ==========================================
 // VERIFICATION (Phase 18)
 // ==========================================
@@ -508,6 +686,43 @@ export interface VerificationResultResponse {
   }>;
   policy_checks_passed?: boolean;
   verified_at: string;
+}
+
+export interface VerificationCommand {
+  verification_id?: string | null;
+  action_id: string;
+  decision_id?: string | null;
+  approval_id?: string | null;
+  organization_id: string;
+  action_type: string;
+  target_entity_type: string;
+  target_entity_id: string;
+  action_parameters?: Record<string, unknown>;
+  action_executed_at?: string;
+  observation_window_seconds?: number;
+  trace_id?: string | null;
+  policy_version?: string;
+}
+
+export interface VerificationResultPayload {
+  verification_id: string;
+  action_id: string;
+  organization_id: string;
+  status: VerificationStatus;
+  verified: boolean;
+  evidence_precedence: EvidenceSourcePrecedence;
+  intended_outcome?: string | null;
+  observed_outcome?: string | null;
+  risk_score_before?: number | null;
+  risk_score_after?: number | null;
+  observation_summary?: string | null;
+  verified_at: string;
+  evidence_items: Array<{
+    source_type: EvidenceSourcePrecedence;
+    source_id: string;
+    description: string;
+    timestamp: string;
+  }>;
 }
 
 // ==========================================
@@ -723,8 +938,8 @@ export interface EvaluationScoreContract {
 export interface EvaluationFailureContract {
   case_id: string;
   reason: string;
-  expected?: any;
-  actual?: any;
+  expected?: unknown;
+  actual?: unknown;
 }
 
 export interface EvaluationReportContract {
@@ -742,7 +957,7 @@ export interface EvaluationReportContract {
   total_cases: number;
   passed_cases: number;
   failed_cases: number;
-  results: any[];
+  results: unknown[];
   failures: EvaluationFailureContract[];
   duration_ms: number;
   tenant_id?: string | null;

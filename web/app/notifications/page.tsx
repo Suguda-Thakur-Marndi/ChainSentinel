@@ -1,21 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   AlertOctagon,
-  Bell,
   CheckCircle2,
   Clock,
   ExternalLink,
-  Filter,
   RefreshCw,
   ShieldCheck,
   UserCheck,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { EmptyState, ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { NotificationResponse } from "@/lib/api/types";
 
@@ -24,8 +22,9 @@ export default function NotificationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
+  const [isMarkingAll, setIsMarkingAll] = useState(false);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -36,11 +35,11 @@ export default function NotificationsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [fetchNotifications]);
 
   const handleMarkRead = async (id: string) => {
     try {
@@ -49,12 +48,26 @@ export default function NotificationsPage() {
         prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
       );
     } catch {
-      // Fallback optimistic update
+      // Optimistic state
       setNotifications((prev) =>
         prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
       );
     }
   };
+
+  const handleMarkAllRead = async () => {
+    setIsMarkingAll(true);
+    try {
+      await apiClient.notifications.markAllRead();
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to mark all as read");
+    } finally {
+      setIsMarkingAll(false);
+    }
+  };
+
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   const filtered = notifications.filter(
     (n) => categoryFilter === "ALL" || n.category === categoryFilter
@@ -153,7 +166,7 @@ export default function NotificationsPage() {
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
                 Operational Notifications & Alerts
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
-                  {notifications.filter((n) => !n.is_read).length} Unread
+                  {unreadCount} Unread
                 </span>
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -161,14 +174,27 @@ export default function NotificationsPage() {
               </p>
             </div>
 
-            <button
-              onClick={fetchNotifications}
-              disabled={isLoading}
-              className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
-              title="Refresh"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-            </button>
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  disabled={isMarkingAll || isLoading}
+                  className="px-3 py-1.5 text-xs font-medium text-slate-300 bg-[#111827] hover:bg-[#1A2332] border border-[#243044] rounded-md transition-colors flex items-center gap-1.5"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" />
+                  Mark All Read
+                </button>
+              )}
+
+              <button
+                onClick={fetchNotifications}
+                disabled={isLoading}
+                className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
+                title="Refresh"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
+              </button>
+            </div>
           </div>
 
           {error && <ErrorState message={error} onRetry={fetchNotifications} />}

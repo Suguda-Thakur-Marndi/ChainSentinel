@@ -102,11 +102,16 @@ export default function SimulationResultPage() {
           {/* Dossier Top Banner */}
           <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-mono text-purple-400 block font-bold">
-                Simulation Outcome Report
-              </span>
-              <h1 className="text-xl font-bold text-white tracking-tight">
-                Run ID: {result.result_id}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-mono text-purple-400 font-bold">
+                  Simulation Outcome Report
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
+                  SOURCE_TYPE: SIMULATED
+                </span>
+              </div>
+              <h1 className="text-xl font-bold text-white tracking-tight font-mono">
+                Run ID: {result.simulation_id || result.result_id || id}
               </h1>
               <p className="text-xs text-slate-400 font-mono">
                 Scenario: {result.scenario_id} • Completed: {new Date(result.created_at).toLocaleString()}
@@ -121,83 +126,99 @@ export default function SimulationResultPage() {
             </div>
           </div>
 
+          {/* Simulated Disclaimer Banner */}
+          <div className="p-3 rounded-md bg-purple-950/30 border border-purple-800/60 text-xs text-purple-300 flex items-center gap-2">
+            <span className="font-bold uppercase font-mono text-[10px] bg-purple-900 px-1.5 py-0.5 rounded">Notice</span>
+            <span>Simulated counterfactual output. Non-authoritative until reviewed and formally approved through Human Governance.</span>
+          </div>
+
           {/* Impact KPI Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <MetricCard
-              title="Impact Severity Score"
-              value={`${Math.round(result.impact_score)}/100`}
-              subtext="Normalized network shock"
-              icon={AlertTriangle}
-              variant={result.impact_score > 60 ? "critical" : "warning"}
-              trend={null}
-            />
-            <MetricCard
-              title="Cost Impact (Estimated)"
-              value={`$${result.cost_impact_usd.toLocaleString()}`}
-              subtext="Expedited freight & demurrage"
-              icon={DollarSign}
-              variant="default"
-              trend={null}
-            />
-            <MetricCard
-              title="Delay Variance"
-              value={`+${Math.round(result.delay_impact_hours)} hrs`}
-              subtext="Aggregate corridor delay"
-              icon={Clock}
-              variant="default"
-              trend={null}
-            />
-          </div>
+          {(() => {
+            const impactScore = result.impact_score ?? (typeof result.metrics?.impact_score === "number" ? result.metrics.impact_score : 0);
+            const costImpact = result.cost_impact_usd ?? (typeof result.metrics?.total_cost_usd === "number" ? result.metrics.total_cost_usd : 0);
+            const delayHours = result.delay_impact_hours ?? (typeof result.metrics?.total_delay_hours === "number" ? result.metrics.total_delay_hours : 0);
+            const affectedNodes = result.affected_nodes ?? (result.entity_impacts ? result.entity_impacts.map((e) => e.entity_id) : []);
+            const affectedShipments = result.affected_shipments ?? [];
 
-          {/* Affected Topology Nodes & Shipments */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 border-b border-[#243044] pb-2">
-                <Network className="w-4 h-4 text-blue-400" /> Affected Topology Nodes (
-                {result.affected_nodes.length})
-              </h3>
-              <div className="space-y-1.5 max-h-52 overflow-y-auto">
-                {result.affected_nodes.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic">No nodes suffered capacity degradation.</p>
-                ) : (
-                  result.affected_nodes.map((nodeId) => (
-                    <div
-                      key={nodeId}
-                      className="p-2 rounded bg-[#1A2332] text-xs font-mono text-slate-300 flex items-center justify-between"
-                    >
-                      <span>{nodeId}</span>
-                      <span className="text-[10px] text-amber-400">Degraded</span>
+            return (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <MetricCard
+                    title="Impact Severity Score"
+                    value={`${Math.round(impactScore)}/100`}
+                    subtext="Simulated network shock"
+                    icon={AlertTriangle}
+                    variant={impactScore > 60 ? "critical" : "warning"}
+                    trend={null}
+                  />
+                  <MetricCard
+                    title="Cost Impact (Simulated)"
+                    value={`$${costImpact.toLocaleString()}`}
+                    subtext="Expedited freight & demurrage"
+                    icon={DollarSign}
+                    variant="default"
+                    trend={null}
+                  />
+                  <MetricCard
+                    title="Delay Variance"
+                    value={`+${Math.round(delayHours)} hrs`}
+                    subtext="Simulated corridor delay"
+                    icon={Clock}
+                    variant="default"
+                    trend={null}
+                  />
+                </div>
+
+                {/* Affected Topology Nodes & Shipments */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 border-b border-[#243044] pb-2">
+                      <Network className="w-4 h-4 text-blue-400" /> Affected Topology Nodes ({affectedNodes.length})
+                    </h3>
+                    <div className="space-y-1.5 max-h-52 overflow-y-auto">
+                      {affectedNodes.length === 0 ? (
+                        <p className="text-xs text-slate-500 italic">No nodes suffered capacity degradation.</p>
+                      ) : (
+                        affectedNodes.map((nodeId) => (
+                          <div
+                            key={nodeId}
+                            className="p-2 rounded bg-[#1A2332] text-xs font-mono text-slate-300 flex items-center justify-between"
+                          >
+                            <span>{nodeId}</span>
+                            <span className="text-[10px] text-amber-400">Degraded (Simulated)</span>
+                          </div>
+                        ))
+                      )}
                     </div>
-                  ))
-                )}
-              </div>
-            </div>
+                  </div>
 
-            <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 border-b border-[#243044] pb-2">
-                <Clock className="w-4 h-4 text-amber-400" /> Impacted Shipments (
-                {result.affected_shipments.length})
-              </h3>
-              <div className="space-y-1.5 max-h-52 overflow-y-auto">
-                {result.affected_shipments.length === 0 ? (
-                  <p className="text-xs text-slate-500 italic">No shipments intersected with disruption zone.</p>
-                ) : (
-                  result.affected_shipments.map((shipId) => (
-                    <Link
-                      key={shipId}
-                      href={`/shipments/${shipId}`}
-                      className="p-2 rounded bg-[#1A2332] hover:bg-slate-800 text-xs font-mono text-blue-400 flex items-center justify-between block"
-                    >
-                      <span>{shipId}</span>
-                      <span className="text-[10px] text-slate-500 flex items-center gap-1">
-                        Inspect <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </Link>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
+                  <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-3">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2 border-b border-[#243044] pb-2">
+                      <Clock className="w-4 h-4 text-amber-400" /> Impacted Shipments ({affectedShipments.length})
+                    </h3>
+                    <div className="space-y-1.5 max-h-52 overflow-y-auto">
+                      {affectedShipments.length === 0 ? (
+                        <p className="text-xs text-slate-500 italic">No shipments intersected with disruption zone.</p>
+                      ) : (
+                        affectedShipments.map((shipId) => (
+                          <Link
+                            key={shipId}
+                            href={`/shipments/${shipId}`}
+                            className="p-2 rounded bg-[#1A2332] hover:bg-slate-800 text-xs font-mono text-blue-400 flex items-center justify-between block"
+                          >
+                            <span>{shipId}</span>
+                            <span className="text-[10px] text-slate-500 flex items-center gap-1">
+                              Inspect <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </AppShell>
     </ProtectedRoute>

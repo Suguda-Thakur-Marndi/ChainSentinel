@@ -92,4 +92,45 @@ def get_rag_evaluation_cases() -> List[EvaluationCase]:
             version="1.0.0",
             tags=["security", "tenant_isolation"],
         ),
+        EvaluationCase(
+            case_id="rag-case-005",
+            suite_type=EvaluationSuiteType.RAG_EVALUATION,
+            category=DatasetCategory.SECURITY,
+            name="Unsafe Untrusted Source Rejection",
+            description="Untrusted external sources or blacklisted domains are quarantined and excluded from context.",
+            input_data={
+                "candidate_sources": [
+                    {"source_id": "src-imo-official", "url": "https://www.imo.org/circulars/44", "trusted": True},
+                    {"source_id": "src-unverified-leak", "url": "http://unverified-maritime-rumors.xyz/leak", "trusted": False},
+                ],
+            },
+            expected_output={
+                "accepted_source_ids": ["src-imo-official"],
+                "rejected_source_ids": ["src-unverified-leak"],
+                "unsafe_sources_quarantined": True,
+            },
+            version="1.0.0",
+            tags=["security", "source_validation", "rag"],
+        ),
+        EvaluationCase(
+            case_id="rag-case-006",
+            suite_type=EvaluationSuiteType.RAG_EVALUATION,
+            category=DatasetCategory.EMPTY_DATA,
+            name="Insufficient Graded Judgments Returns NOT_AVAILABLE for nDCG",
+            description="When graded relevance judgments are absent (sample_count < 5), nDCG is reported NOT_AVAILABLE.",
+            input_data={
+                "graded_relevance_scores": [],
+                "min_required_samples": 5,
+            },
+            expected_output={
+                "metric_name": "nDCG@5",
+                "status": "NOT_AVAILABLE",
+                "is_fabricated": False,
+            },
+            version="1.0.0",
+            tags=["rag", "ndcg", "not_available"],
+        ),
     ]
+
+
+GOLDEN_RAG_CASES = get_rag_evaluation_cases()

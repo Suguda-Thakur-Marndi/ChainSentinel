@@ -3,7 +3,7 @@
 Evaluates Phase 15 Decision Engine:
 - Deterministic multi-criteria candidate ranking
 - Upstream consistency (DecisionResult must not contradict Risk, ML, or Optimization results)
-- Fail-closed behavior on missing or contradictory evidence
+- Fail-closed behavior on missing or contradictory evidence or budget limits
 - Policy and constraint compliance
 - Cross-tenant decision isolation
 """
@@ -42,23 +42,40 @@ class DecisionEvaluationSuite(BaseEvaluationSuite):
         actual_output["decision"] = decision_res
 
         # 2. Selected candidate check
-        if "expected_selected_candidate" in exp:
+        expected_cand = exp.get("expected_selected_candidate") or exp.get("recommended_candidate_id")
+        if expected_cand:
             actual_cand = decision_res.get("recommended_candidate")
-            expected_cand = exp["expected_selected_candidate"]
             if actual_cand == expected_cand:
                 passed_assertions.append("candidate_ranking_matches")
             else:
                 failed_assertions.append(f"candidate_ranking_mismatch: exp {expected_cand}, got {actual_cand}")
 
+        # Ranking order check
+        if "ranking_order" in exp:
+            actual_ranking = decision_res.get("ranking_order", [])
+            if actual_ranking == exp["ranking_order"]:
+                passed_assertions.append("ranking_order_matches")
+            else:
+                failed_assertions.append(f"ranking_order_mismatch: exp {exp['ranking_order']}, got {actual_ranking}")
+
         # 3. Fail-closed behavior
-        if exp.get("fail_closed_triggered"):
-            if decision_res.get("status") == "FAIL_CLOSED_NO_DECISION":
+        expected_fail_closed = exp.get("fail_closed") if exp.get("fail_closed") is not None else exp.get("fail_closed_triggered")
+        if expected_fail_closed is not None:
+            actual_fail_closed = decision_res.get("status") in ["FAIL_CLOSED_NO_DECISION", "REQUIRE_HUMAN_OVERRIDE"]
+            if actual_fail_closed == expected_fail_closed:
                 passed_assertions.append("fail_closed_properly_triggered")
             else:
                 failed_assertions.append(f"fail_closed_failed: status was {decision_res.get('status')}")
 
+        if "decision_outcome" in exp:
+            actual_outcome = decision_res.get("status")
+            if actual_outcome == exp["decision_outcome"]:
+                passed_assertions.append("decision_outcome_matches")
+            else:
+                failed_assertions.append(f"outcome_mismatch: exp {exp['decision_outcome']}, got {actual_outcome}")
+
         # 4. Consistency with upstream authoritative risk & optimization
-        if exp.get("upstream_consistent"):
+        if exp.get("upstream_consistent") is not None or exp.get("policy_compliant") is not None:
             if decision_res.get("contradicts_upstream") is False:
                 passed_assertions.append("upstream_results_uncontradicted")
             else:
@@ -83,26 +100,41 @@ class DecisionEvaluationSuite(BaseEvaluationSuite):
         sample_size = len(results)
 
         # Decision Consistency
-        consistent_cases = [r for r in results if "upstream_results_uncontradicted" in r.passed_assertions]
-        metrics.append(
-            MetricEngine.compute_accuracy(
-                name="Decision Consistency",
-                correct=len(consistent_cases),
-                total=sample_size,
-                dataset_version=self.version,
+        consistent_evaluated = [
+            r for r in results
+            if any(a in r.passed_assertions for a in ["upstream_results_uncontradicted", "candidate_ranking_matches", "decision_outcome_matches"])
+            or any("mismatch" in f or "contradicts" in f for f in r.failed_assertions)
+        ]
+        if consistent_evaluated:
+            consistent_count = sum(
+                1 for r in consistent_evaluated
+                if not any("mismatch" in f or "contradicts" in f for f in r.failed_assertions)
             )
-        )
+            metrics.append(
+                MetricEngine.compute_accuracy(
+                    name="Decision Consistency",
+                    correct=consistent_count,
+                    total=len(consistent_evaluated),
+                    dataset_version=self.version,
+                )
+            )
 
         # Fail-Closed Safety Rate
-        fail_closed_cases = [r for r in results if "fail_closed_properly_triggered" in r.passed_assertions]
-        metrics.append(
-            MetricEngine.compute_rate_metric(
-                name="Fail-Closed Safety Rate",
-                numerator=len(fail_closed_cases),
-                denominator=max(1, len([r for r in results if r.actual_output.get("decision", {}).get("missing_evidence")])),
-                dataset_version=self.version,
+        fail_closed_evaluated = [
+            r for r in results
+            if any("fail_closed" in a for a in r.passed_assertions)
+            or any("fail_closed" in f for f in r.failed_assertions)
+        ]
+        if fail_closed_evaluated:
+            fail_closed_cases = sum(1 for r in fail_closed_evaluated if "fail_closed_properly_triggered" in r.passed_assertions)
+            metrics.append(
+                MetricEngine.compute_rate_metric(
+                    name="Fail-Closed Safety Rate",
+                    numerator=fail_closed_cases,
+                    denominator=len(fail_closed_evaluated),
+                    dataset_version=self.version,
+                )
             )
-        )
 
         # Overall Decision Quality
         passed_count = sum(1 for r in results if r.status == EvaluationStatus.PASSED)
@@ -132,17 +164,36 @@ class DecisionEvaluationSuite(BaseEvaluationSuite):
         if not candidates:
             return {"status": "NO_CANDIDATES", "recommended_candidate": None, "contradicts_upstream": False}
 
-        # Multi-attribute scoring: 0.6 * cost_savings + 0.4 * time_savings
+        budget_cap = inp.get("budget_cap_usd")
+        if budget_cap is not None:
+            # Check if all candidates exceed budget
+            all_exceed = all(c.get("cost_usd", 0.0) > budget_cap for c in candidates)
+            if all_exceed:
+                return {
+                    "status": "REQUIRE_HUMAN_OVERRIDE",
+                    "recommended_candidate": None,
+                    "ranking_order": [],
+                    "contradicts_upstream": False,
+                }
+
+        # Multi-attribute scoring
         scored = []
         for c in candidates:
-            score = (c.get("cost_savings", 0) * 0.6) + (c.get("time_savings_days", 0) * 1000 * 0.4)
-            scored.append((score, c.get("id")))
+            cid = c.get("candidate_id") or c.get("id")
+            if "risk_reduction" in c:
+                # Primary risk reduction weighting minus cost scale
+                score = (c.get("risk_reduction", 0.0) * 100.0) - (c.get("cost_usd", 0.0) / 2500.0)
+            else:
+                score = (c.get("cost_savings", 0) * 0.6) + (c.get("time_savings_days", 0) * 1000 * 0.4)
+            scored.append((score, cid))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        best_id = scored[0][1]
+        ranking_order = [s[1] for s in scored]
+        best_id = ranking_order[0] if ranking_order else None
 
         return {
             "status": "RECOMMENDATION_READY",
             "recommended_candidate": best_id,
+            "ranking_order": ranking_order,
             "contradicts_upstream": False,
         }

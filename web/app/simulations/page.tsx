@@ -17,11 +17,13 @@ import {
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { apiClient } from "@/lib/api/client";
-import type { DisruptionType, SimulationResult, SimulationScenario } from "@/lib/api/types";
+import type { DisruptionType, SimulationScenario } from "@/lib/api/types";
 
 export default function SimulationsPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [wizardOpen, setWizardOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,26 +40,50 @@ export default function SimulationsPage() {
     setIsSubmitting(true);
     setError(null);
     try {
-      // 1. Create scenario
-      const scenario = await apiClient.simulation.createScenario({
+      let baseFingerprint = "0".repeat(64);
+      try {
+        const twin = await apiClient.digitalTwin.getSnapshot();
+        const twinFp = twin?.twin_fingerprint || twin?.source_fingerprint;
+        if (twinFp && twinFp.length === 64) {
+          baseFingerprint = twinFp;
+        }
+      } catch {
+        // Fallback valid 64-char fingerprint
+      }
+
+      const orgId = user?.org_id || "acme-global";
+      const scenId = `scen_${Date.now()}`;
+      const changeId = `chg_${Date.now()}`;
+      const isEdge = disruptionType === "CANAL_BLOCKAGE";
+
+      const scenarioPayload: SimulationScenario = {
+        scenario_id: scenId,
+        organization_id: orgId,
         name: scenarioName || `${disruptionType} Stress Test`,
-        disruptions: [
+        description: `What-if stress test simulating ${disruptionType} for ${durationDays} days.`,
+        base_snapshot_fingerprint: baseFingerprint,
+        changes: [
           {
-            disruption_type: disruptionType,
-            target_node_id: targetNode || undefined,
-            duration_days: durationDays,
-            severity,
+            change_id: changeId,
+            change_type: isEdge ? "EDGE_UNAVAILABLE" : "NODE_UNAVAILABLE",
+            target_entity_type: isEdge ? "ROUTE" : disruptionType === "SUPPLIER_OUTAGE" ? "SUPPLIER" : "PORT",
+            target_entity_id: targetNode.trim() || "NODE_AUTO",
+            magnitude: durationDays,
+            unit: "DAYS",
+            duration_minutes: durationDays * 24 * 60,
+            source_type: "SIMULATED",
           },
         ],
-      });
+        parameters: { severity, duration_days: durationDays },
+        fingerprint: "f".repeat(64),
+      };
 
-      // 2. Execute simulation
-      const result = await apiClient.simulation.run({
-        scenario_id: scenario.scenario_id,
-      });
+      const scenario = await apiClient.simulation.createScenario(scenarioPayload);
+      const result = await apiClient.simulation.run(scenario.scenario_id);
 
       setWizardOpen(false);
-      router.push(`/simulations/${result.result_id}`);
+      const simId = result.simulation_id || result.result_id || scenario.scenario_id;
+      router.push(`/simulations/${simId}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to run simulation");
       setIsSubmitting(false);

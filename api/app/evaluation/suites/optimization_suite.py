@@ -68,6 +68,13 @@ class OptimizationEvaluationSuite(BaseEvaluationSuite):
             else:
                 failed_assertions.append("time_limit_solution_falsely_claimed_optimal")
 
+        # Unbounded is not claimed optimal and is invalid
+        if expected_status == "UNBOUNDED":
+            if not solver_res.get("is_optimal") and not solver_res.get("is_valid_solution", True):
+                passed_assertions.append("unbounded_not_treated_as_optimal_solution")
+            else:
+                failed_assertions.append("unbounded_falsely_treated_as_valid_optimal")
+
         # Feasibility flag
         if exp.get("is_feasible") is not None:
             if solver_res.get("is_feasible") == exp["is_feasible"]:
@@ -111,13 +118,16 @@ class OptimizationEvaluationSuite(BaseEvaluationSuite):
             )
         )
 
-        # Status Invariant Adherence (FEASIBLE != OPTIMAL, INFEASIBLE != FAILED)
-        invariants = sum(1 for r in results if any(a in r.passed_assertions for a in ["infeasible_not_labeled_failed", "feasible_not_claimed_optimal"]))
+        # Status Invariant Adherence (FEASIBLE != OPTIMAL, INFEASIBLE != FAILED, UNBOUNDED != OPTIMAL)
+        invariants = sum(
+            1 for r in results
+            if any(a in r.passed_assertions for a in ["infeasible_not_labeled_failed", "feasible_not_claimed_optimal", "unbounded_not_treated_as_optimal_solution"])
+        )
         metrics.append(
             MetricEngine.compute_rate_metric(
                 name="Status Invariant Adherence",
                 numerator=invariants,
-                denominator=max(1, len([r for r in results if r.actual_output.get("status") in ["FEASIBLE", "INFEASIBLE"]])),
+                denominator=max(1, len([r for r in results if r.actual_output.get("status") in ["FEASIBLE", "INFEASIBLE", "UNBOUNDED"]])),
                 dataset_version=self.version,
             )
         )
@@ -145,6 +155,15 @@ class OptimizationEvaluationSuite(BaseEvaluationSuite):
                 "is_feasible": True,
                 "is_optimal": False,
                 "gap": inp.get("gap", 0.05),
+            }
+
+        if exit_cond == "UNBOUNDED":
+            return {
+                "status": "UNBOUNDED",
+                "reported_status": "UNBOUNDED",
+                "is_feasible": False,
+                "is_optimal": False,
+                "is_valid_solution": False,
             }
 
         demand = inp.get("demand", 0)

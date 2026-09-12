@@ -11,9 +11,12 @@
 
 import { LogoutResponse, UserMeResponse } from "../auth/types";
 import type {
+  ActionCommand,
   ActionCreate,
   ActionResponse,
+  ActionResult,
   ApprovalCreate,
+  ApprovalDossier,
   ApprovalResponse,
   AuditLogResponse,
   CarrierResponse,
@@ -23,6 +26,7 @@ import type {
   DigitalTwinSnapshot,
   DigitalTwinSummaryResponse,
   FactoryResponse,
+  HumanDecisionRequest,
   IncidentCreate,
   IncidentResponse,
   InventoryResponse,
@@ -30,6 +34,7 @@ import type {
   OptimizationRequest,
   OptimizationResult,
   PaginatedResponse,
+  PendingApprovalListResponse,
   PortResponse,
   ProductResponse,
   RecommendationResponse,
@@ -41,12 +46,17 @@ import type {
   ShipmentEventResponse,
   ShipmentResponse,
   SimulationComparison,
+  SimulationInput,
   SimulationResult,
   SimulationScenario,
   SupplierCreate,
   SupplierResponse,
   SystemHealthResponse,
+  TwinEdgeContract,
+  TwinNodeContract,
   TwinPathResult,
+  VerificationCommand,
+  VerificationResultPayload,
   VerificationResultResponse,
   WarehouseResponse,
   EvaluationSuiteMetadata,
@@ -66,6 +76,7 @@ export class ApiClientError extends Error {
 
   constructor(status: number, statusText: string, detail: string, code?: string) {
     super(detail || `API Error ${status}: ${statusText}`);
+    Object.setPrototypeOf(this, ApiClientError.prototype);
     this.name = "ApiClientError";
     this.status = status;
     this.statusText = statusText;
@@ -123,12 +134,26 @@ class ApiClient {
     if (options.body && typeof options.body === "string" && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
+    if (!headers.has("X-Request-ID")) {
+      headers.set("X-Request-ID", `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
+    }
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-      credentials: "include", // Enforce HttpOnly cookie inclusion
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: "include", // Enforce HttpOnly cookie inclusion
+      });
+    } catch (e: unknown) {
+      if (e instanceof ApiClientError) throw e;
+      throw new ApiClientError(
+        0,
+        "Network Error",
+        `Failed to connect to backend service: ${e instanceof Error ? e.message : String(e)}`,
+        "NETWORK_ERROR"
+      );
+    }
 
     if (!response.ok) {
       let detail = response.statusText;
@@ -187,6 +212,14 @@ class ApiClient {
     });
   }
 
+  public patch<T = unknown>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+    return this.request<T>(path, {
+      ...options,
+      method: "PATCH",
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+
   public delete<T = unknown>(path: string, options?: RequestInit): Promise<T> {
     return this.request<T>(path, { ...options, method: "DELETE" });
   }
@@ -195,6 +228,9 @@ class ApiClient {
   // AUTH
   // ==========================================
   public readonly auth = {
+    me: (): Promise<UserMeResponse> => {
+      return this.get<UserMeResponse>("/api/v1/auth/me");
+    },
     getMe: (): Promise<UserMeResponse> => {
       return this.get<UserMeResponse>("/api/v1/auth/me");
     },
@@ -306,23 +342,42 @@ class ApiClient {
         max_depth: maxDepth,
       });
     },
+    getNodes: (params?: { node_type?: string; limit?: number }): Promise<TwinNodeContract[]> => {
+      const q = new URLSearchParams();
+      if (params?.node_type) q.set("node_type", params.node_type);
+      if (params?.limit) q.set("limit", String(params.limit));
+      const qs = q.toString() ? `?${q.toString()}` : "";
+      return this.get<TwinNodeContract[]>(`/api/v1/digital-twin/nodes${qs}`);
+    },
+    getEdges: (): Promise<TwinEdgeContract[]> => {
+      return this.get<TwinEdgeContract[]>("/api/v1/digital-twin/edges");
+    },
+    refresh: (): Promise<DigitalTwinSummaryResponse> => {
+      return this.post<DigitalTwinSummaryResponse>("/api/v1/digital-twin/refresh");
+    },
   };
 
   // ==========================================
   // SIMULATION (Phase 13)
   // ==========================================
   public readonly simulation = {
-    createScenario: (scenario: Partial<SimulationScenario>): Promise<SimulationScenario> => {
+    listScenarios: (): Promise<SimulationScenario[]> => {
+      return this.get<SimulationScenario[]>("/api/v1/simulation/scenarios");
+    },
+    getScenario: (scenarioId: string): Promise<SimulationScenario> => {
+      return this.get<SimulationScenario>(`/api/v1/simulation/scenarios/${scenarioId}`);
+    },
+    createScenario: (scenario: SimulationScenario): Promise<SimulationScenario> => {
       return this.post<SimulationScenario>("/api/v1/simulation/scenarios", scenario);
     },
-    run: (input: { scenario_id: string; twin_version?: string }): Promise<SimulationResult> => {
-      return this.post<SimulationResult>("/api/v1/simulation/run", input);
+    run: (scenarioId: string, input?: SimulationInput): Promise<SimulationResult> => {
+      return this.post<SimulationResult>(`/api/v1/simulation/scenarios/${scenarioId}/simulate`, input);
     },
-    getResult: (resultId: string): Promise<SimulationResult> => {
-      return this.get<SimulationResult>(`/api/v1/simulation/results/${resultId}`);
+    getResult: (simulationId: string): Promise<SimulationResult> => {
+      return this.get<SimulationResult>(`/api/v1/simulation/simulations/${simulationId}`);
     },
     compare: (scenarioAId: string, scenarioBId: string): Promise<SimulationComparison> => {
-      return this.post<SimulationComparison>("/api/v1/simulation/compare", {
+      return this.post<SimulationComparison>("/api/v1/simulation/simulations/compare", {
         scenario_a_id: scenarioAId,
         scenario_b_id: scenarioBId,
       });
@@ -341,6 +396,9 @@ class ApiClient {
       return this.get<OptimizationResult[]>(`/api/v1/optimization-runs${qs}`);
     },
     create: (request: OptimizationRequest): Promise<OptimizationResult> => {
+      return this.post<OptimizationResult>("/api/v1/optimization-runs", request);
+    },
+    run: (request: OptimizationRequest): Promise<OptimizationResult> => {
       return this.post<OptimizationResult>("/api/v1/optimization-runs", request);
     },
     get: (id: string): Promise<OptimizationResult> => {
@@ -362,6 +420,9 @@ class ApiClient {
     },
     get: (id: string): Promise<RecommendationResponse> => {
       return this.get<RecommendationResponse>(`/api/v1/recommendations/${id}`);
+    },
+    approve: (id: string): Promise<RecommendationResponse> => {
+      return this.post<RecommendationResponse>(`/api/v1/recommendations/${id}/approve`);
     },
   };
 
@@ -395,8 +456,31 @@ class ApiClient {
       const qs = q.toString() ? `?${q.toString()}` : "";
       return this.get<PaginatedResponse<ApprovalResponse>>(`/api/v1/approvals${qs}`);
     },
+    listPending: (params?: { page?: number; limit?: number; search?: string }): Promise<PendingApprovalListResponse> => {
+      const q = new URLSearchParams();
+      if (params?.page) q.set("page", String(params.page));
+      if (params?.limit) q.set("limit", String(params.limit));
+      if (params?.search) q.set("search", params.search);
+      const qs = q.toString() ? `?${q.toString()}` : "";
+      return this.get<PendingApprovalListResponse>(`/api/v1/approvals/pending${qs}`);
+    },
+    getDossier: (id: string): Promise<ApprovalDossier> => {
+      return this.get<ApprovalDossier>(`/api/v1/approvals/${id}/dossier`);
+    },
+    decide: (id: string, body: HumanDecisionRequest): Promise<ApprovalDossier> => {
+      return this.post<ApprovalDossier>(`/api/v1/approvals/${id}/decide`, body);
+    },
+    approve: (id: string, comments?: string): Promise<ApprovalDossier> => {
+      return this.post<ApprovalDossier>(`/api/v1/approvals/${id}/approve`, comments ? { comments } : {});
+    },
+    reject: (id: string, comments?: string): Promise<ApprovalDossier> => {
+      return this.post<ApprovalDossier>(`/api/v1/approvals/${id}/reject`, comments ? { comments } : {});
+    },
     create: (payload: ApprovalCreate): Promise<ApprovalResponse> => {
       return this.post<ApprovalResponse>("/api/v1/approvals", payload);
+    },
+    get: (id: string): Promise<ApprovalResponse> => {
+      return this.get<ApprovalResponse>(`/api/v1/approvals/${id}`);
     },
   };
 
@@ -404,10 +488,11 @@ class ApiClient {
   // ACTIONS (Phase 17)
   // ==========================================
   public readonly actions = {
-    list: (params?: { limit?: number; offset?: number }): Promise<PaginatedResponse<ActionResponse>> => {
+    list: (params?: { limit?: number; offset?: number; status?: string }): Promise<PaginatedResponse<ActionResponse>> => {
       const q = new URLSearchParams();
       if (params?.limit) q.set("limit", String(params.limit));
       if (params?.offset) q.set("offset", String(params.offset));
+      if (params?.status) q.set("status", params.status);
       const qs = q.toString() ? `?${q.toString()}` : "";
       return this.get<PaginatedResponse<ActionResponse>>(`/api/v1/actions${qs}`);
     },
@@ -417,21 +502,32 @@ class ApiClient {
     get: (id: string): Promise<ActionResponse> => {
       return this.get<ActionResponse>(`/api/v1/actions/${id}`);
     },
+    execute: (command: ActionCommand): Promise<ActionResult> => {
+      return this.post<ActionResult>("/api/v1/actions/execute", command);
+    },
+    advance: (id: string): Promise<ActionResponse> => {
+      return this.post<ActionResponse>(`/api/v1/actions/${id}/execute`);
+    },
   };
 
   // ==========================================
   // VERIFICATION (Phase 18)
   // ==========================================
   public readonly verification = {
-    list: (params?: { limit?: number; offset?: number }): Promise<PaginatedResponse<VerificationResultResponse>> => {
+    list: (params?: { limit?: number; offset?: number; action_id?: string; verified?: boolean }): Promise<PaginatedResponse<VerificationResultResponse>> => {
       const q = new URLSearchParams();
       if (params?.limit) q.set("limit", String(params.limit));
       if (params?.offset) q.set("offset", String(params.offset));
+      if (params?.action_id) q.set("action_id", params.action_id);
+      if (params?.verified !== undefined) q.set("verified", String(params.verified));
       const qs = q.toString() ? `?${q.toString()}` : "";
       return this.get<PaginatedResponse<VerificationResultResponse>>(`/api/v1/verification-results${qs}`);
     },
     get: (id: string): Promise<VerificationResultResponse> => {
       return this.get<VerificationResultResponse>(`/api/v1/verification-results/${id}`);
+    },
+    verify: (command: VerificationCommand): Promise<VerificationResultPayload> => {
+      return this.post<VerificationResultPayload>("/api/v1/verification-results/verify", command);
     },
   };
 
@@ -532,6 +628,18 @@ class ApiClient {
     },
   };
 
+  public readonly suppliers = {
+    list: (params?: { limit?: number; offset?: number }): Promise<PaginatedResponse<SupplierResponse>> => {
+      return this.network.suppliers.list(params);
+    },
+    create: (data: SupplierCreate): Promise<SupplierResponse> => {
+      return this.network.suppliers.create(data);
+    },
+    get: (id: string): Promise<SupplierResponse> => {
+      return this.network.suppliers.get(id);
+    },
+  };
+
   // ==========================================
   // NOTIFICATIONS
   // ==========================================
@@ -543,8 +651,11 @@ class ApiClient {
       const qs = q.toString() ? `?${q.toString()}` : "";
       return this.get<PaginatedResponse<NotificationResponse>>(`/api/v1/notifications${qs}`);
     },
-    markRead: (id: string): Promise<void> => {
-      return this.put<void>(`/api/v1/notifications/${id}/read`);
+    markRead: (id: string): Promise<NotificationResponse> => {
+      return this.patch<NotificationResponse>(`/api/v1/notifications/${id}`, { is_read: true });
+    },
+    markAllRead: (): Promise<{ count: number }> => {
+      return this.post<{ count: number }>("/api/v1/notifications/mark-all-read");
     },
   };
 

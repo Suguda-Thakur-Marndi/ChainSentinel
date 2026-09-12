@@ -3,28 +3,21 @@
 import React, { useState } from "react";
 import {
   Building2,
-  CheckCircle2,
-  Database,
-  Globe,
-  KeyRound,
   Lock,
-  RefreshCw,
   Server,
   Shield,
-  User,
   Users,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { RoleBadge } from "@/components/ui/Badges";
-import { ForbiddenState } from "@/components/ui/FeedbackStates";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 export default function AdminPage() {
-  const { user } = useAuth();
+  const { user, hasRole } = useAuth();
   const [activeTab, setActiveTab] = useState<"org" | "users" | "integrations" | "security">("org");
 
-  const isAdmin = user?.role === "Admin";
+  const isAdmin = hasRole("ADMIN");
 
   return (
     <ProtectedRoute>
@@ -38,7 +31,7 @@ export default function AdminPage() {
               </span>
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
-              Multi-tenant boundary enforcement, role-based access control, and telemetry adapter integration keys.
+              Multi-tenant boundary enforcement, role-based access control, and backend system configuration.
             </p>
           </div>
 
@@ -104,24 +97,24 @@ export default function AdminPage() {
                   <span className="text-slate-400 block mb-1">Organization Name</span>
                   <input
                     type="text"
-                    disabled={!isAdmin}
-                    defaultValue={user?.organization?.name || "Acme Logistics Global"}
-                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 disabled:opacity-60"
+                    disabled
+                    value={user?.organization?.name || "Active Organization"}
+                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 disabled:opacity-80"
                   />
                 </div>
                 <div>
-                  <span className="text-slate-400 block mb-1">Domain Boundary</span>
+                  <span className="text-slate-400 block mb-1">Domain Boundary / Slug</span>
                   <input
                     type="text"
                     disabled
-                    defaultValue={user?.organization?.slug || "acmelogistics"}
-                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-400 font-mono disabled:opacity-60"
+                    value={user?.organization?.slug || user?.org_id || "default"}
+                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-400 font-mono disabled:opacity-80"
                   />
                 </div>
                 <div>
                   <span className="text-slate-400 block mb-1">Tenant Organization ID</span>
                   <span className="font-mono text-slate-300 block py-2">
-                    {user?.org_id || "org_01HXYZ..."}
+                    {user?.org_id || "—"}
                   </span>
                 </div>
                 <div>
@@ -159,64 +152,46 @@ export default function AdminPage() {
                     Authoritative Role Hierarchy:
                   </h5>
                   <ul className="space-y-1 text-slate-400 font-mono">
-                    <li>• <strong className="text-purple-400">Admin:</strong> Full tenant governance, user management, integration secrets.</li>
-                    <li>• <strong className="text-rose-400">RiskManager:</strong> Authority to approve critical mitigation recommendations.</li>
-                    <li>• <strong className="text-amber-400">OpsManager:</strong> Authority to trigger executions and rerouting commands.</li>
-                    <li>• <strong className="text-blue-400">Analyst:</strong> Run what-if simulations, formulate decisions, inspect ML models.</li>
-                    <li>• <strong className="text-slate-400">Viewer:</strong> Read-only observability across Control Tower telemetry.</li>
+                    <li>• <strong className="text-purple-400">ADMIN:</strong> Full tenant governance, user management, integration secrets.</li>
+                    <li>• <strong className="text-rose-400">RISKMANAGER:</strong> Authority to approve critical mitigation recommendations.</li>
+                    <li>• <strong className="text-amber-400">OPSMANAGER:</strong> Authority to trigger executions and rerouting commands.</li>
+                    <li>• <strong className="text-blue-400">ANALYST:</strong> Run what-if simulations, formulate decisions, inspect ML models.</li>
+                    <li>• <strong className="text-slate-400">VIEWER:</strong> Read-only observability across Control Tower telemetry.</li>
                   </ul>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Tab 3: Integrations (Masked Secrets) */}
+          {/* Tab 3: Integrations (Authoritative notice per Section 25) */}
           {activeTab === "integrations" && (
             <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] space-y-4">
               <div className="flex items-center justify-between border-b border-[#243044] pb-3">
                 <div className="flex items-center gap-2">
                   <Server className="w-4 h-4 text-blue-400" />
-                  <h3 className="text-sm font-bold text-white">Telemetry & ERP Adapter Secrets</h3>
+                  <h3 className="text-sm font-bold text-white">Telemetry & Adapter Integrations</h3>
                 </div>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                  SECRETS MASKED
+                <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
+                  BACKEND SECRETS VAULT
                 </span>
               </div>
 
-              <div className="space-y-3 text-xs">
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-200 block">AIS Live Vessel Stream (Spire / MarineTraffic)</span>
-                    <span className="font-mono text-[11px] text-slate-500">API Key: ••••••••••••••••••••a8f2</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                    CONNECTED
-                  </span>
+              <div className="p-4 rounded bg-[#1A2332] border border-slate-800 text-xs space-y-3">
+                <div className="flex items-center gap-2 text-slate-300">
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <span className="font-semibold">Credentials Managed Server-Side</span>
                 </div>
-
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-200 block">SAP / ERP Execution Adapter</span>
-                    <span className="font-mono text-[11px] text-slate-500">OAuth Client Secret: ••••••••••••••••••••9b1c</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                    ONLINE
-                  </span>
-                </div>
-
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-200 block">NOAA / Weather Disruption Feed</span>
-                    <span className="font-mono text-[11px] text-slate-500">Token: ••••••••••••••••••••44e1</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
-                    ACTIVE
-                  </span>
+                <p className="text-slate-400 leading-relaxed text-[11px]">
+                  Telemetry adapter credentials (such as AIS transponders, weather feeds, and ERP execution connectors) are securely configured and managed directly in backend environment configurations and secret stores.
+                </p>
+                <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                  <span>UI Credential Management:</span>
+                  <span className="text-amber-400 font-medium">Not available / Configuration managed via backend environment</span>
                 </div>
               </div>
 
               <div className="pt-2 border-t border-[#243044] text-[11px] text-slate-500 font-mono">
-                Notice: Raw API keys are never transmitted to browser clients.
+                Security Policy: Secrets, API keys, and connection credentials are never transmitted to browser clients.
               </div>
             </div>
           )}

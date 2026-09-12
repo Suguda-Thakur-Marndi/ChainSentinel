@@ -20,7 +20,7 @@ export interface Column<T> {
   width?: string;
 }
 
-export function DataTable<T extends Record<string, any>>({
+export function DataTable<T extends object>({
   columns,
   data,
   isLoading = false,
@@ -125,14 +125,17 @@ export function DataTable<T extends Record<string, any>>({
                 </td>
               </tr>
             ) : (
-              sortedData.map((row, idx) => (
-                <tr
-                  key={row.id ? String(row.id) : (row.optimization_id ? String(row.optimization_id) : (row.decision_id ? String(row.decision_id) : idx))}
-                  onClick={() => onRowClick && onRowClick(row)}
-                  className={`h-10 hover:bg-[#1A2332]/60 transition-colors ${
-                    onRowClick ? "cursor-pointer" : ""
-                  }`}
-                >
+              sortedData.map((row, idx) => {
+                const rowObj = row as Record<string, unknown>;
+                const rowKey = rowObj.id ? String(rowObj.id) : (rowObj.optimization_id ? String(rowObj.optimization_id) : (rowObj.decision_id ? String(rowObj.decision_id) : idx));
+                return (
+                  <tr
+                    key={rowKey}
+                    onClick={() => onRowClick && onRowClick(row)}
+                    className={`h-10 hover:bg-[#1A2332]/60 transition-colors ${
+                      onRowClick ? "cursor-pointer" : ""
+                    }`}
+                  >
                   {columns.map((col) => {
                     const value = (row as Record<string, unknown>)[col.key];
                     return (
@@ -151,7 +154,8 @@ export function DataTable<T extends Record<string, any>>({
                     );
                   })}
                 </tr>
-              ))
+              );
+            })
             )}
           </tbody>
         </table>
