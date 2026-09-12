@@ -13,9 +13,13 @@ from app.agents.approval.contract import (
     ApprovalAuditContext,
     ApprovalDecision,
     ApprovalDecisionInput,
+    ApprovalDossier,
     ApprovalRequest,
     ApprovalResult,
     ApprovalStatus,
+    HumanDecisionRequest,
+    PendingApprovalItem,
+    PendingApprovalListResponse,
     compute_approval_fingerprint,
     generate_deterministic_approval_id,
 )
@@ -37,6 +41,7 @@ from app.agents.approval.node import (
     HUMAN_APPROVAL_NODE_CONTRACT,
     human_approval_node,
 )
+from app.agents.approval.persistence import ApprovalRepository
 from app.agents.approval.service import HumanApprovalService
 
 __all__ = [
@@ -49,11 +54,16 @@ __all__ = [
     "ApprovalRequest",
     "ApprovalDecisionInput",
     "ApprovalResult",
+    "PendingApprovalItem",
+    "PendingApprovalListResponse",
+    "ApprovalDossier",
+    "HumanDecisionRequest",
     "generate_deterministic_approval_id",
     "compute_approval_fingerprint",
-    # Service & Agent
+    # Service & Agent & Persistence
     "HumanApprovalService",
     "HumanApprovalAgent",
+    "ApprovalRepository",
     # Node & Contract
     "HUMAN_APPROVAL_NODE_CONTRACT",
     "human_approval_node",

@@ -1056,7 +1056,7 @@ def test_api_evaluate_endpoint_invalid_signal_type_rejected(client: TestClient, 
         "signals": [{"arbitrary_key": "unvalidated_data"}],
     }
     res = client.post("/api/v1/risk-assessments/evaluate", json=payload, headers=headers)
-    assert res.status_code in (status.HTTP_422_UNPROCESSABLE_ENTITY, status.HTTP_400_BAD_REQUEST)
+    assert res.status_code in (status.HTTP_422_UNPROCESSABLE_CONTENT, status.HTTP_400_BAD_REQUEST)
 
 
 def test_api_evaluate_endpoint_raw_provider_payload_rejected(client: TestClient, seed_data: dict):
@@ -1072,7 +1072,7 @@ def test_api_evaluate_endpoint_raw_provider_payload_rejected(client: TestClient,
         "signals": [raw_weather_payload],
     }
     res = client.post("/api/v1/risk-assessments/evaluate", json=payload, headers=headers)
-    assert res.status_code in (status.HTTP_422_UNPROCESSABLE_ENTITY, status.HTTP_400_BAD_REQUEST)
+    assert res.status_code in (status.HTTP_422_UNPROCESSABLE_CONTENT, status.HTTP_400_BAD_REQUEST)
 
 
 def test_api_get_assessment_by_id_viewer_success(client: TestClient, seed_data: dict):

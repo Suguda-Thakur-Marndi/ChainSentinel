@@ -26,9 +26,9 @@ class SimulationRiskIntegration:
         """
         try:
             # 1. Baseline risk derived from authoritative node health scores
-            nodes_with_health = [n for n in snapshot.nodes.values() if n.health_score is not None]
-            if nodes_with_health:
-                baseline_avg_health = sum(n.health_score for n in nodes_with_health) / len(nodes_with_health)
+            health_scores = [float(n.health_score) for n in snapshot.nodes.values() if n.health_score is not None]
+            if health_scores:
+                baseline_avg_health = sum(health_scores) / len(health_scores)
                 baseline_risk = max(0.0, min(100.0, 100.0 - baseline_avg_health))
             else:
                 # Operational baseline if no specific node health scores are present
@@ -81,9 +81,11 @@ class SimulationMLIntegration:
         try:
             from app.ml.inference import MLPredictionService
             from app.ml.registry import default_model_registry
+            from app.ml.contracts import ModelFamily
+            from app.agents.prediction.contract import PredictionFeature, PredictionRequest, PredictionType
 
-            metadata = default_model_registry.get_active_metadata("shipment_delay")
-            if not metadata:
+            ml_svc = MLPredictionService(registry=default_model_registry, family=ModelFamily.SHIPMENT_DELAY)
+            if not ml_svc.is_available():
                 return {
                     "availability": MetricAvailability.NOT_AVAILABLE,
                     "reason": "NO_ACTIVE_ML_MODEL_IN_REGISTRY",
@@ -91,6 +93,8 @@ class SimulationMLIntegration:
                     "simulated_prediction": None,
                     "delta": None,
                 }
+
+            meta = ml_svc.get_model_metadata()
 
             # If model is active, evaluate deterministic prediction
             sim_features = {
@@ -106,19 +110,44 @@ class SimulationMLIntegration:
                 "delay_minutes": baseline_delay_minutes + added_transit_minutes,
             }
 
-            pred_result = MLPredictionService.predict(
-                features=sim_features,
-                task_type="REGRESSION",
-                model_name="shipment_delay",
+            req = PredictionRequest(
+                prediction_id=f"sim_{shipment_id}",
+                organization_id="default",
+                prediction_type=PredictionType.SHIPMENT_DELAY,
+                target="delay_minutes",
+                shipment_id=shipment_id,
+                features=[
+                    PredictionFeature(
+                        feature_name=k,
+                        value=v,
+                        source="SIMULATION_ENGINE",
+                        source_type="SYNTHETIC_SIMULATION",
+                        organization_id="default",
+                    )
+                    for k, v in sim_features.items()
+                ],
+                prediction_horizon_hours=24.0,
+                model_name=meta.model_name,
+                model_version=meta.model_version,
             )
 
-            predicted_val = pred_result.prediction
+            pred_result = ml_svc.predict(req)
+            predicted_val = pred_result.predicted_value
+            if predicted_val is None:
+                return {
+                    "availability": MetricAvailability.NOT_AVAILABLE,
+                    "reason": "ML_PREDICTION_NONE",
+                    "baseline_prediction": None,
+                    "simulated_prediction": None,
+                    "delta": None,
+                }
+
             return {
                 "availability": MetricAvailability.AVAILABLE,
                 "baseline_prediction": baseline_delay_minutes,
                 "simulated_prediction": predicted_val,
                 "delta": predicted_val - baseline_delay_minutes,
-                "model_version": metadata.version,
+                "model_version": meta.model_version,
             }
 
         except Exception as e:

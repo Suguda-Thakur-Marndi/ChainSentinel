@@ -303,3 +303,64 @@ class DecisionExplanationLLMError(DecisionExplanationError):
             details=details,
             retryable=retryable,
         )
+
+
+# ==============================================================================
+# Phase 15 Typed Domain Error Extensions for Decision Agent & Policy Layer
+# ==============================================================================
+
+class DecisionPolicyError(DecisionAgentError):
+    """Raised when deterministic decision policy evaluation encounters a failure."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_POLICY_ERROR",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionInfeasibleError(DecisionAgentError):
+    """Raised when optimization is infeasible and policy requires feasible candidate."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_INFEASIBLE",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionFreshnessError(DecisionAgentError):
+    """Raised when decision inputs violate freshness policies."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_STALE_DATA",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionIdempotencyConflictError(DecisionAgentError):
+    """Raised when an idempotent decision request conflicts with an existing different result."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(
+            message=message,
+            error_code="DECISION_IDEMPOTENCY_CONFLICT",
+            details=details,
+            retryable=False,
+        )
+
+
+class DecisionInputValidationError(AgentValidationError):
+    """Raised when decision input parameters or bounds are invalid."""
+
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(message=message, details=details)
+        self.error_code = "DECISION_INPUT_VALIDATION_ERROR"
+

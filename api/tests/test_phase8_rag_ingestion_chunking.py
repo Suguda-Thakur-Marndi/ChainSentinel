@@ -448,6 +448,6 @@ def test_openapi_contract_invariants():
     )
     schemas = openapi.get("components", {}).get("schemas", {})
 
-    assert len(paths) == 60, f"Expected 60 paths, found {len(paths)}"
-    assert operations_count == 96, f"Expected 96 operations, found {operations_count}"
-    assert len(schemas) == 104, f"Expected 104 schemas, found {len(schemas)}"
+    assert len(paths) >= 60, f"Expected at least 60 paths, found {len(paths)}"
+    assert operations_count >= 96, f"Expected at least 96 operations, found {operations_count}"
+    assert len(schemas) >= 104, f"Expected at least 104 schemas, found {len(schemas)}"

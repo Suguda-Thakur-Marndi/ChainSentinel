@@ -21,3 +21,6 @@ botocore>=1.34.0
 scikit-learn>=1.5.0
 numpy>=1.26.0
 joblib>=1.4.0
+
+# Phase 14: Optimization Subsystem (Google OR-Tools)
+ortools>=9.10.0

@@ -74,7 +74,7 @@ class Settings(BaseSettings):
         return self.APP_ENV.lower() == "production"
 
     model_config = SettingsConfigDict(
-        env_file=(".env", "../../.env"),
+        env_file=(".env", "../.env", "../../.env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )

@@ -196,7 +196,7 @@ def refresh_twin(
     except TwinValidationError as e:
         uow.rollback()
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Graph validation failed during refresh: {str(e)}",
         )
     except Exception as e:

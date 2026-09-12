@@ -24,13 +24,18 @@ from app.agents.decision.claude_service import (
     MAX_DECISION_EXPLANATION_CONTEXT_CHARS,
 )
 from app.agents.decision.contract import (
+    AlternativeEvaluation,
     DecisionBasis,
     DecisionCandidate,
     DecisionCandidateStatus,
     DecisionConstraint,
+    DecisionOptimizationSummary,
+    DecisionPredictionSummary,
     DecisionRationale,
     DecisionRequest,
     DecisionResult,
+    DecisionRiskSummary,
+    DecisionScenarioSummary,
     DecisionStatus,
     DecisionType,
     compute_decision_fingerprint,
@@ -47,9 +52,14 @@ from app.agents.decision.errors import (
     DecisionExplanationError,
     DecisionExplanationGroundingError,
     DecisionExplanationLLMError,
+    DecisionFreshnessError,
     DecisionGenerationError,
+    DecisionIdempotencyConflictError,
+    DecisionInfeasibleError,
+    DecisionInputValidationError,
     DecisionOptionFabricationError,
     DecisionOptimizationFabricationError,
+    DecisionPolicyError,
     DecisionQuantitativeFabricationError,
     DecisionStatusContradictionError,
     DecisionTenantIsolationError,
@@ -62,6 +72,12 @@ from app.agents.decision.errors import (
     UnsupportedDecisionTypeError,
 )
 from app.agents.decision.node import DECISION_NODE_CONTRACT, decision_node
+from app.agents.decision.persistence import DecisionRepository
+from app.agents.decision.policy import (
+    DECISION_POLICY_VERSION,
+    DecisionPolicy,
+    DecisionPolicyConfig,
+)
 from app.agents.decision.rules import DecisionRuleEngine, RULE_VERSION
 
 DECISION_RULE_VERSION = RULE_VERSION
@@ -79,6 +95,12 @@ __all__ = [
     "DecisionResult",
     "generate_deterministic_decision_id",
     "compute_decision_fingerprint",
+    # Phase 15 Synthesis Models
+    "AlternativeEvaluation",
+    "DecisionOptimizationSummary",
+    "DecisionRiskSummary",
+    "DecisionPredictionSummary",
+    "DecisionScenarioSummary",
     # Claude Explanation Contracts
     "DecisionExplanationStatus",
     "DecisionCandidateExplanationInput",
@@ -93,10 +115,15 @@ __all__ = [
     "ClaudeDecisionExplanationService",
     "DECISION_EXPLANATION_PROMPT_VERSION",
     "MAX_DECISION_EXPLANATION_CONTEXT_CHARS",
-    # Rule Engine
+    # Rule Engine & Policy
     "DecisionRuleEngine",
     "RULE_VERSION",
     "DECISION_RULE_VERSION",
+    "DecisionPolicy",
+    "DecisionPolicyConfig",
+    "DECISION_POLICY_VERSION",
+    # Persistence
+    "DecisionRepository",
     # Agent
     "DecisionAgent",
     # Node
@@ -126,4 +153,10 @@ __all__ = [
     "DecisionExplanationCitationIntegrityError",
     "DecisionExplanationGroundingError",
     "DecisionExplanationLLMError",
+    "DecisionPolicyError",
+    "DecisionInfeasibleError",
+    "DecisionFreshnessError",
+    "DecisionIdempotencyConflictError",
+    "DecisionInputValidationError",
 ]
+

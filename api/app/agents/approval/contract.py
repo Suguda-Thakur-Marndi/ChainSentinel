@@ -260,3 +260,80 @@ def compute_approval_fingerprint(
     }
     canonical_bytes = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(canonical_bytes).hexdigest()
+
+
+class PendingApprovalItem(BaseModel):
+    """Summarized pending decision awaiting human approval."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    approval_id: str = Field(..., min_length=1, max_length=64)
+    decision_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    title: str = Field(..., min_length=1, max_length=255)
+    rationale: Optional[str] = Field(default=None, max_length=1000)
+    estimated_cost: Optional[float] = None
+    confidence: Optional[float] = None
+    status: str = Field(default=ApprovalStatus.PENDING.value)
+    preferred_candidate_id: Optional[str] = Field(default=None, max_length=64)
+    action_type: Optional[str] = Field(default=None, max_length=64)
+    tradeoffs: Dict[str, Any] = Field(default_factory=dict)
+    requires_human_approval: bool = True
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class PendingApprovalListResponse(BaseModel):
+    """Paginated list of pending decisions awaiting human governance review."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    items: List[PendingApprovalItem] = Field(default_factory=list)
+    total: int = Field(default=0, ge=0)
+    page: int = Field(default=1, ge=1)
+    page_size: int = Field(default=50, ge=1, le=200)
+
+
+class ApprovalDossier(BaseModel):
+    """Comprehensive review dossier providing full inspection context for human sign-off."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    approval_id: str = Field(..., min_length=1, max_length=64)
+    decision_id: str = Field(..., min_length=1, max_length=64)
+    organization_id: str = Field(..., min_length=1, max_length=64)
+    title: str = Field(..., min_length=1, max_length=255)
+    rationale: Optional[str] = Field(default=None, max_length=1000)
+    status: str = Field(default=ApprovalStatus.PENDING.value)
+    confidence: Optional[float] = None
+    decision_result: Dict[str, Any] = Field(default_factory=dict)
+    decision_explanation: Optional[Dict[str, Any]] = None
+    candidates: List[Dict[str, Any]] = Field(default_factory=list)
+    preferred_candidate: Optional[Dict[str, Any]] = None
+    tradeoffs: Dict[str, Any] = Field(default_factory=dict)
+    evidence_references: List[str] = Field(default_factory=list)
+    audit_history: List[Dict[str, Any]] = Field(default_factory=list)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    decided_at: Optional[datetime] = None
+    decided_by_user_id: Optional[str] = Field(default=None, max_length=64)
+    decision: Optional[str] = Field(default=None, max_length=50)
+    comments: Optional[str] = Field(default=None, max_length=1000)
+
+
+class HumanDecisionRequest(BaseModel):
+    """Input payload for a human signing off (approving or rejecting) an operational decision."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    decision: ApprovalDecision
+    comments: Optional[str] = Field(default=None, max_length=1000)
+
+    @field_validator("comments", mode="after")
+    @classmethod
+    def validate_comments_safety(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None:
+            try:
+                validate_no_sensitive_values(v, "comments")
+                validate_no_forbidden_keys({"comments": v}, "comments")
+            except AgentValidationError as e:
+                raise ValueError(str(e)) from e
+        return v

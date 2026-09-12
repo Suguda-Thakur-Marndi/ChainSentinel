@@ -11,11 +11,28 @@ Endpoints:
 - POST /api/v1/actions/{id}/execute (Protected, RiskManager+: advance action execution lifecycle)
 """
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, status
 
+from app.agents.action import (
+    ActionAgent,
+    ActionApprovalInvalidError,
+    ActionApprovalMismatchError,
+    ActionApprovalMissingError,
+    ActionAuthorizationError,
+    ActionCommand,
+    ActionIdempotencyConflictError,
+    ActionResult,
+    ActionSecurityViolationError,
+    ActionStaleDecisionError,
+    ActionTargetNotFoundError,
+    ActionTargetStateConflictError,
+    ActionTenantIsolationError,
+    ActionUnsupportedTypeError,
+)
 from app.api.deps import AuthenticatedContext, get_authenticated_context, require_role
 from app.core.errors import InvalidFilterFieldError
 from app.db.unit_of_work import UnitOfWork, get_uow
+from app.models.governance import Approval, Recommendation
 from app.repositories.governance_repositories import ACTION_FILTER_ALLOWLIST
 from app.schemas.common import PaginationParams
 from app.schemas.governance import (
@@ -139,3 +156,86 @@ def execute_action(
 ) -> ActionResponse:
     """Trigger lifecycle progression on an operational action."""
     return service.execute_action(id)
+
+
+@router.post(
+    "/execute",
+    response_model=ActionResult,
+    status_code=status.HTTP_200_OK,
+    summary="Execute approved operational mitigation action (Phase 17)",
+    description="Execute an approved operational mitigation action. Strictly requires prior human approval and RiskManager role.",
+)
+def execute_approved_action(
+    body: ActionCommand,
+    x_idempotency_key: Optional[str] = Header(None, alias="X-Idempotency-Key"),
+    context: AuthenticatedContext = Depends(require_role(*EXECUTE_ROLES)),
+    uow: UnitOfWork = Depends(get_uow),
+) -> ActionResult:
+    """Dispatches allowlisted operational mitigation action requiring valid human approval."""
+    org_id = context.organization_id or ""
+    user_id = context.user_id or "user_operator"
+    role = getattr(context, "role", "RiskManager") or "RiskManager"
+
+    # Enforce tenant match
+    if body.organization_id != org_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Cross-tenant action request: payload tenant '{body.organization_id}' does not match authenticated tenant '{org_id}'.",
+        )
+
+    # Use header idempotency key if provided
+    if x_idempotency_key and not body.idempotency_key:
+        body.idempotency_key = x_idempotency_key.strip()
+
+    try:
+        with uow:
+            # Query approval record
+            approval = (
+                uow.session.query(Approval)
+                .filter(
+                    (Approval.id == body.approval_id) | (Approval.recommendation_id == body.decision_id)
+                )
+                .first()
+            )
+            if not approval:
+                # Also check recommendation if recommendation is approved
+                rec = (
+                    uow.session.query(Recommendation)
+                    .filter(
+                        Recommendation.id == body.decision_id,
+                        Recommendation.org_id == org_id,
+                    )
+                    .first()
+                )
+                if rec and rec.status == "APPROVED":
+                    approval = Approval(
+                        id=body.approval_id,
+                        recommendation_id=body.decision_id,
+                        decision="APPROVE",
+                        decided_by_user_id=user_id,
+                    )
+
+            agent = ActionAgent()
+            result, _ = agent.execute(command=body, approval=approval, db=uow.session, uow=uow)
+            uow.commit()
+            return result
+
+    except ActionApprovalMissingError as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except ActionApprovalInvalidError as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
+    except (ActionApprovalMismatchError, ActionIdempotencyConflictError, ActionStaleDecisionError, ActionTargetStateConflictError) as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except ActionTargetNotFoundError as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except (ActionTenantIsolationError, ActionAuthorizationError) as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except (ActionSecurityViolationError, ActionUnsupportedTypeError) as e:
+        uow.rollback()
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
+

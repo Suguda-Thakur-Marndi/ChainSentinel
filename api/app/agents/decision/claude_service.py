@@ -115,7 +115,7 @@ class ClaudeDecisionExplanationService:
         risk_assessment: Optional[Union[RiskAssessment, Dict[str, Any]]] = None,
         prediction_result: Optional[Union[PredictionResult, Dict[str, Any]]] = None,
         research_result: Optional[ResearchResult] = None,
-        evidence_bundle: Optional[RAGEvidenceBundle] = None,
+        evidence_bundle: Optional[Union[RAGEvidenceBundle, Dict[str, Any]]] = None,
         objective: Optional[str] = None,
     ) -> DecisionExplanationInput:
         """Create a typed, immutable read-only snapshot of the authoritative DecisionResult."""
@@ -301,11 +301,11 @@ class ClaudeDecisionExplanationService:
                         ev_refs.update(f.evidence_ids)
             else:
                 upstream_risk_id = upstream_risk_id or risk_assessment.assessment_id
-                risk_level = (
-                    risk_assessment.risk_level.value
-                    if hasattr(risk_assessment.risk_level, "value")
-                    else str(risk_assessment.risk_level)
-                )
+                risk_lvl = getattr(risk_assessment, "risk_level", None)
+                if risk_lvl is not None:
+                    risk_level = risk_lvl.value if hasattr(risk_lvl, "value") else str(risk_lvl)
+                else:
+                    risk_level = None
                 risk_score = risk_assessment.score
                 for f in risk_assessment.factors:
                     ev_refs.update(f.evidence_ids)
@@ -323,11 +323,11 @@ class ClaudeDecisionExplanationService:
                     ev_refs.add(r)
             else:
                 upstream_prediction_id = upstream_prediction_id or prediction_result.prediction_id
-                prediction_status = (
-                    prediction_result.status.value
-                    if hasattr(prediction_result, "status") and hasattr(prediction_result.status, "value")
-                    else getattr(prediction_result, "status", None)
-                )
+                pred_st = getattr(prediction_result, "status", None)
+                if pred_st is not None:
+                    prediction_status = pred_st.value if hasattr(pred_st, "value") else str(pred_st)
+                else:
+                    prediction_status = None
                 predicted_value = prediction_result.predicted_value
                 for r in prediction_result.evidence_references:
                     ev_refs.add(r)
@@ -349,7 +349,7 @@ class ClaudeDecisionExplanationService:
                     if isinstance(itm, dict) and "evidence_id" in itm:
                         ev_refs.add(itm["evidence_id"])
                     elif hasattr(itm, "evidence_id"):
-                        ev_refs.add(itm.evidence_id)
+                        ev_refs.add(getattr(itm, "evidence_id"))
             else:
                 cit_refs.update(c.citation_key for c in evidence_bundle.citations)
                 items = getattr(evidence_bundle, "evidence_items", getattr(evidence_bundle, "items", []))
@@ -385,7 +385,7 @@ class ClaudeDecisionExplanationService:
             predicted_value=predicted_value,
             evidence_references=sorted(ev_refs),
             citation_references=sorted(cit_refs),
-            decision_fingerprint=decision.fingerprint,
+            decision_fingerprint=decision.fingerprint or "",
             objective=objective,
         )
 
@@ -822,7 +822,7 @@ class ClaudeDecisionExplanationService:
         risk_assessment: Optional[Union[RiskAssessment, Dict[str, Any]]] = None,
         prediction_result: Optional[Union[PredictionResult, Dict[str, Any]]] = None,
         research_result: Optional[ResearchResult] = None,
-        evidence_bundle: Optional[RAGEvidenceBundle] = None,
+        evidence_bundle: Optional[Union[RAGEvidenceBundle, Dict[str, Any]]] = None,
         objective: Optional[str] = None,
         correlation_id: Optional[str] = None,
         trace_id: Optional[str] = None,

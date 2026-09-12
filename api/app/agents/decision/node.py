@@ -98,6 +98,12 @@ DECISION_NODE_CONTRACT = AgentNodeContract(
         "prediction_id",
         "prediction_reference",
         "prediction_result",
+        "optimization_id",
+        "optimization_reference",
+        "optimization_result",
+        "simulation_id",
+        "simulation_reference",
+        "simulation_result",
         "recommendation_references",
         "evidence_references",
     ],
@@ -127,19 +133,21 @@ DECISION_NODE_CONTRACT = AgentNodeContract(
 def decision_node(
     state: AgentGraphStateDict,
     rule_engine: Optional[DecisionRuleEngine] = None,
+    explanation_service: Optional[ClaudeDecisionExplanationService] = None,
 ) -> Dict[str, Any]:
     """Execute the Decision Agent node within a LangGraph StateGraph pipeline.
 
-    Extracts scenario and risk findings from state, constructs a validated DecisionRequest,
-    invokes DecisionAgent, and writes only DECISION-owned fields into AgentGraphState.
+    Extracts scenario, risk, prediction, and optimization findings from state,
+    constructs a validated DecisionRequest, invokes DecisionAgent, and writes
+    only DECISION-owned fields into AgentGraphState.
     """
     start_time = time.perf_counter()
     status = "SUCCESS"
     error_code: Optional[str] = None
 
     # Extract operational identity from state
-    org_id = state.get("organization_id", "")
-    run_id = state.get("run_id", "")
+    org_id = state.get("organization_id") or state.get("tenant_id") or ""
+    run_id = state.get("run_id") or state.get("agent_run_id") or ""
     actor_id = state.get("actor_id", "")
     request_id = state.get("request_id", "")
     correlation_id = state.get("correlation_id", "")
@@ -171,6 +179,32 @@ def decision_node(
             )
         )
 
+        # Optimization context (Phase 14)
+        input_refs = state.get("input_references", {}) if isinstance(state.get("input_references"), dict) else {}
+        opt_res = state.get("optimization_result") or input_refs.get("optimization_result")
+        opt_ref = state.get("optimization_reference") or input_refs.get("optimization_reference")
+        opt_id = state.get("optimization_id") or input_refs.get("optimization_id") or (
+            opt_res.get("optimization_id") if isinstance(opt_res, dict) else (
+                opt_ref.get("optimization_id") if isinstance(opt_ref, dict) else None
+            )
+        )
+
+        # Simulation context (Phase 13)
+        sim_res = state.get("simulation_result") or input_refs.get("simulation_result")
+        sim_ref = state.get("simulation_reference") or input_refs.get("simulation_reference")
+        sim_id = state.get("simulation_id") or input_refs.get("simulation_id") or (
+            sim_res.get("simulation_id") if isinstance(sim_res, dict) else (
+                sim_ref.get("simulation_id") if isinstance(sim_ref, dict) else None
+            )
+        )
+
+        obj_type = state.get("objective_type") or input_refs.get("objective_type")
+        cand_alts = list(state.get("candidate_alternatives", []) or input_refs.get("candidate_alternatives", []))
+        shipment_id = state.get("shipment_id") or input_refs.get("shipment_id")
+        shipment_ids = list(state.get("shipment_ids", []) or input_refs.get("shipment_ids", []))
+        supplier_id = state.get("supplier_id") or input_refs.get("supplier_id")
+        supplier_ids = list(state.get("supplier_ids", []) or input_refs.get("supplier_ids", []))
+
         rec_refs = list(state.get("recommendation_references", []))
         evidence_refs = list(state.get("evidence_references", []))
         target_ref = state.get("input_reference") or (f"scen_{scen_id}" if scen_id else objective[:32]) or "default_target"
@@ -189,6 +223,18 @@ def decision_node(
             prediction_id=pred_id,
             prediction_reference=pred_ref if isinstance(pred_ref, dict) else None,
             prediction_result=pred_res if isinstance(pred_res, dict) else None,
+            optimization_id=opt_id,
+            optimization_reference=opt_ref if isinstance(opt_ref, dict) else None,
+            optimization_result=opt_res if isinstance(opt_res, dict) else None,
+            simulation_id=sim_id,
+            simulation_reference=sim_ref if isinstance(sim_ref, dict) else None,
+            simulation_result=sim_res if isinstance(sim_res, dict) else None,
+            objective_type=obj_type,
+            candidate_alternatives=cand_alts,
+            shipment_id=shipment_id,
+            shipment_ids=shipment_ids,
+            supplier_id=supplier_id,
+            supplier_ids=supplier_ids,
             recommendation_references=rec_refs,
             evidence_references=evidence_refs,
             correlation_id=correlation_id,
@@ -198,6 +244,7 @@ def decision_node(
         # 3. Execute DecisionAgent
         agent = DecisionAgent(rule_engine=rule_engine)
         result, findings = agent.execute(request)
+
 
         # 3b. Generate Claude Decision Explanation (Phase 10 Step 7)
         use_claude = state.get("use_claude", True)
@@ -210,8 +257,9 @@ def decision_node(
 
         warnings = list(state.get("warnings", []))
         if use_claude and result.candidates:
-            llm_provider = state.get("llm_provider")
-            explanation_service = ClaudeDecisionExplanationService(llm_provider=llm_provider)
+            if explanation_service is None:
+                llm_provider = state.get("llm_provider")
+                explanation_service = ClaudeDecisionExplanationService(llm_provider=llm_provider)
             _emit_decision_audit(
                 action="DECISION_LLM_EXPLANATION_STARTED",
                 organization_id=org_id.strip(),

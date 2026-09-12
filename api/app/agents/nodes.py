@@ -207,4 +207,7 @@ from app.agents.decision.node import DECISION_NODE_CONTRACT, decision_node
 # Real Human Approval Agent node contract and handler
 from app.agents.approval.node import HUMAN_APPROVAL_NODE_CONTRACT, human_approval_node
 
+# Real Action Agent node contract and handler
+from app.agents.action.node import ACTION_NODE_CONTRACT, action_node
+
 

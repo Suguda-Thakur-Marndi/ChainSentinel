@@ -1,7 +1,7 @@
-"""Decision Agent execution and orchestration layer (Phase 9 Step 8).
+"""Decision Agent execution and orchestration layer (Phase 9 & Phase 15).
 
 Coordinates DecisionRequest validation, tenant boundary enforcement,
-deterministic DecisionRuleEngine evaluation, and structured AgentFinding production.
+deterministic policy & rule evaluation, and structured AgentFinding production.
 Stops strictly before human approval and operational action execution.
 """
 
@@ -20,17 +20,23 @@ from app.agents.decision.errors import (
     DecisionTenantIsolationError,
     InvalidDecisionRequestError,
 )
+from app.agents.decision.policy import DecisionPolicy
 from app.agents.decision.rules import DecisionRuleEngine
 
 
 class DecisionAgent:
     """Orchestration agent for deterministic decision candidate formulation."""
 
-    def __init__(self, rule_engine: Optional[DecisionRuleEngine] = None) -> None:
+    def __init__(
+        self,
+        rule_engine: Optional[DecisionRuleEngine] = None,
+        policy: Optional[DecisionPolicy] = None,
+    ) -> None:
         self.rule_engine = rule_engine or DecisionRuleEngine()
+        self.policy = policy or DecisionPolicy()
 
     def execute(self, request: DecisionRequest) -> Tuple[DecisionResult, List[AgentFinding]]:
-        """Execute decision rule evaluation and construct structured agent findings.
+        """Execute decision evaluation and construct structured agent findings.
 
         Returns:
             Tuple of (DecisionResult, List[AgentFinding])
@@ -38,8 +44,26 @@ class DecisionAgent:
         if not request.organization_id or not request.organization_id.strip():
             raise InvalidDecisionRequestError("DecisionRequest organization_id must be non-empty.")
 
-        # 1. Execute deterministic rule engine
-        result, limitations = DecisionRuleEngine.evaluate(request)
+        # 1. Dispatch to Phase 15 DecisionPolicy if optimization, simulation, or Phase 15 fields are present
+        has_phase15_signals = (
+            request.optimization_result is not None
+            or request.optimization_reference is not None
+            or request.optimization_id is not None
+            or request.simulation_result is not None
+            or request.simulation_reference is not None
+            or request.simulation_id is not None
+            or request.objective_type is not None
+            or bool(request.candidate_alternatives)
+            or bool(request.shipment_id)
+            or bool(request.shipment_ids)
+            or bool(request.supplier_id)
+            or bool(request.supplier_ids)
+        )
+
+        if has_phase15_signals:
+            result, limitations = self.policy.evaluate(request)
+        else:
+            result, limitations = self.rule_engine.evaluate(request)
 
         # 2. Output tenant validation
         if result.organization_id != request.organization_id:
@@ -51,10 +75,20 @@ class DecisionAgent:
         # 3. Produce structured AgentFinding records
         findings: List[AgentFinding] = []
 
-        if result.status in (DecisionStatus.READY.value, DecisionStatus.REQUIRES_APPROVAL.value) and result.candidates:
+        if result.status in (
+            DecisionStatus.READY.value,
+            DecisionStatus.REQUIRES_APPROVAL.value,
+            DecisionStatus.RECOMMENDED.value,
+            DecisionStatus.CONDITIONAL.value,
+            DecisionStatus.NO_ACTION_RECOMMENDED.value,
+        ) and result.candidates:
             pref = result.preferred_candidate or result.candidates[0]
             cand_types = ", ".join(c.action_type for c in result.candidates)
-            sev = "HIGH" if pref.priority in ("HIGH", "CRITICAL") else ("MEDIUM" if pref.priority == "MEDIUM" else "INFO")
+            sev = (
+                "HIGH"
+                if pref.priority in ("HIGH", "CRITICAL")
+                else ("MEDIUM" if pref.priority == "MEDIUM" else "INFO")
+            )
 
             finding = AgentFinding(
                 finding_id=f"find-dec-{result.decision_id[:8]}",
@@ -66,7 +100,7 @@ class DecisionAgent:
                     "Halting autonomous graph execution for human operational approval."
                 ),
                 severity=sev,
-                confidence=1.0,
+                confidence=result.confidence if result.confidence is not None else 1.0,
                 evidence_ids=result.evidence_references,
                 source_references=[f"decision:{result.decision_id}", f"candidate:{pref.candidate_id}"],
                 limitations=[lim.description for lim in limitations],
@@ -74,7 +108,10 @@ class DecisionAgent:
             )
             findings.append(finding)
 
-        elif result.status == DecisionStatus.INSUFFICIENT_EVIDENCE.value:
+        elif result.status in (
+            DecisionStatus.INSUFFICIENT_EVIDENCE.value,
+            DecisionStatus.INSUFFICIENT_DATA.value,
+        ):
             finding = AgentFinding(
                 finding_id=f"find-dec-insuff-{result.decision_id[:8]}",
                 category="INSUFFICIENT_EVIDENCE",
@@ -92,4 +129,23 @@ class DecisionAgent:
             )
             findings.append(finding)
 
+        elif result.status == DecisionStatus.NO_FEASIBLE_OPTION.value:
+            finding = AgentFinding(
+                finding_id=f"find-dec-nofeas-{result.decision_id[:8]}",
+                category="NO_FEASIBLE_OPTION",
+                title="Decision Formulation: No Feasible Operational Option",
+                summary=(
+                    "Mathematical optimization proved infeasible under active network constraints. "
+                    "No valid reroute or reallocation candidate can be recommended without constraint relaxation."
+                ),
+                severity="HIGH",
+                confidence=1.0,
+                evidence_ids=result.evidence_references,
+                source_references=[f"decision:{result.decision_id}"],
+                limitations=[lim.description for lim in limitations],
+                created_by_node="decision_agent",
+            )
+            findings.append(finding)
+
         return result, findings
+

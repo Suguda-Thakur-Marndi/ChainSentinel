@@ -528,13 +528,38 @@ def test_failed_transaction_recovery(isolated_db: Session):
 # 8. DATABASE ISOLATION & PRODUCTION PROTECTION (§10)
 # ==============================================================================
 
-def test_destructive_tests_against_live_database_are_prevented(monkeypatch):
+def test_destructive_tests_against_live_database_are_prevented(isolated_db: Session):
     """Verify tests safeguard production database from accidental mutations."""
-    # Ensure test environment uses isolated in-memory engine and cannot modify live AWS RDS
     from app.core.config import settings
-    # If settings point to RDS, verify no direct DDL is run against it
+    from app.db.session import engine as prod_engine
+
+    # 1. Verify that the test database session is bound to an isolated in-memory database
+    test_bind = isolated_db.get_bind()
+    assert test_bind is not None
+    assert str(test_bind.url) == "sqlite:///:memory:", (
+        f"Test database must use isolated in-memory SQLite, got: {test_bind.url}"
+    )
+
+    # 2. Verify that the test session is NOT bound to the production engine
+    if prod_engine is not None:
+        assert test_bind is not prod_engine, (
+            "Test database session must never be bound to the production database engine."
+        )
+
+    # 3. Verify that if live AWS RDS is configured, test execution is completely isolated
     if settings.DATABASE_URL and "rds.amazonaws.com" in settings.DATABASE_URL:
-        pytest.skip("Protected live RDS configuration detected; live destructive DDL strictly prohibited.")
+        # Confirm live RDS endpoint is protected by ensuring test engine URL is completely distinct
+        assert "rds.amazonaws.com" not in str(test_bind.url), (
+            "Test execution must never execute DDL against live AWS RDS endpoint."
+        )
+
+    # 4. Safely verify that operations on the isolated engine work without touching production
+    assert len(Base.metadata.tables) == 34
+    org = models.Organization(name="Safety Check Org", slug="safety-check-org")
+    isolated_db.add(org)
+    isolated_db.flush()
+    assert org.id is not None
+    isolated_db.rollback()
 
 
 # ==============================================================================

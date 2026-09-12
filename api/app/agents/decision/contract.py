@@ -64,37 +64,58 @@ class DecisionBaseModel(BaseModel):
     def model_validate(
         cls,
         obj: Any,
-        *,
+        *args: Any,
         strict: Optional[bool] = None,
         from_attributes: Optional[bool] = None,
         context: Optional[Any] = None,
+        **kwargs: Any,
     ) -> Any:
         try:
             return super().model_validate(
-                obj, strict=strict, from_attributes=from_attributes, context=context
+                obj, *args, strict=strict, from_attributes=from_attributes, context=context, **kwargs
             )
         except ValidationError as exc:
             _unwrap_domain_errors(exc)
 
 
 class DecisionType(str, Enum):
-    """Supported decision taxonomy."""
+    """Supported decision taxonomy across Phase 9 and Phase 15."""
 
+    # Phase 9 taxonomy
     OPERATIONAL_REVIEW = "OPERATIONAL_REVIEW"
     OPERATIONAL_RESPONSE = "OPERATIONAL_RESPONSE"
     DISRUPTION_MITIGATION = "DISRUPTION_MITIGATION"
     MONITORING = "MONITORING"
     ESCALATION = "ESCALATION"
 
+    # Phase 15 operational response taxonomy
+    REROUTE_SHIPMENT = "REROUTE_SHIPMENT"
+    SELECT_ROUTE = "SELECT_ROUTE"
+    REALLOCATE_CARRIER = "REALLOCATE_CARRIER"
+    REALLOCATE_FACILITY = "REALLOCATE_FACILITY"
+    EXPEDITE = "EXPEDITE"
+    HOLD = "HOLD"
+    MONITOR = "MONITOR"
+    NO_ACTION = "NO_ACTION"
+
 
 class DecisionStatus(str, Enum):
-    """Lifecycle and execution status of a DecisionResult."""
+    """Lifecycle and execution status of a DecisionResult across Phase 9 and Phase 15."""
 
+    # Phase 9 statuses
     READY = "READY"
     REQUIRES_APPROVAL = "REQUIRES_APPROVAL"
     INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
     BLOCKED = "BLOCKED"
     INVALID = "INVALID"
+
+    # Phase 15 statuses
+    RECOMMENDED = "RECOMMENDED"
+    CONDITIONAL = "CONDITIONAL"
+    INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
+    NO_FEASIBLE_OPTION = "NO_FEASIBLE_OPTION"
+    NO_ACTION_RECOMMENDED = "NO_ACTION_RECOMMENDED"
+    FAILED = "FAILED"
 
 
 class DecisionCandidateStatus(str, Enum):
@@ -120,10 +141,94 @@ class DecisionBasis(str, Enum):
     RECOMMENDATION = "RECOMMENDATION"
     CONSTRAINT = "CONSTRAINT"
     EVIDENCE = "EVIDENCE"
+    OPTIMIZATION = "OPTIMIZATION"
+    SIMULATION = "SIMULATION"
+    POLICY = "POLICY"
+
+
+
+# ==============================================================================
+# Phase 15 Strongly Typed Domain Synthesis Models
+# ==============================================================================
+
+class AlternativeEvaluation(DecisionBaseModel):
+    """Authoritative candidate alternative evaluated and compared by the Decision Agent."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    alternative_id: str = Field(..., min_length=1, max_length=128)
+    entity_type: str = Field(..., min_length=1, max_length=64)
+    entity_id: str = Field(..., min_length=1, max_length=64)
+    is_selected: bool = Field(default=False)
+    is_feasible: bool = Field(default=True)
+    objective_value: Optional[float] = None
+    cost: Optional[float] = None
+    cost_estimate: Optional[float] = None
+    delay_minutes: Optional[float] = None
+    delay_hours: Optional[float] = None
+    risk_score: Optional[float] = None
+    metrics: Dict[str, float] = Field(default_factory=dict)
+    rejection_reason: Optional[str] = Field(default=None, max_length=500)
+    tradeoffs: Dict[str, Any] = Field(default_factory=dict)
+    evidence_references: List[str] = Field(default_factory=list)
+
+
+class DecisionOptimizationSummary(DecisionBaseModel):
+    """Authoritative mathematical optimization outcome summary evaluated by the Decision Agent."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    optimization_id: str = Field(..., min_length=1, max_length=64)
+    domain: str = Field(..., min_length=1, max_length=64)
+    solver_status: str = Field(..., min_length=1, max_length=32)
+    objective_type: str = Field(..., min_length=1, max_length=64)
+    objective_value: Optional[float] = None
+    selected_alternatives_count: int = Field(default=0, ge=0)
+    solver_wall_time_ms: float = Field(default=0.0, ge=0.0)
+    is_optimal: bool = Field(default=False)
+    time_limit_reached: bool = Field(default=False)
+    metrics: Dict[str, Any] = Field(default_factory=dict)
+
+
+class DecisionRiskSummary(DecisionBaseModel):
+    """Authoritative risk engine summary evaluated by the Decision Agent."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    risk_assessment_id: Optional[str] = Field(default=None, max_length=64)
+    risk_level: str = Field(default="LOW", max_length=32)
+    risk_score: Optional[float] = None
+    risk_drivers: List[str] = Field(default_factory=list)
+    evidence_ids: List[str] = Field(default_factory=list)
+
+
+class DecisionPredictionSummary(DecisionBaseModel):
+    """Authoritative ML delay prediction summary evaluated by the Decision Agent."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    prediction_id: Optional[str] = Field(default=None, max_length=64)
+    status: str = Field(default="NOT_AVAILABLE", max_length=32)
+    predicted_delay_minutes: Optional[float] = None
+    confidence_lower: Optional[float] = None
+    confidence_upper: Optional[float] = None
+    model_name: Optional[str] = Field(default=None, max_length=64)
+
+
+class DecisionScenarioSummary(DecisionBaseModel):
+    """Authoritative simulation scenario summary evaluated by the Decision Agent."""
+
+    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+
+    scenario_id: Optional[str] = Field(default=None, max_length=64)
+    scenario_type: Optional[str] = Field(default=None, max_length=64)
+    expected_delay_minutes: Optional[float] = None
+    affected_nodes: List[str] = Field(default_factory=list)
+    affected_edges: List[str] = Field(default_factory=list)
 
 
 def generate_deterministic_decision_id(
-    organization_id: str,
+    organization_id: Union[str, Any],
     scenario_id: Optional[str] = None,
     risk_assessment_id: Optional[str] = None,
     prediction_id: Optional[str] = None,
@@ -135,27 +240,47 @@ def generate_deterministic_decision_id(
     upstream_scenario_id: Optional[str] = None,
     upstream_risk_id: Optional[str] = None,
     upstream_prediction_id: Optional[str] = None,
+    optimization_id: Optional[str] = None,
 ) -> str:
     """Generate a reproducible UUIDv5 decision identifier from stable canonical inputs.
 
     Never incorporates volatile timestamps, request IDs, random UUIDs, or trace IDs.
+    Supports either a DecisionRequest object or individual parameters.
     """
-    if not organization_id or not organization_id.strip():
+    if not isinstance(organization_id, str):
+        req = organization_id
+        organization_id = getattr(req, "organization_id", None)
+        dec_type = getattr(req, "decision_type", decision_type)
+        decision_type = getattr(dec_type, "value", str(dec_type))
+        target_reference = (
+            getattr(req, "target_reference", None)
+            or getattr(req, "shipment_id", None)
+            or "default_target"
+        )
+        scenario_id = getattr(req, "scenario_id", scenario_id)
+        risk_assessment_id = getattr(req, "risk_assessment_id", risk_assessment_id)
+        prediction_id = getattr(req, "prediction_id", prediction_id)
+        optimization_id = getattr(req, "optimization_id", optimization_id)
+
+    if not organization_id or not str(organization_id).strip():
         raise DecisionTenantIsolationError("organization_id must be non-empty to generate decision_id.")
     scen = (scenario_id or upstream_scenario_id or "").strip()
     risk = (risk_assessment_id or upstream_risk_id or "").strip()
     pred = (prediction_id or upstream_prediction_id or "").strip()
     recs = sorted(recommendation_ids or [])
+    opt = (optimization_id or "").strip()
+    opt_token = f":{opt}" if opt else ""
     token = (
-        f"{organization_id.strip()}:{decision_type.strip()}:{target_reference.strip()}:"
-        f"{rule_version.strip()}:{candidate_fingerprint.strip()}:{scen}:{risk}:{pred}:{','.join(recs)}"
+        f"{str(organization_id).strip()}:{str(decision_type).strip()}:{str(target_reference).strip()}:"
+        f"{str(rule_version).strip()}:{str(candidate_fingerprint).strip()}:{scen}:{risk}:{pred}:{','.join(recs)}"
+        f"{opt_token}"
     )
     raw_uuid = str(uuid.uuid5(RAG_UUID_NAMESPACE, token))
     return f"dec_{raw_uuid}"
 
 
 def compute_decision_fingerprint(
-    organization_id: str,
+    organization_id: Any,
     decision_type: str = "OPERATIONAL_REVIEW",
     target_reference: str = "default_target",
     candidates: Optional[List[Dict[str, Any]]] = None,
@@ -167,18 +292,39 @@ def compute_decision_fingerprint(
     prediction_reference: Optional[Dict[str, Any]] = None,
     evidence_references: Optional[List[str]] = None,
     upstream_references: Optional[Dict[str, Any]] = None,
+    optimization_id: Optional[str] = None,
+    alternatives: Optional[List[Dict[str, Any]]] = None,
+    policy_version: Optional[str] = None,
 ) -> str:
-    """Generate a deterministic SHA-256 fingerprint over canonicalized decision content."""
+    """Generate a deterministic SHA-256 fingerprint over canonicalized decision content.
+
+    Supports either a DecisionRequest object or individual parameters.
+    """
+    if hasattr(organization_id, "organization_id"):
+        req = organization_id
+        organization_id = req.organization_id
+        decision_type = req.decision_type.value if hasattr(req.decision_type, "value") else str(req.decision_type)
+        target_reference = req.target_reference or req.shipment_id or "default_target"
+        candidates = [c.model_dump() if hasattr(c, "model_dump") else c for c in req.candidate_alternatives]
+        constraints = [c.model_dump() if hasattr(c, "model_dump") else c for c in req.constraints]
+        scenario_id = req.scenario_id
+        risk_reference = req.risk_assessment_reference
+        prediction_reference = req.prediction_reference
+        evidence_references = req.evidence_references
+        optimization_id = req.optimization_id
+        alternatives = req.candidate_alternatives
+        policy_version = req.policy_version
+
     sorted_candidates = sorted(candidates or [], key=lambda c: str(c.get("candidate_id", "")))
     sorted_constraints = sorted(constraints or [], key=lambda c: str(c.get("name", "")))
     sorted_rationales = sorted(rationales or [], key=lambda r: str(r.get("rule_id", "")))
     sorted_evidence = sorted(evidence_references or [])
 
-    payload = {
-        "organization_id": organization_id.strip(),
-        "decision_type": decision_type.strip(),
-        "target_reference": target_reference.strip(),
-        "rule_version": rule_version.strip(),
+    payload: Dict[str, Any] = {
+        "organization_id": str(organization_id).strip(),
+        "decision_type": str(decision_type).strip(),
+        "target_reference": str(target_reference).strip(),
+        "rule_version": str(rule_version).strip(),
         "candidates": sorted_candidates,
         "constraints": sorted_constraints,
         "rationales": sorted_rationales,
@@ -188,8 +334,16 @@ def compute_decision_fingerprint(
         "evidence_references": sorted_evidence,
         "upstream_references": upstream_references or {},
     }
+    if optimization_id:
+        payload["optimization_id"] = optimization_id.strip()
+    if alternatives:
+        payload["alternatives"] = sorted(alternatives, key=lambda a: str(a.get("alternative_id", "")))
+    if policy_version:
+        payload["policy_version"] = policy_version.strip()
+
     canonical_json = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.sha256(canonical_json.encode("utf-8")).hexdigest()
+
 
 
 class DecisionConstraint(DecisionBaseModel):
@@ -336,14 +490,38 @@ class DecisionRequest(DecisionBaseModel):
     prediction_reference: Optional[Dict[str, Any]] = None
     prediction_result: Optional[Dict[str, Any]] = None
 
+    # Upstream optimization bindings (Phase 14)
+    optimization_id: Optional[str] = Field(default=None, max_length=64)
+    optimization_reference: Optional[Dict[str, Any]] = None
+    optimization_result: Optional[Dict[str, Any]] = None
+
+    # Upstream simulation bindings (Phase 13)
+    simulation_id: Optional[str] = Field(default=None, max_length=64)
+    simulation_reference: Optional[Dict[str, Any]] = None
+    simulation_result: Optional[Dict[str, Any]] = None
+
+    # Decision objectives & candidate options
+    objective_type: Optional[str] = Field(default=None, max_length=64)
+    candidate_alternatives: List[Dict[str, Any]] = Field(default_factory=list, max_length=50)
+
+    # Subject bindings
+    shipment_id: Optional[str] = Field(default=None, max_length=64)
+    shipment_ids: List[str] = Field(default_factory=list, max_length=50)
+    supplier_id: Optional[str] = Field(default=None, max_length=64)
+    supplier_ids: List[str] = Field(default_factory=list, max_length=50)
+
     # Upstream recommendations
-    recommendation_references: List[str] = Field(default_factory=list)
-    available_recommendations: List[Dict[str, Any]] = Field(default_factory=list)
+    recommendation_references: List[str] = Field(default_factory=list, max_length=50)
+    available_recommendations: List[Dict[str, Any]] = Field(default_factory=list, max_length=50)
 
     # Grounding & constraints
-    evidence_references: List[str] = Field(default_factory=list)
-    constraints: List[DecisionConstraint] = Field(default_factory=list)
+    evidence_references: List[str] = Field(default_factory=list, max_length=100)
+    constraints: List[DecisionConstraint] = Field(default_factory=list, max_length=50)
     planning_horizon_hours: Optional[float] = Field(default=None)
+
+    # Policy & freshness
+    freshness_timestamp: Optional[datetime] = None
+    policy_version: Optional[str] = Field(default="1.0.0", max_length=32)
 
     # Telemetry correlation
     correlation_id: Optional[str] = Field(default=None, max_length=64)
@@ -401,7 +579,31 @@ class DecisionRequest(DecisionBaseModel):
                         f"{label} tenant '{ref_org}' does not match request organization_id '{org}'."
                     )
 
-        # 4. Recommendation references tenant check
+        # 4. Optimization reference / result tenant check
+        for opt_obj, label in [
+            (self.optimization_reference, "optimization_reference"),
+            (self.optimization_result, "optimization_result"),
+        ]:
+            if opt_obj and isinstance(opt_obj, dict):
+                ref_org = opt_obj.get("organization_id")
+                if ref_org and ref_org != org:
+                    raise DecisionTenantIsolationError(
+                        f"{label} tenant '{ref_org}' does not match request organization_id '{org}'."
+                    )
+
+        # 5. Simulation reference / result tenant check
+        for sim_obj, label in [
+            (self.simulation_reference, "simulation_reference"),
+            (self.simulation_result, "simulation_result"),
+        ]:
+            if sim_obj and isinstance(sim_obj, dict):
+                ref_org = sim_obj.get("organization_id")
+                if ref_org and ref_org != org:
+                    raise DecisionTenantIsolationError(
+                        f"{label} tenant '{ref_org}' does not match request organization_id '{org}'."
+                    )
+
+        # 6. Recommendation references tenant check
         for rec_obj in self.available_recommendations:
             if isinstance(rec_obj, dict):
                 ref_org = rec_obj.get("organization_id")
@@ -410,7 +612,7 @@ class DecisionRequest(DecisionBaseModel):
                         f"Recommendation tenant '{ref_org}' does not match request organization_id '{org}'."
                     )
 
-        # 5. Prefixed evidence references tenant check
+        # 7. Prefixed evidence references tenant check
         for ref in self.evidence_references:
             if ":" in ref:
                 prefix = ref.split(":", 1)[0]
@@ -454,6 +656,21 @@ class DecisionResult(DecisionBaseModel):
     created_by_node: str = Field(default="decision_agent", min_length=1, max_length=64)
     evaluated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+    # Phase 15 Synthesis Extensions
+    optimization_id: Optional[str] = Field(default=None, max_length=64)
+    optimization_summary: Optional[DecisionOptimizationSummary] = None
+    simulation_id: Optional[str] = Field(default=None, max_length=64)
+    scenario_summary: Optional[DecisionScenarioSummary] = None
+    risk_summary: Optional[DecisionRiskSummary] = None
+    prediction_summary: Optional[DecisionPredictionSummary] = None
+    alternatives_considered: List[AlternativeEvaluation] = Field(default_factory=list)
+    selected_alternative_id: Optional[str] = Field(default=None, max_length=128)
+    tradeoffs: Dict[str, Any] = Field(default_factory=dict)
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+    decision_policy_version: str = Field(default="1.0.0", min_length=1, max_length=32)
+    freshness_timestamp: Optional[datetime] = None
+    expiry_timestamp: Optional[datetime] = None
+
     @field_validator("organization_id", mode="before")
     @classmethod
     def validate_org_id(cls, v: Any) -> str:
@@ -469,7 +686,7 @@ class DecisionResult(DecisionBaseModel):
 
     @model_validator(mode="after")
     def validate_status_and_candidate_consistency(self) -> DecisionResult:
-        """Enforce that READY or REQUIRES_APPROVAL status requires valid candidates and fingerprint."""
+        """Enforce that actionable statuses require valid candidates and fingerprint."""
         if self.status in (DecisionStatus.READY.value, DecisionStatus.REQUIRES_APPROVAL.value):
             if not self.candidates:
                 raise InvalidDecisionRequestError(
@@ -479,4 +696,23 @@ class DecisionResult(DecisionBaseModel):
                 raise InvalidDecisionRequestError(
                     f"DecisionResult with status '{self.status}' must contain a valid fingerprint."
                 )
+        if self.status in (DecisionStatus.RECOMMENDED.value, DecisionStatus.CONDITIONAL.value):
+            if not self.candidates and not self.selected_alternative_id:
+                raise InvalidDecisionRequestError(
+                    f"DecisionResult with status '{self.status}' must contain at least one candidate or selected alternative."
+                )
+            if not self.fingerprint:
+                raise InvalidDecisionRequestError(
+                    f"DecisionResult with status '{self.status}' must contain a valid fingerprint."
+                )
         return self
+
+    @property
+    def primary_rationale(self) -> str:
+        """Convenience property extracting the primary rationale text or explanation code."""
+        if self.rationales:
+            return self.rationales[0].explanation_code or ""
+        if self.candidates:
+            return self.candidates[0].description or ""
+        return ""
+

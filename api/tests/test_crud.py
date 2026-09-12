@@ -58,6 +58,7 @@ def test_supplier_crud_lifecycle(test_db_session: Session):
     assert retrieved.code == "SUP-APEX-001"
     assert retrieved.tier == "CRITICAL"
     assert retrieved.reliability_score == 92.5
+    assert retrieved.metadata_json is not None
     assert retrieved.metadata_json["audit_score"] == 96
 
     # 3. Retrieve by business code
@@ -79,6 +80,7 @@ def test_supplier_crud_lifecycle(test_db_session: Session):
 
     # Verify retrieval reflects update
     re_retrieved = repo.get(supplier_id)
+    assert re_retrieved is not None
     assert re_retrieved.reliability_score == 95.0
 
     # 5. Delete & Verify
@@ -133,6 +135,7 @@ def test_shipment_crud_lifecycle(test_db_session: Session):
 
     # 4. Re-retrieve to verify persistent commit
     persisted = repo.get(shipment_id)
+    assert persisted is not None
     assert persisted.status == "DELAYED"
     assert persisted.delay_minutes == 180.0
 
@@ -209,6 +212,7 @@ def test_repository_rollback_on_failure(test_db_session: Session):
         code="FIXED-01",
     )
     repo.create(supplier)
+    test_db_session.expunge(supplier)
 
     # Attempt to insert duplicate primary key to trigger IntegrityError
     duplicate_supplier = Supplier(

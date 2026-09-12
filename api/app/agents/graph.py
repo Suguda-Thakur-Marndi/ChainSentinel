@@ -28,10 +28,12 @@ from app.agents.errors import (
     AgentValidationError,
 )
 from app.agents.nodes import (
+    ACTION_NODE_CONTRACT,
     APPROVAL_BOUNDARY_NODE_CONTRACT,
     HUMAN_APPROVAL_NODE_CONTRACT,
     INITIALIZATION_NODE_CONTRACT,
     TERMINATION_NODE_CONTRACT,
+    action_node,
     approval_boundary_node,
     human_approval_node,
     initialization_node,

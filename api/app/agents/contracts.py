@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Union
 from typing_extensions import TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -399,6 +399,10 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "approval_result": {AgentStage.APPROVAL},
     "approval_status": {AgentStage.APPROVAL},
     "side_effect_allowed": {AgentStage.APPROVAL},
+    "action_id": {AgentStage.ACTION},
+    "action_reference": {AgentStage.ACTION},
+    "action_result": {AgentStage.ACTION},
+    "action_status": {AgentStage.ACTION},
     "completed_at": {AgentStage.TERMINATION},
     "termination_reason": {AgentStage.TERMINATION},
 }
@@ -495,7 +499,13 @@ class AgentGraphState(BaseModel):
     side_effect_allowed: bool = False
     approval_status: Optional[str] = None
 
-    # K. Termination & Telemetry
+    # K. Operational Action (Phase 17)
+    action_id: Optional[str] = None
+    action_reference: Optional[str] = None
+    action_result: Optional[Dict[str, Any]] = None
+    action_status: Optional[str] = None
+
+    # L. Termination & Telemetry
     termination_reason: Optional[str] = None
     started_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     completed_at: Optional[datetime] = None
@@ -595,6 +605,20 @@ class AgentGraphState(BaseModel):
                     f"Cross-tenant approval result belongs to '{appr_org}', state scoped to '{self.organization_id}'."
                 )
 
+        # Enforce tenant isolation on action result / reference
+        if self.action_result and isinstance(self.action_result, dict):
+            act_org = self.action_result.get("organization_id")
+            if act_org and act_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant action result belongs to '{act_org}', state scoped to '{self.organization_id}'."
+                )
+        if self.action_reference and ":" in self.action_reference:
+            prefix = self.action_reference.split(":", 1)[0]
+            if prefix.startswith("org_") and prefix != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant action reference '{self.action_reference}' does not match state tenant '{self.organization_id}'."
+                )
+
         # 5. Enforce approval boundary on termination if human approval is required
         if self.requires_human_approval and self.status == AgentLifecycleStatus.COMPLETED:
             raise AgentApprovalBoundaryViolationError(
@@ -647,7 +671,7 @@ AgentState = AgentGraphState
 
 
 def validate_state_update(
-    current_state: AgentGraphState,
+    current_state: Union[AgentGraphState, AgentGraphStateDict, Any],
     updates: Optional[Dict[str, Any]] = None,
     node_id: Optional[str] = None,
     stage: Optional[AgentStage] = None,

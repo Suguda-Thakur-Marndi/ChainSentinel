@@ -161,7 +161,12 @@ def human_approval_node(
         )
 
         # 5. Check for explicit human decision payload in state
-        raw_decision_input = state.get("human_approval_decision") or state.get("metadata", {}).get("human_approval_decision")
+        raw_decision_input = (
+            state.get("human_approval_decision")
+            or state.get("approval_input")
+            or state.get("metadata", {}).get("human_approval_decision")
+            or state.get("metadata", {}).get("approval_input")
+        )
         decision_input: Optional[ApprovalDecisionInput] = None
 
         if raw_decision_input:
@@ -224,7 +229,6 @@ def human_approval_node(
             update_payload["status"] = AgentLifecycleStatus.WAITING_FOR_APPROVAL.value
             update_payload["selected_route"] = "termination"
             update_payload["route_reason"] = "Awaiting explicit human sign-off."
-            update_payload["termination_reason"] = "Paused at approval boundary: awaiting human review."
         elif result.status == ApprovalStatus.APPROVED.value:
             warnings.append(f"Human approval granted by actor '{result.actor_id}'. Ready for action stage.")
             update_payload["selected_route"] = "termination"
@@ -233,7 +237,6 @@ def human_approval_node(
             warnings.append(f"Candidate rejected by human approver '{result.actor_id}'. Halting execution.")
             update_payload["selected_route"] = "termination"
             update_payload["route_reason"] = "Candidate explicitly rejected by human authority."
-            update_payload["termination_reason"] = "Candidate rejected by human approver."
         else:
             update_payload["selected_route"] = "termination"
             update_payload["route_reason"] = f"Approval lifecycle state: {result.status}"

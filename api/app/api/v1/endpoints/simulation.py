@@ -73,7 +73,7 @@ def create_scenario(
     except SimulationValidationError as e:
         uow.rollback()
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(e),
         )
 
@@ -159,7 +159,7 @@ def run_simulation(
     except SimulationValidationError as e:
         uow.rollback()
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(e),
         )
     except SimulationResourceLimitError as e:
