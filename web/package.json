@@ -7,13 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:auth": "npx tsx --test tests/auth-integration.test.ts"
+    "test": "npx tsx --test tests/*.test.ts",
+    "test:auth": "npx tsx --test tests/auth-integration.test.ts",
+    "test:phase19": "npx tsx --test tests/phase19-control-tower.test.ts"
   },
   "dependencies": {
     "lucide-react": "^1.41.0",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

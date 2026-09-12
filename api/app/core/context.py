@@ -19,3 +19,8 @@ class AuthenticatedContext:
         self.organization: Optional[Organization] = organization
         self.organization_id: Optional[str] = user.org_id
         self.role: str = user.role
+
+    @property
+    def org_id(self) -> Optional[str]:
+        return self.organization_id
+

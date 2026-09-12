@@ -1,0 +1,562 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#101419","inverse-on-surface":"#2d3136","tertiary-fixed":"#e9ddff","surface-variant":"#31353b","background":"#101419","surface-container":"#1c2025","on-tertiary":"#3c0091","surface-container-low":"#181c21","error":"#ffb4ab","surface-bright":"#36393f","surface-dim":"#101419","secondary":"#4edea3","on-error-container":"#ffdad6","on-error":"#690005","primary-fixed":"#d8e2ff","on-secondary-container":"#00311f","inverse-surface":"#e0e2ea","outline":"#8c909f","on-surface":"#e0e2ea","on-background":"#e0e2ea","on-secondary":"#003824","on-surface-variant":"#c2c6d6","secondary-fixed":"#6ffbbe","error-container":"#93000a","surface-container-lowest":"#0a0e13","on-secondary-fixed-variant":"#005236","tertiary-container":"#a078ff","tertiary-fixed-dim":"#d0bcff","tertiary":"#d0bcff","on-tertiary-fixed-variant":"#5516be","on-secondary-fixed":"#002113","on-tertiary-fixed":"#23005c","inverse-primary":"#005ac2","primary":"#adc6ff","on-tertiary-container":"#340080","on-primary-fixed-variant":"#004395","surface-tint":"#adc6ff","secondary-fixed-dim":"#4edea3","on-primary":"#002e6a","on-primary-fixed":"#001a42","primary-fixed-dim":"#adc6ff","surface-container-highest":"#31353b","primary-container":"#4d8eff","surface-container-high":"#262a30","on-primary-container":"#00285d","outline-variant":"#424754","secondary-container":"#00a572"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-xl":"1.5rem","gutter":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"display-lg-mobile":["Inter"],"headline-md":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30 bg-surface-container-low/40"><img alt="RiskWise 2.0 Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">RiskWise 2.0</span><span class="font-label-xs text-label-xs px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/30 uppercase">v2.4.9</span></div><span class="font-label-xs text-label-xs text-outline truncate">AUTONOMOUS CORE</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/20 bg-surface-container/30"><div class="flex items-center justify-between text-outline"><span class="font-label-xs text-label-xs uppercase tracking-wider">Active Node Scope</span><span class="material-symbols-outlined text-[14px] text-secondary">hub</span></div><div class="font-label-sm text-label-sm text-on-surface font-medium truncate mt-0.5">NORTH-AMER / APAC TIER-1</div></div><nav class="flex flex-col gap-space-sm p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary"><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">1. Overview</div><a aria-current="page" class="flex items-center gap-space-sm px-2.5 py-1.5 rounded transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary" data-path="control-tower" href="#"><span class="material-symbols-outlined text-[18px]">space_dashboard</span><span>Control Tower</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="global-live-map" href="#"><span class="material-symbols-outlined text-[18px]">public</span><span>Global Live Map</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">2. Intelligence &amp; Risk</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="risk-register" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span>Risk Register</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="incident-command" href="#"><span class="material-symbols-outlined text-[18px]">crisis_alert</span><span>Incident Command</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="ai-recommendations" href="#"><span class="material-symbols-outlined text-[18px]">psychology</span><span>AI Recommendations</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">3. Digital Twin &amp; Sim</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="topology-canvas" href="#"><span class="material-symbols-outlined text-[18px]">schema</span><span>Topology Canvas</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="disruption-simulation" href="#"><span class="material-symbols-outlined text-[18px]">model_training</span><span>Disruption Simulation</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="optimization-runs" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Optimization Runs</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">4. Operations &amp; Shipments</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="shipments-tracker" href="#"><span class="material-symbols-outlined text-[18px]">local_shipping</span><span>Shipments Tracker</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="action-dispatch" href="#"><span class="material-symbols-outlined text-[18px]">send_and_archive</span><span>Action Dispatch</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="verification-engine" href="#"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Engine</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">5. Governance &amp; Data</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="human-approvals" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span><span>Human Approvals</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="audit-log-explorer" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>Audit Log Explorer</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="network-data" href="#"><span class="material-symbols-outlined text-[18px]">database</span><span>Network Data</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings-rbac" href="#"><span class="material-symbols-outlined text-[18px]">shield_person</span><span>Settings &amp; RBAC</span></a></div></nav></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-lowest"><div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/30"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">LATENCY</span></div><span class="font-label-xs text-label-xs text-secondary font-mono font-medium">12ms (Z-FEED)</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-md gap-space-md"><div class="flex items-center gap-space-md min-w-0 max-w-sm"><div class="flex items-center gap-space-xs px-2.5 py-1.5 rounded bg-surface-container-low border border-outline-variant/30 min-w-0 cursor-pointer hover:border-outline transition-colors"><span class="material-symbols-outlined text-[16px] text-primary shrink-0">corporate_fare</span><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs text-on-surface truncate font-semibold">Global Logistics Enterprise</span><span class="font-label-xs text-[9px] leading-tight text-outline truncate">NA &amp; APAC Tier-1</span></div><span class="material-symbols-outlined text-[14px] text-outline shrink-0 ml-1">unfold_more</span></div></div><div class="flex-1 max-w-xl mx-2"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-[18px] text-outline pointer-events-none">search</span><input class="w-full h-9 pl-9 pr-14 rounded bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><div class="absolute right-2 flex items-center"><kbd class="px-1.5 py-0.5 text-label-xs font-label-xs rounded bg-surface-container-high border border-outline-variant/40 text-outline">⌘K</kbd></div></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden xl:flex items-center gap-space-xs px-2.5 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs tracking-wider">TELEMETRY: OPTIMAL</span><span class="text-outline-variant">|</span><span class="font-label-xs text-label-xs text-on-surface-variant font-mono">42,819 NODES</span></div><button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">play_circle</span><span class="hidden sm:inline font-medium">Simulate Disruption</span></button><div class="relative"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error rounded-full font-label-xs text-[9px] flex items-center justify-center font-bold">4</span></button></div><div class="h-5 w-[1px] bg-outline-variant/30"></div><div class="flex items-center gap-space-xs pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQuBzY8_uH28XOIJkp7YNiKdBHoCBrbNAsX1Pxn6b7nl5mKPh4mux72wHWsHoECrYU5ieJ7_p7ZC2f0p6_-K54dwRCG0A61JOFqnanBDPUUj_CpSE0eIKQuUKI4SqN6_TX2zDV9Rb7uVTxLvOWH7XzrvAq452bck_URYflU_BB9SEC5CUi_6kgkYNcTHRZcDIHul6BPUaKZh02jI8iAfW5vVb_gyPtz8fdtF1xhJmcM3aIGRDudy_A"><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm text-on-surface font-semibold leading-none">Marcus Vance</span><div class="flex items-center gap-1 mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-[10px] text-outline leading-none">Risk Director (L4)</span></div></div></div></div></header><main class="w-full pt-14 px-space-md pb-space-lg bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="relative w-full h-[calc(100vh-4.5rem)] overflow-hidden rounded-xl bg-surface-container-lowest select-none">
+<!-- INTERACTIVE GIS TACTICAL MAP CANVAS -->
+<div class="absolute inset-0 w-full h-full cursor-crosshair overflow-hidden" id="gis-canvas">
+<!-- Deep Oceanic Graticule & Bathymetric Vector Canvas -->
+<svg class="w-full h-full pointer-events-none" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Grid Graticule Pattern -->
+<pattern height="90" id="latlong-grid" patternUnits="userSpaceOnUse" width="120">
+<path class="text-outline-variant/15" d="M 120 0 L 0 0 0 90" fill="none" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1"></path>
+</pattern>
+<pattern height="24" id="dot-matrix" patternUnits="userSpaceOnUse" width="24">
+<circle class="text-outline-variant/20" cx="1.5" cy="1.5" fill="currentColor" r="0.75"></circle>
+</pattern>
+<!-- Radial Pulse for Ports -->
+<radialGradient cx="50%" cy="50%" id="radar-pulse-crit" r="50%">
+<stop offset="0%" stop-color="#ffb4ab" stop-opacity="0.6"></stop>
+<stop offset="70%" stop-color="#93000a" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#ffb4ab" stop-opacity="0"></stop>
+</radialGradient>
+<radialGradient cx="50%" cy="50%" id="storm-swirl" r="50%">
+<stop offset="0%" stop-color="#d0bcff" stop-opacity="0.45"></stop>
+<stop offset="40%" stop-color="#a078ff" stop-opacity="0.25"></stop>
+<stop offset="85%" stop-color="#ffb4ab" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#d0bcff" stop-opacity="0"></stop>
+</radialGradient>
+</defs>
+<!-- Underlay Ocean Grids -->
+<rect fill="none" height="100%" width="100%"></rect>
+<rect fill="url(#dot-matrix)" height="100%" width="100%"></rect>
+<rect fill="url(#latlong-grid)" height="100%" width="100%"></rect>
+<!-- Stylized Dark Vector Continents / Shorelines (Tactical Monochromatic) -->
+<g class="fill-surface-container/60 stroke-outline-variant/40" stroke-linejoin="round" stroke-width="1.2">
+<!-- Europe & Mediterranean -->
+<path d="M 640 240 L 680 230 L 730 250 L 770 290 L 790 320 L 740 340 L 710 330 L 690 360 L 670 340 L 630 330 L 610 300 L 630 270 Z"></path>
+<!-- British Isles & North Sea -->
+<path d="M 620 220 L 645 200 L 655 235 L 635 250 Z"></path>
+<!-- Africa Shoreline -->
+<path d="M 680 370 L 730 365 L 770 420 L 820 480 L 860 520 L 840 580 L 800 680 L 770 760 L 720 740 L 670 610 L 640 480 L 650 410 Z"></path>
+<!-- Middle East & Arabian Peninsula -->
+<path d="M 800 370 L 850 360 L 890 390 L 920 430 L 880 470 L 840 460 L 825 430 Z"></path>
+<!-- Indian Subcontinent -->
+<path d="M 970 380 L 1050 370 L 1090 440 L 1050 540 L 1010 470 L 980 420 Z"></path>
+<!-- Southeast Asia Archipelago -->
+<path d="M 1120 420 L 1180 410 L 1230 460 L 1220 530 L 1180 570 L 1140 500 Z"></path>
+<!-- East Asia / China / Japan -->
+<path d="M 1150 310 L 1240 290 L 1310 270 L 1360 290 L 1380 340 L 1320 380 L 1260 410 L 1180 370 Z"></path>
+<!-- Australia -->
+<path d="M 1280 620 L 1390 610 L 1440 680 L 1410 770 L 1310 760 L 1260 690 Z"></path>
+<!-- North America -->
+<path d="M 160 210 L 290 190 L 380 210 L 440 270 L 430 340 L 370 370 L 320 410 L 260 380 L 200 330 L 140 260 Z"></path>
+</g>
+<!-- Global Maritime Transit Corridors (Hairline Glowing Arcs) -->
+<g fill="none" stroke-linecap="round">
+<!-- Trans-Pacific Corridor -->
+<path class="stroke-primary/20" d="M 1320 340 Q 1550 200 1800 280" stroke-dasharray="6 4" stroke-width="2"></path>
+<!-- Asia to Europe via Suez/Red Sea -->
+<path class="stroke-secondary/30" d="M 1260 410 C 1120 480, 1010 470, 860 490" stroke-width="2"></path>
+<path class="stroke-secondary/30" d="M 860 490 L 820 450 L 760 360 L 660 250" stroke-dasharray="4 3" stroke-width="1.8"></path>
+<!-- Bab-el-Mandeb to Cape of Good Hope (Reroute Vector - Dashed Amber) -->
+<path class="stroke-tertiary/70" d="M 840 480 C 880 570, 830 720, 770 780 C 720 830, 620 650, 630 290" stroke-dasharray="6 6" stroke-width="2.5"></path>
+<!-- Transatlantic North Sea to USEC -->
+<path class="stroke-primary/30" d="M 640 240 C 500 230, 420 280, 370 330" stroke-width="2"></path>
+</g>
+<!-- WEATHER RADAR OVERLAY: Typhoon Koinu & High Sea System -->
+<g class="pointer-events-none" id="typhoon-koinu-overlay">
+<!-- Dynamic Isobars & Danger Cone -->
+<circle class="animate-pulse" cx="1290" cy="360" fill="url(#storm-swirl)" r="140"></circle>
+<circle class="stroke-tertiary-container/50" cx="1290" cy="360" fill="none" r="110" stroke-dasharray="8 4" stroke-width="1.5"></circle>
+<circle class="stroke-tertiary/70" cx="1290" cy="360" fill="none" r="75" stroke-dasharray="5 3" stroke-width="2"></circle>
+<circle class="stroke-error/80" cx="1290" cy="360" fill="none" r="35" stroke-width="2"></circle>
+<!-- Storm Track Forecast Arrow -->
+<path class="stroke-error" d="M 1320 410 Q 1280 360 1240 330" fill="none" stroke-dasharray="4 2" stroke-width="2.5"></path>
+<!-- Wind barb symbol group -->
+<g class="text-tertiary" transform="translate(1290, 360)">
+<line stroke="currentColor" stroke-width="2" x1="-12" x2="12" y1="0" y2="0"></line>
+<line stroke="currentColor" stroke-width="2" x1="0" x2="0" y1="-12" y2="12"></line>
+</g>
+</g>
+<!-- Red Sea Conflict / Danger Zone Zone Boundary -->
+<g class="pointer-events-none">
+<polygon fill="#93000a" fill-opacity="0.15" points="810,440 855,475 830,510 795,470" stroke="#ffb4ab" stroke-dasharray="4 2" stroke-width="1.5"></polygon>
+<circle class="animate-ping" cx="835" cy="485" fill="url(#radar-pulse-crit)" r="28"></circle>
+</g>
+<!-- Global Port Hub Rings -->
+<g class="text-on-surface" id="port-nodes">
+<!-- Ningbo-Zhoushan -->
+<circle class="fill-error/90 stroke-surface" cx="1275" cy="345" r="7" stroke-width="2"></circle>
+<!-- Rotterdam (Maasvlakte) -->
+<circle class="fill-secondary-container stroke-surface" cx="650" cy="235" r="6" stroke-width="2"></circle>
+<!-- Singapore (PSA) -->
+<circle class="fill-secondary stroke-surface" cx="1145" cy="495" r="6" stroke-width="2"></circle>
+<!-- Los Angeles (LAX/LGB) -->
+<circle class="fill-secondary stroke-surface" cx="280" cy="320" r="6" stroke-width="2"></circle>
+<!-- Jebel Ali (AEJEA) -->
+<circle class="fill-primary stroke-surface" cx="890" cy="415" r="6" stroke-width="2"></circle>
+</g>
+</svg>
+<!-- HTML Interactive Overlays on Map Coordinates -->
+<!-- PORT CALLOUT METRIC BADGES -->
+<!-- Ningbo Alert -->
+<div class="absolute left-[64%] top-[31%] -translate-x-1/2 flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high/90 shadow-md backdrop-blur-sm pointer-events-auto cursor-pointer hover:bg-surface-variant transition-colors">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="font-label-xs text-label-xs font-semibold text-error">Ningbo-Zhoushan</span>
+<span class="font-label-xs text-[10px] text-on-surface-variant">72h Berth Delay [SEV-1]</span>
+</div>
+<!-- Rotterdam -->
+<div class="absolute left-[33%] top-[20%] -translate-x-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container/90 shadow-sm backdrop-blur-sm pointer-events-auto cursor-pointer">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="font-label-xs text-[10px] text-on-surface font-semibold">Rotterdam</span>
+<span class="font-label-xs text-[9px] text-outline">Dwell: 14.8h [STRIKE]</span>
+</div>
+<!-- Singapore PSA -->
+<div class="absolute left-[58.5%] top-[47%] -translate-x-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low/90 shadow-sm backdrop-blur-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-xs text-[10px] text-on-surface">Singapore (PSA): 8.2h</span>
+</div>
+<!-- Jebel Ali -->
+<div class="absolute left-[45.5%] top-[39.5%] -translate-x-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-low/90 shadow-sm backdrop-blur-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-xs text-[10px] text-on-surface">Jebel Ali (AEJEA): 4.2h</span>
+</div>
+<!-- MARITIME VESSELS & ADS-B FLIGHT ICONS (Tactical Heading Indicators) -->
+<!-- Target 1: COSCO SHIPPING SOLAR (Currently Inspected - RED CRITICAL) -->
+<div class="absolute left-[43.5%] top-[45.5%] -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-30" onclick="selectVessel('COSCO SHIPPING SOLAR')">
+<!-- Target Reticle -->
+<div class="absolute -inset-3.5 rounded-full bg-error/15 animate-ping pointer-events-none"></div>
+<div class="relative flex items-center gap-2 bg-surface-container-highest/95 px-2.5 py-1 rounded-md shadow-lg">
+<div class="w-3.5 h-3.5 flex items-center justify-center text-error rotate-[284deg]">
+<span class="material-symbols-outlined text-[16px]">navigation</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-[11px] font-bold text-error tracking-tight">COSCO SHIPPING SOLAR</span>
+<span class="font-label-xs text-[9px] text-on-surface-variant font-mono">18.2 kts • 284° WNW</span>
+</div>
+<span class="px-1 py-0.2 rounded bg-error-container text-on-error-container font-label-xs text-[9px] font-bold">SEV-1</span>
+</div>
+</div>
+<!-- Target 2: MSC LORETTO (Critical Bab-el-Mandeb Divert) -->
+<div class="absolute left-[41.5%] top-[48.5%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-high/90 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-error rotate-[195deg]">navigation</span>
+<span class="font-label-xs text-[10px] text-error font-semibold">MSC LORETTO</span>
+<span class="font-label-xs text-[9px] text-outline">Diverting Cape</span>
+</div>
+</div>
+<!-- Target 3: CMA CGM PALAIS (High Risk - Storm Peripheral) -->
+<div class="absolute left-[66%] top-[35.5%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-high/90 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-error rotate-[45deg]">navigation</span>
+<span class="font-label-xs text-[10px] text-error font-medium">CMA CGM PALAIS</span>
+<span class="font-label-xs text-[9px] text-tertiary">55kt Wind</span>
+</div>
+</div>
+<!-- Target 4: MAERSK MC-KINNEY MOLLER (Nominal - Green) -->
+<div class="absolute left-[38%] top-[24%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-low/80 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-secondary rotate-[260deg]">navigation</span>
+<span class="font-label-xs text-[10px] text-on-surface">MAERSK MC-KINNEY</span>
+<span class="font-label-xs text-[9px] text-secondary">NOMINAL</span>
+</div>
+</div>
+<!-- Target 5: ONE APUS (Amber - Medium) -->
+<div class="absolute left-[78%] top-[28%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-low/80 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-tertiary rotate-[85deg]">navigation</span>
+<span class="font-label-xs text-[10px] text-on-surface">ONE APUS</span>
+<span class="font-label-xs text-[9px] text-tertiary">Wave 4.2m</span>
+</div>
+</div>
+<!-- Target 6: AVIATION ADS-B - Emirates SkyCargo EK-9921 -->
+<div class="absolute left-[47%] top-[34%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-high/90 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary rotate-[310deg]">flight</span>
+<span class="font-label-xs text-[10px] text-primary font-semibold">EK-9921 (B77F)</span>
+<span class="font-label-xs text-[9px] text-on-surface-variant font-mono">FL340 • 490kts</span>
+</div>
+</div>
+<!-- Target 7: AVIATION ADS-B - Lufthansa Cargo LH-8220 -->
+<div class="absolute left-[34%] top-[25%] -translate-x-1/2 -translate-y-1/2 cursor-pointer group">
+<div class="flex items-center gap-1.5 bg-surface-container-high/90 px-2 py-0.5 rounded shadow-sm hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary rotate-[115deg]">flight</span>
+<span class="font-label-xs text-[10px] text-primary">LH-8220 (B77F)</span>
+<span class="font-label-xs text-[9px] text-outline font-mono">FL380</span>
+</div>
+</div>
+<!-- Typhoon Label Overlay Card -->
+<div class="absolute left-[68%] top-[26%] flex flex-col gap-1 p-2.5 rounded-lg bg-surface-container-lowest/90 backdrop-blur-md pointer-events-none">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-ping"></span>
+<span class="font-headline-sm text-headline-sm text-tertiary font-bold tracking-tight">TYPHOON KOINU</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary/20 text-tertiary font-label-xs text-[9px] font-mono">CAT-3</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant font-mono">
+          CENTER: 21°48'N 124°10'E • SUSTAINED 95 KTS<br>
+          SWELL RADIUS: 340 NM • IMPACT: SHANGHAI / NINGBO
+        </div>
+</div>
+</div>
+<!-- FLOATING CONTROLS: ZOOM & MAP MODES (Top-Right / In-canvas) -->
+<div class="absolute right-[430px] top-4 z-20 flex flex-col gap-1">
+<div class="flex flex-col bg-surface-container-high/90 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors" title="Zoom In">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<div class="h-[1px] bg-outline-variant/30"></div>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors" title="Zoom Out">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+</div>
+<button class="w-8 h-8 bg-surface-container-high/90 backdrop-blur-md rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-variant shadow-md" title="Reset Tactical Bearing">
+<span class="material-symbols-outlined text-[18px]">explore</span>
+</button>
+<button class="w-8 h-8 bg-surface-container-high/90 backdrop-blur-md rounded-lg flex items-center justify-center text-on-surface hover:bg-surface-variant shadow-md" title="Center on Active Incident">
+<span class="material-symbols-outlined text-[18px] text-error">crisis_alert</span>
+</button>
+</div>
+<!-- LEFT FLOATING FILTER PANEL -->
+<div class="absolute left-4 top-4 bottom-4 w-80 bg-surface-container-lowest/90 backdrop-blur-md rounded-xl shadow-2xl z-20 flex flex-col justify-between p-3.5 overflow-hidden">
+<div class="flex flex-col gap-3 overflow-y-auto pr-1">
+<!-- Panel Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">layers</span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface leading-tight">Telemetry Layers</span>
+<span class="font-label-xs text-[10px] text-outline">Real-time Sensor Feeds</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary font-label-xs text-label-xs font-mono font-semibold">5/6 ACTIVE</span>
+</div>
+<!-- Presets Dropdown Selector -->
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">tune</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Preset: Maritime Focus</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+</div>
+<!-- Layer Toggles -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-xs text-[10px] text-outline uppercase tracking-wider font-semibold px-1">Active Streams</span>
+<!-- Layer 1: Maritime AIS -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0">directions_boat</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Maritime AIS</span>
+<span class="font-label-xs text-[10px] text-outline truncate font-mono">3,280 vessels • Orbcomm Z-Stream</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-secondary-container p-0.5 flex items-center justify-end shrink-0">
+<div class="w-3 h-3 rounded-full bg-on-secondary shadow-sm"></div>
+</div>
+</div>
+<!-- Layer 2: Aviation ADS-B -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0">flight</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Aviation ADS-B</span>
+<span class="font-label-xs text-[10px] text-outline truncate font-mono">412 freighters • FlightAware ICAO</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-primary-container p-0.5 flex items-center justify-end shrink-0">
+<div class="w-3 h-3 rounded-full bg-on-primary-container shadow-sm"></div>
+</div>
+</div>
+<!-- Layer 3: Road & Intermodal -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim shrink-0">local_shipping</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Road &amp; Intermodal</span>
+<span class="font-label-xs text-[10px] text-outline truncate font-mono">890 telematics units</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-secondary-container p-0.5 flex items-center justify-end shrink-0">
+<div class="w-3 h-3 rounded-full bg-on-secondary shadow-sm"></div>
+</div>
+</div>
+<!-- Layer 4: Freight Rail Corridors (OFF) -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container cursor-pointer transition-colors opacity-60">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-outline shrink-0">train</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Freight Rail Corridors</span>
+<span class="font-label-xs text-[10px] text-outline truncate font-mono">240 Class-1 Routes</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-surface-container-highest p-0.5 flex items-center justify-start shrink-0">
+<div class="w-3 h-3 rounded-full bg-outline shadow-sm"></div>
+</div>
+</div>
+<!-- Layer 5: Weather & Storm Radar -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-tertiary shrink-0 animate-pulse">cyclone</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Weather &amp; Severe Storms</span>
+<span class="font-label-xs text-[10px] text-tertiary truncate font-mono">Typhoon Koinu + Gale Warnings</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-tertiary-container p-0.5 flex items-center justify-end shrink-0">
+<div class="w-3 h-3 rounded-full bg-on-tertiary-container shadow-sm"></div>
+</div>
+</div>
+<!-- Layer 6: Risk & Choke Heatmap -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-[18px] text-error shrink-0">crisis_alert</span>
+<div class="flex flex-col min-w-0">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">Risk Exposure Zones</span>
+<span class="font-label-xs text-[10px] text-error truncate font-mono">Bab-el-Mandeb &amp; Malacca</span>
+</div>
+</div>
+<div class="w-8 h-4 rounded-full bg-error-container p-0.5 flex items-center justify-end shrink-0">
+<div class="w-3 h-3 rounded-full bg-error shadow-sm"></div>
+</div>
+</div>
+</div>
+<!-- Secondary Severity Filter Toggles -->
+<div class="flex flex-col gap-1.5 pt-1">
+<span class="font-label-xs text-[10px] text-outline uppercase tracking-wider font-semibold px-1">Filter by Severity</span>
+<div class="grid grid-cols-4 gap-1">
+<button class="py-1 px-1.5 rounded bg-surface-container text-center font-label-xs text-[10px] text-on-surface hover:bg-surface-container-high transition-colors font-semibold">ALL</button>
+<button class="py-1 px-1.5 rounded bg-error/15 text-center font-label-xs text-[10px] text-error hover:bg-error/25 transition-colors font-bold">CRIT (7)</button>
+<button class="py-1 px-1.5 rounded bg-surface-container text-center font-label-xs text-[10px] text-tertiary hover:bg-surface-container-high transition-colors">HIGH (31)</button>
+<button class="py-1 px-1.5 rounded bg-surface-container text-center font-label-xs text-[10px] text-outline hover:bg-surface-container-high transition-colors">MED (80)</button>
+</div>
+</div>
+<!-- Carrier Filter Pills -->
+<div class="flex flex-col gap-1.5 pt-1">
+<span class="font-label-xs text-[10px] text-outline uppercase tracking-wider font-semibold px-1">Carrier Focus</span>
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary font-label-xs text-[10px] font-semibold cursor-pointer">Maersk (982)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-xs text-[10px] hover:text-on-surface cursor-pointer">MSC (1,104)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-xs text-[10px] hover:text-on-surface cursor-pointer">COSCO (640)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-xs text-[10px] hover:text-on-surface cursor-pointer">CMA CGM</span>
+</div>
+</div>
+</div>
+<!-- Playback Time-Scrubber Control -->
+<div class="pt-2 border-t border-outline-variant/20 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-xs text-[10px] text-secondary font-semibold uppercase">Live Ingest (10Hz)</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline font-mono">T-00:00:00</span>
+</div>
+<!-- Scrubber Range Track -->
+<div class="relative w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-[78%] bg-primary rounded-full"></div>
+<div class="absolute left-[78%] top-0 bottom-0 w-2 h-2 -mt-0.25 bg-surface-tint rounded-full shadow"></div>
+</div>
+<div class="flex items-center justify-between font-label-xs text-[9px] text-outline font-mono">
+<span class="hover:text-on-surface cursor-pointer">-24h</span>
+<span class="hover:text-on-surface cursor-pointer">-6h</span>
+<span class="hover:text-on-surface cursor-pointer">-1h</span>
+<span class="text-primary font-bold">NOW</span>
+<span class="text-tertiary hover:text-on-surface cursor-pointer">+12h Forecast</span>
+</div>
+</div>
+</div>
+<!-- RIGHT-SIDE CONTEXTUAL VESSEL DETAIL DRAWER -->
+<div class="absolute right-4 top-4 bottom-4 w-96 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl shadow-2xl z-20 flex flex-col justify-between p-4 overflow-y-auto" id="vessel-detail-drawer">
+<!-- Drawer Top: Identity & Status Header -->
+<div class="flex flex-col gap-3">
+<div class="flex items-start justify-between pb-2 border-b border-outline-variant/20">
+<div class="flex flex-col min-w-0 pr-2">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight truncate">COSCO SHIPPING SOLAR</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface font-label-xs text-[9px] uppercase font-bold shrink-0">HKG</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline font-mono truncate mt-0.5">IMO 9795634 • MMSI 477198300 • Call: VRQP8</span>
+</div>
+<div class="flex items-center gap-1 shrink-0">
+<button class="w-7 h-7 rounded flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container transition-colors" title="Pop out into multi-monitor view">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+<button class="w-7 h-7 rounded flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container transition-colors" onclick="closeVesselDrawer()" title="Close drawer">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Sev Alert Badge -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-error-container/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-error animate-pulse">crisis_alert</span>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs font-bold text-error uppercase tracking-wide">Critical Threat: Bab-el-Mandeb</span>
+<span class="font-label-xs text-[10px] text-on-error-container">Drone Munition Corridor Intercept</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-error text-on-error font-label-xs text-[9px] font-bold">SEV-1</span>
+</div>
+<!-- 2x2 Telemetry Metric Chips -->
+<div class="grid grid-cols-2 gap-2">
+<!-- Speed Over Ground -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Speed Over Ground</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-md text-headline-md text-on-surface font-bold font-mono">18.2</span>
+<span class="font-label-xs text-[10px] text-on-surface-variant font-mono">knots</span>
+</div>
+</div>
+<!-- Heading -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Current Heading</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-md text-headline-md text-on-surface font-bold font-mono">284°</span>
+<span class="font-label-xs text-[10px] text-on-surface-variant font-mono">WNW</span>
+</div>
+</div>
+<!-- Draft / Max Draft -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Draft / Capacity</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-md text-headline-md text-on-surface font-bold font-mono">15.2m</span>
+<span class="font-label-xs text-[10px] text-secondary font-mono font-medium">(95% Load)</span>
+</div>
+</div>
+<!-- Next Port of Call -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Destination Port</span>
+<div class="flex flex-col mt-0.5">
+<span class="font-body-sm text-body-sm text-on-surface font-bold">Rotterdam (NLRTM)</span>
+<span class="font-label-xs text-[9px] text-error font-mono font-semibold">ETA: Nov 02 (+8.4d Delay)</span>
+</div>
+</div>
+</div>
+<!-- Linked High-Value Manifest Card -->
+<div class="p-3 rounded-lg bg-surface-container flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-[10px] text-outline uppercase tracking-wider font-semibold">Linked Consignment Manifest</span>
+<div class="flex items-center gap-1 text-primary cursor-pointer hover:underline">
+<span class="font-label-xs text-[10px] font-mono font-bold">#SHP-9921-X</span>
+<span class="material-symbols-outlined text-[12px]">content_copy</span>
+</div>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface font-medium">
+            14,200 TEU • Automotive Microcontrollers &amp; Silicon Wafers
+          </div>
+<div class="flex items-center justify-between font-label-xs text-[10px] text-on-surface-variant pt-1 border-t border-outline-variant/20">
+<span>Shipper: Infineon Technologies / BMW</span>
+<span class="text-secondary font-mono font-semibold">$88,400,000 USD (Lloyd's)</span>
+</div>
+</div>
+<!-- Real-Time AI Risk Assessment -->
+<div class="p-3 rounded-lg bg-surface-container-low flex flex-col gap-2 border-l-2 border-primary">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">psychology</span>
+<span class="font-label-xs text-label-xs text-primary font-bold uppercase">Autonomous Copilot Assessment</span>
+</div>
+<span class="font-label-xs text-[9px] text-outline font-mono">98.4% CONF</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Direct transit via Bab-el-Mandeb exposes cargo to a 91% threat coefficient. Secondary bottleneck: Typhoon Koinu outbound sea swell.
+          </p>
+<div class="p-2 rounded bg-surface-container-high/60 flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary shrink-0 mt-0.5">alt_route</span>
+<div class="flex flex-col">
+<span class="font-label-xs text-[10px] text-secondary font-semibold">Recommended Alternative: Cape of Good Hope</span>
+<span class="font-label-xs text-[9px] text-outline font-mono">+9.2 Transit Days • +$342k Bunker Fuel • 0% Kinetic Risk</span>
+</div>
+</div>
+</div>
+<!-- Data Provenance & Verification Hash -->
+<div class="flex items-center justify-between px-2 py-1 rounded bg-surface-container-lowest font-mono text-[9px] text-outline">
+<span>AIS SAT-SOURCE: SPIRE-LEO-44</span>
+<span class="text-secondary">PROVENANCE VERIFIED ✓</span>
+</div>
+</div>
+<!-- Action Buttons Dock -->
+<div class="flex flex-col gap-2 pt-3 border-t border-outline-variant/20">
+<button class="w-full h-9 rounded bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-md">
+<span>View Full Shipment Dossier</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+<div class="grid grid-cols-2 gap-2">
+<button class="h-8 rounded bg-surface-container-high text-on-surface hover:bg-surface-variant font-label-xs text-label-xs font-semibold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">model_training</span>
+<span>Simulate Reroute</span>
+</button>
+<button class="h-8 rounded bg-surface-container-high text-on-surface hover:bg-surface-variant font-label-xs text-label-xs font-semibold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">cell_tower</span>
+<span>SATCOM Advisory</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BOTTOM-LEFT FLOATING HUD BAR: COORDINATES, SCALE, PROVENANCE -->
+<div class="absolute left-4 bottom-4 z-20 hidden md:flex items-center gap-4 px-3 py-1.5 rounded-lg bg-surface-container-lowest/90 backdrop-blur-md shadow-lg">
+<!-- Severity Indicator Scale -->
+<div class="flex items-center gap-2 pr-3 border-r border-outline-variant/30">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Severity</span>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error" title="Critical"></span>
+<span class="w-2 h-2 rounded-full bg-tertiary" title="High"></span>
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed" title="Medium"></span>
+<span class="w-2 h-2 rounded-full bg-secondary" title="Low / Nominal"></span>
+</div>
+</div>
+<!-- Cursor Geo-Location HUD -->
+<div class="flex items-center gap-2 font-mono text-[11px]">
+<span class="text-outline">CURSOR:</span>
+<span class="text-on-surface font-medium" id="hud-coordinates">14°28'12"N 51°14'48"E</span>
+<span class="text-outline-variant">|</span>
+<span class="text-outline">ZOOM:</span>
+<span class="text-on-surface">3.4x</span>
+<span class="text-outline-variant">|</span>
+<span class="text-outline">WGS84</span>
+</div>
+<!-- Telemetry Merkle Proof Verification -->
+<div class="flex items-center gap-2 pl-3 border-l border-outline-variant/30 font-mono text-[10px]">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="text-outline">BLOCK #8f9b7c...3c12</span>
+<span class="text-secondary font-semibold">VERIFIED</span>
+</div>
+</div>
+</div>
+<!-- INTERACTIVE EVENT SCRIPT -->
+<script>
+    function selectVessel(name) {
+      const drawer = document.getElementById('vessel-detail-drawer');
+      if (drawer) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+      }
+    }
+
+    function closeVesselDrawer() {
+      const drawer = document.getElementById('vessel-detail-drawer');
+      if (drawer) {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+      }
+    }
+
+    // Dynamic mouse coordinates update
+    const canvas = document.getElementById('gis-canvas');
+    const coordDisplay = document.getElementById('hud-coordinates');
+    if (canvas && coordDisplay) {
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const xRatio = (e.clientX - rect.left) / rect.width;
+        const yRatio = (e.clientY - rect.top) / rect.height;
+        
+        const lat = (90 - yRatio * 180).toFixed(4);
+        const lon = (-180 + xRatio * 360).toFixed(4);
+        
+        const latDir = lat >= 0 ? 'N' : 'S';
+        const lonDir = lon >= 0 ? 'E' : 'W';
+        
+        coordDisplay.innerText = `${Math.abs(lat)}°${latDir} ${Math.abs(lon)}°${lonDir}`;
+      });
+    }
+  </script>
+</div></main></div></body></html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#101419","inverse-on-surface":"#2d3136","tertiary-fixed":"#e9ddff","surface-variant":"#31353b","background":"#101419","surface-container":"#1c2025","on-tertiary":"#3c0091","surface-container-low":"#181c21","error":"#ffb4ab","surface-bright":"#36393f","surface-dim":"#101419","secondary":"#4edea3","on-error-container":"#ffdad6","on-error":"#690005","primary-fixed":"#d8e2ff","on-secondary-container":"#00311f","inverse-surface":"#e0e2ea","outline":"#8c909f","on-surface":"#e0e2ea","on-background":"#e0e2ea","on-secondary":"#003824","on-surface-variant":"#c2c6d6","secondary-fixed":"#6ffbbe","error-container":"#93000a","surface-container-lowest":"#0a0e13","on-secondary-fixed-variant":"#005236","tertiary-container":"#a078ff","tertiary-fixed-dim":"#d0bcff","tertiary":"#d0bcff","on-tertiary-fixed-variant":"#5516be","on-secondary-fixed":"#002113","on-tertiary-fixed":"#23005c","inverse-primary":"#005ac2","primary":"#adc6ff","on-tertiary-container":"#340080","on-primary-fixed-variant":"#004395","surface-tint":"#adc6ff","secondary-fixed-dim":"#4edea3","on-primary":"#002e6a","on-primary-fixed":"#001a42","primary-fixed-dim":"#adc6ff","surface-container-highest":"#31353b","primary-container":"#4d8eff","surface-container-high":"#262a30","on-primary-container":"#00285d","outline-variant":"#424754","secondary-container":"#00a572"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-xl":"1.5rem","gutter":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"display-lg-mobile":["Inter"],"headline-md":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30 bg-surface-container-low/40"><img alt="RiskWise 2.0 Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">RiskWise 2.0</span><span class="font-label-xs text-label-xs px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/30 uppercase">v2.4.9</span></div><span class="font-label-xs text-label-xs text-outline truncate">AUTONOMOUS CORE</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/20 bg-surface-container/30"><div class="flex items-center justify-between text-outline"><span class="font-label-xs text-label-xs uppercase tracking-wider">Active Node Scope</span><span class="material-symbols-outlined text-[14px] text-secondary">hub</span></div><div class="font-label-sm text-label-sm text-on-surface font-medium truncate mt-0.5">NORTH-AMER / APAC TIER-1</div></div><nav class="flex flex-col gap-space-sm p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary"><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">1. Overview</div><a aria-current="page" class="flex items-center gap-space-sm px-2.5 py-1.5 rounded transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary" data-path="control-tower" href="#"><span class="material-symbols-outlined text-[18px]">space_dashboard</span><span>Control Tower</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="global-live-map" href="#"><span class="material-symbols-outlined text-[18px]">public</span><span>Global Live Map</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">2. Intelligence &amp; Risk</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="risk-register" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span>Risk Register</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="incident-command" href="#"><span class="material-symbols-outlined text-[18px]">crisis_alert</span><span>Incident Command</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="ai-recommendations" href="#"><span class="material-symbols-outlined text-[18px]">psychology</span><span>AI Recommendations</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">3. Digital Twin &amp; Sim</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="topology-canvas" href="#"><span class="material-symbols-outlined text-[18px]">schema</span><span>Topology Canvas</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="disruption-simulation" href="#"><span class="material-symbols-outlined text-[18px]">model_training</span><span>Disruption Simulation</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="optimization-runs" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Optimization Runs</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">4. Operations &amp; Shipments</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="shipments-tracker" href="#"><span class="material-symbols-outlined text-[18px]">local_shipping</span><span>Shipments Tracker</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="action-dispatch" href="#"><span class="material-symbols-outlined text-[18px]">send_and_archive</span><span>Action Dispatch</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="verification-engine" href="#"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Engine</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">5. Governance &amp; Data</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="human-approvals" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span><span>Human Approvals</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="audit-log-explorer" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>Audit Log Explorer</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="network-data" href="#"><span class="material-symbols-outlined text-[18px]">database</span><span>Network Data</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings-rbac" href="#"><span class="material-symbols-outlined text-[18px]">shield_person</span><span>Settings &amp; RBAC</span></a></div></nav></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-lowest"><div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/30"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">LATENCY</span></div><span class="font-label-xs text-label-xs text-secondary font-mono font-medium">12ms (Z-FEED)</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-md gap-space-md"><div class="flex items-center gap-space-md min-w-0 max-w-sm"><div class="flex items-center gap-space-xs px-2.5 py-1.5 rounded bg-surface-container-low border border-outline-variant/30 min-w-0 cursor-pointer hover:border-outline transition-colors"><span class="material-symbols-outlined text-[16px] text-primary shrink-0">corporate_fare</span><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs text-on-surface truncate font-semibold">Global Logistics Enterprise</span><span class="font-label-xs text-[9px] leading-tight text-outline truncate">NA &amp; APAC Tier-1</span></div><span class="material-symbols-outlined text-[14px] text-outline shrink-0 ml-1">unfold_more</span></div></div><div class="flex-1 max-w-xl mx-2"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-[18px] text-outline pointer-events-none">search</span><input class="w-full h-9 pl-9 pr-14 rounded bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><div class="absolute right-2 flex items-center"><kbd class="px-1.5 py-0.5 text-label-xs font-label-xs rounded bg-surface-container-high border border-outline-variant/40 text-outline">⌘K</kbd></div></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden xl:flex items-center gap-space-xs px-2.5 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs tracking-wider">TELEMETRY: OPTIMAL</span><span class="text-outline-variant">|</span><span class="font-label-xs text-label-xs text-on-surface-variant font-mono">42,819 NODES</span></div><button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">play_circle</span><span class="hidden sm:inline font-medium">Simulate Disruption</span></button><div class="relative"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error rounded-full font-label-xs text-[9px] flex items-center justify-center font-bold">4</span></button></div><div class="h-5 w-[1px] bg-outline-variant/30"></div><div class="flex items-center gap-space-xs pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQuBzY8_uH28XOIJkp7YNiKdBHoCBrbNAsX1Pxn6b7nl5mKPh4mux72wHWsHoECrYU5ieJ7_p7ZC2f0p6_-K54dwRCG0A61JOFqnanBDPUUj_CpSE0eIKQuUKI4SqN6_TX2zDV9Rb7uVTxLvOWH7XzrvAq452bck_URYflU_BB9SEC5CUi_6kgkYNcTHRZcDIHul6BPUaKZh02jI8iAfW5vVb_gyPtz8fdtF1xhJmcM3aIGRDudy_A"><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm text-on-surface font-semibold leading-none">Marcus Vance</span><div class="flex items-center gap-1 mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-[10px] text-outline leading-none">Risk Director (L4)</span></div></div></div></div></header><main class="w-full pt-14 px-space-md pb-space-lg bg-surface min-h-screen"><div class="flex flex-col w-full gap-space-md">
+<!-- TOP BAR: TELEMETRY QUICK-HEADER & ACTIVE MANDATES -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low px-space-md py-2 rounded-lg shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">Real-Time Ingest</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold ml-1">10Hz Merkle Stream</span>
+</div>
+<div class="hidden md:flex items-center gap-space-xs text-outline font-label-xs text-label-xs">
+<span>SESSION:</span>
+<span class="font-label-sm text-label-sm text-primary font-mono">OP-CMD-7702-ZETA</span>
+</div>
+<div class="hidden lg:flex items-center gap-space-xs text-outline font-label-xs text-label-xs">
+<span>EPOCH:</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">1729864200</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-high text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-tertiary">lock_clock</span>
+<span class="font-label-xs text-label-xs">Quorum TTL: <span class="text-on-surface font-semibold font-mono">01:44:19</span></span>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+<span class="font-label-xs text-label-xs font-semibold uppercase tracking-wider">L4 Autonomous Guard Active</span>
+</div>
+</div>
+</div>
+<!-- ROW 1: 4 KPI CARDS -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- KPI 1: Active Critical Risks -->
+<div class="relative overflow-hidden rounded-lg bg-surface-container-low p-space-md shadow-sm flex flex-col justify-between">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-error via-error-container to-transparent"></div>
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-semibold">Active Critical Risks</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">18</span>
+<span class="font-headline-sm text-headline-sm text-error font-semibold">Critical</span>
+<span class="text-outline text-body-sm font-body-sm">/</span>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant font-semibold">42</span>
+<span class="font-label-xs text-label-xs text-outline">High</span>
+</div>
+</div>
+<div class="p-2 rounded bg-error-container/30 text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">crisis_alert</span>
+</div>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/50 -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between">
+<div class="flex items-center gap-1 text-error font-label-xs text-label-xs font-semibold">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span>+3 past 24h</span>
+</div>
+<svg class="w-24 h-6 text-error overflow-visible" fill="none" viewBox="0 0 96 24">
+<path d="M2 18 L18 16 L34 19 L50 11 L66 14 L82 7 L94 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle class="fill-error animate-pulse" cx="94" cy="4" r="2.5"></circle>
+</svg>
+</div>
+</div>
+<!-- KPI 2: Shipments In Transit -->
+<div class="relative overflow-hidden rounded-lg bg-surface-container-low p-space-md shadow-sm flex flex-col justify-between">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-primary-container to-transparent"></div>
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-semibold">Shipments In Transit</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">1,482</span>
+<span class="font-label-sm text-label-sm text-primary font-mono font-semibold">$1.24B Value</span>
+</div>
+</div>
+<div class="p-2 rounded bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">directions_boat</span>
+</div>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/50 -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs text-secondary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">arrow_drop_up</span>+4.1%
+          </span>
+<span class="font-label-xs text-label-xs text-outline">vs 30d avg</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs font-mono text-on-surface-variant">94.2% On-Time</span>
+<svg class="w-16 h-6 text-primary" fill="none" viewBox="0 0 64 24">
+<path d="M2 16 L14 13 L26 15 L38 9 L50 11 L62 5" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- KPI 3: Pending Approvals -->
+<div class="relative overflow-hidden rounded-lg bg-surface-container-low p-space-md shadow-sm flex flex-col justify-between">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-tertiary via-tertiary-container to-transparent"></div>
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-semibold">Pending Approvals</span>
+<span class="px-1.5 py-0.2 rounded bg-error/20 text-error font-label-xs text-[9px] font-bold">2 SLA &lt;2h</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">6</span>
+<span class="font-headline-sm text-headline-sm text-tertiary font-semibold">Sovereign Quorum</span>
+<span class="font-label-xs text-label-xs text-outline">L4 Mandate</span>
+</div>
+</div>
+<div class="p-2 rounded bg-tertiary/10 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+</div>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/50 -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between">
+<div class="flex items-center gap-1 text-secondary font-label-xs text-label-xs font-semibold">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+<span>-2 from yesterday</span>
+</div>
+<svg class="w-20 h-6 text-tertiary" fill="none" viewBox="0 0 80 24">
+<path d="M2 6 L18 8 L34 5 L50 14 L66 12 L78 18" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+</svg>
+</div>
+</div>
+<!-- KPI 4: Verified Actions -->
+<div class="relative overflow-hidden rounded-lg bg-surface-container-low p-space-md shadow-sm flex flex-col justify-between">
+<div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-secondary via-secondary-container to-transparent"></div>
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-semibold">Verified Actions (30d)</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">142</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold">Dispatched</span>
+</div>
+</div>
+<div class="p-2 rounded bg-secondary/10 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">format_image_left</span>
+</div>
+</div>
+<div class="mt-3 pt-2 bg-surface-container-lowest/50 -mx-space-md -mb-space-md px-space-md py-2 flex items-center justify-between">
+<div class="flex items-center gap-1 text-secondary font-label-xs text-label-xs font-semibold">
+<span class="font-mono font-bold">$48.2M</span>
+<span class="text-outline font-normal">saved</span>
+<span class="text-outline">•</span>
+<span>+18.6% MoM</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-xs text-label-xs font-mono">
+<span>98.4% Eff</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ROW 2: 60% / 40% SPLIT (WORLD MAP + TOP 5 INCIDENTS) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- LEFT 60% (7 cols xl / 7 cols lg): Live Corridors & Telemetry Vectors -->
+<div class="lg:col-span-7 xl:col-span-7 rounded-lg bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm relative overflow-hidden min-h-[540px]">
+<!-- Panel Header & Tactical Controls -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm z-10 relative">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">public</span>
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Live Corridors &amp; Telemetry Vectors</h2>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-label-xs text-label-xs text-outline">CRITICAL TRADE CHOKEPOINTS</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary/10 text-secondary font-label-xs text-[9px] font-mono">10Hz LIVE MERKLE STREAM</span>
+</div>
+</div>
+</div>
+<!-- Layer Filters -->
+<div class="flex flex-wrap items-center gap-1 bg-surface-container-lowest/80 p-1 rounded">
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-primary/20 text-primary font-label-xs text-label-xs font-semibold">
+<span class="material-symbols-outlined text-[14px]">directions_boat</span>
+<span>AIS Maritime (3,280)</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px]">flight</span>
+<span>ADS-B (412)</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px]">train</span>
+<span>Intermodal (890)</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-1 rounded bg-surface-container hover:bg-surface-container-high text-outline font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px]">thunderstorm</span>
+<span>Weather</span>
+</button>
+</div>
+</div>
+<!-- Tactical Map Canvas (SVG Vector Map with Corridors, Pings, Chokepoint Alerts) -->
+<div class="relative w-full flex-1 rounded bg-surface-container-lowest my-2 overflow-hidden flex items-center justify-center min-h-[380px]">
+<!-- Map Grid Overlay -->
+<div class="absolute inset-0 bg-[radial-gradient(#243044_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
+<!-- Geospatial Stylized Vector Map with Real Lanes -->
+<svg class="w-full h-full min-h-[380px] text-outline/20" fill="none" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1000 500">
+<!-- Simplified Continents Outlines -->
+<!-- Americas -->
+<path d="M120 70 Q160 50 210 60 Q270 90 280 140 Q250 180 230 200 Q270 240 310 280 Q320 340 280 430 Q250 460 230 420 Q240 330 210 260 Q170 210 140 180 Q100 130 120 70 Z" fill="#181c21" stroke="#262a30" stroke-width="1.2"></path>
+<!-- Eurasia & Africa -->
+<path d="M460 80 Q580 50 780 70 Q890 90 920 160 Q860 200 840 250 Q780 230 740 270 Q690 290 640 230 Q600 240 580 270 Q630 350 610 430 Q540 450 490 380 Q470 300 450 250 Q430 190 440 130 Z" fill="#181c21" stroke="#262a30" stroke-width="1.2"></path>
+<!-- Australia -->
+<path d="M780 340 Q860 330 890 370 Q890 420 840 440 Q770 420 780 340 Z" fill="#181c21" stroke="#262a30" stroke-width="1.2"></path>
+<!-- Primary Corridors (Maritime Corridors - Glowing Dashed) -->
+<!-- Transpacific North -->
+<path class="opacity-60" d="M220 140 C340 90, 720 80, 850 150" stroke="#4d8eff" stroke-dasharray="6 4" stroke-width="1.5"></path>
+<!-- Transatlantic North -->
+<path class="opacity-70" d="M250 140 C330 110, 410 100, 480 120" stroke="#4d8eff" stroke-dasharray="6 4" stroke-width="1.5"></path>
+<!-- Asia to Europe via Suez (DISRUPTED / REROUTED) -->
+<path class="opacity-40" d="M820 220 Q700 240 600 220 Q560 210 520 180 L490 140" stroke="#ffb4ab" stroke-dasharray="3 3" stroke-width="1.5"></path>
+<!-- Cape of Good Hope Diversion Route (ACTIVE MITIGATION) -->
+<path class="opacity-90" d="M820 220 Q740 280 680 370 Q600 460 520 420 Q480 320 475 170" stroke="#4edea3" stroke-dasharray="8 4" stroke-width="2.2"></path>
+<!-- Transatlantic Flight Vectors (Dotted Cyan) -->
+<path class="opacity-80" d="M240 130 Q360 80 490 110" stroke="#adc6ff" stroke-dasharray="2 3" stroke-width="1"></path>
+<!-- Transpacific Flight Vectors -->
+<path class="opacity-80" d="M860 140 Q600 50 230 120" stroke="#adc6ff" stroke-dasharray="2 3" stroke-width="1"></path>
+<!-- High-Risk Live Vessels / Clusters (Red = Critical, Orange = High, Green = Clear) -->
+<!-- Red Sea Chokepoint Nodes (Critical Red Cluster) -->
+<circle class="fill-error animate-ping opacity-75" cx="565" cy="225" r="5"></circle>
+<circle class="fill-error" cx="565" cy="225" r="4"></circle>
+<circle class="fill-error" cx="558" cy="218" r="3"></circle>
+<circle class="fill-error" cx="572" cy="232" r="3"></circle>
+<circle class="fill-primary-container" cx="580" cy="240" r="2.5"></circle>
+<!-- Cape of Good Hope Bypass Vessels (Green) -->
+<circle class="fill-secondary" cx="560" cy="435" r="3.5"></circle>
+<circle class="fill-secondary" cx="580" cy="425" r="3"></circle>
+<circle class="fill-secondary" cx="535" cy="410" r="3"></circle>
+<!-- Ningbo-Zhoushan Port Surge (Critical Red Node) -->
+<circle class="fill-error animate-ping opacity-60" cx="835" cy="180" r="6"></circle>
+<circle class="fill-error" cx="835" cy="180" r="4"></circle>
+<circle class="fill-error" cx="845" cy="175" r="3"></circle>
+<circle class="fill-tertiary" cx="828" cy="188" r="3"></circle>
+<!-- Rotterdam Port Cluster (High Orange) -->
+<circle cx="490" cy="120" fill="#f97316" r="4"></circle>
+<circle cx="498" cy="115" fill="#f97316" r="3"></circle>
+<!-- Panama Canal (High Orange) -->
+<circle cx="230" cy="215" fill="#f97316" r="4"></circle>
+<!-- Strait of Malacca (Normal Green Vessels) -->
+<circle class="fill-secondary" cx="750" cy="245" r="3"></circle>
+<circle class="fill-secondary" cx="760" cy="250" r="3"></circle>
+<circle class="fill-secondary" cx="740" cy="240" r="2.5"></circle>
+</svg>
+<!-- Prominent Map Callout: Bab-el-Mandeb Strait & Red Sea Divert -->
+<div class="absolute left-[47%] top-[34%] transform -translate-x-1/2 -translate-y-full bg-surface-container-high/95 backdrop-blur-md p-2.5 rounded-lg shadow-xl max-w-xs pointer-events-auto">
+<div class="flex items-center justify-between gap-2 border-b border-outline-variant/30 pb-1 mb-1.5">
+<span class="flex items-center gap-1 font-label-xs text-label-xs text-error font-bold uppercase">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span> Bab-el-Mandeb Choke
+            </span>
+<span class="font-label-xs text-label-xs px-1 rounded bg-error-container text-on-error-container font-mono">SEV-1</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface leading-tight font-medium">Houthi Munitions Alert: 28 Vessels rerouted via Cape of Good Hope.</p>
+<div class="flex items-center justify-between mt-2 pt-1 font-label-xs text-label-xs text-outline font-mono">
+<span>SLA: +11.4d</span>
+<span class="text-secondary font-bold">100% QUORUM ACTIVE</span>
+</div>
+<!-- Pointer Tip -->
+<div class="w-2.5 h-2.5 bg-surface-container-high rotate-45 mx-auto -mb-3.5 mt-1"></div>
+</div>
+<!-- Prominent Map Callout: Ningbo-Zhoushan Typhoon Alert -->
+<div class="absolute right-[10%] top-[22%] bg-surface-container-high/95 backdrop-blur-md p-2.5 rounded-lg shadow-xl max-w-[210px] pointer-events-auto">
+<div class="flex items-center justify-between gap-1 border-b border-outline-variant/30 pb-1 mb-1">
+<span class="font-label-xs text-label-xs text-error font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">cyclone</span> Ningbo Freeze
+            </span>
+<span class="font-label-xs text-label-xs text-outline font-mono">72h Berth</span>
+</div>
+<p class="font-label-xs text-label-xs text-on-surface-variant">Typhoon Koinu wave surge. 14 ships queued off Daishan anchorage.</p>
+</div>
+<!-- Map Tactical Controls Overlay Bottom-Right -->
+<div class="absolute bottom-3 right-3 flex items-center gap-1 bg-surface-container-high/90 backdrop-blur-sm p-1 rounded shadow">
+<button class="w-6 h-6 rounded flex items-center justify-center hover:bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[16px]">add</span></button>
+<button class="w-6 h-6 rounded flex items-center justify-center hover:bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[16px]">remove</span></button>
+<button class="w-6 h-6 rounded flex items-center justify-center hover:bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[16px]">center_focus_strong</span></button>
+</div>
+</div>
+<!-- Map Footer Status Bar -->
+<div class="flex flex-wrap items-center justify-between gap-2 pt-space-xs font-label-xs text-label-xs text-outline bg-surface-container-low">
+<div class="flex items-center gap-space-sm font-mono">
+<span class="text-on-surface">Active Vessels Tracked: <strong class="text-secondary">3,280</strong></span>
+<span>•</span>
+<span>Latency: <strong class="text-secondary font-semibold">12ms (Z-Feed)</strong></span>
+<span>•</span>
+<span class="hidden sm:inline">Merkle Root: <strong class="text-primary">8f9b7c...3c12</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-error"></span> Critical
+          </span>
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-[#f97316]"></span> High
+          </span>
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Nominal
+          </span>
+</div>
+</div>
+</div>
+<!-- RIGHT 40% (5 cols xl / 5 cols lg): Top 5 Highest-Risk Active Incidents -->
+<div class="lg:col-span-5 xl:col-span-5 rounded-lg bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<!-- Panel Header -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-error">warning</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Top 5 Active Disruption Incidents</h2>
+</div>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container-high text-outline font-mono">SORT: EXPOSURE DESC</span>
+</div>
+<!-- Incidents Stack (5 Items) -->
+<div class="flex flex-col gap-2 mt-3 flex-1 overflow-y-auto max-h-[500px] pr-1">
+<!-- Incident 1: Red Sea Closure -->
+<div class="group p-2.5 rounded bg-surface-container hover:bg-surface-container-high transition-all shadow-sm">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-error/20 text-error font-label-xs text-[10px] font-bold">SEV-1 CRITICAL</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">INC-9902</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-mono font-bold">$84.5M EXPOSURE</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-semibold mt-1">
+            Red Sea Total Closure &amp; Houthi Munitions Threat
+          </div>
+<div class="flex items-center justify-between text-outline font-body-sm text-body-sm mt-1">
+<span>28 Shipments • Auto-Reroute active (Cape of Good Hope)</span>
+<button class="text-primary hover:text-primary-container font-headline-sm text-headline-sm flex items-center gap-0.5">
+<span>Inspect</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Incident 2: Typhoon Koinu -->
+<div class="group p-2.5 rounded bg-surface-container hover:bg-surface-container-high transition-all shadow-sm">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-error/20 text-error font-label-xs text-[10px] font-bold">SEV-1 CRITICAL</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">INC-9891</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-mono font-bold">$68.4M EXPOSURE</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-semibold mt-1">
+            Typhoon Koinu Port Surge - Ningbo-Zhoushan Berth Freeze
+          </div>
+<div class="flex items-center justify-between text-outline font-body-sm text-body-sm mt-1">
+<span>14 Shipments • 72h Berth Delay in effect</span>
+<button class="text-primary hover:text-primary-container font-headline-sm text-headline-sm flex items-center gap-0.5">
+<span>Inspect</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Incident 3: Rotterdam Rail Strike -->
+<div class="group p-2.5 rounded bg-surface-container hover:bg-surface-container-high transition-all shadow-sm">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-[#f97316]/20 text-[#f97316] font-label-xs text-[10px] font-bold">SEV-2 HIGH</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">INC-9875</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-mono font-bold">$24.2M EXPOSURE</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-semibold mt-1">
+            Rotterdam Maasvlakte Rail Intermodal Strike
+          </div>
+<div class="flex items-center justify-between text-outline font-body-sm text-body-sm mt-1">
+<span>19 Shipments • Trucking transload proposed</span>
+<button class="text-primary hover:text-primary-container font-headline-sm text-headline-sm flex items-center gap-0.5">
+<span>Inspect</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Incident 4: Panama Canal Gatun Lake -->
+<div class="group p-2.5 rounded bg-surface-container hover:bg-surface-container-high transition-all shadow-sm">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-[#f97316]/20 text-[#f97316] font-label-xs text-[10px] font-bold">SEV-2 HIGH</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">INC-9860</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-mono font-bold">$18.9M EXPOSURE</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-semibold mt-1">
+            Panama Canal Gatun Lake Draft Surcharge &amp; Auction Bottleneck
+          </div>
+<div class="flex items-center justify-between text-outline font-body-sm text-body-sm mt-1">
+<span>11 Shipments • 44ft Max Draft Cap</span>
+<button class="text-primary hover:text-primary-container font-headline-sm text-headline-sm flex items-center gap-0.5">
+<span>Inspect</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Incident 5: Rhine Low Water Level -->
+<div class="group p-2.5 rounded bg-surface-container hover:bg-surface-container-high transition-all shadow-sm">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-label-xs text-[10px] font-bold">SEV-3 MEDIUM</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">INC-9844</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-mono font-bold">$6.8M EXPOSURE</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface font-semibold mt-1">
+            Rhine Low Water Level Barge Weight Penalties (Kaub Gauge)
+          </div>
+<div class="flex items-center justify-between text-outline font-body-sm text-body-sm mt-1">
+<span>8 Shipments • Rail swap queued</span>
+<button class="text-primary hover:text-primary-container font-headline-sm text-headline-sm flex items-center gap-0.5">
+<span>Inspect</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Incident Summary Actions Footer -->
+<div class="pt-space-sm mt-2 border-t border-outline-variant/30 flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline">Showing 5 of 60 active network disruptions</span>
+<a class="font-headline-sm text-headline-sm text-primary hover:underline flex items-center gap-1" data-path="risk-register" href="#">
+<span>Open Full Risk Register</span>
+<span class="material-symbols-outlined text-[16px]">launch</span>
+</a>
+</div>
+</div>
+</div>
+<!-- ROW 3: THREE EQUAL PANELS -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- PANEL 1: PENDING HUMAN APPROVALS QUEUE -->
+<div class="rounded-lg bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-tertiary">gavel</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Pending Human Approvals</h3>
+</div>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-tertiary/10 text-tertiary font-mono">QUORUM L4</span>
+</div>
+<!-- Table Header & Items -->
+<div class="flex flex-col gap-2.5 mt-3 flex-1">
+<!-- Approval Item 1 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="font-body-md text-body-md text-on-surface font-semibold">
+              Emergency Sea-Air Diversion (MSC AMELIA)
+            </div>
+<span class="px-1.5 py-0.2 rounded bg-error/20 text-error font-label-xs text-label-xs font-bold font-mono">SCORE: 92</span>
+</div>
+<div class="flex items-center justify-between font-label-xs text-label-xs text-outline font-mono">
+<span class="truncate max-w-[170px]" title="SHA-256 Digest">SHA: a489f81a...b083c749</span>
+<span class="text-tertiary font-medium">2/3 Signed (Sarah Lin)</span>
+</div>
+<div class="flex items-center gap-2 mt-1 pt-1 border-t border-outline-variant/20">
+<button class="flex-1 py-1 px-2 rounded bg-secondary text-on-secondary font-headline-sm text-headline-sm hover:bg-secondary-container transition-colors text-center font-semibold">
+              Approve &amp; Sign
+            </button>
+<button class="py-1 px-3 rounded bg-error/10 text-error font-headline-sm text-headline-sm hover:bg-error/20 transition-colors">
+              Reject
+            </button>
+</div>
+</div>
+<!-- Approval Item 2 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="font-body-md text-body-md text-on-surface font-semibold">
+              Advance Inventory Drawdown: Munich Plant
+            </div>
+<span class="px-1.5 py-0.2 rounded bg-[#f97316]/20 text-[#f97316] font-label-xs text-label-xs font-bold font-mono">SCORE: 78</span>
+</div>
+<div class="flex items-center justify-between font-label-xs text-label-xs text-outline font-mono">
+<span class="truncate max-w-[170px]">SHA: 6b84013a...419a12c8</span>
+<span class="text-outline">1/2 Signed</span>
+</div>
+<div class="flex items-center gap-2 mt-1 pt-1 border-t border-outline-variant/20">
+<button class="flex-1 py-1 px-2 rounded bg-secondary text-on-secondary font-headline-sm text-headline-sm hover:bg-secondary-container transition-colors text-center font-semibold">
+              Approve &amp; Sign
+            </button>
+<button class="py-1 px-3 rounded bg-error/10 text-error font-headline-sm text-headline-sm hover:bg-error/20 transition-colors">
+              Reject
+            </button>
+</div>
+</div>
+<!-- Approval Item 3 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="font-body-md text-body-md text-on-surface font-semibold">
+              Carrier Substitution: Hapag-Lloyd to Maersk
+            </div>
+<span class="px-1.5 py-0.2 rounded bg-tertiary/20 text-tertiary font-label-xs text-label-xs font-bold font-mono">SCORE: 64</span>
+</div>
+<div class="flex items-center justify-between font-label-xs text-label-xs text-outline font-mono">
+<span class="truncate max-w-[170px]">SHA: 99c158df...e88102a4</span>
+<span class="text-outline">0/2 Signed</span>
+</div>
+<div class="flex items-center gap-2 mt-1 pt-1 border-t border-outline-variant/20">
+<button class="w-full py-1 px-2 rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-primary hover:text-on-primary transition-colors text-center">
+              Review Mandate Dossier
+            </button>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2 border-t border-outline-variant/30 flex items-center justify-between font-label-xs text-label-xs text-outline">
+<span>Dual Cryptographic Keys Required</span>
+<a class="text-primary hover:underline" data-path="human-approvals" href="#">All Approvals (6)</a>
+</div>
+</div>
+<!-- PANEL 2: RECENT VERIFICATION OUTCOMES (PHASE 18) -->
+<div class="rounded-lg bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">fact_check</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Recent Verification Outcomes</h3>
+</div>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-secondary/10 text-secondary font-mono">PHASE 18 ENGINE</span>
+</div>
+<!-- Outcomes Feed -->
+<div class="flex flex-col gap-2 mt-3 flex-1">
+<!-- Outcome 1 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Cape of Good Hope Diversion</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary/20 text-secondary font-label-xs text-label-xs font-bold">VERIFIED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">CMA CGM Palais bypassed Suez Canal.</p>
+<div class="flex items-center gap-1.5 mt-0.5 font-label-xs text-label-xs">
+<span class="px-1.5 py-0.2 rounded bg-secondary/10 text-secondary border border-secondary/30 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>REAL EVIDENCE
+            </span>
+<span class="text-outline font-mono">AIS Satellite delta (+1.1d SLA)</span>
+</div>
+</div>
+<!-- Outcome 2 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">DB Schenker Rail Transload</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary/20 text-secondary font-label-xs text-label-xs font-bold">VERIFIED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Transloaded 14 TEUs via dry port terminal.</p>
+<div class="flex items-center gap-1.5 mt-0.5 font-label-xs text-label-xs">
+<span class="px-1.5 py-0.2 rounded bg-[#f59e0b]/10 text-[#f59e0b] border border-dashed border-[#f59e0b]/40 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"></span>ESTIMATED
+            </span>
+<span class="text-outline font-mono">Telematics seal ping confirmed</span>
+</div>
+</div>
+<!-- Outcome 3 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Charter FX-9921 HKG → LGG</span>
+<span class="px-1.5 py-0.2 rounded bg-primary/20 text-primary font-label-xs text-label-xs font-bold animate-pulse">PENDING</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Emergency air charter booked for cold-chain vaccines.</p>
+<div class="flex items-center gap-1.5 mt-0.5 font-label-xs text-label-xs">
+<span class="px-1.5 py-0.2 rounded bg-tertiary/10 text-tertiary border border-dotted border-tertiary/40 font-mono flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>SIMULATED
+            </span>
+<span class="text-outline font-mono">Runway slot staged, awaiting wheels-up</span>
+</div>
+</div>
+<!-- Outcome 4 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Intermodal Drayage Hamburg</span>
+<span class="px-1.5 py-0.2 rounded bg-error/20 text-error font-label-xs text-label-xs font-bold">FAILED</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Driver hours-of-service violation reported.</p>
+<div class="flex items-center gap-1.5 mt-0.5 font-label-xs text-label-xs">
+<span class="px-1.5 py-0.2 rounded bg-secondary/10 text-secondary border border-secondary/30 font-mono">REAL</span>
+<span class="text-error font-mono">Re-dispatch auto-triggered</span>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2 border-t border-outline-variant/30 flex items-center justify-between font-label-xs text-label-xs text-outline">
+<span>Tripartite Verification Integrity: 99.1%</span>
+<a class="text-primary hover:underline" data-path="verification-engine" href="#">Verification Rail</a>
+</div>
+</div>
+<!-- PANEL 3: AGENT ACTIVITY FEED (LANGGRAPH TRACES) -->
+<div class="rounded-lg bg-surface-container-low p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">psychology</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Agent Reasoning Feed</h3>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-xs text-label-xs text-secondary font-mono">LANGGRAPH ACTIVE</span>
+</div>
+</div>
+<!-- Feed Stream -->
+<div class="flex flex-col gap-2 mt-3 flex-1 font-mono text-body-sm">
+<!-- Trace 1 -->
+<div class="p-2 rounded bg-surface-container-lowest/80 flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="text-primary font-bold">14:22:08 UTC</span>
+<span class="px-1 rounded bg-primary/10 text-primary font-bold">DISPATCH_AGENT</span>
+</div>
+<p class="text-on-surface text-[12px] leading-snug">
+            Dispatched signed mandate <span class="text-secondary">ACT-2024-8894-GOV</span> to Emirates SkyCargo EDI endpoint. Latency 112ms.
+          </p>
+</div>
+<!-- Trace 2 -->
+<div class="p-2 rounded bg-surface-container-lowest/80 flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="text-primary font-bold">14:21:45 UTC</span>
+<span class="px-1 rounded bg-tertiary/10 text-tertiary font-bold">SIMULATION_WORKER</span>
+</div>
+<p class="text-on-surface text-[12px] leading-snug">
+            Monte Carlo completed 10,000 runs for Gulf of Aden detour (P90 Variance: +3.2d, σ = 0.4d).
+          </p>
+</div>
+<!-- Trace 3 -->
+<div class="p-2 rounded bg-surface-container-lowest/80 flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="text-primary font-bold">14:19:12 UTC</span>
+<span class="px-1 rounded bg-secondary/10 text-secondary font-bold">CLAUDE_3.5_SONNET</span>
+</div>
+<p class="text-on-surface text-[12px] leading-snug">
+            Synthesized Pareto-optimal mitigation strategy: +$482k cost vs +$14.3M assembly penalty avoidance.
+          </p>
+</div>
+<!-- Trace 4 -->
+<div class="p-2 rounded bg-surface-container-lowest/80 flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-label-xs text-label-xs">
+<span class="text-primary font-bold">14:15:30 UTC</span>
+<span class="px-1 rounded bg-surface-container-high text-outline font-bold">TELEMETRY_INGEST</span>
+</div>
+<p class="text-on-surface text-[12px] leading-snug">
+            Ingested 18,492 AIS NMEA sentences via Spire Constellation node #48.
+          </p>
+</div>
+</div>
+<div class="mt-3 pt-2 border-t border-outline-variant/30 flex items-center justify-between font-label-xs text-label-xs text-outline">
+<span>Worker Clusters: 64x H100</span>
+<a class="text-primary hover:underline font-mono" data-path="ai-recommendations" href="#">View Trace DAG</a>
+</div>
+</div>
+</div>
+<!-- BOTTOM ROW: HORIZONTAL PIPELINE VISUALIZATION STRIP (18 PHASES ACROSS 7 STAGES) -->
+<div class="rounded-lg bg-surface-container-low p-space-md shadow-sm flex flex-col gap-space-sm overflow-x-auto">
+<!-- Strip Header -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">alt_route</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">
+          Autonomous End-to-End Governance Lifecycle
+        </h3>
+<span class="text-outline font-label-xs text-label-xs font-mono">• 18 PHASES ACROSS 7 CORE STAGES</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-xs text-label-xs font-mono">
+<span class="text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span> FULL CLOSED-LOOP SYNC
+        </span>
+</div>
+</div>
+<!-- The 7 Stages Horizontal Pipeline -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-2 min-w-[900px] mt-1">
+<!-- Stage 1 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 01</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Ingestion &amp; Telemetry
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 1-3</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">42,819 Nodes</span>
+<span class="text-secondary font-semibold">Optimal</span>
+</div>
+</div>
+<!-- Stage 2 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 02</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Risk &amp; Choke Detection
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 4-6</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-error font-medium">18 Critical</span>
+<span class="text-tertiary">Active</span>
+</div>
+</div>
+<!-- Stage 3 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 03</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Digital Twin &amp; Sim
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 7-9</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">64x H100</span>
+<span class="text-secondary font-semibold">Converged</span>
+</div>
+</div>
+<!-- Stage 4 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 04</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Pareto Optimization
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 10-12</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">3 Frontiers</span>
+<span class="text-secondary font-semibold">Complete</span>
+</div>
+</div>
+<!-- Stage 5 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 05</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Claude Decision Agent
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 13-15</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">6 Recs</span>
+<span class="text-secondary font-semibold">Ready</span>
+</div>
+</div>
+<!-- Stage 6: Human Quorum (Highlighted Amber) -->
+<div class="p-2.5 rounded bg-[#f59e0b]/10 flex flex-col justify-between relative group hover:bg-[#f59e0b]/15 transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-[#f59e0b] font-bold font-mono">STAGE 06</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#f59e0b] animate-ping"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Cryptographic Quorum
+        </div>
+<div class="font-label-xs text-label-xs text-[#f59e0b] mt-0.5">Phase 16 (L4 Gate)</div>
+<div class="mt-2 pt-1 border-t border-[#f59e0b]/30 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">3 In Queue</span>
+<span class="text-[#f59e0b] font-bold">Sign-off</span>
+</div>
+</div>
+<!-- Stage 7 -->
+<div class="p-2.5 rounded bg-surface-container flex flex-col justify-between relative group hover:bg-surface-container-high transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline font-mono">STAGE 07</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface mt-1 font-semibold leading-tight">
+          Dispatch &amp; Verify
+        </div>
+<div class="font-label-xs text-label-xs text-outline mt-0.5">Phases 17 &amp; 18</div>
+<div class="mt-2 pt-1 border-t border-outline-variant/20 flex items-center justify-between font-label-xs text-label-xs font-mono">
+<span class="text-on-surface font-medium">14 Dispatching</span>
+<span class="text-secondary font-semibold">142 Done</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple interactive mock for approval actions
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      if (this.textContent.includes('Approve & Sign')) {
+        this.innerHTML = '<span class="material-symbols-outlined text-[14px]">check</span> Signed (2/2)';
+        this.classList.remove('bg-secondary');
+        this.classList.add('bg-primary', 'text-on-primary');
+        this.disabled = true;
+      }
+    });
+  });
+</script></main></div></body></html>

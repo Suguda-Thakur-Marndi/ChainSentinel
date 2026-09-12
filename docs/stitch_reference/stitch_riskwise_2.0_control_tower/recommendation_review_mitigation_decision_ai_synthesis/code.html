@@ -1,0 +1,684 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#101419","inverse-on-surface":"#2d3136","tertiary-fixed":"#e9ddff","surface-variant":"#31353b","background":"#101419","surface-container":"#1c2025","on-tertiary":"#3c0091","surface-container-low":"#181c21","error":"#ffb4ab","surface-bright":"#36393f","surface-dim":"#101419","secondary":"#4edea3","on-error-container":"#ffdad6","on-error":"#690005","primary-fixed":"#d8e2ff","on-secondary-container":"#00311f","inverse-surface":"#e0e2ea","outline":"#8c909f","on-surface":"#e0e2ea","on-background":"#e0e2ea","on-secondary":"#003824","on-surface-variant":"#c2c6d6","secondary-fixed":"#6ffbbe","error-container":"#93000a","surface-container-lowest":"#0a0e13","on-secondary-fixed-variant":"#005236","tertiary-container":"#a078ff","tertiary-fixed-dim":"#d0bcff","tertiary":"#d0bcff","on-tertiary-fixed-variant":"#5516be","on-secondary-fixed":"#002113","on-tertiary-fixed":"#23005c","inverse-primary":"#005ac2","primary":"#adc6ff","on-tertiary-container":"#340080","on-primary-fixed-variant":"#004395","surface-tint":"#adc6ff","secondary-fixed-dim":"#4edea3","on-primary":"#002e6a","on-primary-fixed":"#001a42","primary-fixed-dim":"#adc6ff","surface-container-highest":"#31353b","primary-container":"#4d8eff","surface-container-high":"#262a30","on-primary-container":"#00285d","outline-variant":"#424754","secondary-container":"#00a572"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-xl":"1.5rem","gutter":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"display-lg-mobile":["Inter"],"headline-md":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30 bg-surface-container-low/40"><img alt="RiskWise 2.0 Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">RiskWise 2.0</span><span class="font-label-xs text-label-xs px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/30 uppercase">v2.4.9</span></div><span class="font-label-xs text-label-xs text-outline truncate">AUTONOMOUS CORE</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/20 bg-surface-container/30"><div class="flex items-center justify-between text-outline"><span class="font-label-xs text-label-xs uppercase tracking-wider">Active Node Scope</span><span class="material-symbols-outlined text-[14px] text-secondary">hub</span></div><div class="font-label-sm text-label-sm text-on-surface font-medium truncate mt-0.5">NORTH-AMER / APAC TIER-1</div></div><nav class="flex flex-col gap-space-sm p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary"><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">1. Overview</div><a aria-current="page" class="flex items-center gap-space-sm px-2.5 py-1.5 rounded transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary" data-path="control-tower" href="#"><span class="material-symbols-outlined text-[18px]">space_dashboard</span><span>Control Tower</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="global-live-map" href="#"><span class="material-symbols-outlined text-[18px]">public</span><span>Global Live Map</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">2. Intelligence &amp; Risk</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="risk-register" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span>Risk Register</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="incident-command" href="#"><span class="material-symbols-outlined text-[18px]">crisis_alert</span><span>Incident Command</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="ai-recommendations" href="#"><span class="material-symbols-outlined text-[18px]">psychology</span><span>AI Recommendations</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">3. Digital Twin &amp; Sim</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="topology-canvas" href="#"><span class="material-symbols-outlined text-[18px]">schema</span><span>Topology Canvas</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="disruption-simulation" href="#"><span class="material-symbols-outlined text-[18px]">model_training</span><span>Disruption Simulation</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="optimization-runs" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Optimization Runs</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">4. Operations &amp; Shipments</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="shipments-tracker" href="#"><span class="material-symbols-outlined text-[18px]">local_shipping</span><span>Shipments Tracker</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="action-dispatch" href="#"><span class="material-symbols-outlined text-[18px]">send_and_archive</span><span>Action Dispatch</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="verification-engine" href="#"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Engine</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">5. Governance &amp; Data</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="human-approvals" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span><span>Human Approvals</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="audit-log-explorer" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>Audit Log Explorer</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="network-data" href="#"><span class="material-symbols-outlined text-[18px]">database</span><span>Network Data</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings-rbac" href="#"><span class="material-symbols-outlined text-[18px]">shield_person</span><span>Settings &amp; RBAC</span></a></div></nav></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-lowest"><div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/30"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">LATENCY</span></div><span class="font-label-xs text-label-xs text-secondary font-mono font-medium">12ms (Z-FEED)</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-md gap-space-md"><div class="flex items-center gap-space-md min-w-0 max-w-sm"><div class="flex items-center gap-space-xs px-2.5 py-1.5 rounded bg-surface-container-low border border-outline-variant/30 min-w-0 cursor-pointer hover:border-outline transition-colors"><span class="material-symbols-outlined text-[16px] text-primary shrink-0">corporate_fare</span><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs text-on-surface truncate font-semibold">Global Logistics Enterprise</span><span class="font-label-xs text-[9px] leading-tight text-outline truncate">NA &amp; APAC Tier-1</span></div><span class="material-symbols-outlined text-[14px] text-outline shrink-0 ml-1">unfold_more</span></div></div><div class="flex-1 max-w-xl mx-2"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-[18px] text-outline pointer-events-none">search</span><input class="w-full h-9 pl-9 pr-14 rounded bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><div class="absolute right-2 flex items-center"><kbd class="px-1.5 py-0.5 text-label-xs font-label-xs rounded bg-surface-container-high border border-outline-variant/40 text-outline">⌘K</kbd></div></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden xl:flex items-center gap-space-xs px-2.5 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs tracking-wider">TELEMETRY: OPTIMAL</span><span class="text-outline-variant">|</span><span class="font-label-xs text-label-xs text-on-surface-variant font-mono">42,819 NODES</span></div><button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">play_circle</span><span class="hidden sm:inline font-medium">Simulate Disruption</span></button><div class="relative"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error rounded-full font-label-xs text-[9px] flex items-center justify-center font-bold">4</span></button></div><div class="h-5 w-[1px] bg-outline-variant/30"></div><div class="flex items-center gap-space-xs pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQuBzY8_uH28XOIJkp7YNiKdBHoCBrbNAsX1Pxn6b7nl5mKPh4mux72wHWsHoECrYU5ieJ7_p7ZC2f0p6_-K54dwRCG0A61JOFqnanBDPUUj_CpSE0eIKQuUKI4SqN6_TX2zDV9Rb7uVTxLvOWH7XzrvAq452bck_URYflU_BB9SEC5CUi_6kgkYNcTHRZcDIHul6BPUaKZh02jI8iAfW5vVb_gyPtz8fdtF1xhJmcM3aIGRDudy_A"><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm text-on-surface font-semibold leading-none">Marcus Vance</span><div class="flex items-center gap-1 mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-[10px] text-outline leading-none">Risk Director (L4)</span></div></div></div></div></header><main class="w-full pt-14 px-space-md pb-space-lg bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Breadcrumb & Tactical Scenario Bar -->
+<div class="flex flex-col gap-space-sm mb-space-lg">
+<!-- Breadcrumb + Protocol Identity -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-outline">
+<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="control-tower" href="#">
+<span class="material-symbols-outlined text-[14px]">space_dashboard</span>
+<span>Control Tower</span>
+</a>
+<span>/</span>
+<a class="hover:text-primary transition-colors" data-path="incident-command" href="#">Incidents</a>
+<span>/</span>
+<span class="text-on-surface-variant font-medium">INC-8942</span>
+<span>/</span>
+<span class="text-primary font-semibold">Mitigation Decision &amp; Recommendations</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          DECISION PIPELINE: ACTIVE
+        </span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-high text-outline font-label-xs text-label-xs">
+          TRACE ID: <span class="text-on-surface font-mono">0x48a9::opt-sol</span>
+</span>
+</div>
+</div>
+<!-- Active Disruption Operational Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-space-md shadow-md">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-error via-tertiary to-primary"></div>
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-error-container/40 flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-error text-[22px]">cyclone</span>
+</div>
+<div class="flex flex-col">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">Active Disruption: Typhoon Malakas</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-error/15 text-error font-medium">CAT-3 SEVERE</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant">Port of Busan &amp; Kaohsiung Corridor</span>
+</div>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="text-outline">Shipments at risk:</span> <strong class="text-on-surface font-mono">14</strong></span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1"><span class="text-outline">Total Cargo Value:</span> <strong class="text-on-surface font-mono">$48,200,000</strong></span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1"><span class="text-outline">Unmitigated Variance:</span> <strong class="text-error font-mono font-semibold">+9.4 days delay</strong></span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1"><span class="text-outline">Affected Fab:</span> <span class="text-on-surface">Fab 3 &amp; Fab 4 Lines (Taichung &amp; Phoenix)</span></span>
+</div>
+</div>
+</div>
+<!-- Stage & Countdown Indicators -->
+<div class="flex flex-wrap sm:flex-nowrap items-center gap-space-sm shrink-0">
+<div class="flex flex-col px-3 py-1.5 rounded bg-surface-container text-left shadow-sm">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Decision Protocol</span>
+<span class="font-headline-sm text-headline-sm text-tertiary flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">hourglass_top</span>
+              Sign-off Pending
+            </span>
+</div>
+<div class="flex flex-col px-3.5 py-1.5 rounded bg-error-container/25 text-left shadow-sm">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-xs text-label-xs text-error font-semibold tracking-wider">WINDOW CLOSES</span>
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="font-label-md text-label-md font-mono text-error font-bold tracking-tight mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">alarm</span>
+<span id="countdown-clock">02:41:31</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 1: Ranked Mitigation Candidates Grid -->
+<section class="flex flex-col gap-space-sm mb-space-lg">
+<div class="flex flex-wrap items-center justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-primary/10 text-primary uppercase font-mono tracking-widest font-semibold">Stage 03 / Optimization Output</span>
+<span class="font-label-xs text-label-xs text-outline">Simulated against 1,000 Perturbations</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-semibold tracking-tight mt-1">Ranked Mitigation Candidates (Pareto Frontier)</h2>
+</div>
+<div class="flex items-center gap-2 font-label-xs text-label-xs text-on-surface-variant">
+<span class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container"><span class="w-2 h-2 rounded-full bg-secondary"></span> Optimal Utility</span>
+<span class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container"><span class="w-2 h-2 rounded-full bg-tertiary"></span> Budget Constrained</span>
+<span class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container"><span class="w-2 h-2 rounded-full bg-primary-container"></span> Zero-SLA Variance</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md items-stretch mt-1">
+<!-- CANDIDATE 1: OPTIMAL RECOMMENDED -->
+<div class="relative flex flex-col justify-between rounded-xl bg-surface-container-low p-space-md shadow-xl transition-all hover:bg-surface-container group" id="candidate-1">
+<div class="absolute -top-3 left-4 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-xs text-label-xs font-bold uppercase tracking-wider shadow-sm">
+<span class="material-symbols-outlined text-[13px]">auto_awesome</span>
+<span>Recommended by Multi-Agent Swarm</span>
+</div>
+<div class="flex flex-col pt-1">
+<!-- Card Header & Utility Badge -->
+<div class="flex items-start justify-between gap-2 mb-space-sm">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-primary font-mono tracking-wide font-semibold uppercase">RANK #01 • PARETO OPTIMAL</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 leading-snug">
+                Multimodal Air-Sea Pivot
+                <span class="block font-headline-sm text-headline-sm text-on-surface-variant font-normal">via Incheon (ICN) &amp; Anchorage (ANC)</span>
+</h3>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<div class="px-2.5 py-1 rounded bg-secondary/15 text-secondary font-label-md text-label-md font-bold font-mono tracking-tight flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>94.8/100</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline mt-0.5">Confidence: 99.1%</span>
+</div>
+</div>
+<!-- KPI Metric Chips Grid -->
+<div class="grid grid-cols-2 gap-space-xs p-space-sm rounded-lg bg-surface-container-lowest mb-space-md">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Cost Delta</span>
+<span class="font-label-md text-label-md font-mono text-on-surface font-semibold mt-0.5">+$142,500</span>
+<span class="font-label-xs text-[10px] text-tertiary">+8.2% budget drift</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Time Preserved</span>
+<span class="font-label-md text-label-md font-mono text-secondary font-semibold mt-0.5">7.2 Days saved</span>
+<span class="font-label-xs text-[10px] text-outline">ETA Nov 14 (vs Nov 21)</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Carbon Footprint</span>
+<span class="font-label-md text-label-md font-mono text-on-surface-variant mt-0.5">+14.3 tCO2e</span>
+<span class="font-label-xs text-[10px] text-outline">Offset credit applied</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Disruption Risk</span>
+<span class="font-label-md text-label-md font-mono text-secondary font-semibold mt-0.5">12% (Low)</span>
+<span class="font-label-xs text-[10px] text-secondary">Wave clearance: OK</span>
+</div>
+</div>
+<!-- Strategy Breakdown Text -->
+<div class="flex flex-col gap-1 mb-space-md">
+<span class="font-label-xs text-label-xs uppercase text-outline tracking-wider font-semibold">Execution Strategy</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Air freight Tier-1 critical wafer inventory via Polar Air Cargo from <strong class="text-on-surface font-medium">ICN to ANC</strong>, then dedicated feeder to SeaTac. Divert non-critical secondary volume via safe berthing at Port of Tokyo.
+            </p>
+</div>
+<!-- Feasibility Status Box -->
+<div class="p-2.5 rounded-lg bg-surface-container flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">inventory</span>
+<div class="flex flex-col font-body-sm text-body-sm">
+<span class="font-label-xs text-label-xs text-secondary font-semibold uppercase tracking-wider">Confirmed Carrier Hold</span>
+<span class="text-on-surface font-medium text-[12px] leading-tight mt-0.5">Korean Air Cargo &amp; Nippon Express slots secured</span>
+<span class="font-label-xs text-[10px] text-outline mt-0.5 flex items-center gap-1 font-mono">
+<span class="material-symbols-outlined text-[12px]">schedule</span>
+                Hold expires in: 03h 14m 52s
+              </span>
+</div>
+</div>
+</div>
+<!-- Action Selection Button -->
+<button class="w-full h-9 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md" id="btn-candidate-1" onclick="selectCandidate(1)">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Selected as Primary Solution</span>
+</button>
+</div>
+<!-- CANDIDATE 2: COST FOCUSED -->
+<div class="relative flex flex-col justify-between rounded-xl bg-surface-container-low p-space-md shadow-md transition-all hover:bg-surface-container group" id="candidate-2">
+<div class="flex flex-col pt-1">
+<!-- Card Header & Utility Badge -->
+<div class="flex items-start justify-between gap-2 mb-space-sm">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline font-mono tracking-wide font-semibold uppercase">RANK #02 • MINIMAL EXPENDITURE</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 leading-snug">
+                Maritime Slow-Steaming
+                <span class="block font-headline-sm text-headline-sm text-on-surface-variant font-normal">&amp; Southern Bypass (Singapore-Suez)</span>
+</h3>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<div class="px-2.5 py-1 rounded bg-surface-container-highest text-tertiary font-label-md text-label-md font-bold font-mono tracking-tight flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+<span>81.4/100</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline mt-0.5">Confidence: 87.4%</span>
+</div>
+</div>
+<!-- KPI Metric Chips Grid -->
+<div class="grid grid-cols-2 gap-space-xs p-space-sm rounded-lg bg-surface-container-lowest mb-space-md">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Cost Delta</span>
+<span class="font-label-md text-label-md font-mono text-secondary font-semibold mt-0.5">-$28,000</span>
+<span class="font-label-xs text-[10px] text-secondary">-1.6% savings</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Time Preserved</span>
+<span class="font-label-md text-label-md font-mono text-error font-semibold mt-0.5">-3.5 Days delay</span>
+<span class="font-label-xs text-[10px] text-error">Breaches Fab 4 SLA</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Carbon Footprint</span>
+<span class="font-label-md text-label-md font-mono text-secondary mt-0.5">-6.2 tCO2e</span>
+<span class="font-label-xs text-[10px] text-outline">Reduced bunker burn</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Disruption Risk</span>
+<span class="font-label-md text-label-md font-mono text-error font-semibold mt-0.5">38% (Moderate)</span>
+<span class="font-label-xs text-[10px] text-outline">Port congestion risk</span>
+</div>
+</div>
+<!-- Strategy Breakdown Text -->
+<div class="flex flex-col gap-1 mb-space-md">
+<span class="font-label-xs text-label-xs uppercase text-outline tracking-wider font-semibold">Execution Strategy</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Hold vessels at anchor outside typhoon perimeter for 48h, then proceed through southern secondary maritime lane via Singapore. Conserves fuel and limits ocean freight surcharges.
+            </p>
+</div>
+<!-- Feasibility Status Box -->
+<div class="p-2.5 rounded-lg bg-surface-container flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-outline text-[16px] shrink-0 mt-0.5">warning</span>
+<div class="flex flex-col font-body-sm text-body-sm">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">Capacity Verified / Line Risk</span>
+<span class="text-on-surface font-medium text-[12px] leading-tight mt-0.5">High carrier readiness via ONE &amp; Evergreen</span>
+<span class="font-label-xs text-[10px] text-error mt-0.5 font-mono">High vulnerability to Fab 4 assembly line halts</span>
+</div>
+</div>
+</div>
+<!-- Action Selection Button -->
+<button class="w-full h-9 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-bright transition-all" id="btn-candidate-2" onclick="selectCandidate(2)">
+<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span>
+<span>Select Alternative A</span>
+</button>
+</div>
+<!-- CANDIDATE 3: HIGH SPEED CHARTER -->
+<div class="relative flex flex-col justify-between rounded-xl bg-surface-container-low p-space-md shadow-md transition-all hover:bg-surface-container group" id="candidate-3">
+<div class="flex flex-col pt-1">
+<!-- Card Header & Utility Badge -->
+<div class="flex items-start justify-between gap-2 mb-space-sm">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-primary-fixed font-mono tracking-wide font-semibold uppercase">RANK #03 • MAX VELOCITY</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-0.5 leading-snug">
+                Emergency Direct Air Charter
+                <span class="block font-headline-sm text-headline-sm text-on-surface-variant font-normal">Antonov AN-124 / Boeing 747-8F Direct</span>
+</h3>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<div class="px-2.5 py-1 rounded bg-primary/10 text-primary font-label-md text-label-md font-bold font-mono tracking-tight flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">speed</span>
+<span>76.2/100</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline mt-0.5">Confidence: 96.0%</span>
+</div>
+</div>
+<!-- KPI Metric Chips Grid -->
+<div class="grid grid-cols-2 gap-space-xs p-space-sm rounded-lg bg-surface-container-lowest mb-space-md">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Cost Delta</span>
+<span class="font-label-md text-label-md font-mono text-error font-semibold mt-0.5">+$490,000</span>
+<span class="font-label-xs text-[10px] text-error">+28.4% budget overrun</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Time Preserved</span>
+<span class="font-label-md text-label-md font-mono text-secondary font-semibold mt-0.5">9.0 Days saved</span>
+<span class="font-label-xs text-[10px] text-secondary">Full schedule recovery</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Carbon Footprint</span>
+<span class="font-label-md text-label-md font-mono text-error mt-0.5">+52.8 tCO2e</span>
+<span class="font-label-xs text-[10px] text-error">Substantial emission surge</span>
+</div>
+<div class="flex flex-col pt-1">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Disruption Risk</span>
+<span class="font-label-md text-label-md font-mono text-secondary font-semibold mt-0.5">4% (Negligible)</span>
+<span class="font-label-xs text-[10px] text-secondary">Overflies weather zone</span>
+</div>
+</div>
+<!-- Strategy Breakdown Text -->
+<div class="flex flex-col gap-1 mb-space-md">
+<span class="font-label-xs text-label-xs uppercase text-outline tracking-wider font-semibold">Execution Strategy</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Immediate wet-lease charter mobilization from Gimpo (GMP) direct to San Francisco (SFO) carrying the complete 14-container batch. Unloads directly into express drayage network.
+            </p>
+</div>
+<!-- Feasibility Status Box -->
+<div class="p-2.5 rounded-lg bg-surface-container flex items-start gap-2 mb-space-md">
+<span class="material-symbols-outlined text-tertiary text-[16px] shrink-0 mt-0.5">gavel</span>
+<div class="flex flex-col font-body-sm text-body-sm">
+<span class="font-label-xs text-label-xs text-tertiary font-semibold uppercase tracking-wider">Governance Gate Required</span>
+<span class="text-on-surface font-medium text-[12px] leading-tight mt-0.5">Atlas Air tail confirmed available on tarmac</span>
+<span class="font-label-xs text-[10px] text-error mt-0.5 font-mono">Requires Tier-3 VP Finance approval (&gt;$250k cap)</span>
+</div>
+</div>
+</div>
+<!-- Action Selection Button -->
+<button class="w-full h-9 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-bright transition-all" id="btn-candidate-3" onclick="selectCandidate(3)">
+<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span>
+<span>Select Alternative B</span>
+</button>
+</div>
+</div>
+</section>
+<!-- SECTION 2: AI Multi-Agent Executive Consensus & Citations -->
+<section class="mb-space-lg">
+<div class="relative rounded-xl overflow-hidden bg-surface-container-low p-space-lg shadow-xl">
+<!-- Ambient Glow Decorator -->
+<div class="absolute -right-24 -top-24 w-80 h-80 rounded-full bg-tertiary-container/10 blur-3xl pointer-events-none"></div>
+<div class="absolute -left-24 -bottom-24 w-80 h-80 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+<!-- Agent Top Bar Metadata -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/30 mb-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-tertiary/15 text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Claude 3.5 Sonnet — Multi-Agent Executive Synthesis</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary font-mono">MERKLE-PROVEN</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">Temperature: 0.1 • Top-P: 0.95 • Autonomous Consensus Engine v3.1</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-xs text-label-xs px-2.5 py-1 rounded bg-surface-container-highest text-secondary font-mono flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+            AGENT QUORUM: 100% UNANIMOUS
+          </span>
+</div>
+</div>
+<!-- Multi-Agent Consensus Pill Matrix -->
+<div class="flex flex-wrap items-center gap-2 p-space-sm rounded-lg bg-surface-container-lowest mb-space-md">
+<span class="font-label-xs text-label-xs uppercase text-outline font-semibold tracking-wider mr-1">Agent Swarm Voting:</span>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px] text-secondary">alt_route</span>
+<span>RoutingAgent:</span>
+<span class="font-mono text-secondary font-semibold">99% Confidence</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px] text-secondary">shield_with_heart</span>
+<span>RiskAssessmentAgent:</span>
+<span class="font-mono text-secondary font-semibold">94% Confidence</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px] text-secondary">account_balance</span>
+<span>TreasuryPolicyAgent:</span>
+<span class="font-mono text-secondary font-semibold">96% Confidence</span>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container text-outline font-label-xs text-label-xs ml-auto">
+<span class="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+<span class="text-on-surface-variant font-mono">0 Dissenting Nodes</span>
+</div>
+</div>
+<!-- Executive Rationale Prose with Inline Document Reference Badges -->
+<div class="flex flex-col gap-space-sm mb-space-lg">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">psychology</span>
+          Consensus Rationale &amp; Trade-off Quantification
+        </h4>
+<div class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed space-y-3">
+<p>
+            Based on probabilistic Monte Carlo simulation across <span class="font-mono text-on-surface font-medium">1,000 perturbation runs</span>, <strong class="text-on-surface font-semibold">Rank #1 (Multimodal Air-Sea Pivot)</strong> delivers the highest Pareto optimality between production line continuity and operational expenditure. Holding cargo risks an estimated <span class="text-error font-mono font-medium">$1.2M/day</span> Fab 3 downtime penalty 
+            <button class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs font-mono transition-colors mx-1" onclick="toggleCiteModal('cite-1')">
+<span class="material-symbols-outlined text-[12px]">description</span>
+              Doc Ref: SOP-SC-402 §4.2
+            </button>, which severely eclipses the $142.5k multimodal freight surcharge.
+          </p>
+<p>
+            While Alternative B eliminates transit variance, the 28.4% budget overrun triggers Tier-3 VP escalations under Treasury Guideline TG-88 
+            <button class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs font-mono transition-colors mx-1" onclick="toggleCiteModal('cite-2')">
+<span class="material-symbols-outlined text-[12px]">account_balance_wallet</span>
+              Doc Ref: FinGov-TG-88
+            </button>. Carrier reliability for Korean Air Cargo on this route currently stands at <strong class="text-on-surface font-medium">98.4% on-time performance</strong> over the past 90 days 
+            <button class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs font-mono transition-colors mx-1" onclick="toggleCiteModal('cite-3')">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+              Doc Ref: Carrier-SLA-KAL-Q3
+            </button>. Rerouting batch <span class="font-mono text-on-surface">RW-9021</span> through Incheon avoids the gale-force radius entirely, reducing vessel sea-state hazard score from 84/100 to 11/100 
+            <button class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-surface-container-high hover:bg-surface-bright text-primary font-label-xs text-label-xs font-mono transition-colors mx-1" onclick="toggleCiteModal('cite-4')">
+<span class="material-symbols-outlined text-[12px]">thunderstorm</span>
+              Doc Ref: NOAA-AIS-Bulletin-49
+            </button>.
+          </p>
+</div>
+</div>
+<!-- Interactive RAG Citations Strip -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase text-outline font-semibold tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">link</span>
+            Cryptographically Grounded RAG Sources (Click to inspect vector chunk)
+          </span>
+<span class="font-label-xs text-label-xs text-secondary font-mono">4 SOURCES EMBEDDED</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<!-- Citation 1 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors group" onclick="toggleCiteModal('cite-1')">
+<div class="w-7 h-7 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">SOP-SC-402 §4.2</span>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono shrink-0">98.2% Match</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Semiconductor Disruption SLA &amp; Downside Penalties</span>
+<span class="font-label-xs text-[10px] text-outline font-mono mt-0.5">SHA256: e8b9f1...4a02</span>
+</div>
+</div>
+<!-- Citation 2 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors group" onclick="toggleCiteModal('cite-2')">
+<div class="w-7 h-7 rounded bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">policy</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">FinGov-TG-88</span>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-mono shrink-0">94.7% Match</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Autonomous Expenditure Delegation Thresholds ($250k Cap)</span>
+<span class="font-label-xs text-[10px] text-outline font-mono mt-0.5">SHA256: d241b7...91e3</span>
+</div>
+</div>
+<!-- Citation 3 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors group" onclick="toggleCiteModal('cite-3')">
+<div class="w-7 h-7 rounded bg-secondary/10 text-secondary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">flight_takeoff</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Carrier-SLA-KAL-Q3</span>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono shrink-0">97.8% Match</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Korean Air Cargo Performance Metrics &amp; Slot Reliability</span>
+<span class="font-label-xs text-[10px] text-outline font-mono mt-0.5">SHA256: 7f33c1...b599</span>
+</div>
+</div>
+<!-- Citation 4 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high cursor-pointer transition-colors group" onclick="toggleCiteModal('cite-4')">
+<div class="w-7 h-7 rounded bg-error-container/40 text-error flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px]">air</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center justify-between gap-1">
+<span class="font-headline-sm text-body-sm text-on-surface font-semibold truncate group-hover:text-primary transition-colors">NOAA-AIS-Bulletin-49</span>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono shrink-0">99.4% Match</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Pacific Storm Track Vector Model &amp; Severe Wave Forecast</span>
+<span class="font-label-xs text-[10px] text-outline font-mono mt-0.5">SHA256: bb0844...627a</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Bottom Action & Cryptographic Governance Approval Bar -->
+<section class="sticky bottom-0 z-30 -mx-space-md px-space-md py-3 bg-surface-container-lowest/95 backdrop-blur-md shadow-2xl border-t border-outline-variant/30">
+<div class="flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Authority & Delegated Cap Notice -->
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-9 h-9 rounded-lg bg-secondary/15 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold truncate">Required Sign-off: Level 2 Supply Chain Director</span>
+<span class="font-label-xs text-[10px] px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-semibold font-mono">AUTONOMOUS ELIGIBLE</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">
+            Selected cost: <strong class="text-on-surface font-mono" id="summary-cost">$142,500</strong> (Within pre-authorized delegation ceiling of <span class="font-mono text-outline">$250,000</span>)
+          </span>
+</div>
+</div>
+<!-- Ledger Hashes (Audit Provenance) -->
+<div class="hidden xl:flex flex-col text-left font-label-xs text-label-xs text-outline font-mono">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Crypto Hash: <strong class="text-on-surface">0x7f8a...9c2d</strong></span>
+<span class="text-outline-variant">•</span>
+<span>Merkle Root: <strong class="text-on-surface">0x4a3b...8e11</strong></span>
+</div>
+<span class="text-[10px] text-outline">Audit trail immutably anchored to Enterprise Hyperledger Fabric</span>
+</div>
+<!-- Governance Action Group -->
+<div class="flex flex-wrap items-center gap-space-xs shrink-0 w-full lg:w-auto justify-end">
+<button class="h-9 px-3 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm flex items-center gap-1.5 transition-colors shadow-sm" onclick="simulateVariance()">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Simulate Variance</span>
+</button>
+<button class="h-9 px-3 rounded bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm flex items-center gap-1.5 transition-colors shadow-sm" onclick="exportDossier()">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Export Dossier</span>
+</button>
+<!-- Primary Sign-off Trigger -->
+<button class="relative group h-9 px-4 rounded bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold flex items-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md" id="execute-button" onclick="executeSignOff()">
+<span class="material-symbols-outlined text-[18px]">lock_open</span>
+<span>Send for Governance Approval &amp; Cryptographic Sign-off</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Interactive Citation Detail Drawer / Modal (Hidden by default) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-surface-container-lowest/80 backdrop-blur-sm hidden" id="citation-modal">
+<div class="w-full max-w-xl bg-surface-container-low rounded-xl p-space-lg shadow-2xl relative">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30 mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">fingerprint</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold" id="modal-title">Document Citation Inspector</span>
+</div>
+<button class="w-7 h-7 rounded hover:bg-surface-container-high flex items-center justify-center text-outline hover:text-on-surface" onclick="closeCiteModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="space-y-3 font-body-sm text-body-sm text-on-surface-variant mb-space-lg">
+<div class="p-3 rounded bg-surface-container-lowest font-mono text-label-xs text-label-xs space-y-1">
+<div class="flex justify-between text-outline">
+<span>DOCUMENT HASH</span>
+<span id="modal-hash">0x8a928ef1902410a8b9e...</span>
+</div>
+<div class="flex justify-between text-outline">
+<span>COSINE SIMILARITY</span>
+<span class="text-secondary font-bold" id="modal-match">98.2%</span>
+</div>
+<div class="flex justify-between text-outline">
+<span>GOVERNANCE AUTHORITY</span>
+<span class="text-on-surface">Global Logistics Operations Committee</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs uppercase text-outline font-semibold">Extracted Vector Passage:</span>
+<p class="p-3 rounded bg-surface-container text-on-surface leading-relaxed text-[13px]" id="modal-body">
+            "In the event of active typhoon conditions exceeding sea-state 6 within the Busan/Taiwan Strait lane, critical wafer batches categorized as Priority 1 (Fab 3 &amp; Fab 4 commitments) MUST be rerouted via air transshipment if maritime hold delays exceed 72 hours, to circumvent contractually stipulated liquidated damages of $1,200,000 per operational line shutdown day."
+          </p>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2">
+<button class="h-8 px-4 rounded bg-primary text-on-primary font-headline-sm text-headline-sm font-medium hover:bg-primary-container transition-colors" onclick="closeCiteModal()">
+          Dismiss
+        </button>
+</div>
+</div>
+</div>
+<!-- Interactive JavaScript -->
+<script>
+    let selectedCandidateIndex = 1;
+
+    const candidateCosts = {
+      1: "$142,500",
+      2: "-$28,000",
+      3: "+$490,000"
+    };
+
+    const citationData = {
+      "cite-1": {
+        title: "SOP-SC-402 §4.2: Semiconductor Disruption SLA & Downside Penalties",
+        hash: "SHA256: e8b9f10a89d9e4a02... [VERIFIED]",
+        match: "98.2% Semantic Confidence",
+        body: "In the event of active typhoon conditions exceeding sea-state 6 within the Busan/Taiwan Strait corridor, critical wafer batches categorized as Priority 1 (Fab 3 & 4 commitments) MUST be rerouted via air multimodal if maritime hold delays exceed 72 hours to circumvent contractually stipulated liquidated damages of $1,200,000 per line shutdown day."
+      },
+      "cite-2": {
+        title: "FinGov-TG-88: Autonomous Expenditure Delegation Thresholds",
+        hash: "SHA256: d241b7a66f09191e3... [VERIFIED]",
+        match: "94.7% Semantic Confidence",
+        body: "Supply Chain Risk Directors (Level 2) maintain unilateral discretionary authorization for disruption mitigation expenditure up to $250,000 USD per single incident event. Any reroute package exceeding this cap requires dual-key approval from the Corporate VP Finance."
+      },
+      "cite-3": {
+        title: "Carrier-SLA-KAL-Q3: Korean Air Cargo Performance Metrics",
+        hash: "SHA256: 7f33c16a12b88b599... [VERIFIED]",
+        match: "97.8% Semantic Confidence",
+        body: "Quarterly audit results confirm KAL transpacific freight adherence at 98.4% on-time flight departure reliability. Dedicated cold-chain and microchip container vibration isolation protocols meet Class-A specifications for all 777F & 747-8F movements via Incheon."
+      },
+      "cite-4": {
+        title: "NOAA-AIS-Bulletin-49: Pacific Storm Track Vector Model",
+        hash: "SHA256: bb0844f210d19627a... [VERIFIED]",
+        match: "99.4% Semantic Confidence",
+        body: "Typhoon Malakas is tracking NNW at 14 knots with central pressure 945hPa. Predicted wave heights across Busan approach channel will exceed 8.5 meters over the next 72 hours. Incheon International Airport maintains clear runway operations outside the peripheral gale envelope."
+      }
+    };
+
+    function selectCandidate(index) {
+      selectedCandidateIndex = index;
+
+      // Update button text & card highlights
+      for (let i = 1; i <= 3; i++) {
+        const card = document.getElementById('candidate-' + i);
+        const btn = document.getElementById('btn-candidate-' + i);
+        
+        if (i === index) {
+          card.classList.add('bg-surface-container');
+          card.classList.remove('bg-surface-container-low');
+          btn.className = "w-full h-9 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-all shadow-md";
+          btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Selected Primary Candidate</span>`;
+        } else {
+          card.classList.remove('bg-surface-container');
+          card.classList.add('bg-surface-container-low');
+          btn.className = "w-full h-9 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm font-semibold flex items-center justify-center gap-2 hover:bg-surface-bright transition-all";
+          btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">radio_button_unchecked</span><span>Select Alternative ${i === 2 ? 'A' : 'B'}</span>`;
+        }
+      }
+
+      // Update bottom action bar info
+      const costEl = document.getElementById('summary-cost');
+      if (costEl) costEl.textContent = candidateCosts[index];
+
+      // Update main approval CTA label
+      const execBtn = document.getElementById('execute-button');
+      if (execBtn) {
+        if (index === 3) {
+          execBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">lock_clock</span><span>Escalate to VP Finance ($490k &gt; $250k Cap)</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+          execBtn.classList.remove('bg-primary', 'text-on-primary');
+          execBtn.classList.add('bg-tertiary', 'text-on-tertiary');
+        } else {
+          execBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">lock_open</span><span>Send for Governance Approval &amp; Cryptographic Sign-off</span><span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>`;
+          execBtn.classList.add('bg-primary', 'text-on-primary');
+          execBtn.classList.remove('bg-tertiary', 'text-on-tertiary');
+        }
+      }
+    }
+
+    function toggleCiteModal(citeId) {
+      const data = citationData[citeId];
+      if (!data) return;
+
+      document.getElementById('modal-title').textContent = data.title;
+      document.getElementById('modal-hash').textContent = data.hash;
+      document.getElementById('modal-match').textContent = data.match;
+      document.getElementById('modal-body').textContent = data.body;
+      
+      const modal = document.getElementById('citation-modal');
+      modal.classList.remove('hidden');
+    }
+
+    function closeCiteModal() {
+      document.getElementById('citation-modal').classList.add('hidden');
+    }
+
+    function simulateVariance() {
+      const btn = event.currentTarget;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Computing Runs...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-secondary">check</span><span>Monte Carlo Verified (1k Runs)</span>`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2200);
+      }, 1000);
+    }
+
+    function exportDossier() {
+      const btn = event.currentTarget;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">progress_activity</span><span>Compiling PDF...</span>`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-secondary">check</span><span>Dossier Packaged</span>`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }, 900);
+    }
+
+    function executeSignOff() {
+      const btn = document.getElementById('execute-button');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Signing with Hardware Security Module...</span>`;
+      
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">verified</span><span>Signed &amp; Dispatched to Dispatch Engine!</span>`;
+        btn.classList.remove('bg-primary', 'bg-tertiary');
+        btn.classList.add('bg-secondary', 'text-on-secondary');
+      }, 1400);
+    }
+
+    // Countdown Clock Simulation
+    let totalSeconds = (2 * 3600) + (44 * 60) + 18;
+    const clockEl = document.getElementById('countdown-clock');
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(totalSeconds % 60).padStart(2, '0');
+        if (clockEl) clockEl.textContent = `${h}:${m}:${s}`;
+      }
+    }, 1000);
+  </script>
+</div></main></div></body></html>

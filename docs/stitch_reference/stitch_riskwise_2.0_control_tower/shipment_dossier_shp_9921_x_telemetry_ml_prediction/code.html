@@ -1,0 +1,763 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-variant": "#31353b",
+          "secondary": "#4edea3",
+          "primary": "#adc6ff",
+          "on-surface": "#e0e2ea",
+          "on-error": "#690005",
+          "outline-variant": "#424754",
+          "on-primary-fixed-variant": "#004395",
+          "surface-dim": "#101419",
+          "primary-fixed-dim": "#adc6ff",
+          "surface-container-high": "#262a30",
+          "on-primary": "#002e6a",
+          "secondary-container": "#00a572",
+          "on-primary-fixed": "#001a42",
+          "primary-container": "#4d8eff",
+          "surface-container-lowest": "#0a0e13",
+          "tertiary-fixed": "#e9ddff",
+          "on-primary-container": "#00285d",
+          "outline": "#8c909f",
+          "secondary-fixed": "#6ffbbe",
+          "error-container": "#93000a",
+          "inverse-primary": "#005ac2",
+          "tertiary-fixed-dim": "#d0bcff",
+          "background": "#101419",
+          "primary-fixed": "#d8e2ff",
+          "on-secondary-fixed-variant": "#005236",
+          "surface-container-highest": "#31353b",
+          "surface": "#101419",
+          "error": "#ffb4ab",
+          "on-background": "#e0e2ea",
+          "on-tertiary-container": "#340080",
+          "inverse-on-surface": "#2d3136",
+          "on-tertiary-fixed-variant": "#5516be",
+          "surface-tint": "#adc6ff",
+          "on-secondary-fixed": "#002113",
+          "inverse-surface": "#e0e2ea",
+          "tertiary": "#d0bcff",
+          "on-tertiary-fixed": "#23005c",
+          "surface-bright": "#36393f",
+          "surface-container": "#1c2025",
+          "surface-container-low": "#181c21",
+          "secondary-fixed-dim": "#4edea3",
+          "on-tertiary": "#3c0091",
+          "on-secondary-container": "#00311f",
+          "on-error-container": "#ffdad6",
+          "tertiary-container": "#a078ff",
+          "on-secondary": "#003824",
+          "on-surface-variant": "#c2c6d6"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "space-lg": "1rem",
+          "gutter": "0.75rem",
+          "space-xl": "1.5rem",
+          "space-sm": "0.5rem",
+          "margin": "1rem",
+          "space-xs": "0.25rem",
+          "space-md": "0.75rem"
+        },
+        "fontFamily": {
+          "display-lg": [
+            "Inter"
+          ],
+          "label-sm": [
+            "JetBrains Mono"
+          ],
+          "headline-sm": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "label-xs": [
+            "JetBrains Mono"
+          ],
+          "display-lg-mobile": [
+            "Inter"
+          ],
+          "label-md": [
+            "JetBrains Mono"
+          ],
+          "body-sm": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "display-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-sm": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "0em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-md": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "15px",
+            {
+              "lineHeight": "22px",
+              "letterSpacing": "0em",
+              "fontWeight": "400"
+            }
+          ],
+          "label-xs": [
+            "10px",
+            {
+              "lineHeight": "12px",
+              "letterSpacing": "0.06em",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg-mobile": [
+            "24px",
+            {
+              "lineHeight": "32px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      },
+    },
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest border-r border-outline-variant/30 z-50 flex flex-col justify-between overflow-y-auto"><div class="p-space-lg"><div class="flex items-center gap-space-sm pb-space-md border-b border-outline-variant/20"><img alt="Brand logo. - Primary color: #3b82f6
+- Font: inter
+- Mode: dark
+- Roundness: rounded-sm
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-on-surface">RiskWise</span><span class="font-label-xs text-label-xs text-primary px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20">v2.4.9</span></div><span class="font-label-xs text-label-xs uppercase tracking-wider text-outline">AUTONOMOUS CORE</span></div></div><div class="mt-space-md px-2.5 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/30 flex items-center justify-between"><div class="flex flex-col"><span class="font-label-xs text-label-xs text-outline uppercase">Active Scope</span><span class="font-label-sm text-label-sm text-secondary font-medium tracking-tight truncate">NA / APAC TIER-1</span></div><span class="material-symbols-outlined text-outline text-[16px]">tune</span></div><nav class="mt-space-lg space-y-space-md" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg"><div class="space-y-1"><span class="px-2 font-label-xs text-label-xs uppercase tracking-widest text-outline">1. Overview</span><div class="flex flex-col mt-1 space-y-0.5"><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="control-tower" href="#">Control Tower</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="global-live-map" href="#">Global Live Map</a></div></div><div class="space-y-1"><span class="px-2 font-label-xs text-label-xs uppercase tracking-widest text-outline">2. Intelligence &amp; Risk</span><div class="flex flex-col mt-1 space-y-0.5"><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="risk-register" href="#">Risk Register</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="incident-command" href="#">Incident Command</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ai-recommendations" href="#">AI Recommendations</a></div></div><div class="space-y-1"><span class="px-2 font-label-xs text-label-xs uppercase tracking-widest text-outline">3. Digital Twin &amp; Sim</span><div class="flex flex-col mt-1 space-y-0.5"><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="topology-canvas" href="#">Topology Canvas</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="disruption-simulation" href="#">Disruption Simulation</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="optimization-runs" href="#">Optimization Runs</a></div></div><div class="space-y-1"><span class="px-2 font-label-xs text-label-xs uppercase tracking-widest text-outline">4. Operations &amp; Shipments</span><div class="flex flex-col mt-1 space-y-0.5"><a aria-current="page" class="flex items-center px-2.5 py-1.5 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg" data-path="shipments-tracker" href="#">Shipments Tracker</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="action-dispatch" href="#">Action Dispatch</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="verification-engine" href="#">Verification Engine</a></div></div><div class="space-y-1"><span class="px-2 font-label-xs text-label-xs uppercase tracking-widest text-outline">5. Governance &amp; Data</span><div class="flex flex-col mt-1 space-y-0.5"><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="human-approvals" href="#">Human Approvals</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="audit-log-explorer" href="#">Audit Log Explorer</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="network-data" href="#">Network Data</a><a class="flex items-center px-2.5 py-1.5 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="settings-rbac" href="#">Settings &amp; RBAC</a></div></div></nav></div><div class="p-space-lg border-t border-outline-variant/30 bg-surface-container-low/40"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs text-on-surface font-medium">12ms (Z-FEED)</span></div><span class="font-label-xs text-label-xs text-outline uppercase">MERKLE SYNC</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 z-40 px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/40 hover:border-outline-variant transition-colors cursor-pointer"><span class="material-symbols-outlined text-secondary text-[18px]">corporate_fare</span><span class="font-body-sm text-body-sm text-on-surface font-medium truncate max-w-[220px]">Global Logistics Enterprise NA &amp; APAC Tier-1</span><span class="material-symbols-outlined text-outline text-[16px]">expand_more</span></div></div><div class="flex-1 max-w-xl mx-space-xl"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span><input class="w-full h-9 pl-9 pr-14 rounded-lg bg-surface-container-low border border-outline-variant/40 text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:border-primary" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><kbd class="absolute right-2 px-1.5 py-0.5 rounded bg-surface-container-high border border-outline-variant/40 font-label-xs text-label-xs text-outline">⌘K</kbd></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-2 px-2.5 py-1 rounded bg-secondary/10 border border-secondary/20"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-label-xs font-semibold text-secondary uppercase tracking-wider">TELEMETRY: OPTIMAL 42,819 NODES</span></div><button class="h-9 px-3.5 rounded-lg bg-primary-container text-on-primary-container font-headline-sm text-headline-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1.5"><span class="material-symbols-outlined text-[18px]">bolt</span><span>Simulate Disruption</span></button><div class="relative flex items-center justify-center p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors cursor-pointer"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-error text-on-error font-label-xs text-[9px] font-bold">4</span></div><div class="h-6 w-[1px] bg-outline-variant/40"></div><div class="flex items-center gap-2.5 pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida/AEtjO1XVwVHTLpN_t23CC23GlOlyciakF-dIu0LgtTtRBVzz3bDN_KQZCn_oWyQL410lEHDYWwbOi7G7gZRh7CY4Ye3PcFJBQd5yh823vGBDHabffHzpYZhW0o9u2oZSaDB5OxpXalrD_xPnr9h_6V1IV9AUngs8WbqUo2JkvkGY9mZ38LzGkyN5iK8HGRfTV3g8lzNtiEsENqZVWVvfgKWJDsfkTPErg9XqQsTS2QebKIihDY0SPksnykZdVjMr"><div class="hidden md:flex flex-col text-left"><span class="font-headline-sm text-headline-sm text-on-surface leading-none font-semibold">Marcus Vance</span><span class="font-label-xs text-label-xs text-outline leading-tight mt-0.5">Risk Director (L4)</span></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen px-space-xl py-space-lg"><div class="flex flex-col w-full space-y-space-md text-on-surface">
+<!-- Top Command & Dossier Metadata Bar -->
+<div class="flex flex-col space-y-space-xs">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-1.5 font-label-xs text-label-xs text-outline tracking-wider uppercase">
+<span class="hover:text-on-surface cursor-pointer transition-colors">Operations &amp; Shipments</span>
+<span class="material-symbols-outlined text-[13px] text-outline-variant">chevron_right</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Shipments Tracker</span>
+<span class="material-symbols-outlined text-[13px] text-outline-variant">chevron_right</span>
+<span class="text-primary font-semibold">#SHP-9921-X</span>
+<span class="mx-1 h-1 w-1 rounded-full bg-outline-variant"></span>
+<span class="text-secondary font-medium">LIVE TELEMETRY ACTIVE</span>
+</div>
+<!-- Main Header Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="space-y-1.5 min-w-0">
+<div class="flex flex-wrap items-center gap-2">
+<div class="flex items-center gap-1.5 bg-surface-container-high px-2.5 py-1 rounded">
+<span class="font-label-sm text-label-sm font-semibold tracking-tight text-on-surface">#SHP-9921-X</span>
+<button class="text-outline hover:text-on-surface transition-colors" onclick="navigator.clipboard.writeText('SHP-9921-X')" title="Copy ID">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-error-container text-error font-label-xs text-label-xs font-semibold uppercase tracking-wider">
+<span class="h-1.5 w-1.5 rounded-full bg-error animate-pulse"></span>
+            Critical At-Risk (SEV-1)
+          </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">directions_boat</span>
+            Ocean Freight • 14,200 TEU
+          </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-outline font-label-xs text-label-xs">
+            BOL: <span class="text-on-surface font-mono">BOL-COSCO-2024-884912</span>
+</span>
+</div>
+<div class="flex flex-wrap items-center gap-2 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-medium text-on-surface">Automotive Microcontrollers &amp; 300mm Silicon Wafer Arrays</span>
+<span class="text-outline">•</span>
+<span>Declared Cargo Value: <strong class="text-secondary font-mono font-medium">$88,400,000 USD</strong></span>
+<span class="text-outline font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Lloyd's Underwritten [Tier-A1]</span>
+</div>
+</div>
+<!-- Action Cluster -->
+<div class="flex flex-wrap items-center gap-2 shrink-0">
+<button class="h-9 px-3.5 rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold hover:bg-primary-fixed-dim transition-all flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+<span>Simulate &amp; Trigger AI Mitigation</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-surface-container-high text-on-surface font-headline-sm text-headline-sm font-medium hover:bg-surface-bright transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]">verified_user</span>
+<span>Sovereign Sign-Off</span>
+</button>
+<button class="h-9 px-2.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors flex items-center gap-1" title="Carrier SATCOM Bridge">
+<span class="material-symbols-outlined text-[17px]">satellite_alt</span>
+<span class="hidden sm:inline font-body-sm text-body-sm">SATCOM</span>
+</button>
+<button class="h-9 w-9 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-bright transition-colors flex items-center justify-center" title="Export Dossier (PDF/EDI)">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Three-Column Cockpit Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
+<!-- LEFT COLUMN: Geospatial Telemetry & Sensor Telematics (30%) -->
+<div class="lg:col-span-4 xl:col-span-4 space-y-space-md">
+<!-- Live Corridor GIS Telemetry Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm flex flex-col space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">radar</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Live Corridor GIS Telemetry</h3>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary animate-ping"></span>
+            10Hz STREAM
+          </span>
+</div>
+<!-- Embedded Map Visualization -->
+<div class="relative w-full h-56 rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center opacity-40" data-location="Bab-el-Mandeb Strait"></div>
+<!-- Tactical HUD Route Overlay (SVG Layer) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none" viewBox="0 0 400 220">
+<!-- Grid Lines -->
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="0" x2="400" y1="55" y2="55"></line>
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="0" x2="400" y1="110" y2="110"></line>
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="0" x2="400" y1="165" y2="165"></line>
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="100" x2="100" y1="0" y2="220"></line>
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="200" x2="200" y1="0" y2="220"></line>
+<line class="text-outline-variant/20" stroke="currentColor" stroke-dasharray="2,4" x1="300" x2="300" y1="0" y2="220"></line>
+<!-- Original Planned Track (Red Sea - Blocked Corridor) -->
+<path class="text-outline" d="M 370 180 Q 290 150 210 115 T 145 75 T 90 40" fill="none" stroke="currentColor" stroke-dasharray="4,3" stroke-width="2"></path>
+<!-- Active SEV-1 Threat Zone Polygon -->
+<polygon class="text-error/25" fill="currentColor" points="120,60 170,55 185,95 135,110" stroke="currentColor" stroke-dasharray="2,2" stroke-width="1.5"></polygon>
+<!-- Cape of Good Hope Proposed Diversion Trajectory -->
+<path class="text-tertiary" d="M 210 115 C 230 150, 240 195, 200 215 C 160 225, 110 190, 70 120 C 40 70, 50 30, 80 20" fill="none" stroke="currentColor" stroke-dasharray="5,4" stroke-width="2"></path>
+<!-- Current Vessel Anchor / Vector Position -->
+<circle class="text-secondary" cx="210" cy="115" fill="currentColor" r="5"></circle>
+<circle class="text-secondary/60 animate-ping" cx="210" cy="115" fill="none" r="14" stroke="currentColor"></circle>
+<line class="text-secondary" stroke="currentColor" stroke-width="2" x1="210" x2="190" y1="115" y2="105"></line>
+</svg>
+<!-- Map Overlays / Badges -->
+<div class="absolute top-2 left-2 flex flex-col gap-1">
+<span class="font-label-xs text-label-xs bg-surface-container-lowest/90 backdrop-blur px-2 py-0.5 rounded text-on-surface font-mono">
+              LAT 12°35'14"N • LON 43°20'08"E
+            </span>
+<span class="font-label-xs text-label-xs bg-error-container/90 text-error backdrop-blur px-1.5 py-0.5 rounded font-semibold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[12px]">warning</span> HOUTHI THREAT CORRIDOR
+            </span>
+</div>
+<div class="absolute bottom-2 right-2 bg-surface-container-lowest/90 backdrop-blur px-2 py-1 rounded text-right">
+<div class="font-label-xs text-label-xs text-outline">Projected Alternate</div>
+<div class="font-label-xs text-label-xs text-tertiary font-semibold flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-[13px]">alt_route</span> Cape of Good Hope (+3,420 nm)
+            </div>
+</div>
+</div>
+<!-- Telemetry HUD Specs Grid -->
+<div class="grid grid-cols-2 gap-2 pt-1 font-body-sm text-body-sm">
+<div class="bg-surface-container p-2 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider block">Vessel Info</span>
+<span class="font-semibold text-on-surface truncate block">COSCO SHIPPING SOLAR</span>
+<span class="font-label-xs text-label-xs text-outline-variant font-mono">IMO 9795634 • Flag HKG</span>
+</div>
+<div class="bg-surface-container p-2 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider block">Speed Over Ground</span>
+<span class="font-semibold text-secondary font-mono text-headline-sm">18.2 <span class="text-body-sm text-outline font-sans">kts</span></span>
+<span class="font-label-xs text-label-xs text-outline block">Bearing: <span class="text-on-surface font-mono">284° WNW</span></span>
+</div>
+<div class="bg-surface-container p-2 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider block">Current Draught</span>
+<span class="font-semibold text-on-surface font-mono">15.2m <span class="text-outline text-label-xs">(95% Capacity)</span></span>
+<div class="w-full bg-surface-container-high h-1 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-primary h-full" style="width: 95%"></div>
+</div>
+</div>
+<div class="bg-surface-container p-2 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider block">LEO Uplink Proof</span>
+<span class="font-label-xs text-label-xs text-on-surface font-mono truncate block">Spire LEO #48 (12ms)</span>
+<span class="font-label-xs text-label-xs text-secondary font-mono flex items-center gap-0.5 mt-0.5">
+              8f9b7c...3c12 <span class="text-[11px]">✓</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Container & Sensor Telematics Box -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]">sensors</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Cold-Chain &amp; Sensor Telematics</h3>
+</div>
+<span class="font-label-xs text-label-xs text-outline">18 Critical TEU Pods</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Reefer Temp -->
+<div class="bg-surface-container p-2.5 rounded flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline uppercase">Wafer Chamber</span>
+<span class="material-symbols-outlined text-[15px] text-secondary">thermostat</span>
+</div>
+<div class="mt-1">
+<div class="font-mono text-headline-md font-semibold text-on-surface">21.4°C</div>
+<span class="font-label-xs text-label-xs text-secondary">Optimal (18°–24°C)</span>
+</div>
+</div>
+<!-- Humidity -->
+<div class="bg-surface-container p-2.5 rounded flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline uppercase">Relative RH</span>
+<span class="material-symbols-outlined text-[15px] text-primary">humidity_percentage</span>
+</div>
+<div class="mt-1">
+<div class="font-mono text-headline-md font-semibold text-on-surface">42% RH</div>
+<span class="font-label-xs text-label-xs text-outline">Controlled purge</span>
+</div>
+</div>
+<!-- Tilt & Shock -->
+<div class="bg-surface-container p-2.5 rounded flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline uppercase">Tri-Axial G-Force</span>
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant">vibration</span>
+</div>
+<div class="mt-1">
+<div class="font-mono text-headline-md font-semibold text-on-surface">0.04 G</div>
+<span class="font-label-xs text-label-xs text-secondary">Nominal inertial</span>
+</div>
+</div>
+<!-- E-Seal Integrity -->
+<div class="bg-surface-container p-2.5 rounded flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline uppercase">E-Seal Ledger</span>
+<span class="material-symbols-outlined text-[15px] text-secondary">lock</span>
+</div>
+<div class="mt-1">
+<div class="font-mono text-label-sm font-semibold text-secondary">SHA-256 VALID</div>
+<span class="font-label-xs text-label-xs text-outline">Zero Tamper Event</span>
+</div>
+</div>
+</div>
+<!-- Micro Cargo Visual -->
+<div class="relative w-full h-24 rounded-lg overflow-hidden mt-2 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="High-tech secure ISO container stack on container ship deck at twilight with neon blue security sensors and glowing optical seal telemetry LEDs, hyperrealistic industrial cyber-logistics photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx8gU9z4m-ZGmJqH-bIh5VT9BBil_pGBL1FMHh_t0rYyMgjNTz02ExbhqJ59Ccp62Qgi8eWrYyNP1IRb-fqt76J1Q-GjFf2FZw5SvKskXFMBea5Eec0CmCM2r9ZqOlxIbEndfuk-4yFmJ3uAJPF8bAUehDMa1zRhbGZA5P4-YYHFcVIGoaE_yqpHBldaGNHOeoUX2m7gQTvy9rVfuw8vczt_0z7GSx71Ff8mYZ0bz2x0ILQx5UDZM72A">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-surface-container-lowest/30 to-transparent p-2 flex items-end justify-between">
+<span class="font-label-xs text-label-xs text-on-surface font-mono">POD-ID: MSKU-998201-4</span>
+<span class="font-label-xs text-label-xs text-secondary bg-surface-container-lowest/80 px-1.5 py-0.5 rounded font-mono">BATTERY: 98%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CENTER COLUMN: Multimodal Trajectory Timeline (40%) -->
+<div class="lg:col-span-4 xl:col-span-5 space-y-space-md">
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-md">
+<!-- Timeline Header with Progress -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">End-to-End Multimodal Trajectory</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cryptographic data provenance &amp; sensor checkpoints</p>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm font-semibold text-primary font-mono">4 of 7 COMPLETED</span>
+<div class="font-label-xs text-label-xs text-outline">57% Route Traversed</div>
+</div>
+</div>
+<!-- Linear progress bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 42.8%"></div>
+<div class="bg-error h-full" style="width: 14.3%"></div>
+<div class="bg-tertiary/40 h-full" style="width: 42.9%"></div>
+</div>
+</div>
+<!-- Vertical Timeline Stepper -->
+<div class="relative pl-6 space-y-space-md before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant/30">
+<!-- Milestone 1 -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Factory Gate Out &amp; Drayage Dispatch</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono font-semibold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> REAL
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                TSMC Fab 12 / Ningbo Semiconductor Park • <span class="font-mono text-outline">Oct 10, 04:15 UTC</span>
+</div>
+<div class="font-label-xs text-label-xs text-outline-variant font-mono bg-surface-container-low px-2 py-1 rounded">
+                Telemetry: GPS Geofence Exit + E-Seal Cryptographic Handshake
+              </div>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Berth Loading &amp; Port Departure</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono font-semibold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> REAL
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                Port of Ningbo-Zhoushan (Berth 4) • <span class="font-mono text-outline">Oct 12, 08:30 UTC</span>
+</div>
+<div class="font-label-xs text-label-xs text-outline-variant font-mono bg-surface-container-low px-2 py-1 rounded">
+                Carrier TOS Ingest • Vessel: COSCO SHIPPING SOLAR
+              </div>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-on-secondary shadow-sm">
+<span class="material-symbols-outlined text-[13px] font-bold">check</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Strait of Malacca Passage</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono font-semibold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> REAL
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                Singapore VTS Sector 3 Transit • <span class="font-mono text-outline">Oct 17, 19:40 UTC</span>
+</div>
+<div class="font-label-xs text-label-xs text-outline-variant font-mono bg-surface-container-low px-2 py-1 rounded">
+                Telemetry: Coastal AIS Transponder + LEO Satellite AIS Verified
+              </div>
+</div>
+</div>
+<!-- Milestone 4: ACTIVE & CRITICAL -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-error flex items-center justify-center text-on-error animate-pulse shadow-sm">
+<span class="material-symbols-outlined text-[13px] font-bold">warning</span>
+</div>
+<div class="bg-surface-container-high p-space-sm rounded-lg space-y-2 border-l-2 border-error">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-error font-semibold flex items-center gap-1.5">
+                  Bab-el-Mandeb Approaching Corridor
+                  <span class="font-label-xs text-label-xs px-1 py-0.2 bg-error/20 text-error rounded font-mono">ACTIVE STAGE</span>
+</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-mono font-semibold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> REAL
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface">
+                Southern Red Sea Entry • <span class="font-mono text-on-surface-variant">Live Point (Oct 22, 14:30 UTC)</span>
+</div>
+<!-- Severe Threat Alert Callout -->
+<div class="p-2 rounded bg-error-container/40 text-error text-body-sm space-y-1">
+<div class="flex items-center gap-1.5 font-semibold">
+<span class="material-symbols-outlined text-[16px]">crisis_alert</span>
+                  ACTIVE CHOKEPOINT BLOCKADE: Drone Munitions Threat Level SEV-1
+                </div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  UKMTO Advisory 042-24 issued. Hull war insurance canceled for transit. Vessel instructed to hold in international water lane while awaiting routing resolution.
+                </p>
+</div>
+</div>
+</div>
+<!-- Milestone 5: ESTIMATED / MITIGATION -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[13px]">schedule</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1 opacity-90">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Suez Canal Convoy vs Cape Diversion</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-mono font-semibold">
+                  ESTIMATED
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                Port Said / Suez Northbound • <span class="line-through text-outline">Oct 26</span> <span class="text-error font-mono font-semibold">BLOCKED</span> • <span class="text-tertiary">Cape Route: Nov 03</span>
+</div>
+<div class="font-label-xs text-label-xs text-outline-variant font-mono bg-surface-container-low px-2 py-1 rounded">
+                Dynamic ETA recalculated via physics drift model &amp; naval routing protocol
+              </div>
+</div>
+</div>
+<!-- Milestone 6: SIMULATED -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[13px]">insights</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1 opacity-80">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Port of Rotterdam Arrival &amp; Unberthing</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-tertiary/15 text-tertiary font-mono font-semibold">
+                  SIMULATED
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                Maasvlakte II Terminal • <span class="text-error font-mono font-medium">ETA Delta: +8.4 Days Delay</span>
+</div>
+<div class="font-label-xs text-label-xs text-outline-variant font-mono bg-surface-container-low px-2 py-1 rounded">
+                Simulated berth conflict at ECT Delta with automated slot re-requesting
+              </div>
+</div>
+</div>
+<!-- Milestone 7: FINAL DESTINATION -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 h-5 w-5 rounded-full bg-surface-container-high flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[13px]">pin_drop</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg space-y-1 opacity-80">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Final Drayage to BMW Munich Plant</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-mono font-semibold">
+                  ESTIMATED
+                </span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">
+                Inland Terminal Munich • <span class="text-error font-semibold">Factory Line Assembly Buffer: 36 hrs remaining!</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: AI Intelligence, ML Delay Engine & Recommendations (30%) -->
+<div class="lg:col-span-4 xl:col-span-3 space-y-space-md">
+<!-- Multi-Factor Risk Score Gauge -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Multi-Factor Risk Score</h3>
+<span class="font-label-xs text-label-xs text-error font-mono font-semibold">MAXIMUM TIER</span>
+</div>
+<!-- Risk Dial & Headline -->
+<div class="flex items-center gap-space-md p-2 bg-surface-container rounded-lg">
+<div class="relative w-16 h-16 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-error" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-mono font-bold text-headline-md text-error">92</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-error font-bold">Critical Exposure</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant leading-tight">Line stoppage threshold breached (&gt;85.0)</div>
+</div>
+</div>
+<!-- 4-Factor Breakdown -->
+<div class="space-y-2 pt-1 font-body-sm text-body-sm">
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-error">security</span> Geopolitical &amp; Kinetic
+              </span>
+<span class="font-mono text-error font-semibold">96 / 100</span>
+</div>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-error h-full" style="width: 96%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">waves</span> Weather &amp; Hydrographic
+              </span>
+<span class="font-mono text-on-surface font-semibold">68 / 100</span>
+</div>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full" style="width: 68%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">anchor</span> Port Congestion (RTM)
+              </span>
+<span class="font-mono text-primary font-semibold">74 / 100</span>
+</div>
+<div class="w-full bg-surface-container-high h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full" style="width: 74%"></div>
+</div>
+</div>
+<div class="p-2 bg-error-container/30 rounded flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-error font-semibold uppercase">Financial Stoppage Exposure</span>
+<span class="font-mono text-headline-sm font-bold text-error">$14.8M</span>
+</div>
+</div>
+</div>
+<!-- ML Delay Prediction Engine -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-[18px]">model_training</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">ML Delay Prediction Engine</h3>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">XGBoost-V4</span>
+</div>
+<div class="p-2.5 bg-surface-container rounded-lg text-center">
+<div class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Estimated Transit Delta</div>
+<div class="font-mono text-display-lg text-error font-bold tracking-tight mt-0.5">+8.4 Days</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant mt-1 font-mono">
+            201.6 Operating Hours Slipped
+          </div>
+</div>
+<!-- Confidence Bands -->
+<div class="bg-surface-container p-2 rounded space-y-1 font-label-xs text-label-xs">
+<div class="flex justify-between text-outline">
+<span>P10 (Best Case)</span>
+<span>P50 (Median)</span>
+<span>P90 (Worst Case)</span>
+</div>
+<div class="flex justify-between text-on-surface font-mono font-semibold">
+<span class="text-secondary">+6.2d</span>
+<span class="text-primary">+8.4d</span>
+<span class="text-error">+11.8d</span>
+</div>
+<div class="w-full bg-surface-container-high h-1 rounded-full relative mt-1">
+<div class="absolute left-[30%] right-[15%] h-full bg-tertiary rounded-full"></div>
+<div class="absolute left-[50%] w-1.5 h-2 bg-on-surface rounded-full -top-0.5"></div>
+</div>
+</div>
+<!-- Key Drivers -->
+<div class="space-y-1 font-body-sm text-body-sm">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Key Contributory Drivers</span>
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-label-xs">
+<span>1. Chokepoint Loitering / Holding</span>
+<span class="text-error font-semibold">+142h</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-label-xs">
+<span>2. Cape of Good Hope Drift</span>
+<span class="text-error font-semibold">+180h</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-mono text-label-xs">
+<span>3. Suez Canal Convoy Backlog</span>
+<span class="text-outline font-semibold">+96h</span>
+</div>
+</div>
+</div>
+<!-- Autonomous Copilot Recommendation (Claude 3.5) -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm border-l-2 border-tertiary">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary text-[18px]">neurology</span>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-tertiary/15 text-tertiary font-mono font-bold tracking-wider">
+              PRESCRIPTION #REC-4891
+            </span>
+</div>
+<span class="font-label-xs text-label-xs text-outline">Claude 3.5 Sonnet</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Sea-Air Intermodal Diversion via Jebel Ali</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Offload 18 critical TEUs at Jebel Ali (AEJEA); transload into 2x chartered B77F flights to Frankfurt (FRA); deliver to Munich Plant via bonded drayage in 42 hours.
+          </p>
+</div>
+<!-- Cost vs Salvage Tradeoff Banner -->
+<div class="p-2 bg-surface-container rounded font-label-xs text-label-xs space-y-1">
+<div class="flex justify-between items-center">
+<span class="text-outline">Air Charter Cost:</span>
+<span class="font-mono text-on-surface font-semibold">+$482,000 USD</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-outline">Prevented Assembly Loss:</span>
+<span class="font-mono text-secondary font-semibold">-$14,800,000 USD</span>
+</div>
+<div class="flex justify-between items-center pt-1 border-t border-outline-variant/30 font-semibold">
+<span class="text-primary">Net Preserved ROI:</span>
+<span class="font-mono text-secondary">30.7x Multiple</span>
+</div>
+</div>
+<button class="w-full h-9 rounded-lg bg-tertiary text-on-tertiary font-headline-sm text-headline-sm font-semibold hover:bg-tertiary-fixed transition-colors flex items-center justify-center gap-1.5">
+<span>Review in Sovereign Sign-Off Quorum</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Linked System Incidents -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-2">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider block">Correlated Incidents &amp; Registry</span>
+<div class="space-y-1.5 font-body-sm text-body-sm">
+<div class="p-2 rounded bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-2 min-w-0">
+<span class="h-2 w-2 rounded-full bg-error shrink-0"></span>
+<div class="truncate">
+<div class="font-medium text-on-surface text-label-sm truncate">INC-9902: Red Sea Total Closure</div>
+<div class="font-label-xs text-label-xs text-outline">$84.5M System Exposure</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[16px]">open_in_new</span>
+</div>
+<div class="p-2 rounded bg-surface-container flex items-center justify-between hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center gap-2 min-w-0">
+<span class="h-2 w-2 rounded-full bg-primary shrink-0"></span>
+<div class="truncate">
+<div class="font-medium text-on-surface text-label-sm truncate">RSK-412: Semiconductor Chokepoint</div>
+<div class="font-label-xs text-label-xs text-outline">Supply Security Tier-1</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[16px]">open_in_new</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

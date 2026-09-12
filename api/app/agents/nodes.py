@@ -210,4 +210,7 @@ from app.agents.approval.node import HUMAN_APPROVAL_NODE_CONTRACT, human_approva
 # Real Action Agent node contract and handler
 from app.agents.action.node import ACTION_NODE_CONTRACT, action_node
 
+# Real Verification Agent node contract and handler
+from app.agents.verification.node import VERIFICATION_NODE_CONTRACT, verification_node
+
 

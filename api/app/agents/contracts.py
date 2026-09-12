@@ -403,6 +403,10 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "action_reference": {AgentStage.ACTION},
     "action_result": {AgentStage.ACTION},
     "action_status": {AgentStage.ACTION},
+    "verification_id": {AgentStage.VERIFICATION},
+    "verification_reference": {AgentStage.VERIFICATION},
+    "verification_result": {AgentStage.VERIFICATION},
+    "verification_status": {AgentStage.VERIFICATION},
     "completed_at": {AgentStage.TERMINATION},
     "termination_reason": {AgentStage.TERMINATION},
 }
@@ -504,6 +508,12 @@ class AgentGraphState(BaseModel):
     action_reference: Optional[str] = None
     action_result: Optional[Dict[str, Any]] = None
     action_status: Optional[str] = None
+
+    # M. Operational Verification (Phase 18)
+    verification_id: Optional[str] = None
+    verification_reference: Optional[str] = None
+    verification_result: Optional[Dict[str, Any]] = None
+    verification_status: Optional[str] = None
 
     # L. Termination & Telemetry
     termination_reason: Optional[str] = None
@@ -617,6 +627,13 @@ class AgentGraphState(BaseModel):
             if prefix.startswith("org_") and prefix != self.organization_id:
                 raise AgentTenantIsolationError(
                     f"Cross-tenant action reference '{self.action_reference}' does not match state tenant '{self.organization_id}'."
+                )
+
+        if self.verification_reference and ":" in self.verification_reference:
+            prefix = self.verification_reference.split(":", 1)[0]
+            if prefix.startswith("org_") and prefix != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant verification reference '{self.verification_reference}' does not match state tenant '{self.organization_id}'."
                 )
 
         # 5. Enforce approval boundary on termination if human approval is required
@@ -883,6 +900,16 @@ class AgentGraphStateDict(TypedDict, total=False):
     approval_result: Optional[Dict[str, Any]]
     side_effect_allowed: bool
     approval_status: Optional[str]
+    # Operational Action (Phase 17)
+    action_id: Optional[str]
+    action_reference: Optional[str]
+    action_result: Optional[Dict[str, Any]]
+    action_status: Optional[str]
+    # Operational Verification (Phase 18)
+    verification_id: Optional[str]
+    verification_reference: Optional[str]
+    verification_result: Optional[Dict[str, Any]]
+    verification_status: Optional[str]
     # Termination
     termination_reason: Optional[str]
     started_at: str

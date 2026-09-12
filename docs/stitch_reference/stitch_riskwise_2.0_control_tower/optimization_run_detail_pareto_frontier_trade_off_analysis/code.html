@@ -1,0 +1,787 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#101419","inverse-on-surface":"#2d3136","tertiary-fixed":"#e9ddff","surface-variant":"#31353b","background":"#101419","surface-container":"#1c2025","on-tertiary":"#3c0091","surface-container-low":"#181c21","error":"#ffb4ab","surface-bright":"#36393f","surface-dim":"#101419","secondary":"#4edea3","on-error-container":"#ffdad6","on-error":"#690005","primary-fixed":"#d8e2ff","on-secondary-container":"#00311f","inverse-surface":"#e0e2ea","outline":"#8c909f","on-surface":"#e0e2ea","on-background":"#e0e2ea","on-secondary":"#003824","on-surface-variant":"#c2c6d6","secondary-fixed":"#6ffbbe","error-container":"#93000a","surface-container-lowest":"#0a0e13","on-secondary-fixed-variant":"#005236","tertiary-container":"#a078ff","tertiary-fixed-dim":"#d0bcff","tertiary":"#d0bcff","on-tertiary-fixed-variant":"#5516be","on-secondary-fixed":"#002113","on-tertiary-fixed":"#23005c","inverse-primary":"#005ac2","primary":"#adc6ff","on-tertiary-container":"#340080","on-primary-fixed-variant":"#004395","surface-tint":"#adc6ff","secondary-fixed-dim":"#4edea3","on-primary":"#002e6a","on-primary-fixed":"#001a42","primary-fixed-dim":"#adc6ff","surface-container-highest":"#31353b","primary-container":"#4d8eff","surface-container-high":"#262a30","on-primary-container":"#00285d","outline-variant":"#424754","secondary-container":"#00a572"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-xl":"1.5rem","gutter":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"display-lg-mobile":["Inter"],"headline-md":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30 bg-surface-container-low/40"><img alt="RiskWise 2.0 Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">RiskWise 2.0</span><span class="font-label-xs text-label-xs px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/30 uppercase">v2.4.9</span></div><span class="font-label-xs text-label-xs text-outline truncate">AUTONOMOUS CORE</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/20 bg-surface-container/30"><div class="flex items-center justify-between text-outline"><span class="font-label-xs text-label-xs uppercase tracking-wider">Active Node Scope</span><span class="material-symbols-outlined text-[14px] text-secondary">hub</span></div><div class="font-label-sm text-label-sm text-on-surface font-medium truncate mt-0.5">NORTH-AMER / APAC TIER-1</div></div><nav class="flex flex-col gap-space-sm p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary"><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">1. Overview</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="control-tower" href="#"><span class="material-symbols-outlined text-[18px]">space_dashboard</span><span>Control Tower</span></a><a aria-current="page" class="flex items-center gap-space-sm px-2.5 py-1.5 rounded transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary" data-path="global-live-map" href="#"><span class="material-symbols-outlined text-[18px]">public</span><span>Global Live Map</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">2. Intelligence &amp; Risk</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="risk-register" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span>Risk Register</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="incident-command" href="#"><span class="material-symbols-outlined text-[18px]">crisis_alert</span><span>Incident Command</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="ai-recommendations" href="#"><span class="material-symbols-outlined text-[18px]">psychology</span><span>AI Recommendations</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">3. Digital Twin &amp; Sim</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="topology-canvas" href="#"><span class="material-symbols-outlined text-[18px]">schema</span><span>Topology Canvas</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="disruption-simulation" href="#"><span class="material-symbols-outlined text-[18px]">model_training</span><span>Disruption Simulation</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="optimization-runs" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Optimization Runs</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">4. Operations &amp; Shipments</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="shipments-tracker" href="#"><span class="material-symbols-outlined text-[18px]">local_shipping</span><span>Shipments Tracker</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="action-dispatch" href="#"><span class="material-symbols-outlined text-[18px]">send_and_archive</span><span>Action Dispatch</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="verification-engine" href="#"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Engine</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">5. Governance &amp; Data</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="human-approvals" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span><span>Human Approvals</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="audit-log-explorer" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>Audit Log Explorer</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="network-data" href="#"><span class="material-symbols-outlined text-[18px]">database</span><span>Network Data</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings-rbac" href="#"><span class="material-symbols-outlined text-[18px]">shield_person</span><span>Settings &amp; RBAC</span></a></div></nav></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-lowest"><div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/30"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">LATENCY</span></div><span class="font-label-xs text-label-xs text-secondary font-mono font-medium">12ms (Z-FEED)</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-md gap-space-md"><div class="flex items-center gap-space-md min-w-0 max-w-sm"><div class="flex items-center gap-space-xs px-2.5 py-1.5 rounded bg-surface-container-low border border-outline-variant/30 min-w-0 cursor-pointer hover:border-outline transition-colors"><span class="material-symbols-outlined text-[16px] text-primary shrink-0">corporate_fare</span><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs text-on-surface truncate font-semibold">Global Logistics Enterprise</span><span class="font-label-xs text-[9px] leading-tight text-outline truncate">NA &amp; APAC Tier-1</span></div><span class="material-symbols-outlined text-[14px] text-outline shrink-0 ml-1">unfold_more</span></div></div><div class="flex-1 max-w-xl mx-2"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-[18px] text-outline pointer-events-none">search</span><input class="w-full h-9 pl-9 pr-14 rounded bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><div class="absolute right-2 flex items-center"><kbd class="px-1.5 py-0.5 text-label-xs font-label-xs rounded bg-surface-container-high border border-outline-variant/40 text-outline">⌘K</kbd></div></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden xl:flex items-center gap-space-xs px-2.5 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs tracking-wider">TELEMETRY: OPTIMAL</span><span class="text-outline-variant">|</span><span class="font-label-xs text-label-xs text-on-surface-variant font-mono">42,819 NODES</span></div><button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">play_circle</span><span class="hidden sm:inline font-medium">Simulate Disruption</span></button><div class="relative"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error rounded-full font-label-xs text-[9px] flex items-center justify-center font-bold">4</span></button></div><div class="h-5 w-[1px] bg-outline-variant/30"></div><div class="flex items-center gap-space-xs pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQuBzY8_uH28XOIJkp7YNiKdBHoCBrbNAsX1Pxn6b7nl5mKPh4mux72wHWsHoECrYU5ieJ7_p7ZC2f0p6_-K54dwRCG0A61JOFqnanBDPUUj_CpSE0eIKQuUKI4SqN6_TX2zDV9Rb7uVTxLvOWH7XzrvAq452bck_URYflU_BB9SEC5CUi_6kgkYNcTHRZcDIHul6BPUaKZh02jI8iAfW5vVb_gyPtz8fdtF1xhJmcM3aIGRDudy_A"><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm text-on-surface font-semibold leading-none">Marcus Vance</span><div class="flex items-center gap-1 mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-[10px] text-outline leading-none">Risk Director (L4)</span></div></div></div></div></header><main class="w-full pt-14 px-space-md pb-space-lg bg-surface min-h-screen"><div class="flex flex-col w-full gap-space-lg">
+<!-- TOP HEADER / PROVENANCE DOCK -->
+<section class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-xl shadow-md">
+<!-- Breadcrumb & Core Actions Row -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs font-label-xs text-label-xs text-outline tracking-wider flex-wrap">
+<span class="text-on-surface-variant">ANALYTICS &amp; ENGINE</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface-variant">MULTI-OBJECTIVE OPTIMIZER</span>
+<span class="text-outline-variant">/</span>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-highest text-primary font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+          RUN #OPT-8492-B
+        </div>
+<span class="text-on-surface font-body-sm text-body-sm font-medium ml-1">Global Reroute &amp; Sourcing Re-allocation</span>
+</div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<button class="flex items-center gap-1.5 h-8 px-2.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-xs text-label-xs transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">tune</span>
+<span>Re-run Adjusted Bounds</span>
+</button>
+<button class="flex items-center gap-1.5 h-8 px-2.5 rounded bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-xs text-label-xs transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-outline">file_download</span>
+<span>Export Package (.JSON)</span>
+</button>
+<button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-all shadow-sm">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Deploy Winner to Governance</span>
+</button>
+</div>
+</div>
+<!-- Solver Metadata & Real-Time Run Telemetry Ribbon -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-space-xs pt-space-xs bg-surface-container-lowest p-2 rounded-lg">
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Solution State</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-xs text-label-xs text-secondary font-semibold font-mono">CONVERGED (Pareto)</span>
+</div>
+</div>
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Solver Kernel</span>
+<span class="font-label-xs text-label-xs text-on-surface font-mono mt-0.5 truncate">Gurobi MI-LP v11.4</span>
+</div>
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Compute Duration</span>
+<span class="font-label-xs text-label-xs text-primary font-mono mt-0.5">4.82s (16 T-FLOPs)</span>
+</div>
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Candidate Space</span>
+<span class="font-label-xs text-label-xs text-on-surface font-mono mt-0.5">1,420 Evaluated</span>
+</div>
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Frontier Dimension</span>
+<span class="font-label-xs text-label-xs text-tertiary font-mono mt-0.5">3-D Trade-off Surface</span>
+</div>
+<div class="flex flex-col px-2 py-1 bg-surface-container/60 rounded">
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider">Timestamp Execution</span>
+<span class="font-label-xs text-label-xs text-outline font-mono mt-0.5">Today, 14:32:08 UTC</span>
+</div>
+</div>
+</section>
+<!-- DUAL COCKPIT: PARETO FRONTIER VISUALIZER (LEFT) + CONSTRAINT & SENSITIVITY PANEL (RIGHT) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-start">
+<!-- LEFT / CENTER: PARETO FRONTIER SCATTER CHART (8 COLUMNS) -->
+<section class="xl:col-span-8 flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-xl shadow-md">
+<!-- Frontier Header & Parameter Controls -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">bubble_chart</span>
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Multi-Objective Pareto Frontier (Trade-off Space)</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Evaluating trade-offs between <span class="text-on-surface font-medium">Landed Cost ($M)</span> vs. <span class="text-on-surface font-medium">Transit Lead Time (Days)</span>. Bubble size correlates with <span class="text-on-surface font-medium">CO2e Emissions</span>.
+          </p>
+</div>
+<!-- Metric Weights Indicator Pill -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-highest self-start sm:self-auto shrink-0">
+<span class="font-label-xs text-label-xs text-outline uppercase mr-1">Weights:</span>
+<span class="font-label-xs text-label-xs text-primary font-mono">Cost 45%</span>
+<span class="text-outline-variant text-[10px]">•</span>
+<span class="font-label-xs text-label-xs text-secondary font-mono">Speed 35%</span>
+<span class="text-outline-variant text-[10px]">•</span>
+<span class="font-label-xs text-label-xs text-tertiary font-mono">ESG 20%</span>
+</div>
+</div>
+<!-- Quick Toggles Toolbar -->
+<div class="flex flex-wrap items-center justify-between gap-space-xs bg-surface-container-lowest px-space-sm py-1.5 rounded-lg font-label-xs text-label-xs">
+<div class="flex items-center gap-space-sm">
+<label class="flex items-center gap-1.5 cursor-pointer text-on-surface">
+<input checked="" class="accent-primary w-3.5 h-3.5 rounded" type="checkbox">
+<span>Show Optimal Frontier Boundary</span>
+</label>
+<label class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant">
+<input checked="" class="accent-outline w-3.5 h-3.5 rounded" type="checkbox">
+<span>Show Dominated Solutions (1,415)</span>
+</label>
+<label class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant">
+<input checked="" class="accent-error w-3.5 h-3.5 rounded" type="checkbox">
+<span>Status Quo Reference</span>
+</label>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<span>X: <span class="text-on-surface font-mono">10d – 40d</span></span>
+<span class="mx-1">|</span>
+<span>Y: <span class="text-on-surface font-mono">$1.0M – $4.5M</span></span>
+</div>
+</div>
+<!-- SVG COORDINATE SPACE -->
+<div class="relative w-full aspect-[16/9] min-h-[360px] bg-surface-container-lowest rounded-xl p-3 flex flex-col justify-between overflow-hidden shadow-inner">
+<!-- SVG Grid & Data Scatter -->
+<svg class="w-full h-full" fill="none" viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Frontier Glowing Gradient -->
+<linearGradient id="frontierGlow" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9"></stop>
+<stop offset="50%" stop-color="#06b6d4" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#10b981" stop-opacity="0.8"></stop>
+</linearGradient>
+<!-- Area under frontier wash -->
+<linearGradient id="frontierFill" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"></stop>
+</linearGradient>
+<!-- Radial Winner Bubble Glow -->
+<radialGradient cx="50%" cy="50%" id="winnerRadial" r="50%">
+<stop offset="0%" stop-color="#06b6d4" stop-opacity="0.7"></stop>
+<stop offset="60%" stop-color="#3b82f6" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#3b82f6" stop-opacity="0"></stop>
+</radialGradient>
+</defs>
+<!-- Background Subtle Coordinate Grid -->
+<!-- Horizontal Y lines ($1.0M to $4.5M) -->
+<line stroke="#262a30" stroke-width="1" x1="60" x2="770" y1="360" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="60" x2="770" y1="290" y2="290"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="60" x2="770" y1="220" y2="220"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="60" x2="770" y1="150" y2="150"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="60" x2="770" y1="80" y2="80"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="60" x2="770" y1="30" y2="30"></line>
+<!-- Vertical X lines (10d to 38d) -->
+<line stroke="#262a30" stroke-width="1" x1="60" x2="60" y1="20" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="180" x2="180" y1="20" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="300" x2="300" y1="20" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="420" x2="420" y1="20" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="540" x2="540" y1="20" y2="360"></line>
+<line stroke="#1c2025" stroke-dasharray="3 3" stroke-width="1" x1="660" x2="660" y1="20" y2="360"></line>
+<line stroke="#262a30" stroke-width="1" x1="770" x2="770" y1="20" y2="360"></line>
+<!-- Y Axis Labels ($M USD Landed Cost) -->
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="364">$1.0M</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="294">$1.7M</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="224">$2.4M</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="154">$3.1M</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="84">$3.8M</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="50" y="34">$4.5M</text>
+<!-- X Axis Labels (Lead Time Days) -->
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="60" y="380">10d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="180" y="380">15d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="300" y="380">20d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="420" y="380">25d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="540" y="380">30d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="660" y="380">35d</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="10" text-anchor="middle" x="770" y="380">40d</text>
+<!-- Axis Titles -->
+<text fill="#c2c6d6" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="415" y="405">AVERAGE TRANSIT LEAD TIME (CALENDAR DAYS) →</text>
+<text fill="#c2c6d6" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" transform="rotate(-90 16 200)" x="16" y="200">TOTAL LANDED COST ($M USD) →</text>
+<!-- Area Under Frontier Curve (Efficient Feasibility Envelope) -->
+<path d="M 136 68 Q 230 180 262 245 T 325 285 T 600 320 L 770 340 L 770 360 L 60 360 L 60 68 Z" fill="url(#frontierFill)"></path>
+<!-- Pareto Frontier Curve (Spline through optimal points) -->
+<path d="M 136 68 Q 230 180 262 245 T 325 285 T 600 320 L 710 332" fill="none" stroke="url(#frontierGlow)" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Dominated Candidates Cloud (Gray Dots) -->
+<g fill="#424754" opacity="0.45">
+<circle cx="210" cy="190" r="3.5"></circle>
+<circle cx="230" cy="230" r="4.0"></circle>
+<circle cx="280" cy="195" r="3.0"></circle>
+<circle cx="340" cy="220" r="4.5"></circle>
+<circle cx="370" cy="180" r="5.0"></circle>
+<circle cx="410" cy="260" r="3.5"></circle>
+<circle cx="450" cy="220" r="4.0"></circle>
+<circle cx="490" cy="275" r="3.0"></circle>
+<circle cx="510" cy="210" r="6.0"></circle>
+<circle cx="560" cy="250" r="4.0"></circle>
+<circle cx="620" cy="280" r="3.5"></circle>
+<circle cx="670" cy="230" r="4.5"></circle>
+<circle cx="700" cy="270" r="3.0"></circle>
+<circle cx="390" cy="310" r="3.5"></circle>
+<circle cx="460" cy="310" r="4.0"></circle>
+<circle cx="310" cy="140" r="5.0"></circle>
+<circle cx="390" cy="120" r="4.0"></circle>
+<circle cx="480" cy="160" r="3.5"></circle>
+<circle cx="580" cy="190" r="4.5"></circle>
+</g>
+<!-- Candidate E: Baseline Status Quo (Transit 26.4d, Cost $2.85M, 280 MT) -->
+<!-- Coordinates: X ~ 453, Y ~ 175 -->
+<g class="cursor-pointer group">
+<circle cx="453" cy="175" fill="#31353b" fill-opacity="0.4" r="18" stroke="#ffb4ab" stroke-dasharray="3 3" stroke-width="1.5"></circle>
+<circle cx="453" cy="175" fill="#ffb4ab" r="4"></circle>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="10" font-weight="600" x="475" y="172">Candidate E (Status Quo)</text>
+<text fill="#8c909f" font-family="JetBrains Mono" font-size="9" x="475" y="186">$2.85M | 26.4d | 280t</text>
+</g>
+<!-- Candidate B: Ultra-Fast Air Direct (Transit 13.2d, Cost $4.10M, 410 MT) -->
+<!-- Coordinates: X ~ 136, Y ~ 68 -->
+<g class="cursor-pointer group">
+<circle cx="136" cy="68" fill="#4d8eff" fill-opacity="0.25" r="22" stroke="#adc6ff" stroke-width="1.5"></circle>
+<circle cx="136" cy="68" fill="#adc6ff" r="5"></circle>
+<text fill="#adc6ff" font-family="JetBrains Mono" font-size="10" font-weight="600" x="162" y="65">Candidate B (Air Direct)</text>
+<text fill="#c2c6d6" font-family="JetBrains Mono" font-size="9" x="162" y="78">$4.10M | 13.2d | 410t</text>
+</g>
+<!-- Candidate D: Nearshore Dual-Sourcing (Transit 19.8d, Cost $2.40M, 165 MT) -->
+<!-- Coordinates: X ~ 295, Y ~ 220 -->
+<g class="cursor-pointer group">
+<circle cx="295" cy="220" fill="#d0bcff" fill-opacity="0.25" r="14" stroke="#a078ff" stroke-width="1.5"></circle>
+<circle cx="295" cy="220" fill="#d0bcff" r="4"></circle>
+<text fill="#d0bcff" font-family="JetBrains Mono" font-size="10" font-weight="600" x="315" y="217">Candidate D (Nearshore)</text>
+<text fill="#c2c6d6" font-family="JetBrains Mono" font-size="9" x="315" y="230">$2.40M | 19.8d | 165t</text>
+</g>
+<!-- Candidate C: Green Maritime Slow-Steaming (Transit 32.6d, Cost $1.58M, 88 MT) -->
+<!-- Coordinates: X ~ 602, Y ~ 302 -->
+<g class="cursor-pointer group">
+<circle cx="602" cy="302" fill="#4edea3" fill-opacity="0.3" r="10" stroke="#4edea3" stroke-width="1.5"></circle>
+<circle cx="602" cy="302" fill="#4edea3" r="4"></circle>
+<text fill="#4edea3" font-family="JetBrains Mono" font-size="10" font-weight="600" x="618" y="298">Candidate C (Green Maritime)</text>
+<text fill="#c2c6d6" font-family="JetBrains Mono" font-size="9" x="618" y="311">$1.58M | 32.6d | 88t</text>
+</g>
+<!-- Candidate A: RECOMMENDED WINNER (Transit 18.4d, Cost $2.15M, 142 MT) -->
+<!-- Coordinates: X ~ 262, Y ~ 245 -->
+<g class="cursor-pointer">
+<!-- Ambient Pulsing Field -->
+<circle cx="262" cy="245" fill="url(#winnerRadial)" r="32"></circle>
+<circle cx="262" cy="245" fill="#00a572" fill-opacity="0.4" r="13" stroke="#4edea3" stroke-width="2.5"></circle>
+<circle cx="262" cy="245" fill="#6ffbbe" r="5"></circle>
+<!-- Crosshair indicator -->
+<line stroke="#4edea3" stroke-dasharray="2 2" stroke-width="1" x1="262" x2="262" y1="225" y2="265"></line>
+<line stroke="#4edea3" stroke-dasharray="2 2" stroke-width="1" x1="242" x2="282" y1="245" y2="245"></line>
+</g>
+<!-- Highlight Pointer Leader Line to Tooltip Anchor -->
+<polyline fill="none" points="262,232 262,175 220,150" stroke="#4edea3" stroke-dasharray="2 2" stroke-width="1.5"></polyline>
+</svg>
+<!-- FLOATING INTERACTIVE TOOLTIP DOCK OVER CANDIDATE A -->
+<div class="absolute top-12 left-14 sm:left-24 max-w-xs bg-surface-container-high/95 backdrop-blur-md p-3 rounded-lg shadow-xl pointer-events-none">
+<div class="flex items-center justify-between gap-space-xs pb-1.5 border-b border-outline-variant/30">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Candidate A (Selected)</span>
+</div>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-mono font-bold">TOP UTILITY</span>
+</div>
+<div class="grid grid-cols-2 gap-x-3 gap-y-1.5 pt-2 font-label-xs text-label-xs">
+<div>
+<span class="text-outline block">Utility Score</span>
+<span class="text-secondary font-mono font-semibold text-body-sm">94.2 / 100</span>
+</div>
+<div>
+<span class="text-outline block">Landed Cost</span>
+<span class="text-on-surface font-mono font-semibold text-body-sm">$2.15M <span class="text-secondary font-normal text-[10px]">(-24.6%)</span></span>
+</div>
+<div>
+<span class="text-outline block">Transit Lead Time</span>
+<span class="text-on-surface font-mono font-semibold text-body-sm">18.4 Days <span class="text-secondary font-normal text-[10px]">(-8.0d)</span></span>
+</div>
+<div>
+<span class="text-outline block">Carbon (CO2e)</span>
+<span class="text-on-surface font-mono font-semibold text-body-sm">142 MT <span class="text-secondary font-normal text-[10px]">(-49%)</span></span>
+</div>
+</div>
+<div class="mt-2 pt-1.5 border-t border-outline-variant/20 flex items-center justify-between text-outline text-[10px]">
+<span>Reliability: <strong class="text-on-surface font-mono">98.4%</strong></span>
+<span>Resilience Margin: <strong class="text-secondary font-mono">+38.2%</strong></span>
+</div>
+</div>
+<!-- Legend Overlay Strip -->
+<div class="flex flex-wrap items-center gap-space-md pt-2 px-1 text-on-surface-variant font-label-xs text-label-xs">
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-0.5 bg-gradient-to-r from-primary to-secondary"></span>
+<span>Pareto Efficient Frontier</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span>Pareto Optimal Solutions</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant opacity-60"></span>
+<span>Dominated / Feasible Space</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-surface-variant"></span>
+<span>Baseline Status Quo</span>
+</div>
+<div class="flex items-center gap-1 text-outline ml-auto">
+<span class="material-symbols-outlined text-[13px]">radio_button_unchecked</span>
+<span>Diameter = Metric Tons CO2e</span>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT: OPERATIONAL CONSTRAINTS & SENSITIVITY PANEL (4 COLUMNS) -->
+<section class="xl:col-span-4 flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-xl shadow-md">
+<!-- Panel Header -->
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary">fact_check</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Constraints &amp; Bounds</h3>
+</div>
+<span class="font-label-xs text-label-xs text-outline mt-0.5">8 Hard Bounds Evaluated</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-secondary/15 text-secondary font-label-xs text-label-xs font-mono font-medium">ALL SATISFIED</span>
+</div>
+<!-- Constraint Progress Meters -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p- space-xs rounded-lg">
+<!-- Constraint 1: Budget Limit -->
+<div class="p-2 bg-surface-container/60 rounded flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface font-medium">Total Cost Budget Cap</span>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-on-surface">$2.15M</span>
+<span class="text-outline">/</span>
+<span class="text-outline">$2.50M Max</span>
+<span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary font-bold text-[9px]">PASS</span>
+</div>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 86%;"></div>
+</div>
+<div class="flex justify-between text-[10px] text-outline font-mono">
+<span>86.0% Allocated</span>
+<span>Headroom: $352,000</span>
+</div>
+</div>
+<!-- Constraint 2: Lead Time Hard Max -->
+<div class="p-2 bg-surface-container/60 rounded flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface font-medium">Transit Time Ceiling</span>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-on-surface">18.4 Days</span>
+<span class="text-outline">/</span>
+<span class="text-outline">22.0d Max</span>
+<span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary font-bold text-[9px]">PASS</span>
+</div>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 83.6%;"></div>
+</div>
+<div class="flex justify-between text-[10px] text-outline font-mono">
+<span>83.6% Threshold</span>
+<span>Slack: +3.6 Days</span>
+</div>
+</div>
+<!-- Constraint 3: Tier-1 Port Capacity Allocation (NEAR BOUND) -->
+<div class="p-2 bg-surface-container/60 rounded flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface font-medium">Rotterdam Slot Capacity</span>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-tertiary">84,000 TEU</span>
+<span class="text-outline">/</span>
+<span class="text-outline">90,000 TEU</span>
+<span class="px-1 py-0.2 rounded bg-tertiary/20 text-tertiary font-bold text-[9px]">93.3% NEAR</span>
+</div>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 93.3%;"></div>
+</div>
+<div class="flex justify-between text-[10px] text-outline font-mono">
+<span>Shadow Penalty: $0.00</span>
+<span class="text-tertiary">Buffer: 6,000 TEU</span>
+</div>
+</div>
+<!-- Constraint 4: Carrier Volume Commitment (MVC) -->
+<div class="p-2 bg-surface-container/60 rounded flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface font-medium">Carrier Min. Volume (MVC)</span>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-on-surface">98.2%</span>
+<span class="text-outline">/</span>
+<span class="text-outline">≥ 95.0% Min</span>
+<span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary font-bold text-[9px]">PASS</span>
+</div>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 98.2%;"></div>
+</div>
+</div>
+<!-- Constraint 5: Carbon Tax Exposure -->
+<div class="p-2 bg-surface-container/60 rounded flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-xs text-label-xs">
+<span class="text-on-surface font-medium">EU ETS Carbon Tax Ceiling</span>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-on-surface">$18,400</span>
+<span class="text-outline">/</span>
+<span class="text-outline">≤ $25,000</span>
+<span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary font-bold text-[9px]">PASS</span>
+</div>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 73.6%;"></div>
+</div>
+</div>
+</div>
+<!-- SENSITIVITY ANALYSIS / SHADOW PRICING MODULE -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">psychology_alt</span>
+<span class="font-label-xs text-label-xs text-on-surface uppercase font-semibold">Dual Variables &amp; Shadow Pricing</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">ΔMarginal</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-[11px] leading-relaxed">
+          Estimated financial leverage obtained by relaxing active constraints by one unit:
+        </p>
+<div class="flex flex-col gap-1.5 pt-1 font-label-xs text-label-xs">
+<div class="flex items-center justify-between p-1.5 rounded bg-surface-container/80">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-secondary">schedule</span>
+<span>Relax Lead Time +1.0 Day</span>
+</div>
+<span class="font-mono text-secondary font-semibold">-$142,000 / run</span>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded bg-surface-container/80">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-primary">anchor</span>
+<span>Expand Rotterdam Slot +5,000 TEU</span>
+</div>
+<span class="font-mono text-primary font-semibold">-$68,500 / run</span>
+</div>
+<div class="flex items-center justify-between p-1.5 rounded bg-surface-container/80">
+<div class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[14px] text-outline">co2</span>
+<span>EU ETS Carbon Cap Relax 10%</span>
+</div>
+<span class="font-mono text-outline font-semibold">-$21,400 / run</span>
+</div>
+</div>
+</div>
+<!-- Lineage & Validation Provenance -->
+<div class="p-2 rounded bg-surface-container-lowest flex items-center justify-between text-outline font-label-xs text-label-xs">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">lock</span>
+<span>Dual Simplex Proof: Guaranteed Optimal</span>
+</div>
+<span class="font-mono text-secondary">0.00% GAP</span>
+</div>
+</section>
+</div>
+<!-- BOTTOM SECTION: RANKED CANDIDATES MATRIX & SCENARIO COMPARISON -->
+<section class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-xl shadow-md">
+<!-- Table Toolbar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">view_list</span>
+<h3 class="font-headline-md text-headline-md text-on-surface tracking-tight">Ranked Candidate Solutions</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface font-label-xs text-label-xs font-mono font-medium">5 Evaluated</span>
+</div>
+<!-- Quick Filter Pills & Search -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="flex items-center bg-surface-container-lowest p-0.5 rounded-lg font-label-xs text-label-xs">
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary font-medium shadow-xs">All Candidates (5)</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Pareto Optimal (3)</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Near-Frontier (2)</button>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-2 text-[15px] text-outline">search</span>
+<input class="h-8 pl-7 pr-3 rounded bg-surface-container-lowest text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none w-40" placeholder="Filter corridors..." type="text">
+</div>
+</div>
+</div>
+<!-- HIGH-DENSITY COMPARISON MATRIX -->
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left font-body-sm text-body-sm">
+<thead>
+<tr class="h-9 bg-surface-container-lowest text-outline font-label-xs text-label-xs uppercase tracking-wider">
+<th class="px-space-md py-1 rounded-l">Scenario / Route Strategy</th>
+<th class="px-3 py-1">Utility Score</th>
+<th class="px-3 py-1">Landed Cost</th>
+<th class="px-3 py-1">Transit Time</th>
+<th class="px-3 py-1">Emissions (CO2e)</th>
+<th class="px-3 py-1">Resilience Score</th>
+<th class="px-3 py-1">Bound Compliance</th>
+<th class="px-space-md py-1 text-right rounded-r">Governance Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 flex-col gap-1">
+<!-- ROW 1: RECOMMENDED WINNER (CANDIDATE A) -->
+<tr class="h-16 bg-surface-container-high hover:bg-surface-bright transition-colors shadow-sm">
+<td class="px-space-md py-2 rounded-l">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-center justify-center w-8 h-8 rounded bg-secondary-container text-on-secondary-container font-mono font-bold text-label-xs">
+                  #1
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Candidate A: Hybrid Rail/Air Flex</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-label-xs text-label-xs font-mono font-semibold">RECOMMENDED</span>
+</div>
+<span class="text-on-surface-variant font-label-xs text-label-xs truncate mt-0.5">Rail Trans-Eurasian Corridor + Strategic Air Bridge for High-Value SKUs</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-baseline gap-1">
+<span class="font-mono text-secondary font-semibold text-headline-sm">94.2</span>
+<span class="text-outline text-label-xs font-mono">/100</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">$2,148,000</span>
+<span class="font-mono text-secondary text-[11px]">-24.6% vs Base</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">18.4 Days</span>
+<span class="font-mono text-secondary text-[11px]">-8.0 Days</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">142 MT</span>
+<span class="font-mono text-secondary text-[11px]">-49.3%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-mono text-secondary font-semibold">91/100</span>
+</div>
+<span class="text-outline text-[10px]">Zero Red Sea Risk</span>
+</td>
+<td class="px-3 py-2">
+<span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-mono">8/8 Passed</span>
+</td>
+<td class="px-space-md py-2 text-right rounded-r">
+<div class="flex items-center justify-end gap-1.5">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest hover:bg-surface-variant text-on-surface font-label-xs text-label-xs transition-colors">
+                  Dossier
+                </button>
+<button class="h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-all">
+                  Promote
+                </button>
+</div>
+</td>
+</tr>
+<!-- ROW 2: CANDIDATE B (ULTRA-FAST AIR DIRECT) -->
+<tr class="h-14 bg-surface-container hover:bg-surface-container-high transition-colors">
+<td class="px-space-md py-2 rounded-l">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-center justify-center w-8 h-8 rounded bg-surface-container-highest text-outline font-mono font-medium text-label-xs">
+                  #2
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Candidate B: Fast Express Route</span>
+<span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-xs text-label-xs font-mono">FRONTIER</span>
+</div>
+<span class="text-outline font-label-xs text-label-xs truncate mt-0.5">Direct Air Charter Incheon → Anchorage → Dallas Hub</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-baseline gap-1">
+<span class="font-mono text-primary font-semibold text-headline-sm">87.5</span>
+<span class="text-outline text-label-xs font-mono">/100</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-error font-semibold">$4,105,000</span>
+<span class="font-mono text-error text-[11px]">+44.0%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">13.2 Days</span>
+<span class="font-mono text-secondary text-[11px]">-13.2 Days</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-error font-semibold">410 MT</span>
+<span class="font-mono text-error text-[11px]">+46.4%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-mono text-on-surface font-semibold">82/100</span>
+</div>
+<span class="text-outline text-[10px]">High Fuel Volatility</span>
+</td>
+<td class="px-3 py-2">
+<span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-mono">8/8 Passed</span>
+</td>
+<td class="px-space-md py-2 text-right rounded-r">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest hover:bg-surface-variant text-on-surface font-label-xs text-label-xs transition-colors">
+                Inspect
+              </button>
+</td>
+</tr>
+<!-- ROW 3: CANDIDATE C (GREEN MARITIME SLOW-STEAMING) -->
+<tr class="h-14 bg-surface-container hover:bg-surface-container-high transition-colors">
+<td class="px-space-md py-2 rounded-l">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-center justify-center w-8 h-8 rounded bg-surface-container-highest text-outline font-mono font-medium text-label-xs">
+                  #3
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Candidate C: Eco Slow-Steaming Maritime</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-mono">ESG LEADER</span>
+</div>
+<span class="text-outline font-label-xs text-label-xs truncate mt-0.5">Biofuel VLCC Shanghai → Cape Route → Rotterdam Gateway</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-baseline gap-1">
+<span class="font-mono text-on-surface font-semibold text-headline-sm">85.1</span>
+<span class="text-outline text-label-xs font-mono">/100</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">$1,580,000</span>
+<span class="font-mono text-secondary text-[11px]">-44.5%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-error font-semibold">32.6 Days</span>
+<span class="font-mono text-error text-[11px]">+6.2 Days</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">88 MT</span>
+<span class="font-mono text-secondary text-[11px]">-68.5%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-mono text-on-surface font-semibold">78/100</span>
+</div>
+<span class="text-outline text-[10px]">Lead Time Buffer Tight</span>
+</td>
+<td class="px-3 py-2">
+<span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-mono">8/8 Passed</span>
+</td>
+<td class="px-space-md py-2 text-right rounded-r">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest hover:bg-surface-variant text-on-surface font-label-xs text-label-xs transition-colors">
+                Inspect
+              </button>
+</td>
+</tr>
+<!-- ROW 4: CANDIDATE D (MULTI-HUB NEARSHORING PIVOT) -->
+<tr class="h-14 bg-surface-container hover:bg-surface-container-high transition-colors">
+<td class="px-space-md py-2 rounded-l">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-center justify-center w-8 h-8 rounded bg-surface-container-highest text-outline font-mono font-medium text-label-xs">
+                  #4
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-medium">Candidate D: Multi-Hub Nearshoring Pivot</span>
+<span class="px-1.5 py-0.5 rounded bg-tertiary/10 text-tertiary font-label-xs text-label-xs font-mono">HIGH RESILIENCE</span>
+</div>
+<span class="text-outline font-label-xs text-label-xs truncate mt-0.5">60% Dual Mexico Tier-2 + 40% Taiwan Precision Component Base</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-baseline gap-1">
+<span class="font-mono text-on-surface font-semibold text-headline-sm">81.4</span>
+<span class="text-outline text-label-xs font-mono">/100</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">$2,390,000</span>
+<span class="font-mono text-secondary text-[11px]">-16.1%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">19.8 Days</span>
+<span class="font-mono text-secondary text-[11px]">-6.6 Days</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-secondary font-semibold">165 MT</span>
+<span class="font-mono text-secondary text-[11px]">-41.0%</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-mono text-secondary font-semibold">96/100</span>
+</div>
+<span class="text-outline text-[10px]">Geopolitical Hedge</span>
+</td>
+<td class="px-3 py-2">
+<span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-label-xs text-label-xs font-mono">8/8 Passed</span>
+</td>
+<td class="px-space-md py-2 text-right rounded-r">
+<button class="h-8 px-2.5 rounded bg-surface-container-lowest hover:bg-surface-variant text-on-surface font-label-xs text-label-xs transition-colors">
+                Inspect
+              </button>
+</td>
+</tr>
+<!-- ROW 5: CANDIDATE E (STATUS QUO BASELINE) -->
+<tr class="h-14 bg-surface-container/60 hover:bg-surface-container transition-colors">
+<td class="px-space-md py-2 rounded-l">
+<div class="flex items-center gap-space-sm">
+<div class="flex flex-col items-center justify-center w-8 h-8 rounded bg-surface-container-highest text-error font-mono font-medium text-label-xs">
+                  #5
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-outline font-medium">Candidate E: Status Quo Baseline</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-highest text-outline font-label-xs text-label-xs font-mono">BENCHMARK</span>
+</div>
+<span class="text-outline font-label-xs text-label-xs truncate mt-0.5">Suez Ocean Route • Single-Source APAC Foundry • High Vulnerability</span>
+</div>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-baseline gap-1">
+<span class="font-mono text-outline font-semibold text-headline-sm">64.0</span>
+<span class="text-outline text-label-xs font-mono">/100</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">$2,850,000</span>
+<span class="font-mono text-outline text-[11px]">Base Reference</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">26.4 Days</span>
+<span class="font-mono text-outline text-[11px]">Base Reference</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface font-semibold">280 MT</span>
+<span class="font-mono text-outline text-[11px]">Base Reference</span>
+</div>
+</td>
+<td class="px-3 py-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-mono text-error font-semibold">58/100</span>
+</div>
+<span class="text-error text-[10px]">Severe Chokepoint Risk</span>
+</td>
+<td class="px-3 py-2">
+<span class="px-2 py-0.5 rounded bg-error/15 text-error font-label-xs text-label-xs font-mono">2 Warnings</span>
+</td>
+<td class="px-space-md py-2 text-right rounded-r">
+<span class="font-label-xs text-label-xs text-outline italic">Status Quo</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Executive Run Synthesis Note -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm p-3 rounded-lg bg-surface-container-lowest mt-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0">info</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+          Selecting <strong class="text-on-surface">Candidate A</strong> unlocks <strong class="text-secondary">$702,000/quarter</strong> net savings while slashing lead-time volatility across Malacca/Red Sea corridors by <strong>38.2%</strong>.
+        </span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 font-label-xs text-label-xs">
+<span class="text-outline">Audited by:</span>
+<span class="font-mono text-on-surface">Engine-Gurobi-DualSimplex</span>
+<span class="text-secondary">(✓ Formally Verified)</span>
+</div>
+</div>
+</section>
+</div></main></div></body></html>

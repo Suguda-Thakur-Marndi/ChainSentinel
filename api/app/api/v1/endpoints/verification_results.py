@@ -10,8 +10,20 @@ Endpoints:
 - GET /api/v1/verification-results/{id} (Protected, Viewer+: get single verification result by ID)
 """
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
+from app.agents.verification import (
+    VerificationActionNotExecutedError,
+    VerificationActionNotFoundError,
+    VerificationAgent,
+    VerificationApprovalMismatchError,
+    VerificationCommand,
+    VerificationEvidenceConflictError,
+    VerificationObservationWindowExpiredError,
+    VerificationResultPayload,
+    VerificationSecurityViolationError,
+    VerificationTenantIsolationError,
+)
 from app.api.deps import AuthenticatedContext, get_authenticated_context, require_role
 from app.core.errors import InvalidFilterFieldError
 from app.db.unit_of_work import UnitOfWork, get_uow
@@ -84,6 +96,43 @@ def create_verification_result(
 ) -> VerificationResultResponse:
     """Record an observational verification result for an action."""
     return service.create_verification_result(body)
+
+
+@router.post(
+    "/verify",
+    response_model=VerificationResultPayload,
+    status_code=status.HTTP_200_OK,
+    summary="Verify action outcome",
+    description="Deterministically verify post-action operational outcome against authoritative evidence. Requires RiskManager role or higher.",
+)
+def verify_action_outcome(
+    body: VerificationCommand,
+    context: AuthenticatedContext = Depends(require_role(*WRITE_ROLES)),
+    uow: UnitOfWork = Depends(get_uow),
+) -> VerificationResultPayload:
+    """Run deterministic outcome verification for an executed action."""
+    org_id = context.organization_id
+    if body.organization_id != org_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Cross-tenant verification request: payload tenant '{body.organization_id}' does not match authenticated tenant '{org_id}'.",
+        )
+
+    try:
+        agent = VerificationAgent(db=uow.session)
+        result = agent.execute_verification(command=body)
+        return result
+    except VerificationActionNotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except VerificationTenantIsolationError as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except VerificationActionNotExecutedError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except (VerificationApprovalMismatchError, VerificationEvidenceConflictError) as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except (VerificationObservationWindowExpiredError, VerificationSecurityViolationError) as e:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
+
 
 
 @router.get(

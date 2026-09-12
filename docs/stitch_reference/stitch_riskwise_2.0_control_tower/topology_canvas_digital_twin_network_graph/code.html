@@ -1,0 +1,643 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#101419","inverse-on-surface":"#2d3136","tertiary-fixed":"#e9ddff","surface-variant":"#31353b","background":"#101419","surface-container":"#1c2025","on-tertiary":"#3c0091","surface-container-low":"#181c21","error":"#ffb4ab","surface-bright":"#36393f","surface-dim":"#101419","secondary":"#4edea3","on-error-container":"#ffdad6","on-error":"#690005","primary-fixed":"#d8e2ff","on-secondary-container":"#00311f","inverse-surface":"#e0e2ea","outline":"#8c909f","on-surface":"#e0e2ea","on-background":"#e0e2ea","on-secondary":"#003824","on-surface-variant":"#c2c6d6","secondary-fixed":"#6ffbbe","error-container":"#93000a","surface-container-lowest":"#0a0e13","on-secondary-fixed-variant":"#005236","tertiary-container":"#a078ff","tertiary-fixed-dim":"#d0bcff","tertiary":"#d0bcff","on-tertiary-fixed-variant":"#5516be","on-secondary-fixed":"#002113","on-tertiary-fixed":"#23005c","inverse-primary":"#005ac2","primary":"#adc6ff","on-tertiary-container":"#340080","on-primary-fixed-variant":"#004395","surface-tint":"#adc6ff","secondary-fixed-dim":"#4edea3","on-primary":"#002e6a","on-primary-fixed":"#001a42","primary-fixed-dim":"#adc6ff","surface-container-highest":"#31353b","primary-container":"#4d8eff","surface-container-high":"#262a30","on-primary-container":"#00285d","outline-variant":"#424754","secondary-container":"#00a572"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"0.75rem","margin":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1rem","space-xl":"1.5rem","gutter":"0.75rem"},"fontFamily":{"headline-sm":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg":["Inter"],"body-md":["Inter"],"display-lg-mobile":["Inter"],"headline-md":["Inter"],"headline-lg":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-14 px-space-md flex items-center gap-space-sm border-b border-outline-variant/30 bg-surface-container-low/40"><img alt="RiskWise 2.0 Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVzVJkqRgbbJS8VV7_Kp7MIiRKh30JQLcdkt-QmqJb2x3ZjeLiWUEjriFTrVPc-qMrGw6sOecdTfT_Kx5R5-sMFcXUCapSf0cMkUkMIu8TaOSUm_-scv9b2tlIvEILZiSTt0kBW9HUwv6jPpJJjefuuGzaV0uzLJHuqu2NR7DWkGPYHJhNmD3c6nSNVhtSp97Wm7RN2Myl1XuMjjbwzuguJWiIZKR1yoYlGQzMhwPwymVS71CmwEhYHeCo"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">RiskWise 2.0</span><span class="font-label-xs text-label-xs px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/30 uppercase">v2.4.9</span></div><span class="font-label-xs text-label-xs text-outline truncate">AUTONOMOUS CORE</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/20 bg-surface-container/30"><div class="flex items-center justify-between text-outline"><span class="font-label-xs text-label-xs uppercase tracking-wider">Active Node Scope</span><span class="material-symbols-outlined text-[14px] text-secondary">hub</span></div><div class="font-label-sm text-label-sm text-on-surface font-medium truncate mt-0.5">NORTH-AMER / APAC TIER-1</div></div><nav class="flex flex-col gap-space-sm p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary"><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">1. Overview</div><a aria-current="page" class="flex items-center gap-space-sm px-2.5 py-1.5 rounded transition-all bg-primary-container text-on-primary-container font-semibold shadow-sm border-l-2 border-primary" data-path="control-tower" href="#"><span class="material-symbols-outlined text-[18px]">space_dashboard</span><span>Control Tower</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="global-live-map" href="#"><span class="material-symbols-outlined text-[18px]">public</span><span>Global Live Map</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">2. Intelligence &amp; Risk</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="risk-register" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span>Risk Register</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="incident-command" href="#"><span class="material-symbols-outlined text-[18px]">crisis_alert</span><span>Incident Command</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="ai-recommendations" href="#"><span class="material-symbols-outlined text-[18px]">psychology</span><span>AI Recommendations</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">3. Digital Twin &amp; Sim</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="topology-canvas" href="#"><span class="material-symbols-outlined text-[18px]">schema</span><span>Topology Canvas</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="disruption-simulation" href="#"><span class="material-symbols-outlined text-[18px]">model_training</span><span>Disruption Simulation</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="optimization-runs" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Optimization Runs</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">4. Operations &amp; Shipments</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="shipments-tracker" href="#"><span class="material-symbols-outlined text-[18px]">local_shipping</span><span>Shipments Tracker</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="action-dispatch" href="#"><span class="material-symbols-outlined text-[18px]">send_and_archive</span><span>Action Dispatch</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="verification-engine" href="#"><span class="material-symbols-outlined text-[18px]">fact_check</span><span>Verification Engine</span></a></div><div class="flex flex-col gap-0.5"><div class="px-space-xs py-1 font-label-xs text-label-xs text-outline uppercase tracking-wider font-semibold">5. Governance &amp; Data</div><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="human-approvals" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span><span>Human Approvals</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="audit-log-explorer" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span><span>Audit Log Explorer</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="network-data" href="#"><span class="material-symbols-outlined text-[18px]">database</span><span>Network Data</span></a><a class="flex items-center gap-space-sm px-2.5 py-1.5 rounded text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-sm text-body-sm" data-path="settings-rbac" href="#"><span class="material-symbols-outlined text-[18px]">shield_person</span><span>Settings &amp; RBAC</span></a></div></nav></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-lowest"><div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/30"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant">LATENCY</span></div><span class="font-label-xs text-label-xs text-secondary font-mono font-medium">12ms (Z-FEED)</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-14 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 flex items-center justify-between px-space-md gap-space-md"><div class="flex items-center gap-space-md min-w-0 max-w-sm"><div class="flex items-center gap-space-xs px-2.5 py-1.5 rounded bg-surface-container-low border border-outline-variant/30 min-w-0 cursor-pointer hover:border-outline transition-colors"><span class="material-symbols-outlined text-[16px] text-primary shrink-0">corporate_fare</span><div class="flex flex-col min-w-0"><span class="font-label-xs text-label-xs text-on-surface truncate font-semibold">Global Logistics Enterprise</span><span class="font-label-xs text-[9px] leading-tight text-outline truncate">NA &amp; APAC Tier-1</span></div><span class="material-symbols-outlined text-[14px] text-outline shrink-0 ml-1">unfold_more</span></div></div><div class="flex-1 max-w-xl mx-2"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-3 text-[18px] text-outline pointer-events-none">search</span><input class="w-full h-9 pl-9 pr-14 rounded bg-surface-container-lowest border border-outline-variant/40 text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:border-primary transition-colors" placeholder="Search shipments, IMO vessels, risks, containers..." type="text"><div class="absolute right-2 flex items-center"><kbd class="px-1.5 py-0.5 text-label-xs font-label-xs rounded bg-surface-container-high border border-outline-variant/40 text-outline">⌘K</kbd></div></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden xl:flex items-center gap-space-xs px-2.5 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-xs text-label-xs tracking-wider">TELEMETRY: OPTIMAL</span><span class="text-outline-variant">|</span><span class="font-label-xs text-label-xs text-on-surface-variant font-mono">42,819 NODES</span></div><button class="flex items-center gap-1.5 h-8 px-3 rounded bg-primary text-on-primary font-headline-sm text-headline-sm hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">play_circle</span><span class="hidden sm:inline font-medium">Simulate Disruption</span></button><div class="relative"><button class="w-8 h-8 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-on-error rounded-full font-label-xs text-[9px] flex items-center justify-center font-bold">4</span></button></div><div class="h-5 w-[1px] bg-outline-variant/30"></div><div class="flex items-center gap-space-xs pl-1"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0NQuBzY8_uH28XOIJkp7YNiKdBHoCBrbNAsX1Pxn6b7nl5mKPh4mux72wHWsHoECrYU5ieJ7_p7ZC2f0p6_-K54dwRCG0A61JOFqnanBDPUUj_CpSE0eIKQuUKI4SqN6_TX2zDV9Rb7uVTxLvOWH7XzrvAq452bck_URYflU_BB9SEC5CUi_6kgkYNcTHRZcDIHul6BPUaKZh02jI8iAfW5vVb_gyPtz8fdtF1xhJmcM3aIGRDudy_A"><div class="hidden md:flex flex-col text-left"><span class="font-body-sm text-body-sm text-on-surface font-semibold leading-none">Marcus Vance</span><div class="flex items-center gap-1 mt-0.5"><span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span><span class="font-label-xs text-[10px] text-outline leading-none">Risk Director (L4)</span></div></div></div></div></header><main class="w-full pt-14 px-space-md pb-space-lg bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- SCRIPT TO HIGHLIGHT ACTIVE SIDEBAR NAV -->
+<script>
+    (function() {
+      const activePath = 'topology-canvas';
+      const navLinks = document.querySelectorAll('aside nav a[data-path]');
+      navLinks.forEach(link => {
+        if (link.getAttribute('data-path') === activePath) {
+          link.className = 'flex items-center gap-space-sm px-2.5 py-1.5 rounded bg-primary-container text-on-primary-container font-semibold shadow-sm font-body-sm text-body-sm';
+          const icon = link.querySelector('.material-symbols-outlined');
+          if (icon) icon.className = 'material-symbols-outlined text-[18px] text-on-primary-container';
+        }
+      });
+    })();
+  </script>
+<!-- TOP CONTROL & TACTICAL FILTER BAR -->
+<header class="flex flex-col gap-space-xs mb-space-sm">
+<!-- Row 1: System Hierarchy, Master Search, High-Priority Actions -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm p-space-sm bg-surface-container rounded-xl shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0 shadow-inner">
+<span class="material-symbols-outlined text-[20px]">schema</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-on-surface tracking-tight truncate">Digital Twin Topology Canvas</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-semibold uppercase tracking-wider">GRAPH-V4.2 LIVE</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline truncate">MULTI-ECHELON GLOBAL VALUE CHAIN • SEMICONDUCTOR &amp; AUTO SUITE</span>
+</div>
+</div>
+<!-- Quick Search to Highlight -->
+<div class="flex-1 max-w-md mx-2 min-w-[240px]">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-2.5 text-[16px] text-outline pointer-events-none">filter_center_focus</span>
+<input class="w-full h-8 pl-8 pr-12 rounded bg-surface-container-lowest text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:bg-surface-container-low transition-colors shadow-inner" placeholder="Highlight node by name, tier, SKU, or geo-code... (⌘K)" type="text" value="TSMC Fab 18 - Tainan">
+<span class="absolute right-2 font-label-xs text-label-xs text-secondary font-semibold">1 MATCH</span>
+</div>
+</div>
+<!-- Right Action Triggers -->
+<div class="flex items-center gap-space-xs shrink-0">
+<!-- Bottlenecks / SPOF Detection Button -->
+<button class="flex items-center gap-1.5 h-8 px-2.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold shadow-md transition-all hover:bg-error hover:text-on-error" id="spof-toggle-btn">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+</span>
+<span class="material-symbols-outlined text-[15px]">report_problem</span>
+<span>Find Bottlenecks / SPOF (3)</span>
+</button>
+<!-- Simulation Mode Toggle -->
+<button class="flex items-center gap-1.5 h-8 px-2.5 rounded bg-surface-container-high text-on-surface hover:text-primary transition-colors font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-tertiary">science</span>
+<span>Sim Mode</span>
+</button>
+<!-- Layout Presets Selector -->
+<div class="flex items-center bg-surface-container-lowest p-0.5 rounded shadow-inner">
+<button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-xs text-label-xs font-semibold">Force-Directed</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-xs text-label-xs">Tier Echelon</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-xs text-label-xs">Geo Projected</button>
+</div>
+<button class="w-8 h-8 rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Full Screen Canvas">
+<span class="material-symbols-outlined text-[17px]">fullscreen</span>
+</button>
+</div>
+</div>
+<!-- Row 2: Node Type Badges & Edge Legend Toggles -->
+<div class="flex flex-wrap items-center justify-between gap-space-xs px-space-sm py-1.5 bg-surface-container-low rounded-lg font-label-xs text-label-xs">
+<!-- Node Class Filters -->
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="text-outline uppercase tracking-wider font-semibold mr-1">Node Types:</span>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface shadow-xs hover:bg-surface-bright">
+<span class="w-2.5 h-2.5 rounded-sm bg-primary rotate-45 inline-block"></span>
+<span>Tier-1/2 Suppliers</span>
+<span class="text-primary font-mono font-semibold ml-0.5">48</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface shadow-xs hover:bg-surface-bright">
+<span class="w-2.5 h-2.5 rotate-45 bg-error inline-block"></span>
+<span>Mines &amp; Raw Sites</span>
+<span class="text-error font-mono font-semibold ml-0.5">112</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-primary shadow-xs font-semibold">
+<span class="w-2.5 h-2.5 rounded-none bg-primary inline-block"></span>
+<span>Semiconductor Fabs</span>
+<span class="text-primary font-mono font-semibold ml-0.5">16</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface shadow-xs hover:bg-surface-bright">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary inline-block"></span>
+<span>Warehouses / 3PL</span>
+<span class="text-secondary font-mono font-semibold ml-0.5">34</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface shadow-xs hover:bg-surface-bright">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary inline-block"></span>
+<span>Maritime Chokepoints</span>
+<span class="text-tertiary font-mono font-semibold ml-0.5">28</span>
+</button>
+<button class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high text-on-surface shadow-xs hover:bg-surface-bright">
+<span class="w-2.5 h-2 rounded bg-tertiary-fixed-dim inline-block"></span>
+<span>Automotive OEMs</span>
+<span class="text-tertiary-fixed-dim font-mono font-semibold ml-0.5">62</span>
+</button>
+</div>
+<!-- Edge Links Legend -->
+<div class="flex items-center gap-3 text-outline">
+<span class="uppercase tracking-wider font-semibold">Edges:</span>
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-4 h-0.5 bg-primary"></span>
+<span>Flow (TEU/hr)</span>
+</span>
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-4 h-0.5 bg-error"></span>
+<span>Critical SPOF Link</span>
+</span>
+<span class="flex items-center gap-1 text-on-surface-variant">
+<span class="w-4 h-0.5 bg-tertiary"></span>
+<span>Maritime Corridor</span>
+</span>
+</div>
+</div>
+</header>
+<!-- MAIN OPERATIONAL WORKSPACE (TRI-PANE: STATS DRAWER + INTERACTIVE CANVAS + MINIMAP/HUD) -->
+<div class="relative w-full h-[760px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-2xl flex">
+<!-- LEFT HUD: GRAPH TELEMETRY & TACTICAL FILTERS DRAWER -->
+<aside class="w-80 h-full bg-surface-container-low/95 backdrop-blur-md p-space-md z-20 flex flex-col justify-between shrink-0 shadow-lg overflow-y-auto">
+<div class="flex flex-col gap-space-md">
+<!-- Drawer Header -->
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">hub</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Topology Graph Metrics</span>
+</div>
+<span class="font-label-xs text-label-xs text-secondary px-1.5 py-0.5 rounded bg-secondary/10">STABLE-SYNC</span>
+</div>
+<!-- Metric KPI Cards Bento -->
+<div class="grid grid-cols-2 gap-space-xs">
+<div class="p-2 rounded bg-surface-container flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase">Active Vertices</span>
+<span class="font-headline-lg text-headline-lg text-on-surface font-mono font-semibold">300</span>
+<span class="font-label-xs text-[9px] text-secondary mt-0.5">+4 Sub-tiers added</span>
+</div>
+<div class="p-2 rounded bg-surface-container flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase">Active Edges</span>
+<span class="font-headline-lg text-headline-lg text-on-surface font-mono font-semibold">742</span>
+<span class="font-label-xs text-[9px] text-outline mt-0.5">Dir-Acyclic Graph</span>
+</div>
+<div class="p-2 rounded bg-surface-container flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase">Network Density</span>
+<span class="font-headline-sm text-headline-sm text-primary font-mono">0.184</span>
+<span class="font-label-xs text-[9px] text-outline mt-0.5">Echelon Cohesion</span>
+</div>
+<div class="p-2 rounded bg-surface-container flex flex-col">
+<span class="font-label-xs text-label-xs text-outline uppercase">Graph Centrality</span>
+<span class="font-headline-sm text-headline-sm text-error font-mono">HIGH SPOF</span>
+<span class="font-label-xs text-[9px] text-error mt-0.5">3 Vulnerable hubs</span>
+</div>
+</div>
+<!-- Slider Filter: Multi-Tier Depth Filter -->
+<div class="flex flex-col gap-1.5 p-space-sm bg-surface-container rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-on-surface font-semibold uppercase tracking-wider">Multi-Tier Depth</span>
+<span class="font-label-xs text-label-xs text-primary font-mono">Tier 1 - 4 (All)</span>
+</div>
+<div class="w-full flex items-center gap-1 text-outline font-label-xs text-[10px]">
+<span class="text-primary font-bold">T1</span>
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden relative">
+<div class="w-full h-full bg-primary rounded-full"></div>
+</div>
+<span class="text-primary font-bold">T4</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline">Traversing 4 tiers of sub-contractor wafer dependencies</span>
+</div>
+<!-- Slider Filter: Disruption Blast Radius -->
+<div class="flex flex-col gap-1.5 p-space-sm bg-surface-container rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-on-surface font-semibold uppercase tracking-wider">Disruption Blast Radius</span>
+<span class="font-label-xs text-label-xs text-error font-mono font-bold">3 Hops (OEM Impact)</span>
+</div>
+<div class="w-full flex items-center gap-1 text-outline font-label-xs text-[10px]">
+<span>1 Hop</span>
+<div class="flex-1 h-1.5 bg-surface-container-highest rounded-full overflow-hidden relative">
+<div class="w-3/4 h-full bg-error rounded-full"></div>
+</div>
+<span>4 Hops</span>
+</div>
+<span class="font-label-xs text-[10px] text-on-surface-variant">Forecasts assembly line halts within 3 tier echelons</span>
+</div>
+<!-- Capacity Strain Filter -->
+<div class="flex flex-col gap-1.5 p-space-sm bg-surface-container rounded-lg">
+<span class="font-label-xs text-label-xs text-on-surface font-semibold uppercase tracking-wider">Edge Flow Saturation</span>
+<div class="flex flex-col gap-1 font-body-sm text-body-sm">
+<label class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-error"></span>
+<span class="font-label-xs text-label-xs text-on-surface">&gt; 85% Bottleneck Saturation</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">19 edges</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="font-label-xs text-label-xs text-on-surface">50% - 85% Nominal Flow</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">482 edges</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer p-1 rounded hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-xs text-label-xs text-on-surface">&lt; 50% Underutilized</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono">241 edges</span>
+</label>
+</div>
+</div>
+<!-- Identified Critical SPOFs List -->
+<div class="flex flex-col gap-1.5">
+<span class="font-label-xs text-label-xs text-error font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">crisis_alert</span>
+            Identified Single Points of Failure
+          </span>
+<div class="flex flex-col gap-1 font-label-xs text-label-xs">
+<!-- SPOF 1: Selected -->
+<div class="p-2 rounded bg-surface-container-high text-on-surface shadow-xs cursor-pointer">
+<div class="flex items-center justify-between font-semibold">
+<span class="text-primary truncate">TSMC Fab 18 - Tainan</span>
+<span class="px-1 py-0.2 rounded bg-error/20 text-error">94% Cap</span>
+</div>
+<span class="text-outline text-[10px] block truncate">3nm MCU Auto Wafers • Tier-1 Foundry</span>
+</div>
+<!-- SPOF 2 -->
+<div class="p-2 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center justify-between font-semibold">
+<span class="text-on-surface truncate">Bab-el-Mandeb Strait</span>
+<span class="px-1 py-0.2 rounded bg-error/20 text-error">Chokepoint</span>
+</div>
+<span class="text-outline text-[10px] block truncate">Red Sea Maritime • 14 Vessels Rerouted</span>
+</div>
+<!-- SPOF 3 -->
+<div class="p-2 rounded bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="flex items-center justify-between font-semibold">
+<span class="text-on-surface truncate">SK Hynix M16 - Icheon</span>
+<span class="px-1 py-0.2 rounded bg-error/20 text-error">Critical</span>
+</div>
+<span class="text-outline text-[10px] block truncate">DDR5 &amp; HBM Wafer Dependency</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Footer Action -->
+<div class="pt-space-sm">
+<button class="w-full py-2 rounded bg-surface-container-high text-primary hover:bg-surface-bright transition-colors font-label-sm text-label-sm flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export Graph Topology (JSON)</span>
+</button>
+</div>
+</aside>
+<!-- CENTER CANVAS: FULL INTERACTIVE VECTOR GRAPH -->
+<main class="flex-1 h-full relative overflow-hidden bg-[radial-gradient(#262a30_1px,transparent_1px)] [background-size:24px_24px] cursor-grab active:cursor-grabbing">
+<!-- Vector Topology Canvas -->
+<svg class="w-full h-full select-none" id="network-topology-svg" viewBox="0 0 1100 760" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Gradients -->
+<linearGradient id="edge-flow-cyan" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#06b6d4" stop-opacity="0.9"></stop>
+</linearGradient>
+<linearGradient id="edge-spof-danger" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ef4444" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#f97316" stop-opacity="0.9"></stop>
+</linearGradient>
+<!-- Marker Arrowheads -->
+<marker id="arrow-cyan" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="22" refY="5" viewBox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4"></path>
+</marker>
+<marker id="arrow-danger" markerHeight="7" markerWidth="7" orient="auto-start-reverse" refX="24" refY="5" viewBox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"></path>
+</marker>
+<marker id="arrow-purple" markerHeight="6" markerWidth="6" orient="auto-start-reverse" refX="22" refY="5" viewBox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#8b5cf6"></path>
+</marker>
+<!-- Pulse Filter / Shadow Glows -->
+<filter height="160%" id="glow-danger" width="160%" x="-30%" y="-30%">
+<feGaussianBlur result="blur" stdDeviation="6"></feGaussianBlur>
+<feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+</filter>
+</defs>
+<!-- BACKGROUND HUD RADIAL GUIDES -->
+<g opacity="0.15" stroke="#424754" stroke-dasharray="3 3">
+<circle cx="520" cy="380" fill="none" r="140"></circle>
+<circle cx="520" cy="380" fill="none" r="280"></circle>
+<circle cx="520" cy="380" fill="none" r="420"></circle>
+<line x1="520" x2="520" y1="0" y2="760"></line>
+<line x1="0" x2="1100" y1="380" y2="380"></line>
+</g>
+<!-- GRAPH EDGES (CONNECTIONS & TRANSIT) -->
+<g id="graph-edges" stroke-linecap="round">
+<!-- Upstream Mines -> Tier 2 Sub-Suppliers -->
+<path d="M 120 180 Q 200 150 290 190" fill="none" marker-end="url(#arrow-cyan)" stroke="#424754" stroke-width="1.5"></path>
+<path d="M 130 360 Q 210 330 290 310" fill="none" marker-end="url(#arrow-cyan)" stroke="#424754" stroke-width="1.5"></path>
+<path d="M 110 560 Q 200 520 280 470" fill="none" marker-end="url(#arrow-cyan)" stroke="#424754" stroke-width="1.5"></path>
+<path d="M 140 240 Q 220 230 290 250" fill="none" stroke="#424754" stroke-width="1.5"></path>
+<!-- Tier 2 Suppliers -> TSMC Fab 18 (CRITICAL SPOF CONVERGENCE) -->
+<path d="M 330 190 Q 420 230 490 350" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-dasharray="6 3" stroke-width="2.5"></path>
+<path d="M 330 310 Q 400 340 480 370" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-width="3"></path>
+<path d="M 320 470 Q 410 440 490 400" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-dasharray="6 3" stroke-width="2.5"></path>
+<!-- Rare Gas Neon Supplier (Ukraine/Rotterdam) -> SK Hynix & TSMC -->
+<path d="M 280 620 Q 380 610 520 420" fill="none" stroke="#06b6d4" stroke-dasharray="4 2" stroke-width="2"></path>
+<path d="M 280 620 Q 380 660 540 620" fill="none" marker-end="url(#arrow-cyan)" stroke="#06b6d4" stroke-width="1.5"></path>
+<!-- TSMC Fab 18 -> Global Ports & Distribution Hubs -->
+<path d="M 560 360 Q 640 280 730 260" fill="none" marker-end="url(#arrow-cyan)" stroke="#06b6d4" stroke-width="3"></path>
+<path d="M 560 390 Q 650 390 730 400" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-width="3"></path>
+<path d="M 550 420 Q 640 500 720 540" fill="none" marker-end="url(#arrow-purple)" stroke="#8b5cf6" stroke-dasharray="5 3" stroke-width="2"></path>
+<!-- Maritime Chokepoint Bab-el-Mandeb Links -->
+<path d="M 720 540 Q 620 620 540 620" fill="none" marker-end="url(#arrow-danger)" stroke="#ef4444" stroke-dasharray="4 4" stroke-width="2.5"></path>
+<path d="M 720 540 Q 810 570 900 580" fill="none" marker-end="url(#arrow-purple)" stroke="#8b5cf6" stroke-width="2"></path>
+<!-- Ports/Hubs -> Tier-1 Tier-0 Automotive OEMs -->
+<path d="M 770 250 Q 840 220 920 210" fill="none" marker-end="url(#arrow-cyan)" stroke="#06b6d4" stroke-width="2"></path>
+<path d="M 770 270 Q 840 310 920 330" fill="none" marker-end="url(#arrow-cyan)" stroke="#06b6d4" stroke-width="2.5"></path>
+<path d="M 770 410 Q 840 390 920 360" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-width="3"></path>
+<path d="M 770 420 Q 850 450 920 480" fill="none" marker-end="url(#arrow-danger)" stroke="url(#edge-spof-danger)" stroke-width="2.5"></path>
+<!-- Cross-tier feedback telemetry loop -->
+<path d="M 940 230 Q 750 110 520 120 Q 340 120 300 180" fill="none" stroke="#4edea3" stroke-dasharray="2 4" stroke-width="1"></path>
+<!-- Particle Pulses Representing Dynamic Cargo Flow -->
+<circle fill="#4edea3" r="3.5">
+<animateMotion dur="2.4s" path="M 330 310 Q 400 340 480 370" repeatCount="indefinite"></animateMotion>
+</circle>
+<circle fill="#06b6d4" r="3.5">
+<animateMotion dur="3s" path="M 560 360 Q 640 280 730 260" repeatCount="indefinite"></animateMotion>
+</circle>
+<circle fill="#ef4444" r="4">
+<animateMotion dur="1.8s" path="M 560 390 Q 650 390 730 400" repeatCount="indefinite"></animateMotion>
+</circle>
+<circle fill="#8b5cf6" r="3">
+<animateMotion dur="4.2s" path="M 720 540 Q 810 570 900 580" repeatCount="indefinite"></animateMotion>
+</circle>
+</g>
+<!-- GRAPH NODES -->
+<g id="graph-nodes">
+<!-- LEVEL 0: RAW MATERIAL & SILICON MINES (Diamonds #f59e0b) -->
+<g class="cursor-pointer" transform="translate(110, 180)">
+<polygon fill="#181d24" points="0,-12 12,0 0,12 -12,0" stroke="#f59e0b" stroke-width="2"></polygon>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="0" y="24">Quartz Corp (Spruce Pine)</text>
+<text fill="#64748b" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="34">Ultra-Purity Silica</text>
+</g>
+<g class="cursor-pointer" transform="translate(120, 360)">
+<polygon fill="#181d24" points="0,-12 12,0 0,12 -12,0" stroke="#f59e0b" stroke-width="2"></polygon>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="0" y="24">Sumco Silicon (Kyushu)</text>
+<text fill="#64748b" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="34">Raw Ingot Polishing</text>
+</g>
+<g class="cursor-pointer" transform="translate(100, 560)">
+<polygon fill="#181d24" points="0,-12 12,0 0,12 -12,0" stroke="#f59e0b" stroke-width="2"></polygon>
+<text fill="#94a3b8" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="0" y="24">Jervois Cobalt (Idaho)</text>
+<text fill="#64748b" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="34">EV Cathode Mine</text>
+</g>
+<!-- LEVEL 1: TIER-2 CHEMICAL & WAFER PRECURSORS (Hexagons #06b6d4) -->
+<g class="cursor-pointer" transform="translate(300, 190)">
+<circle cx="0" cy="0" fill="#181d24" r="14" stroke="#06b6d4" stroke-width="2"></circle>
+<text fill="#06b6d4" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">T2</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="26">Shin-Etsu Handotai</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="38">300mm Prime Wafers</text>
+</g>
+<g class="cursor-pointer" transform="translate(300, 310)">
+<circle cx="0" cy="0" fill="#181d24" r="14" stroke="#06b6d4" stroke-width="2"></circle>
+<text fill="#06b6d4" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">T2</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="26">Tokyo Ohka Kogyo</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="38">EUV Photoresist Resin</text>
+</g>
+<g class="cursor-pointer" transform="translate(290, 470)">
+<circle cx="0" cy="0" fill="#181d24" r="14" stroke="#06b6d4" stroke-width="2"></circle>
+<text fill="#06b6d4" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">T2</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="26">Inpria / JSR Micro</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="38">Metal Oxide Resists</text>
+</g>
+<g class="cursor-pointer" transform="translate(270, 620)">
+<circle cx="0" cy="0" fill="#181d24" r="13" stroke="#f59e0b" stroke-width="2"></circle>
+<text fill="#f59e0b" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">T3</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" text-anchor="middle" x="0" y="25">Ingas Neon Refining</text>
+<text fill="#ef4444" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="36">Supply Shock (Rotterdam)</text>
+</g>
+<!-- LEVEL 2: MAJOR SEMICONDUCTOR FABS (CENTER HUBS) -->
+<!-- HIGH SPOF NODE: SK HYNIX M16 -->
+<g class="cursor-pointer" transform="translate(540, 620)">
+<rect fill="#181d24" height="36" rx="6" stroke="#ef4444" stroke-width="2" width="36" x="-18" y="-18"></rect>
+<circle class="animate-ping" cx="12" cy="-12" fill="#ef4444" r="4"></circle>
+<circle cx="12" cy="-12" fill="#ef4444" r="4"></circle>
+<text fill="#f1f5f9" font-family="JetBrains Mono" font-size="10" font-weight="bold" text-anchor="middle" x="0" y="4">FAB</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="0" y="30">SK Hynix M16 - Icheon</text>
+<text fill="#ef4444" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="0" y="42">DDR5 &amp; HBM Wafer Bottleneck</text>
+</g>
+<!-- CRITICAL ANCHOR SPOF: TSMC FAB 18 TAINAN (SELECTED HERO NODE) -->
+<g class="cursor-pointer" id="hero-node-tsmc" transform="translate(520, 380)">
+<!-- Outermost Pulsing Halo -->
+<circle class="animate-spin [animation-duration:12s]" cx="0" cy="0" fill="rgba(239, 68, 68, 0.08)" r="48" stroke="#ef4444" stroke-dasharray="4 3" stroke-width="1.5"></circle>
+<circle cx="0" cy="0" fill="rgba(239, 68, 68, 0.18)" filter="url(#glow-danger)" r="36" stroke="#ef4444" stroke-width="2"></circle>
+<!-- Node Body -->
+<rect fill="#111827" height="48" rx="8" stroke="#ef4444" stroke-width="2.5" width="48" x="-24" y="-24"></rect>
+<!-- Tactical Inner Target / Chip Icon -->
+<rect fill="#ef4444" fill-opacity="0.25" height="24" rx="3" stroke="#ef4444" stroke-width="1.5" width="24" x="-12" y="-12"></rect>
+<circle cx="0" cy="0" fill="#ffffff" r="4"></circle>
+<!-- Top Alert Badge -->
+<g transform="translate(0, -32)">
+<rect fill="#93000a" height="17" rx="3" width="84" x="-42" y="-9"></rect>
+<text fill="#ffdad6" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="3">SEV-1 SPOF (88%)</text>
+</g>
+<!-- Bottom Titles -->
+<text fill="#ffffff" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.8))" font-family="Inter" font-size="13" font-weight="700" text-anchor="middle" x="0" y="42">TSMC Fab 18 - Tainan</text>
+<text fill="#adc6ff" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="0" y="55">3nm N3E Automotive Process</text>
+</g>
+<!-- LEVEL 3: LOGISTICS PORTS & HUBS -->
+<!-- Port of Kaohsiung -->
+<g class="cursor-pointer" transform="translate(740, 260)">
+<circle cx="0" cy="0" fill="#181d24" r="16" stroke="#8b5cf6" stroke-width="2"></circle>
+<circle cx="0" cy="0" fill="#8b5cf6" r="6"></circle>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="28">Port of Kaohsiung</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="40">TEU Air/Sea Outbound</text>
+</g>
+<!-- Distribution Consolidation Hub (Rotterdam) -->
+<g class="cursor-pointer" transform="translate(740, 400)">
+<polygon fill="#181d24" points="-12,-12 12,-12 16,0 12,12 -12,12 -16,0" stroke="#10b981" stroke-width="2"></polygon>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="28">ECT Delta Terminal (Rotterdam)</text>
+<text fill="#4edea3" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="0" y="40">3PL Hub • 18k m² buffer</text>
+</g>
+<!-- SPOF MARITIME CHOKEPOINT: BAB-EL-MANDEB -->
+<g class="cursor-pointer" transform="translate(730, 560)">
+<circle cx="0" cy="0" fill="#181d24" r="20" stroke="#ef4444" stroke-dasharray="3 2" stroke-width="2"></circle>
+<polygon fill="#ef4444" points="0,-10 10,8 -10,8"></polygon>
+<text fill="#f1f5f9" font-family="Inter" font-size="11" font-weight="600" text-anchor="middle" x="0" y="32">Bab-el-Mandeb Strait</text>
+<text fill="#ef4444" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="0" y="44">RED SEA BLOCKAGE (+14 Days)</text>
+</g>
+<!-- LEVEL 4: AUTOMOTIVE OEMS / CUSTOMERS (Shields / Rounded) -->
+<!-- BMW Dingolfing -->
+<g class="cursor-pointer" transform="translate(940, 210)">
+<rect fill="#181d24" height="32" rx="10" stroke="#ec4899" stroke-width="2" width="32" x="-16" y="-16"></rect>
+<text fill="#ec4899" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">OEM</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="28">BMW Plant Dingolfing</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="40">iX / 7-Series Assembly</text>
+</g>
+<!-- Bosch Reutlingen Sub-Tier -->
+<g class="cursor-pointer" transform="translate(940, 340)">
+<rect fill="#181d24" height="32" rx="10" stroke="#3b82f6" stroke-width="2" width="32" x="-16" y="-16"></rect>
+<text fill="#3b82f6" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">T1</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="28">Bosch Mobility Hub</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="40">Braking &amp; Radar ECU Mod</text>
+</g>
+<!-- Tesla Gigafactory Berlin -->
+<g class="cursor-pointer" transform="translate(940, 470)">
+<rect fill="#181d24" height="32" rx="10" stroke="#ec4899" stroke-width="2" width="32" x="-16" y="-16"></rect>
+<text fill="#ec4899" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle" x="0" y="4">OEM</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" font-weight="600" text-anchor="middle" x="0" y="28">Tesla Giga Berlin-Brandenburg</text>
+<text fill="#ef4444" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="0" y="40">MCU Buffer: 4.1 Days (CRIT)</text>
+</g>
+<!-- Foxconn European Assembly (Pardubice) -->
+<g class="cursor-pointer" transform="translate(920, 600)">
+<rect fill="#181d24" height="28" rx="8" stroke="#ec4899" stroke-width="2" width="28" x="-14" y="-14"></rect>
+<text fill="#ec4899" font-family="JetBrains Mono" font-size="8" font-weight="bold" text-anchor="middle" x="0" y="4">EMS</text>
+<text fill="#f1f5f9" font-family="Inter" font-size="10" text-anchor="middle" x="0" y="26">Foxconn Pardubice</text>
+<text fill="#94a3b8" font-family="Inter" font-size="8" text-anchor="middle" x="0" y="38">In-Vehicle Infotainment</text>
+</g>
+</g>
+</svg>
+<!-- CANVAS HUD FLOATING ZOOM & GRAVITY CONTROLS -->
+<div class="absolute top-4 right-4 flex flex-col gap-1 z-30 bg-surface-container-high/90 backdrop-blur-md p-1 rounded-lg shadow-lg">
+<button class="w-8 h-8 rounded hover:bg-surface-bright flex items-center justify-center text-on-surface" title="Zoom In">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+<button class="w-8 h-8 rounded hover:bg-surface-bright flex items-center justify-center text-on-surface" title="Zoom Out">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<button class="w-8 h-8 rounded hover:bg-surface-bright flex items-center justify-center text-on-surface" title="Fit to Screen">
+<span class="material-symbols-outlined text-[18px]">fit_screen</span>
+</button>
+<div class="w-full h-px bg-outline-variant/30 my-0.5"></div>
+<button class="w-8 h-8 rounded hover:bg-surface-bright flex items-center justify-center text-primary" title="Recalculate Physics Gravity">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+</div>
+<!-- CANVAS OVERLAY: FLOATING DETAIL INSPECTION DOSSIER (FOR SELECTED HERO NODE: TSMC FAB 18) -->
+<section class="absolute top-4 left-6 w-96 bg-surface-container/95 backdrop-blur-md rounded-xl p-space-md shadow-2xl z-30 flex flex-col gap-space-sm border-l-4 border-error">
+<!-- Dossier Header -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">TIER-1 FOUNDRY</span>
+<span class="font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-error/20 text-error font-mono font-bold">SEV-1 SPOF</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight mt-1">TSMC Fab 18 - Tainan</h3>
+<span class="font-label-xs text-label-xs text-outline font-mono">GEO: 23.114°N, 120.281°E • ID: TPE-FAB-018</span>
+</div>
+<button class="w-6 h-6 rounded flex items-center justify-center text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Node Risk Score Gauge & Status Strip -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Risk Health Index</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-lg text-headline-lg text-error font-mono font-bold">88</span>
+<span class="font-label-xs text-label-xs text-outline">/ 100</span>
+</div>
+<span class="font-label-xs text-[9px] text-error font-semibold">Critical Vulnerability</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-xs text-[10px] text-outline uppercase font-semibold">Buffer Inventory</span>
+<div class="flex items-baseline gap-1 mt-0.5 justify-end">
+<span class="font-headline-lg text-headline-lg text-error font-mono font-bold">9.4</span>
+<span class="font-label-xs text-label-xs text-outline">Days</span>
+</div>
+<span class="font-label-xs text-[9px] text-outline">Threshold: 14.0d Safety</span>
+</div>
+</div>
+<!-- Structural Impact Metrics -->
+<div class="grid grid-cols-2 gap-space-xs font-body-sm text-body-sm">
+<div class="p-2 rounded bg-surface-container-high flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase">Upstream Sources</span>
+<span class="font-body-md text-body-md text-on-surface font-semibold">6 Direct Precursors</span>
+<span class="font-label-xs text-[9px] text-on-surface-variant">Japan Wafers &amp; EUV Resin</span>
+</div>
+<div class="p-2 rounded bg-surface-container-high flex flex-col">
+<span class="font-label-xs text-[10px] text-outline uppercase">Downstream Blast</span>
+<span class="font-body-md text-body-md text-error font-semibold">14 Auto OEMs</span>
+<span class="font-label-xs text-[9px] text-error">BMW, Tesla, Bosch, ZF</span>
+</div>
+</div>
+<!-- Active Threat Vector Flags -->
+<div class="flex flex-col gap-1 font-label-xs text-label-xs">
+<span class="text-outline uppercase tracking-wider font-semibold">Vulnerability Vector Assessment:</span>
+<div class="flex items-center gap-1.5 text-on-surface p-1 rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-[14px] text-error">volcano</span>
+<span>Seismic &amp; Taiwan Strait Geopolitical Exposure</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface p-1 rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-[14px] text-error">speed</span>
+<span>94% Global 3nm Automotive MCU Concentration</span>
+</div>
+</div>
+<!-- Quick Governance Actions -->
+<div class="flex items-center gap-1.5 pt-1">
+<button class="flex-1 py-1.5 px-2 rounded bg-primary text-on-primary hover:bg-primary-container font-headline-sm text-headline-sm text-center transition-colors shadow-sm">
+            Simulate Outage
+          </button>
+<button class="py-1.5 px-2.5 rounded bg-surface-container-high text-on-surface hover:bg-surface-bright font-label-sm text-label-sm text-center transition-colors">
+            Blast Radius
+          </button>
+<button class="w-8 h-8 rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface flex items-center justify-center" title="Full Node Dossier">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+</div>
+</section>
+<!-- BOTTOM-RIGHT INTERACTIVE MINIMAP & GRAPH TELEMETRY HUD -->
+<aside class="absolute bottom-4 right-4 w-72 bg-surface-container-low/95 backdrop-blur-md rounded-xl p-space-sm shadow-2xl z-30 flex flex-col gap-space-xs">
+<div class="flex items-center justify-between pb-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">radar</span>
+<span class="font-label-xs text-label-xs text-on-surface font-semibold uppercase tracking-wider">Tactical Radar Minimap</span>
+</div>
+<span class="font-label-xs text-[10px] text-outline font-mono">1.25x • 60 FPS</span>
+</div>
+<!-- Radar Viewport Minimap SVG -->
+<div class="relative w-full h-24 bg-surface-container-lowest rounded overflow-hidden shadow-inner">
+<svg class="w-full h-full opacity-60" viewBox="0 0 200 80">
+<!-- Simplified cluster points in radar -->
+<circle cx="25" cy="20" fill="#f59e0b" r="2"></circle>
+<circle cx="30" cy="45" fill="#f59e0b" r="2"></circle>
+<circle cx="28" cy="65" fill="#f59e0b" r="2"></circle>
+<circle cx="60" cy="30" fill="#06b6d4" r="2"></circle>
+<circle cx="65" cy="50" fill="#06b6d4" r="2"></circle>
+<circle cx="100" cy="40" fill="#ef4444" r="4"></circle>
+<circle cx="105" cy="65" fill="#ef4444" r="3"></circle>
+<circle cx="140" cy="30" fill="#8b5cf6" r="2.5"></circle>
+<circle cx="145" cy="55" fill="#10b981" r="2.5"></circle>
+<circle cx="180" cy="25" fill="#ec4899" r="3"></circle>
+<circle cx="180" cy="45" fill="#3b82f6" r="3"></circle>
+<circle cx="180" cy="60" fill="#ec4899" r="3"></circle>
+<!-- Connection web lines -->
+<path d="M 28 45 L 60 30 L 100 40 L 140 30 L 180 25" fill="none" stroke="#424754" stroke-width="0.75"></path>
+<path d="M 65 50 L 100 40 L 145 55 L 180 45" fill="none" stroke="#ef4444" stroke-width="1"></path>
+</svg>
+<!-- Current Magnified Viewport Box Highlight -->
+<div class="absolute inset-0 m-auto w-24 h-16 bg-primary/10 rounded shadow-[0_0_0_1px_rgba(173,198,255,0.4)] pointer-events-none">
+<span class="absolute -top-1 -right-1 w-1.5 h-1.5 bg-primary rounded-full"></span>
+</div>
+</div>
+<!-- Telemetry Performance Metadata -->
+<div class="grid grid-cols-2 gap-1 pt-1 font-label-xs text-[10px] text-outline">
+<div class="flex items-center justify-between">
+<span>Graph Latency:</span>
+<span class="text-secondary font-mono">14ms</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Active Render:</span>
+<span class="text-on-surface font-mono">WebGL2</span>
+</div>
+<div class="flex items-center justify-between col-span-2">
+<span>Merkle State:</span>
+<span class="text-on-surface font-mono text-[9px] truncate">0x7F4B..98EA (SYNC)</span>
+</div>
+</div>
+</aside>
+</main>
+</div>
+<!-- BOTTOM STATUS & TELEMETRY PROVENANCE BAR -->
+<footer class="flex flex-wrap items-center justify-between gap-space-sm mt-space-sm px-space-md py-space-xs bg-surface-container rounded-lg font-label-xs text-label-xs text-outline">
+<div class="flex items-center gap-space-md">
+<span class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>CRYPTOGRAPHIC TOPOLOGY STATE VERIFIED</span>
+</span>
+<span class="text-outline-variant">|</span>
+<span>ACTIVE LAYOUT: FORCE-ATLAS2 ECHELON</span>
+<span class="text-outline-variant">|</span>
+<span>SOLVER ITERATIONS: 4,200</span>
+</div>
+<div class="flex items-center gap-space-sm font-mono">
+<span>REFRESH CYCLE: 30s</span>
+<div class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-on-surface-variant">RISKWISE TOPOLOGY DAEMON v2.4.9</span>
+</div>
+</footer>
+<!-- MICRO-INTERACTION LOGIC -->
+<script>
+    (function() {
+      // Toggle SPOF Button Pulse Effect
+      const spofBtn = document.getElementById('spof-toggle-btn');
+      const heroNode = document.getElementById('hero-node-tsmc');
+      let spofActive = true;
+
+      if (spofBtn && heroNode) {
+        spofBtn.addEventListener('click', function() {
+          spofActive = !spofActive;
+          if (spofActive) {
+            spofBtn.classList.remove('bg-surface-container-high', 'text-on-surface');
+            spofBtn.classList.add('bg-error-container', 'text-on-error-container');
+            heroNode.style.display = 'block';
+          } else {
+            spofBtn.classList.add('bg-surface-container-high', 'text-on-surface');
+            spofBtn.classList.remove('bg-error-container', 'text-on-error-container');
+          }
+        });
+      }
+    })();
+  </script>
+</div></main></div></body></html>

@@ -97,13 +97,80 @@ def logout(
     return LogoutResponse(status="ok", message="Successfully logged out")
 
 
+import app.models as models
+
+
+@router.api_route(
+    "/demo-login",
+    methods=["GET", "POST"],
+    status_code=status.HTTP_302_FOUND,
+    include_in_schema=False,
+)
+def demo_login(
+    response: Response,
+    return_to: str = Query("/", description="Destination path after login"),
+    db: Session = Depends(get_db),
+    session_service: SessionService = Depends(get_session_service),
+    oauth_service: OAuthService = Depends(get_oauth_service),
+) -> RedirectResponse:
+    """Development and demo workspace login: provisions an ADMIN session and sets session cookie."""
+    from app.db.session import ensure_tables_exist
+    ensure_tables_exist()
+    org = db.query(models.Organization).filter_by(slug="acme-global").first()
+    if not org:
+        org = models.Organization(
+            name="Acme Global Logistics",
+            slug="acme-global",
+            plan="ENTERPRISE",
+            is_active=True,
+        )
+        db.add(org)
+        db.commit()
+        db.refresh(org)
+
+    user = db.query(models.User).filter_by(email="director@riskwise.internal").first()
+    if not user:
+        user = models.User(
+            email="director@riskwise.internal",
+            full_name="RiskWise Mission Director",
+            role="ADMIN",
+            org_id=org.id,
+            is_active=True,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    session = session_service.create_session(
+        user_id=user.id,
+        role=user.role,
+        organization_id=org.id,
+    )
+    safe_return_to = oauth_service.sanitize_return_to(return_to)
+    target_url = f"{settings.FRONTEND_URL}{safe_return_to}"
+    redirect_resp = RedirectResponse(url=target_url, status_code=status.HTTP_302_FOUND)
+    SessionService.set_session_cookie(redirect_resp, session.session_id)
+    SessionService.set_session_cookie(response, session.session_id)
+    return redirect_resp
+
+
 @router.get("/google", status_code=status.HTTP_302_FOUND)
 def initiate_google_oauth(
     return_to: str = Query("/", description="Post-login destination path"),
     oauth_service: OAuthService = Depends(get_oauth_service),
+    db: Session = Depends(get_db),
+    session_service: SessionService = Depends(get_session_service),
 ) -> RedirectResponse:
     """Initiate Google OAuth 2.0 authorization code flow."""
     if not settings.is_google_oauth_configured:
+        if settings.APP_ENV == "development":
+            return demo_login(
+                response=Response(),
+                return_to=return_to,
+                db=db,
+                session_service=session_service,
+                oauth_service=oauth_service,
+            )
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Google OAuth is not configured on this server",

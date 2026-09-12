@@ -26,9 +26,11 @@ function AuthContent() {
   const activeError = isDismissed ? null : (clientError || queryError);
 
   const rawReturnTo = searchParams.get("return_to") || "/";
-  // Safe relative path validation to prevent open-redirect vulnerabilities
+  // Safe relative path validation to prevent open-redirect vulnerabilities and internal API paths
   const returnTo =
-    rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") ? rawReturnTo : "/";
+    rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") && !rawReturnTo.startsWith("/api/")
+      ? rawReturnTo
+      : "/";
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -83,8 +85,8 @@ function AuthContent() {
         disabled={isLoading}
       />
 
-      {/* Primary Google SSO Action */}
-      <div className="w-full pt-1">
+      {/* Primary Google SSO Action & Demo Access */}
+      <div className="w-full pt-1 space-y-3">
         <GoogleAuthButton
           mode={mode}
           returnTo={returnTo}
@@ -94,6 +96,22 @@ function AuthContent() {
           }}
           disabled={isLoading}
         />
+
+        <div className="relative flex items-center justify-center py-1">
+          <div className="border-t border-slate-800 w-full" />
+          <span className="bg-[#111827] px-2 text-[10px] uppercase font-mono text-slate-500 tracking-wider">
+            OR
+          </span>
+          <div className="border-t border-slate-800 w-full" />
+        </div>
+
+        <a
+          href={`http://localhost:8000/api/v1/auth/demo-login?return_to=${encodeURIComponent(returnTo)}`}
+          className="w-full py-2.5 px-4 rounded-xl border border-blue-500/30 hover:border-blue-500/60 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 text-xs font-medium flex items-center justify-center gap-2 transition-colors cursor-pointer text-center"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          Enter Mission Control (Demo Access)
+        </a>
       </div>
 
       {/* Enterprise Security Notice & Metadata */}

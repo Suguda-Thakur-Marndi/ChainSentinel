@@ -1,0 +1,581 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-secondary-fixed-variant":"#005236","on-error":"#690005","surface-bright":"#36393f","primary":"#adc6ff","secondary-fixed":"#6ffbbe","on-surface-variant":"#c2c6d6","secondary-fixed-dim":"#4edea3","surface":"#101419","error-container":"#93000a","inverse-primary":"#005ac2","surface-tint":"#adc6ff","surface-container":"#1c2025","tertiary-fixed-dim":"#d0bcff","on-tertiary-fixed":"#23005c","tertiary-fixed":"#e9ddff","on-background":"#e0e2ea","surface-dim":"#101419","on-secondary-fixed":"#002113","secondary-container":"#00a572","secondary":"#4edea3","primary-fixed":"#d8e2ff","on-tertiary-fixed-variant":"#5516be","on-primary-fixed-variant":"#004395","on-surface":"#e0e2ea","on-primary":"#002e6a","surface-variant":"#31353b","on-secondary":"#003824","background":"#101419","on-tertiary":"#3c0091","on-tertiary-container":"#340080","on-secondary-container":"#00311f","surface-container-highest":"#31353b","outline":"#8c909f","error":"#ffb4ab","surface-container-lowest":"#0a0e13","tertiary-container":"#a078ff","outline-variant":"#424754","primary-fixed-dim":"#adc6ff","inverse-surface":"#e0e2ea","on-primary-fixed":"#001a42","inverse-on-surface":"#2d3136","primary-container":"#4d8eff","surface-container-low":"#181c21","surface-container-high":"#262a30","on-primary-container":"#00285d","tertiary":"#d0bcff","on-error-container":"#ffdad6"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-lg":"1rem","space-xs":"0.25rem","space-md":"0.75rem","margin":"1rem","gutter":"0.75rem","space-sm":"0.5rem","space-xl":"1.5rem"},"fontFamily":{"display-lg":["Inter"],"headline-lg":["Inter"],"headline-md":["Inter"],"headline-sm":["Inter"],"body-md":["Inter"],"label-sm":["JetBrains Mono"],"label-xs":["JetBrains Mono"],"display-lg-mobile":["Inter"],"body-lg":["Inter"],"label-md":["JetBrains Mono"],"body-sm":["Inter"]},"fontSize":{"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"headline-sm":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-xs":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"display-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}]}}}}</script></head><body class="bg-surface text-on-surface font-body-md text-body-md min-h-screen selection:bg-primary-container selection:text-on-primary-container"><main class="w-full min-h-screen bg-surface flex flex-col"><div class="flex flex-col w-full">
+<!-- Interactive Modals and Flyouts (Absolute Anchored / Layered) -->
+<!-- 1. APPROVAL DUAL-KEY CRYPTOGRAPHIC SIGN-OFF MODAL -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-surface-container-lowest/80 backdrop-blur-md p-space-lg transition-all duration-200" id="approve-modal">
+<div class="relative w-full max-w-xl bg-surface-container-high rounded-xl p-space-xl shadow-2xl flex flex-col gap-space-lg text-on-surface">
+<!-- Modal Header -->
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">enhanced_encryption</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Cryptographic Authorization &amp; Re-Authentication</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">DUAL-KEY HARDWARE HSM PROTOCOL // DISPATCH-AUTH-2025-0849</p>
+</div>
+</div>
+<button class="p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" onclick="document.getElementById('approve-modal').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<!-- Identity Verification Strip -->
+<div class="bg-surface-container p-space-md rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center font-label-md text-label-md text-primary font-bold">
+            MV
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-space-xs">
+              Marcus Vance
+              <span class="px-1.5 py-0.5 rounded bg-secondary-container/30 text-secondary font-label-xs text-label-xs">L4 VERIFIED</span>
+</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">Senior Risk Director • ID #RV-8402 • Role: RiskDirector / Admin</div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-xs text-label-xs text-outline block">AUTH TIER</span>
+<span class="font-label-sm text-label-sm text-primary font-mono font-semibold">TIER-1 DISPATCH</span>
+</div>
+</div>
+<!-- 2FA TOTP & Hardware Key Trigger -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wide">MANDATORY 6-DIGIT TOTP HARDWARE KEY</label>
+<span class="font-label-xs text-label-xs text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> YubiKey 5C NFC Detected
+          </span>
+</div>
+<div class="grid grid-cols-6 gap-space-sm">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="7">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="3">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="9">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="2">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="8">
+<input class="h-12 text-center font-label-md text-headline-md font-mono bg-surface-container-low text-primary rounded-lg focus:bg-surface-container-highest focus:outline-none focus:ring-2 focus:ring-primary transition-all" maxlength="1" type="text" value="4">
+</div>
+</div>
+<!-- Audit Ledger Notes -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant">AUDIT JOURNAL NOTATION (APPENDS TO IMMUTABLE LEDGER)</label>
+<textarea class="w-full bg-surface-container-low rounded-lg p-space-sm text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary resize-none" placeholder="Ex: Authorized per Q3 Singapore Port emergency mitigation protocol SOP-SC-402..." rows="2"></textarea>
+</div>
+<!-- Legal & SOP Certification Checkbox -->
+<label class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container/60 cursor-pointer select-none">
+<input checked="" class="mt-0.5 rounded text-secondary bg-surface-container-lowest focus:ring-0" type="checkbox">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+          I cryptographically certify that this <strong class="text-on-surface font-semibold">$2,400,000 USD</strong> contingency dispatch allocation adheres to Supply Chain Contingency Protocol <span class="font-label-xs text-primary underline">SOP-SC-402</span> and SOX 404 audit controls.
+        </span>
+</label>
+<!-- Modal Action Buttons -->
+<div class="flex items-center justify-end gap-space-md pt-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-headline-sm text-headline-sm transition-colors" onclick="document.getElementById('approve-modal').classList.add('hidden')" type="button">
+          Cancel
+        </button>
+<button class="px-space-lg py-2.5 rounded-lg bg-secondary text-on-secondary font-headline-sm text-headline-sm flex items-center gap-space-sm shadow-lg hover:brightness-110 active:scale-95 transition-all" onclick="executeSignoff()" type="button">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">key</span>
+          Confirm Cryptographic Signature
+        </button>
+</div>
+</div>
+</div>
+<!-- 2. REJECT JUSTIFICATION SLIDE-OVER DRAWER -->
+<div class="hidden fixed inset-0 z-50 flex justify-end bg-surface-container-lowest/80 backdrop-blur-sm transition-all duration-300" id="reject-drawer">
+<div class="w-full max-w-lg bg-surface-container-high h-full p-space-xl shadow-2xl flex flex-col justify-between text-on-surface overflow-y-auto">
+<div class="flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-error/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">gavel</span>
+</div>
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Reject Recommendation</h3>
+<p class="font-label-sm text-label-sm text-error">MANDATORY RATIONALE LEDGER</p>
+</div>
+</div>
+<button class="p-1 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" onclick="document.getElementById('reject-drawer').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<div class="p-space-md rounded-lg bg-error-container/30 text-on-error-container text-body-sm font-body-sm">
+<strong>Caution:</strong> Rejection halts dispatch execution for Scenario #SIM-8492. Estimated daily outage penalty across 4 automotive plants will escalate by $3,200,000 / day.
+        </div>
+<!-- Reason Categorization -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold">FORMAL REJECTION CODE</label>
+<select class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm rounded-lg p-space-sm focus:ring-1 focus:ring-error focus:outline-none">
+<option value="budget">Budget Allocation Exceeded (Threshold &gt; $2.0M)</option>
+<option value="capacity">Air Cargo Capacity Unconfirmed with Atlas/Kalitta</option>
+<option value="vendor">Vendor Discrepancy / Port Surcharge Unapproved</option>
+<option value="alternate">Alternate Rail Corridor Feasibility Preferred</option>
+<option value="compliance">Environmental ESG CO2 Limit Exceeded</option>
+</select>
+</div>
+<!-- Detailed Justification Textarea -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold">MANDATORY DETAILED JUSTIFICATION • MIN 50 CHARACTERS</label>
+<textarea class="w-full bg-surface-container-low rounded-lg p-space-sm text-body-sm font-body-sm text-on-surface placeholder:text-outline focus:ring-1 focus:ring-error focus:outline-none resize-none" placeholder="State operational justification for rejecting the autonomous model mitigation dispatch. This will be broadcast to CLO and Operations Command..." rows="6"></textarea>
+</div>
+<!-- Alternative Directive Option -->
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold">DIRECTIVE TO AUTONOMOUS ENGINE</label>
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="p-space-sm rounded-lg bg-surface-container text-left hover:bg-surface-variant transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm block text-on-surface">Re-Optimize</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Lower cost cap to $1.5M</span>
+</button>
+<button class="p-space-sm rounded-lg bg-surface-container text-left hover:bg-surface-variant transition-colors" type="button">
+<span class="font-headline-sm text-headline-sm block text-on-surface">Hold Queue</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">Absorb 4.2-day delay</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Drawer Bottom Buttons -->
+<div class="flex items-center gap-space-md pt-space-lg">
+<button class="flex-1 py-2.5 rounded-lg bg-surface-container hover:bg-surface-variant text-on-surface font-headline-sm text-headline-sm transition-colors" onclick="document.getElementById('reject-drawer').classList.add('hidden')" type="button">
+          Cancel
+        </button>
+<button class="flex-1 py-2.5 rounded-lg bg-error text-on-error font-headline-sm text-headline-sm hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-1" onclick="alert('Rejection logged to ledger and incident dispatched.'); document.getElementById('reject-drawer').classList.add('hidden')" type="button">
+<span class="material-symbols-outlined text-lg">close</span>
+          Commit Rejection
+        </button>
+</div>
+</div>
+</div>
+<!-- SUCCESS CONFIRMATION TOAST -->
+<div class="hidden fixed top-6 right-6 z-50 bg-surface-container-high rounded-xl p-space-md shadow-2xl flex items-center gap-space-md text-on-surface" id="success-toast">
+<div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-secondary">Cryptographic Sign-Off Completed</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant font-mono">TX: 0x9f88c...41e8 • Block #4,829,190 Confirmed</div>
+</div>
+</div>
+<!-- MAIN GOVERNANCE VIEWPORT CONTAINER -->
+<div class="p-space-lg flex flex-col gap-space-lg">
+<!-- 1. EXECUTIVE HEADER & APPROVER ROLE BADGE -->
+<header class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs max-w-4xl">
+<!-- Lineage Breadcrumb -->
+<nav class="flex items-center gap-2 font-label-xs text-label-xs text-outline uppercase tracking-wider">
+<span class="hover:text-on-surface cursor-pointer">GOVERNANCE</span>
+<span>/</span>
+<span class="hover:text-on-surface cursor-pointer">HUMAN APPROVALS</span>
+<span>/</span>
+<span class="text-primary font-bold">DISPATCH-AUTH-2025-0849</span>
+</nav>
+<!-- Executive Title -->
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight">
+          Disruption Mitigation Approval: Port of Singapore (SGSIN) Reroute &amp; Expedite Plan
+        </h1>
+<div class="flex flex-wrap items-center gap-space-md pt-1">
+<!-- Pending Status Indicator -->
+<div class="flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-primary">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="font-bold tracking-wide">STATUS: PENDING DUAL-KEY SIGN-OFF</span>
+</div>
+<!-- Time Constraint Countdown -->
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-outline">timer</span>
+<span>SLA Lockout Window: <strong class="text-on-surface font-mono">01h : 42m : 18s</strong> remaining</span>
+</div>
+</div>
+</div>
+<!-- Approver Role Governance Badge -->
+<div class="bg-surface-container p-space-md rounded-xl flex flex-col gap-space-xs min-w-[280px]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 font-label-xs text-label-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-base text-primary">verified_user</span>
+<span>GOVERNANCE AUTHORITY</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-xs text-label-xs text-secondary font-mono font-semibold">ONLINE</span>
+</div>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-bold">
+          ROLE: SENIOR RISK DIRECTOR (L4) / ADMIN
+        </div>
+<div class="font-label-xs text-label-xs text-outline">
+          Authorized Signer: <strong class="text-on-surface">Marcus Vance (#RV-8402)</strong>
+</div>
+<div class="mt-1 pt-1.5 bg-surface-container-high rounded px-2 py-1 text-center font-label-xs text-label-xs text-secondary-fixed-dim">
+          ✓ High-Value Spend Threshold (&gt;$1.0M) Unlocked
+        </div>
+</div>
+</header>
+<!-- 2. CRYPTOGRAPHIC RECOMMENDATION PAYLOAD & INTEGRITY CARD -->
+<section class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<!-- Summary Banner -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container p-space-md rounded-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">hub</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm">
+<span class="text-primary font-bold">SCENARIO #SIM-8492</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant">Target: Singapore Terminal 4 (SGSIN)</span>
+<span class="px-1.5 py-0.5 rounded bg-error/20 text-error font-mono text-label-xs font-bold">78% BOTTLENECK</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">
+              Multi-Modal Tactical Divergence Directive #912-Alpha
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-md self-end lg:self-auto">
+<div class="text-right">
+<span class="font-label-xs text-label-xs text-outline block">ESTIMATED OUTAGE LOSS AVERTED</span>
+<span class="font-headline-lg text-headline-lg text-secondary font-mono font-bold">+$49,200,000 USD</span>
+</div>
+<div class="text-right pl-space-md bg-surface-variant/40 rounded-lg p-space-xs">
+<span class="font-label-xs text-label-xs text-outline block">REQUESTED DISPATCH EXPEDITED SPEND</span>
+<span class="font-headline-lg text-headline-lg text-primary font-mono font-bold">$2,400,000 USD</span>
+</div>
+</div>
+</div>
+<!-- Full Cryptographic State Verification Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- Hash & Merkle Inspection -->
+<div class="lg:col-span-2 bg-surface-container rounded-lg p-space-md flex flex-col justify-between gap-space-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs text-outline tracking-wider uppercase font-semibold">STATE FINGERPRINT (SIMULATION SNAPSHOT #SIM-8492)</span>
+<span class="font-label-xs text-label-xs text-secondary flex items-center gap-1 font-mono">
+<span class="material-symbols-outlined text-sm">verified</span>
+                MATCHES ERP LEDGER
+              </span>
+</div>
+<!-- Monospace Full Hash Container -->
+<div class="bg-surface-container-lowest p-space-sm rounded font-label-sm text-label-sm font-mono text-primary select-all break-all">
+              sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+            </div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-2">
+<div class="flex items-center gap-space-md">
+<span class="font-label-xs text-label-xs text-outline">MERKLE ROOT:</span>
+<span class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container-high px-2 py-0.5 rounded">0x7B89a8f33dc82b01e44E11</span>
+<span class="font-label-xs text-label-xs text-outline">NONCE:</span>
+<span class="font-label-sm text-label-sm font-mono text-on-surface">#9920194</span>
+</div>
+<button class="px-space-md py-1.5 rounded bg-surface-container-high hover:bg-surface-variant font-label-sm text-label-sm text-secondary flex items-center gap-1.5 transition-colors" id="verify-btn" onclick="verifyState()" type="button">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">done_all</span>
+<span id="verify-text">Re-Verify Merkle State</span>
+</button>
+</div>
+</div>
+<!-- Immutable Parameters Snapshot -->
+<div class="bg-surface-container rounded-lg p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-xs text-label-xs text-outline uppercase font-semibold">IMMUTABLE PAYLOAD PARAMETERS</span>
+<span class="material-symbols-outlined text-sm text-outline">lock</span>
+</div>
+<div class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex justify-between items-center bg-surface-container-low px-2 py-1.5 rounded">
+<span>Maritime Re-route:</span>
+<strong class="text-on-surface font-mono">14 Container Vessels → Tanjung Pelepas (MYTPP)</strong>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low px-2 py-1.5 rounded">
+<span>Air Expedite Fleet:</span>
+<strong class="text-on-surface font-mono">3x Boeing 777F Charters (Changi → Frankfurt)</strong>
+</div>
+<div class="flex justify-between items-center bg-surface-container-low px-2 py-1.5 rounded">
+<span>Critical SKU Target:</span>
+<strong class="text-secondary font-mono">ASIC / MCU Tier-1 Automotive Modules</strong>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. MULTI-DIMENSIONAL TRADE-OFF MATRIX TABLE -->
+<section class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Multi-Dimensional Strategic Trade-Off Analysis</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Comparative model evaluated across cost, production line disruption, carbon penalties, and operational execution risk.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-1 rounded bg-secondary-container/20 text-secondary font-label-xs text-label-xs font-bold">
+            CONFIDENCE: 94.8% (BAYESIAN SIM)
+          </span>
+</div>
+</div>
+<!-- Dense Tactical Table -->
+<div class="w-full overflow-x-auto rounded-lg bg-surface-container">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container-high text-outline uppercase font-label-xs text-label-xs tracking-wider">
+<tr>
+<th class="py-3 px-space-md">Strategy Option</th>
+<th class="py-3 px-space-md text-right">Capital Outlay ($)</th>
+<th class="py-3 px-space-md text-right">Delay Reduction</th>
+<th class="py-3 px-space-md text-center">Lines Preserved</th>
+<th class="py-3 px-space-md text-right">CO2 MT Delta</th>
+<th class="py-3 px-space-md text-right">Financial Exposure</th>
+<th class="py-3 px-space-md text-right">SLA Recovery</th>
+<th class="py-3 px-space-md text-center">Risk Score</th>
+</tr>
+</thead>
+<tbody class="text-on-surface">
+<!-- Row 1: Baseline -->
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="py-3.5 px-space-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<div>
+<span>Baseline (Do Nothing / Wait in Queue)</span>
+<span class="block font-label-xs text-label-xs text-outline">Anchor at Singapore outer roads</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-mono text-on-surface-variant">$0</td>
+<td class="py-3.5 px-space-md text-right font-mono text-error">0.0 Days (Queue: +11.4d)</td>
+<td class="py-3.5 px-space-md text-center font-mono text-error font-bold">0 / 4 Plants</td>
+<td class="py-3.5 px-space-md text-right font-mono text-secondary">0 MT (Baseline)</td>
+<td class="py-3.5 px-space-md text-right font-mono text-error font-bold">$49,200,000</td>
+<td class="py-3.5 px-space-md text-right font-mono text-outline">$0 (0%)</td>
+<td class="py-3.5 px-space-md text-center font-mono font-bold text-error">9.4 / 10</td>
+</tr>
+<!-- Row 2: Mitigation Option A -->
+<tr class="hover:bg-surface-variant/30 transition-colors">
+<td class="py-3.5 px-space-md font-semibold">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<div>
+<span>Mitigation Option A (Full Maritime Reroute)</span>
+<span class="block font-label-xs text-label-xs text-outline">Divert all 14 vessels to Tanjung Pelepas + Feeder</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-mono text-on-surface">$820,000</td>
+<td class="py-3.5 px-space-md text-right font-mono text-primary">-4.5 Days</td>
+<td class="py-3.5 px-space-md text-center font-mono text-primary">2 / 4 Plants</td>
+<td class="py-3.5 px-space-md text-right font-mono text-on-surface-variant">+120 MT</td>
+<td class="py-3.5 px-space-md text-right font-mono text-error">$18,400,000</td>
+<td class="py-3.5 px-space-md text-right font-mono text-primary">$30,800,000</td>
+<td class="py-3.5 px-space-md text-center font-mono font-bold text-primary">5.8 / 10</td>
+</tr>
+<!-- Row 3: Mitigation Option B (RECOMMENDED) -->
+<tr class="bg-secondary-container/10 hover:bg-secondary-container/20 transition-colors">
+<td class="py-3.5 px-space-md font-bold text-secondary">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<div>
+<div class="flex items-center gap-2">
+<span>Mitigation Option B (Hybrid Maritime + Air Expedite)</span>
+<span class="px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-xs text-label-xs font-bold uppercase">RECOMMENDED</span>
+</div>
+<span class="block font-label-xs text-label-xs text-on-surface-variant">14 Vessels Tanjung Pelepas + 3x B777F Air Charters for MCUs</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right font-mono text-secondary font-bold">$2,400,000</td>
+<td class="py-3.5 px-space-md text-right font-mono text-secondary font-bold">-9.2 Days</td>
+<td class="py-3.5 px-space-md text-center font-mono text-secondary font-bold">4 / 4 Plants (100%)</td>
+<td class="py-3.5 px-space-md text-right font-mono text-outline-variant">+480 MT</td>
+<td class="py-3.5 px-space-md text-right font-mono text-secondary font-bold">$0 (Fully Neutralized)</td>
+<td class="py-3.5 px-space-md text-right font-mono text-secondary font-bold">$49,200,000 (100%)</td>
+<td class="py-3.5 px-space-md text-center font-mono font-bold text-secondary text-base">2.1 / 10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Tradeoff Visualizer & Highlights Mini Bento -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs">
+<div class="bg-surface-container p-space-md rounded-lg flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl">speed</span>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-outline uppercase">NET ROI MULTIPLIER</div>
+<div class="font-headline-lg text-headline-lg text-on-surface font-mono font-bold">20.5x</div>
+<div class="font-label-xs text-label-xs text-secondary">$2.4M spend saves $49.2M in shutdown fines</div>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-lg flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">factory</span>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-outline uppercase">CRITICAL PLANTS PROTECTED</div>
+<div class="font-headline-lg text-headline-lg text-on-surface font-mono font-bold">4 of 4</div>
+<div class="font-label-xs text-label-xs text-primary">Stuttgart, Spartanburg, Changchun, Ulsan</div>
+</div>
+</div>
+<div class="bg-surface-container p-space-md rounded-lg flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-2xl">eco</span>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-outline uppercase">CARBON OFFSET INCLUDED</div>
+<div class="font-headline-lg text-headline-lg text-on-surface font-mono font-bold">480 MT CO2e</div>
+<div class="font-label-xs text-label-xs text-tertiary">100% Gold Standard Offsets Auto-Bundled</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. BOTTOM DUAL COLUMN: ACTIONS & AUDIT / COMPLIANCE LEDGER -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+<!-- Primary Action Dispatch Console (2 Cols) -->
+<div class="lg:col-span-2 bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col justify-between gap-space-lg">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Authorization Directive Execution</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Execute the binding cryptographic transaction to initiate maritime diversions and release air carrier charter manifests.</p>
+</div>
+<!-- Prominent Dual Action Buttons -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Big Emerald APPROVE Button -->
+<button class="group p-space-lg rounded-xl bg-secondary text-on-secondary flex flex-col justify-between gap-space-sm shadow-xl hover:brightness-110 active:scale-[0.99] transition-all text-left" onclick="document.getElementById('approve-modal').classList.remove('hidden')" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="w-10 h-10 rounded-lg bg-on-secondary/10 flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">key</span>
+</span>
+<span class="font-label-xs text-label-xs uppercase px-2 py-0.5 rounded bg-on-secondary/15 font-bold tracking-wider">
+                RECOMMENDED ACTION
+              </span>
+</div>
+<div>
+<div class="font-headline-lg text-headline-lg font-bold">Approve &amp; Sign Dispatch</div>
+<div class="font-label-sm text-label-sm opacity-90 mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">lock</span>
+                Requires 2FA / Hardware Key Sign-Off
+              </div>
+</div>
+</button>
+<!-- Big Crimson REJECT Button -->
+<button class="group p-space-lg rounded-xl bg-error/10 hover:bg-error/20 text-error flex flex-col justify-between gap-space-sm shadow-md active:scale-[0.99] transition-all text-left" onclick="document.getElementById('reject-drawer').classList.remove('hidden')" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="w-10 h-10 rounded-lg bg-error/15 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-2xl">close</span>
+</span>
+<span class="font-label-xs text-label-xs uppercase px-2 py-0.5 rounded bg-error/20 font-bold tracking-wider">
+                ESCALATE / HALT
+              </span>
+</div>
+<div>
+<div class="font-headline-lg text-headline-lg font-bold">Reject Recommendation</div>
+<div class="font-label-sm text-label-sm opacity-90 mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+                Requires Mandatory Justification Reason
+              </div>
+</div>
+</button>
+</div>
+<!-- Safety Governance Note -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container">
+<span class="material-symbols-outlined text-outline text-lg">shield</span>
+<span class="font-label-xs text-label-xs text-on-surface-variant">
+            Sign-off releases real-time API webhooks directly to Maersk Line, MSC, Atlas Air Cargo, and SAP S/4HANA Purchase Requisition modules.
+          </span>
+</div>
+</div>
+<!-- Audit & Compliance Ledger Sidebar (1 Col) -->
+<aside class="bg-surface-container-low rounded-xl p-space-lg shadow-sm flex flex-col justify-between gap-space-md">
+<div>
+<!-- Quorum Tracker Header -->
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-1.5 font-label-xs text-label-xs text-outline uppercase font-bold">
+<span class="material-symbols-outlined text-base text-primary">groups</span>
+              DUAL-KEY QUORUM TRACKER
+            </div>
+<span class="px-2 py-0.5 rounded bg-primary-container/20 text-primary font-mono text-label-xs font-bold">1 OF 2 SIGNED</span>
+</div>
+<!-- Quorum Visual Progress Bar -->
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden my-space-xs">
+<div class="bg-secondary h-full w-1/2 transition-all"></div>
+</div>
+<!-- Signers List -->
+<div class="space-y-space-sm mt-space-md">
+<!-- Key 1: Signed -->
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Elena Rostova</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">Chief Logistics Officer (CLO)</div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-xs text-label-xs text-secondary font-mono font-bold block">SIGNED</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">13:45 UTC</span>
+</div>
+</div>
+<!-- Key 2: Pending (Active User) -->
+<div class="p-space-sm rounded-lg bg-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">schedule</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Marcus Vance</div>
+<div class="font-label-xs text-label-xs text-primary font-bold">Senior Risk Director (YOU)</div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-xs text-label-xs text-primary font-mono font-bold block">AWAITING</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">L4 Key Req</span>
+</div>
+</div>
+</div>
+<!-- Immutable Audit Trail Timeline -->
+<div class="mt-space-lg">
+<span class="font-label-xs text-label-xs text-outline uppercase font-bold tracking-wider block mb-space-sm">
+              IMMUTABLE AUDIT TRAIL LOG
+            </span>
+<div class="space-y-space-sm font-label-xs text-label-xs">
+<div class="flex gap-2">
+<span class="text-outline font-mono">13:40:02</span>
+<span class="text-on-surface-variant">Simulation engine generated Model #SIM-8492</span>
+</div>
+<div class="flex gap-2">
+<span class="text-outline font-mono">13:45:19</span>
+<span class="text-on-surface-variant">CLO Elena Rostova verified HSM Key <span class="font-mono text-primary">#HSM-7701</span></span>
+</div>
+<div class="flex gap-2">
+<span class="text-outline font-mono">13:45:21</span>
+<span class="text-on-surface-variant">Dual-key trigger passed to Marcus Vance (IP 192.168.4.10)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance Badges -->
+<div class="pt-space-md bg-surface-container rounded-lg p-space-sm flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-outline">
+<span class="material-symbols-outlined text-sm">verified</span>
+<span class="font-label-xs text-label-xs">SOC2 Type II • SOX 404 Compliant</span>
+</div>
+<span class="font-label-xs text-label-xs text-secondary font-mono">AUDIT-READY</span>
+</div>
+</aside>
+</div>
+</div>
+<!-- Interactive JavaScript Handling for Micro-interactions -->
+<script>
+    function executeSignoff() {
+      document.getElementById('approve-modal').classList.add('hidden');
+      const toast = document.getElementById('success-toast');
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 5000);
+    }
+
+    function verifyState() {
+      const btnText = document.getElementById('verify-text');
+      btnText.innerText = 'Calculating Merkle Root...';
+      setTimeout(() => {
+        btnText.innerText = 'Verified (100% Cryptographic Match)';
+        setTimeout(() => {
+          btnText.innerText = 'Re-Verify Merkle State';
+        }, 3000);
+      }, 600);
+    }
+  </script>
+</div></main></body></html>

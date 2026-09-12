@@ -24,6 +24,8 @@ from app.api.v1.endpoints import (
     warehouses,
 )
 from app.api.v1.endpoints import actions, approvals, audit_logs
+from app.api.v1.endpoints import decisions, digital_twin, optimization, simulation
+from app.api.v1.endpoints import evaluations
 
 api_router = APIRouter()
 
@@ -63,5 +65,12 @@ api_router.include_router(verification_results.router, prefix="/verification-res
 api_router.include_router(audit_logs.router, prefix="/audit-logs", tags=["Audit Logs"])
 api_router.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 
+# Phase 12-15: Digital Twin, Simulation, Optimization, Decisions
+api_router.include_router(digital_twin.router, prefix="/digital-twin", tags=["Digital Twin"])
+api_router.include_router(simulation.router, prefix="/simulation", tags=["Simulation"])
+api_router.include_router(optimization.router, tags=["Optimization"])
+api_router.include_router(decisions.router, tags=["Decisions"])
 
+# Phase 20: Evaluation & Quality Assurance
+api_router.include_router(evaluations.router, prefix="/evaluations", tags=["Evaluations"])
 
