@@ -7,7 +7,6 @@ import {
   Building2,
   Flame,
   Loader2,
-  Package,
   Search,
   Truck,
   X,
@@ -51,8 +50,10 @@ export function GlobalSearchModal({
 
   useEffect(() => {
     if (!query.trim() || !isOpen) {
-      setResults([]);
-      return;
+      const timer = setTimeout(() => {
+        setResults((prev) => (prev.length > 0 ? [] : prev));
+      }, 0);
+      return () => clearTimeout(timer);
     }
 
     const timer = setTimeout(async () => {

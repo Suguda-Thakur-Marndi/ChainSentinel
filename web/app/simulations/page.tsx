@@ -1,22 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
-  CheckCircle2,
-  Clock,
   Cpu,
   Layers,
   Play,
-  Plus,
-  RefreshCw,
   Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import type { DisruptionType, SimulationScenario } from "@/lib/api/types";

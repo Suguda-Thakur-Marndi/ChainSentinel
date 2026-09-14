@@ -1,25 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Activity,
-  AlertOctagon,
-  ArrowRight,
-  Filter,
-  Plus,
-  RefreshCw,
-  Search,
-  ShieldAlert,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
-import { RiskBadge, StatusBadge } from "@/components/ui/Badges";
-import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { RiskBadge } from "@/components/ui/Badges";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { RiskResponse, RiskSeverity } from "@/lib/api/types";
+import type { RiskResponse } from "@/lib/api/types";
 
 export default function RisksPage() {
   const router = useRouter();
@@ -43,7 +33,24 @@ export default function RisksPage() {
   };
 
   useEffect(() => {
-    fetchRisks();
+    let cancelled = false;
+    apiClient.risks
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setRisks(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load risk register");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filteredRisks = risks.filter((r) => {

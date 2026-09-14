@@ -1,18 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Clock,
-  Fingerprint,
   RefreshCw,
-  ScrollText,
-  Shield,
-  User,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
-import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { AuditLogResponse } from "@/lib/api/types";
 
@@ -22,7 +17,7 @@ export default function AuditLogPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -33,10 +28,26 @@ export default function AuditLogPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchLogs();
+    let cancelled = false;
+    apiClient.audit.list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setLogs(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load audit trail");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filteredLogs = logs.filter((log) => {

@@ -236,7 +236,7 @@ class UnitOfWork:
             self.session.commit()
         except Exception as e:
             self.session.rollback()
-            logger.error("UnitOfWork commit failed: %s", e)
+            logger.error("UnitOfWork commit failed: %s", e, exc_info=True)
             raise
 
     def rollback(self) -> None:

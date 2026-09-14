@@ -4,11 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
-  Clock,
-  ExternalLink,
-  FileCheck,
   Fingerprint,
-  Info,
   RefreshCw,
   ShieldAlert,
   ShieldCheck,
@@ -50,8 +46,8 @@ export default function ApprovalsPage() {
   // RBAC check: only OpsManager, RiskManager, Admin can execute approval decisions
   const canDecide = hasRole("ADMIN", "RISKMANAGER", "OPSMANAGER");
 
-  const fetchPending = useCallback(async () => {
-    setIsLoading(true);
+  const fetchPending = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setIsLoading(true);
     setError(null);
     try {
       const res = await apiClient.approvals.listPending({ limit: 50 });
@@ -63,8 +59,8 @@ export default function ApprovalsPage() {
     }
   }, []);
 
-  const fetchHistory = useCallback(async () => {
-    setIsLoading(true);
+  const fetchHistory = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setIsLoading(true);
     setError(null);
     try {
       const res = await apiClient.approvals.list({ limit: 50 });
@@ -77,12 +73,42 @@ export default function ApprovalsPage() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     if (tab === "pending") {
-      fetchPending();
+      apiClient.approvals
+        .listPending({ limit: 50 })
+        .then((res) => {
+          if (!cancelled) {
+            setPendingItems(res.items || []);
+            setIsLoading(false);
+          }
+        })
+        .catch((err: unknown) => {
+          if (!cancelled) {
+            setError(err instanceof Error ? err.message : "Failed to load pending approvals queue");
+            setIsLoading(false);
+          }
+        });
     } else {
-      fetchHistory();
+      apiClient.approvals
+        .list({ limit: 50 })
+        .then((res) => {
+          if (!cancelled) {
+            setHistoryItems(res.items || []);
+            setIsLoading(false);
+          }
+        })
+        .catch((err: unknown) => {
+          if (!cancelled) {
+            setError(err instanceof Error ? err.message : "Failed to load approvals history");
+            setIsLoading(false);
+          }
+        });
     }
-  }, [tab, fetchPending, fetchHistory]);
+    return () => {
+      cancelled = true;
+    };
+  }, [tab]);
 
   const loadDossier = async (idOrDecisionId: string) => {
     setSelectedPendingId(idOrDecisionId);

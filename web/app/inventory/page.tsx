@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Boxes, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -29,7 +29,24 @@ export default function InventoryPage() {
   };
 
   useEffect(() => {
-    fetchInventory();
+    let cancelled = false;
+    apiClient.network.inventory
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setInventory(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load inventory");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = inventory.filter((inv) => {

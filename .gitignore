@@ -44,6 +44,7 @@ storage/
 api/storage/
 apps/api/storage/
 *.joblib
+*.db
 
 # Sensitive Files, Credentials & Environment Secrets
 .env

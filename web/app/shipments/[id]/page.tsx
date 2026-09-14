@@ -6,17 +6,13 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Activity,
   AlertOctagon,
-  Anchor,
   ArrowLeft,
-  Calendar,
   Clock,
   ExternalLink,
   GitCommit,
   MapPin,
   RefreshCw,
   Route,
-  ShieldCheck,
-  Truck,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
@@ -74,7 +70,43 @@ export default function ShipmentDetailPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.shipments
+      .get(id)
+      .then(async (ship) => {
+        if (cancelled) return;
+        setShipment(ship);
+
+        // Fetch telemetry events
+        try {
+          const ev = await apiClient.shipments.getEvents(id);
+          if (!cancelled) setEvents(ev || []);
+        } catch {
+          if (!cancelled) setEvents([]);
+        }
+
+        // Fetch linked risk if present
+        if (ship.risk_id) {
+          try {
+            const r = await apiClient.risks.get(ship.risk_id);
+            if (!cancelled) setLinkedRisk(r);
+          } catch {
+            if (!cancelled) setLinkedRisk(null);
+          }
+        }
+
+        if (!cancelled) setIsLoading(false);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load shipment dossier");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

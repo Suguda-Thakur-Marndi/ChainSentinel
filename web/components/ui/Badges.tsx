@@ -9,7 +9,6 @@ import {
   HelpCircle,
   Info,
   Shield,
-  ShieldAlert,
   ShieldCheck,
   XCircle,
   Zap,

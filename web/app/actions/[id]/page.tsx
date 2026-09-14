@@ -1,23 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Layers,
-  RefreshCw,
   ShieldCheck,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { ActionResponse } from "@/lib/api/types";
 
@@ -30,7 +23,7 @@ export default function ActionDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAction = async () => {
+  const fetchAction = useCallback(async () => {
     if (!id) return;
     setIsLoading(true);
     setError(null);
@@ -42,10 +35,27 @@ export default function ActionDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
-    fetchAction();
+    if (!id) return;
+    let cancelled = false;
+    apiClient.actions.get(id)
+      .then((res) => {
+        if (!cancelled) {
+          setAction(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load action details");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

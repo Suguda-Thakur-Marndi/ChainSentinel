@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { GitFork, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
-import { StatusBadge } from "@/components/ui/Badges";
 import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { RouteResponse } from "@/lib/api/types";
@@ -30,7 +29,24 @@ export default function RoutesPage() {
   };
 
   useEffect(() => {
-    fetchRoutes();
+    let cancelled = false;
+    apiClient.network.routes
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setRoutes(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load routes");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = routes.filter((r) => {

@@ -12,6 +12,8 @@ import logging
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
+from pydantic import ValidationError
+
 from app.integrations.canonical import EventQuality, EventSourceType
 from app.models.risk import Risk as ORMRisk
 from app.models.risk import RiskAssessment as ORMRiskAssessment
@@ -106,7 +108,7 @@ class RiskAssessmentPersistenceAdapter:
         if isinstance(event_time, str):
             try:
                 event_time_dt = datetime.fromisoformat(event_time)
-            except Exception:
+            except (ValueError, TypeError):
                 event_time_dt = datetime.now(timezone.utc)
         elif isinstance(event_time, datetime):
             event_time_dt = event_time
@@ -116,14 +118,14 @@ class RiskAssessmentPersistenceAdapter:
         domain_str = data.get("domain", "LOGISTICS")
         try:
             domain = SignalDomain(domain_str)
-        except Exception:
+        except (ValueError, TypeError):
             domain = SignalDomain.LOGISTICS
 
         rel_val = data.get("relevance", "CORROBORATING")
         if isinstance(rel_val, str):
             try:
                 relevance = EvidenceRelevance(rel_val)
-            except Exception:
+            except (ValueError, TypeError):
                 relevance = EvidenceRelevance.CORROBORATING
         else:
             relevance = rel_val
@@ -132,7 +134,7 @@ class RiskAssessmentPersistenceAdapter:
         if isinstance(source_type_val, str):
             try:
                 source_type = EventSourceType(source_type_val)
-            except Exception:
+            except (ValueError, TypeError):
                 source_type = EventSourceType.REAL
         else:
             source_type = source_type_val
@@ -141,7 +143,7 @@ class RiskAssessmentPersistenceAdapter:
         if isinstance(quality_val, str):
             try:
                 quality = EventQuality(quality_val)
-            except Exception:
+            except (ValueError, TypeError):
                 quality = EventQuality.VALID
         else:
             quality = quality_val
@@ -200,13 +202,13 @@ class RiskAssessmentPersistenceAdapter:
         domain_str = data.get("domain", "LOGISTICS")
         try:
             domain = SignalDomain(domain_str)
-        except Exception:
+        except (ValueError, TypeError):
             domain = SignalDomain.LOGISTICS
 
         sev_str = data.get("severity", "MEDIUM")
         try:
             severity = RiskLevel(sev_str)
-        except Exception:
+        except (ValueError, TypeError):
             severity = RiskLevel.MEDIUM
 
         raw_evidence = data.get("evidence", [])
@@ -437,7 +439,7 @@ class RiskAssessmentPersistenceAdapter:
             sev_str = fcd.get("severity", "MEDIUM")
             try:
                 sev = RiskLevel(sev_str)
-            except Exception:
+            except (ValueError, TypeError):
                 sev = RiskLevel.MEDIUM
 
             factor_contribs.append(
@@ -477,7 +479,7 @@ class RiskAssessmentPersistenceAdapter:
         if exp_dict:
             try:
                 explanation_obj = RiskExplanation(**exp_dict)
-            except Exception:
+            except (ValueError, TypeError, ValidationError):
                 explanation_obj = exp_dict
 
         # Evaluation instant
@@ -493,7 +495,7 @@ class RiskAssessmentPersistenceAdapter:
         if risk_level_str:
             try:
                 risk_level = RiskLevel(risk_level_str)
-            except Exception:
+            except (ValueError, TypeError):
                 pass
 
         # Reconstruct composite score
@@ -516,7 +518,7 @@ class RiskAssessmentPersistenceAdapter:
         if scope_type_str:
             try:
                 scope_entity_type = EntityType(scope_type_str)
-            except Exception:
+            except (ValueError, TypeError):
                 pass
 
         # Primary factor

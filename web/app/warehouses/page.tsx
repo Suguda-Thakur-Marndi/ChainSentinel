@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { RefreshCw, Warehouse } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -16,7 +16,7 @@ export default function WarehousesPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchWarehouses = async () => {
+  const fetchWarehouses = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -27,10 +27,26 @@ export default function WarehousesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchWarehouses();
+    let cancelled = false;
+    apiClient.network.warehouses.list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setWarehouses(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load warehouses");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = warehouses.filter((w) => {

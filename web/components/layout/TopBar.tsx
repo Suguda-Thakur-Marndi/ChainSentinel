@@ -4,14 +4,9 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Bell,
-  CheckCircle2,
   Command,
-  HelpCircle,
   LogOut,
   Search,
-  Shield,
-  Wifi,
-  WifiOff,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { apiClient } from "@/lib/api/client";

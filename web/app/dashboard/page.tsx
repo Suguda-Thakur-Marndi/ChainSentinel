@@ -3,21 +3,14 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  Activity,
   AlertOctagon,
   ArrowRight,
-  CheckCircle2,
-  Clock,
   Cpu,
   Flame,
-  Globe2,
   RefreshCw,
-  Scale,
-  ShieldAlert,
   ShieldCheck,
   Truck,
   UserCheck,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
@@ -25,13 +18,12 @@ import { MetricCard } from "@/components/ui/MetricCard";
 import { MapCard, MapEntity } from "@/components/map/MapCard";
 import { OperationalPipeline } from "@/components/ui/OperationalPipeline";
 import { RiskBadge, VerificationBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { EmptyState, ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type {
   ApprovalResponse,
   ControlTowerMetrics,
   IncidentResponse,
-  RiskResponse,
   ShipmentResponse,
   VerificationResultResponse,
 } from "@/lib/api/types";
@@ -72,7 +64,34 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    Promise.all([
+      apiClient.getDashboardMetrics(),
+      apiClient.incidents.list({ limit: 5 }),
+      apiClient.approvals.list({ limit: 5 }),
+      apiClient.verification.list({ limit: 5 }),
+      apiClient.shipments.list({ limit: 50 }),
+    ])
+      .then(([m, incRes, appRes, verRes, shipRes]) => {
+        if (!cancelled) {
+          setMetrics(m);
+          setIncidents(incRes.items || []);
+          setApprovals(appRes.items || []);
+          setVerifications(verRes.items || []);
+          setShipments(shipRes.items || []);
+          setLastUpdated(new Date().toLocaleTimeString());
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to synchronize operational telemetry");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Map entities generated from real backend shipments with valid coordinates

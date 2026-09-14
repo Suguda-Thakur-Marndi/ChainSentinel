@@ -1,23 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  AlertTriangle,
-  Flame,
-  Plus,
-  RefreshCw,
-  Search,
-  ShieldAlert,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { RiskBadge, StatusBadge } from "@/components/ui/Badges";
-import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { IncidentResponse, IncidentStatus, RiskSeverity } from "@/lib/api/types";
+import type { IncidentResponse } from "@/lib/api/types";
 
 export default function IncidentsPage() {
   const router = useRouter();
@@ -41,7 +33,24 @@ export default function IncidentsPage() {
   };
 
   useEffect(() => {
-    fetchIncidents();
+    let cancelled = false;
+    apiClient.incidents
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setIncidents(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load incidents");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filteredIncidents = incidents.filter((inc) => {

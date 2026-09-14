@@ -14,10 +14,8 @@ import { RoleBadge } from "@/components/ui/Badges";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 export default function AdminPage() {
-  const { user, hasRole } = useAuth();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<"org" | "users" | "integrations" | "security">("org");
-
-  const isAdmin = hasRole("ADMIN");
 
   return (
     <ProtectedRoute>

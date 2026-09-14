@@ -4,24 +4,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
-  AlertOctagon,
-  AlertTriangle,
   ArrowLeft,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
   ExternalLink,
   Flame,
-  Layers,
   RefreshCw,
   Scale,
-  ShieldCheck,
-  Truck,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { RiskBadge, StatusBadge } from "@/components/ui/Badges";
+import { RiskBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { IncidentResponse, RecommendationResponse } from "@/lib/api/types";
@@ -60,7 +51,36 @@ export default function IncidentDetailPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.incidents
+      .get(id)
+      .then(async (inc) => {
+        if (cancelled) return;
+        setIncident(inc);
+        try {
+          const recRes = await apiClient.recommendations.list({ limit: 10 });
+          if (!cancelled) {
+            const linked = (recRes.items || []).filter((r) => r.incident_id === id);
+            setRecommendations(linked);
+            setIsLoading(false);
+          }
+        } catch {
+          if (!cancelled) {
+            setRecommendations([]);
+            setIsLoading(false);
+          }
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load incident war room");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

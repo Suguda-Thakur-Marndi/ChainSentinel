@@ -234,7 +234,7 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(Exception)
     async def unhandled_exception_handler(request: Request, exc: Exception):
-        logger.error("Unhandled internal exception on %s: %s", request.url, exc)
+        logger.error("Unhandled internal exception on %s: %s", request.url, exc, exc_info=True)
         # Strictly sanitize internal exceptions: never leak SQL, passwords, or stack traces
         message = "Internal server error"
         return JSONResponse(

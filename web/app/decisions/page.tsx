@@ -1,22 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Plus,
-  RefreshCw,
-  Scale,
-  Sparkles,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
+import { Column, DataTable } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { DecisionResult } from "@/lib/api/types";
 
@@ -31,7 +22,7 @@ export default function DecisionsPage() {
     setError(null);
     try {
       const data = await apiClient.decisions.list({ limit: 50 });
-      setDecisions(Array.isArray(data) ? data : (data as any)?.items || []);
+      setDecisions(Array.isArray(data) ? data : (data as { items?: DecisionResult[] })?.items || []);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load decisions");
     } finally {
@@ -40,7 +31,24 @@ export default function DecisionsPage() {
   };
 
   useEffect(() => {
-    fetchDecisions();
+    let cancelled = false;
+    apiClient.decisions
+      .list({ limit: 50 })
+      .then((data) => {
+        if (!cancelled) {
+          setDecisions(Array.isArray(data) ? data : (data as { items?: DecisionResult[] })?.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load decisions");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const columns: Column<DecisionResult>[] = [

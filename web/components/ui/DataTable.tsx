@@ -7,7 +7,6 @@ import {
   ChevronRight,
   ChevronUp,
   Search,
-  SlidersHorizontal,
 } from "lucide-react";
 import { EmptyState, LoadingState } from "./FeedbackStates";
 

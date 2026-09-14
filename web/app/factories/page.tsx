@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Factory, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -30,7 +30,24 @@ export default function FactoriesPage() {
   };
 
   useEffect(() => {
-    fetchFactories();
+    let cancelled = false;
+    apiClient.network.factories
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setFactories(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load factories");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = factories.filter((f) => {

@@ -8,7 +8,7 @@ import { GlobalSearchModal } from "./GlobalSearchModal";
 import { LoadingState } from "../ui/FeedbackStates";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { isLoading } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 

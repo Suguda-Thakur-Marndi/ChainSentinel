@@ -5,14 +5,11 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  CheckCircle2,
   Clock,
   Cpu,
   Layers,
   RefreshCw,
-  Sliders,
   Sparkles,
-  Zap,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -29,7 +26,7 @@ import { OptimizationStatusBadge } from "@/components/ui/Badges";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { OptimizationCandidate, OptimizationResult } from "@/lib/api/types";
+import type { OptimizationResult } from "@/lib/api/types";
 
 export default function OptimizationDetailPage() {
   const params = useParams();
@@ -55,7 +52,25 @@ export default function OptimizationDetailPage() {
   };
 
   useEffect(() => {
-    fetchResult();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.optimization
+      .get(id)
+      .then((res) => {
+        if (!cancelled) {
+          setResult(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load optimization run result");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

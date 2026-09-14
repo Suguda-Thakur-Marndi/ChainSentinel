@@ -16,11 +16,8 @@ import {
   Cpu,
   Database,
   Play,
-  CheckCircle2,
-  AlertTriangle,
   Clock,
   RefreshCw,
-  Search,
   ChevronRight,
   Sparkles,
 } from "lucide-react";
@@ -55,8 +52,30 @@ export default function EvaluationPage() {
   }, []);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    let cancelled = false;
+    Promise.allSettled([
+      apiClient.evaluations.listSuites(),
+      apiClient.evaluations.listDatasets(),
+      apiClient.evaluations.listRuns({ limit: 20 }),
+    ])
+      .then(([suitesRes, datasetsRes, runsRes]) => {
+        if (!cancelled) {
+          if (suitesRes.status === "fulfilled") setSuites(suitesRes.value);
+          if (datasetsRes.status === "fulfilled") setDatasets(datasetsRes.value);
+          if (runsRes.status === "fulfilled") setRuns(runsRes.value);
+          setLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load evaluation metadata");
+          setLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleRunSuite = async (suiteType: EvaluationSuiteType) => {
     setRunningSuite(suiteType);
@@ -109,6 +128,12 @@ export default function EvaluationPage() {
             </button>
           </div>
         </div>
+
+        {error && (
+          <div className="p-4 rounded-xl bg-red-950/40 border border-red-800 text-xs text-red-300">
+            {error}
+          </div>
+        )}
 
         {/* Top KPI Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

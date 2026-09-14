@@ -1,25 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  DollarSign,
-  RefreshCw,
-  Scale,
-  Sparkles,
-  Zap,
-} from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { RecommendationResponse, RecommendationStatus } from "@/lib/api/types";
+import type { RecommendationResponse } from "@/lib/api/types";
 
 export default function RecommendationsPage() {
   const router = useRouter();
@@ -43,7 +33,24 @@ export default function RecommendationsPage() {
   };
 
   useEffect(() => {
-    fetchRecommendations();
+    let cancelled = false;
+    apiClient.recommendations
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setRecommendations(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load recommendations");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = recommendations.filter((r) => {

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { RefreshCw, Ship } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -15,7 +15,7 @@ export default function CarriersPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchCarriers = async () => {
+  const fetchCarriers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -26,10 +26,26 @@ export default function CarriersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCarriers();
+    let cancelled = false;
+    apiClient.network.carriers.list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setCarriers(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load carriers");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = carriers.filter((c) => {

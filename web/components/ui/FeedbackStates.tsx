@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AlertCircle, AlertTriangle, Inbox, Loader2, Lock, RefreshCw } from "lucide-react";
+import { AlertTriangle, Inbox, Loader2, Lock, RefreshCw } from "lucide-react";
 
 export function LoadingState({
   message = "Loading operational telemetry...",

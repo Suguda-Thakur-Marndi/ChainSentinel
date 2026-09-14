@@ -38,8 +38,25 @@ export default function NotificationsPage() {
   }, []);
 
   useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
+    let cancelled = false;
+    apiClient.notifications
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setNotifications(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load notifications");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleMarkRead = async (id: string) => {
     try {

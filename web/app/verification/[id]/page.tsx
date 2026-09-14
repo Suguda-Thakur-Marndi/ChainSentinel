@@ -1,24 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Layers,
   RefreshCw,
   Scale,
   ShieldCheck,
-  XCircle,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { EvidenceBadge, VerificationBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { VerificationResultResponse } from "@/lib/api/types";
 
@@ -31,7 +25,7 @@ export default function VerificationDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchVerification = async () => {
+  const fetchVerification = useCallback(async () => {
     if (!id) return;
     setIsLoading(true);
     setError(null);
@@ -43,10 +37,27 @@ export default function VerificationDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
-    fetchVerification();
+    if (!id) return;
+    let cancelled = false;
+    apiClient.verification.get(id)
+      .then((res) => {
+        if (!cancelled) {
+          setVerification(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load verification outcome");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

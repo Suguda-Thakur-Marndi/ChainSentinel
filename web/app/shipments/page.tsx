@@ -1,25 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Calendar,
-  Filter,
   Plus,
   RefreshCw,
-  Search,
-  Ship,
-  Truck,
   X,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
-import { EvidenceBadge, RiskBadge, StatusBadge } from "@/components/ui/Badges";
-import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { EvidenceBadge, StatusBadge } from "@/components/ui/Badges";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { ShipmentCreate, ShipmentResponse, ShipmentStatus } from "@/lib/api/types";
+import type { ShipmentCreate, ShipmentResponse } from "@/lib/api/types";
 
 export default function ShipmentsPage() {
   const router = useRouter();
@@ -53,7 +47,24 @@ export default function ShipmentsPage() {
   };
 
   useEffect(() => {
-    fetchShipments();
+    let cancelled = false;
+    apiClient.shipments
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setShipments(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load shipments");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleCreateShipment = async (e: React.FormEvent) => {

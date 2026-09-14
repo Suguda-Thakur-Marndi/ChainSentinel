@@ -5,16 +5,12 @@ import {
   Anchor,
   Building2,
   Factory,
-  Filter,
-  GitFork,
-  Layers,
   Network,
   RefreshCw,
   Search,
   Ship,
   Warehouse,
   X,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
@@ -31,7 +27,6 @@ export default function DigitalTwinPage() {
   const [snapshot, setSnapshot] = useState<DigitalTwinSnapshot | null>(null);
   const [summary, setSummary] = useState<DigitalTwinSummaryResponse | null>(null);
   const [selectedNode, setSelectedNode] = useState<TwinNodeContract | null>(null);
-  const [selectedEdge, setSelectedEdge] = useState<TwinEdgeContract | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("ALL");
   const [isLoading, setIsLoading] = useState(true);
@@ -55,7 +50,27 @@ export default function DigitalTwinPage() {
   };
 
   useEffect(() => {
-    fetchTwin();
+    let cancelled = false;
+    Promise.all([
+      apiClient.digitalTwin.getCurrent(),
+      apiClient.digitalTwin.getSnapshot(),
+    ])
+      .then(([sum, snap]) => {
+        if (!cancelled) {
+          setSummary(sum);
+          setSnapshot(snap);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load Digital Twin topology");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const rawNodes = snapshot?.nodes;

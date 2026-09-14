@@ -2,19 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Building2,
-  DollarSign,
   Plus,
   RefreshCw,
-  Search,
-  Shield,
   X,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
-import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { SupplierCreate, SupplierResponse } from "@/lib/api/types";
 
@@ -46,7 +41,24 @@ export default function SuppliersPage() {
   };
 
   useEffect(() => {
-    fetchSuppliers();
+    let cancelled = false;
+    apiClient.network.suppliers
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setSuppliers(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load suppliers");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleCreateSupplier = async (e: React.FormEvent) => {

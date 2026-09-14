@@ -8,18 +8,14 @@ import {
   ArrowLeft,
   ArrowRight,
   Clock,
-  Cpu,
   DollarSign,
   Network,
-  Play,
-  RefreshCw,
   Sliders,
-  Zap,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { MetricCard } from "@/components/ui/MetricCard";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { SimulationResult } from "@/lib/api/types";
 
@@ -47,7 +43,25 @@ export default function SimulationResultPage() {
   };
 
   useEffect(() => {
-    fetchResult();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.simulation
+      .getResult(id)
+      .then((res) => {
+        if (!cancelled) {
+          setResult(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load simulation results");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

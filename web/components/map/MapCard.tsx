@@ -4,14 +4,11 @@ import React, { useState } from "react";
 import {
   Anchor,
   Globe2,
-  Layers,
   MapPin,
-  Navigation,
   Ship,
   Truck,
   Wind,
   X,
-  Zap,
 } from "lucide-react";
 import { EvidenceBadge } from "../ui/Badges";
 import type { DataProvenance } from "@/lib/api/types";

@@ -5,22 +5,14 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  DollarSign,
-  FileText,
-  RefreshCw,
   Scale,
-  ShieldCheck,
   Sparkles,
   UserCheck,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { StatusBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type { RecommendationResponse } from "@/lib/api/types";
 
@@ -48,7 +40,25 @@ export default function RecommendationDetailPage() {
   };
 
   useEffect(() => {
-    fetchRec();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.recommendations
+      .get(id)
+      .then((res) => {
+        if (!cancelled) {
+          setRecommendation(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load recommendation detail");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {

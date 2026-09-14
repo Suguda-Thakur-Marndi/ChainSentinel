@@ -1,26 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AlertOctagon,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
   RefreshCw,
-  Scale,
-  ShieldAlert,
   ShieldCheck,
-  XCircle,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
+import { Column, DataTable } from "@/components/ui/DataTable";
 import { EvidenceBadge, VerificationBadge } from "@/components/ui/Badges";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { ErrorState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
-import type { VerificationResultResponse, VerificationStatus } from "@/lib/api/types";
+import type { VerificationResultResponse } from "@/lib/api/types";
 
 export default function VerificationPage() {
   const router = useRouter();
@@ -28,7 +20,7 @@ export default function VerificationPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchVerifications = async () => {
+  const fetchVerifications = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -39,10 +31,26 @@ export default function VerificationPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchVerifications();
+    let cancelled = false;
+    apiClient.verification.list({ limit: 50 })
+      .then((res) => {
+        if (!cancelled) {
+          setResults(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load verification outcomes");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const columns: Column<VerificationResultResponse>[] = [

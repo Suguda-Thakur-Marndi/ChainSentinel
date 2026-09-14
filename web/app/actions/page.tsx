@@ -33,8 +33,24 @@ export default function ActionsPage() {
   }, []);
 
   useEffect(() => {
-    fetchActions();
-  }, [fetchActions]);
+    let cancelled = false;
+    apiClient.actions.list({ limit: 50 })
+      .then((res) => {
+        if (!cancelled) {
+          setActions(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load actions");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const columns: Column<ActionResponse>[] = [
     {

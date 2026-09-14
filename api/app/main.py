@@ -1,4 +1,5 @@
 """Main FastAPI application entrypoint for RiskWise API."""
+import uuid
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
@@ -34,9 +35,12 @@ app.add_middleware(
 
 
 @app.middleware("http")
-async def add_security_headers(request, call_next):
-    """Inject standard protective security headers on all responses."""
+async def request_context_middleware(request, call_next):
+    """Correlate and propagate request ID for end-to-end operational observability."""
+    request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    request.state.request_id = request_id
     response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"

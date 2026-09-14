@@ -180,7 +180,7 @@ def extract_text_from_payload(
     except UnicodeDecodeError:
         try:
             decoded_text = payload_bytes.decode("latin-1")
-        except Exception as err:
+        except (UnicodeDecodeError, ValueError) as err:
             raise RAGMalformedInputError(f"Unable to decode document payload: {err}") from err
 
     extracted_content: str = ""
@@ -196,7 +196,7 @@ def extract_text_from_payload(
             parser.feed(decoded_text)
             parser.close()
             extracted_content = parser.get_text()
-        except Exception as err:
+        except (ValueError, TypeError, RuntimeError) as err:
             raise RAGMalformedInputError(f"Malformed HTML document: {err}") from err
 
     elif resolved_mime == "application/json":
@@ -205,7 +205,7 @@ def extract_text_from_payload(
             detected_meta["is_json_root_array"] = isinstance(parsed_json, list)
             # Reformat canonical sorted JSON text for clean chunking
             extracted_content = json.dumps(parsed_json, indent=2, ensure_ascii=False)
-        except Exception as err:
+        except (json.JSONDecodeError, ValueError, TypeError) as err:
             raise RAGMalformedInputError(f"Malformed JSON payload: {err}") from err
 
     elif resolved_mime == "text/csv":
@@ -229,7 +229,7 @@ def extract_text_from_payload(
                         body_lines.append(f"Row {row_idx}: " + ", ".join(row))
                 extracted_content = "\n".join(body_lines)
             detected_meta["row_count"] = len(rows)
-        except Exception as err:
+        except (csv.Error, ValueError, TypeError) as err:
             raise RAGMalformedInputError(f"Malformed CSV document: {err}") from err
 
     elif resolved_mime == "application/pdf":

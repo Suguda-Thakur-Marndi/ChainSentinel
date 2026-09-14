@@ -27,7 +27,24 @@ export default function GlobalLiveMapPage() {
   };
 
   useEffect(() => {
-    fetchShipments();
+    let cancelled = false;
+    apiClient.shipments
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setShipments(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load telemetry data");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const mapEntities: MapEntity[] = shipments

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Package, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -29,7 +29,24 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    let cancelled = false;
+    apiClient.network.products
+      .list({ limit: 100 })
+      .then((res) => {
+        if (!cancelled) {
+          setProducts(res.items || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load products");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = products.filter((p) => {

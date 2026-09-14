@@ -8,14 +8,9 @@ import assert from "node:assert/strict";
 import { apiClient, ApiClientError } from "../lib/api/client";
 import type {
   ActionCommand,
-  ApprovalDossier,
   OptimizationRequest,
-  OptimizationResult,
   ShipmentCreate,
-  ShipmentResponse,
-  SimulationScenario,
   SupplierCreate,
-  SupplierResponse,
 } from "../lib/api/types";
 
 const originalFetch = global.fetch;
@@ -379,6 +374,9 @@ describe("Frontend ↔ Backend Integration Suite (Section 34 Verification)", () 
 
     const res = await apiClient.actions.execute(cmd);
     assert.ok(capturedUrl.includes("/api/v1/actions/execute"));
+    assert.ok(capturedBody);
+    const body = JSON.parse(capturedBody);
+    assert.equal(body.action_type, "REROUTE_SHIPMENT");
     assert.equal(res.status, "SUBMITTED");
     assert.equal(res.action_id, "act_001");
   });

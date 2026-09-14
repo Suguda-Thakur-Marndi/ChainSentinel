@@ -4,20 +4,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Activity,
-  AlertOctagon,
   ArrowLeft,
-  Calendar,
-  ChevronRight,
   Cpu,
   Layers,
   MapPin,
   RefreshCw,
-  TrendingUp,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
-import { RiskBadge, StatusBadge } from "@/components/ui/Badges";
+import { RiskBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { apiClient } from "@/lib/api/client";
 import type {
@@ -60,7 +55,32 @@ export default function RiskDetailPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    let cancelled = false;
+    if (!id) return;
+    apiClient.risks
+      .get(id)
+      .then(async (r) => {
+        if (cancelled) return;
+        setRisk(r);
+        const [fRes, aRes] = await Promise.allSettled([
+          apiClient.risks.getFactors(id),
+          apiClient.risks.getAssessments(id),
+        ]);
+        if (!cancelled) {
+          if (fRes.status === "fulfilled") setFactors(fRes.value || []);
+          if (aRes.status === "fulfilled") setAssessments(aRes.value || []);
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load risk detail");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (isLoading) {
