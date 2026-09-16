@@ -1,16 +1,31 @@
 """Main FastAPI application entrypoint for RiskWise API."""
+from contextlib import asynccontextmanager
 import uuid
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.errors import register_error_handlers
-from app.core.logging import setup_logging
-from app.db.session import check_db_connection
+from app.core.logging import get_logger, setup_logging
+from app.core.rate_limit import RateLimitMiddleware
+from app.core.telemetry import TelemetryMiddleware
+from app.db.session import check_db_connection, dispose_db_engine
 from app.schemas.health import DatabaseHealthResponse, HealthResponse
 
 # Initialize application logging
 setup_logging()
+logger = get_logger("main")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifecycle manager handling startup readiness and graceful resource draining on SIGTERM."""
+    logger.info(f"Initializing {settings.PROJECT_NAME} v{settings.VERSION} [{settings.APP_ENV}]...")
+    yield
+    logger.info("Service shutting down. Gracefully draining database connection pools and resources...")
+    dispose_db_engine()
+    logger.info("Shutdown complete.")
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -19,6 +34,7 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     description="RiskWise API — Supply Chain Risk Intelligence & Decision Platform",
+    lifespan=lifespan,
 )
 
 # Centralized error handlers
@@ -32,6 +48,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Distributed rate limiting middleware (Valkey/Redis with safe fallback)
+app.add_middleware(RateLimitMiddleware)
+
+# Distributed OpenTelemetry tracing middleware
+app.add_middleware(TelemetryMiddleware)
 
 
 @app.middleware("http")

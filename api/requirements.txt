@@ -24,3 +24,10 @@ joblib>=1.4.0
 
 # Phase 14: Optimization Subsystem (Google OR-Tools)
 ortools>=9.10.0
+
+# Phase 21: Production Hardening, Observability & Security
+cryptography>=43.0.0
+redis>=5.0.0
+opentelemetry-api>=1.25.0
+opentelemetry-sdk>=1.25.0
+opentelemetry-semantic-conventions>=0.46b0

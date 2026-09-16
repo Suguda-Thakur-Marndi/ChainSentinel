@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+tests
+*.tsbuildinfo
+.env
+.env.*
+!*.example
+.gitignore

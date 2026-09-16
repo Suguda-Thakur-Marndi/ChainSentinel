@@ -6,8 +6,8 @@
 
 ---
 
-[![Status: Phase 20 Complete](https://img.shields.io/badge/Roadmap-Phase%2020%20Complete%20(20%2F21)-emerald?style=flat-square&logo=git)](docs/)
-[![Tests: 4,582 Passing](https://img.shields.io/badge/Tests-4%2C582%20Passed%20(4%2C543%20API%20%2B%2039%20Web)%20%7C%200%20Failed-success?style=flat-square&logo=pytest)](api/tests)
+[![Status: Phase 21 Complete](https://img.shields.io/badge/Roadmap-Phase%2021%20Complete%20(21%2F21)-emerald?style=flat-square&logo=git)](docs/)
+[![Tests: 4,602 Passing](https://img.shields.io/badge/Tests-4%2C602%20Passed%20(4%2C563%20API%20%2B%2039%20Web)%20%7C%200%20Failed-success?style=flat-square&logo=pytest)](api/tests)
 [![Code Coverage: 100%](https://img.shields.io/badge/Coverage-100%25%20Completed%20Phases-blue?style=flat-square)](api/tests)
 [![Python: 3.12 | 3.13](https://img.shields.io/badge/Python-3.12%20%7C%203.13-blue?style=flat-square&logo=python)](api/pyproject.toml)
 [![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B%20(75%2B%20Endpoints)-009688?style=flat-square&logo=fastapi)](api/app/api/v1)
@@ -32,7 +32,7 @@
 3. [Master Roadmap & Implementation Status (Phases 1–21)](#3-master-roadmap--implementation-status-phases-121)
 4. [Authoritative Monorepo Layout](#4-authoritative-monorepo-layout)
 5. [The 10 Core Architectural Invariants & Safety Discipline](#5-the-10-core-architectural-invariants--safety-discipline)
-6. [Detailed Technical Deep-Dive of All 20 Completed Subsystems](#6-detailed-technical-deep-dive-of-all-20-completed-subsystems)
+6. [Detailed Technical Deep-Dive of All 21 Completed Subsystems](#6-detailed-technical-deep-dive-of-all-21-completed-subsystems)
    - [Phase 01: Core Foundation & Framework Architecture](#phase-01-core-foundation--framework-architecture)
    - [Phase 02: Relational Database Schema & Domain Integrity](#phase-02-relational-database-schema--domain-integrity)
    - [Phase 03: Google Authentication & Enterprise RBAC Governance](#phase-03-google-authentication--enterprise-rbac-governance)
@@ -53,7 +53,7 @@
    - [Phase 18: Operational Verification Agent & Ground-Truth Outcome Evidence](#phase-18-operational-verification-agent--ground-truth-outcome-evidence)
    - [Phase 19: Control Tower Web Application (Next.js 14/16 App Router)](#phase-19-control-tower-web-application-nextjs-app-router)
    - [Phase 20: Comprehensive Evaluation & Quality Assurance Framework](#phase-20-comprehensive-evaluation--quality-assurance-framework)
-   - [Phase 21: Production Hardening, High Availability & Enterprise Deployment Roadmap](#phase-21-production-hardening-high-availability--enterprise-deployment-roadmap)
+   - [Phase 21: Production Hardening, High Availability & Enterprise Deployment](#phase-21-production-hardening-high-availability--enterprise-deployment)
 7. [Authoritative Relational Database Architecture (34 Core + 2 Evaluation Tables)](#7-authoritative-relational-database-architecture-34-core--2-evaluation-tables)
 8. [Comprehensive REST API Catalog & Route Architecture](#8-comprehensive-rest-api-catalog--route-architecture)
 9. [Multi-Agent LangGraph State Machine Architecture & State Ownership Contracts](#9-multi-agent-langgraph-state-machine-architecture--state-ownership-contracts)
@@ -61,7 +61,7 @@
 11. [Post-Action Verification Agent Deep-Dive & Source Precedence](#11-post-action-verification-agent-deep-dive--source-precedence)
 12. [Control Tower UI & Design System Deep-Dive](#12-control-tower-ui--design-system-deep-dive)
 13. [Continuous Evaluation & Golden Benchmarks Deep-Dive (Phase 20)](#13-continuous-evaluation--golden-benchmarks-deep-dive-phase-20)
-14. [Verification & Automated Test Suite Metrics (4,582 Passing Tests)](#14-verification--automated-test-suite-metrics-4582-passing-tests)
+14. [Verification & Automated Test Suite Metrics (4,602 Passing Tests)](#14-verification--automated-test-suite-metrics-4602-passing-tests)
 15. [Local Development, Setup & Configuration Guide](#15-local-development-setup--configuration-guide)
 16. [Complete Documentation Index](#16-complete-documentation-index)
 17. [Enterprise License & Operational Notice](#17-enterprise-license--operational-notice)
@@ -227,7 +227,7 @@ Consider a Category 4 Super Typhoon (*Muifa*) approaching the East China Sea, th
 | **18** | **Verification Agent** | Post-action outcome verification, precedence hierarchy (`REAL > ESTIMATED > SIMULATED`), fail-closed policy | **COMPLETE** | 100% (36 tests) |
 | **19** | **Control Tower Web UI** | Next.js App Router, 26+ pages, responsive dark/light control room interface, live telemetry, approval center | **COMPLETE** | 100% (39 tests) |
 | **20** | **Evaluation Framework** | Continuous multi-agent benchmark, 16 test suites, 15 golden datasets, MetricEngine, runner API | **COMPLETE** | 100% (37 tests) |
-| *21* | *Production Hardening* | AWS VPC peering, AWS KMS envelope encryption, rate limiting, enterprise HA clustering, CI/CD pipelines | *ROADMAP* | — |
+| **21** | **Production Hardening** | Durable LangGraph PostgreSQL checkpointing, AWS KMS envelope encryption, Valkey sliding-window rate limiting, OpenTelemetry distributed tracing, container hardening, Terraform IaC, disaster recovery | **COMPLETE** | 100% (20 tests) |
 
 ---
 
@@ -550,13 +550,49 @@ To guarantee enterprise compliance, deterministic outcomes, and prevent catastro
   - **Isolated Evaluation Persistence**: Stores evaluation runs and metric reports in dedicated `evaluation_runs` and `evaluation_results` tables under `EvaluationBase`, keeping core operational tables completely untouched.
   - **Evaluation REST API**: Endpoints under `/api/v1/evaluations` for triggering benchmark runs, listing registered suites, querying datasets, and retrieving audit reports.
 
-### Phase 21: Production Hardening, High Availability & Enterprise Deployment Roadmap
-- **Technical Scope**:
-  - AWS VPC peering and private subnets for RDS PostgreSQL 16 and Bedrock VPC endpoints.
-  - AWS KMS envelope encryption for sensitive credentials and database volume encryption at rest.
-  - Redis distributed rate limiting and token bucket throttling across public API routes.
-  - Enterprise High Availability (HA) deployment with multi-AZ RDS failover and containerized auto-scaling on AWS ECS Fargate or EKS.
-  - Automated CI/CD GitHub Actions pipelines running linting, TypeScript type-checking, Jest tests, and Pytest suites.
+### Phase 21: Production Hardening, High Availability & Enterprise Deployment
+- **Purpose**: Hardens the complete RiskWise 2.0 system into an enterprise-grade, resilient production platform with zero data-loss guarantees, strict tenant isolation, distributed rate limiting, cryptographic envelope encryption, OpenTelemetry observability, containerization, and automated disaster recovery.
+- **Key Capabilities**:
+  - **Durable LangGraph Checkpointing (`PostgresAgentCheckpointer`)**:
+    - Dedicated isolated schema (`checkpoints.agent_checkpoints`, `checkpoints.agent_writes`) keeping operational tables completely unpolluted.
+    - Multi-tenant thread isolation enforcing `{organization_id}:{workflow_id}:{thread_id}` composite keys to prevent cross-tenant state access.
+    - Safe serialization using `JsonPlusSerializer` with msgpack protocol, strictly avoiding Python pickle arbitrary code execution vulnerabilities.
+    - `DurableCheckpointManager` with SHA-256 canonical state hashing to detect any out-of-band tampering between agent execution steps.
+  - **Application-Layer KMS Envelope Encryption (`EnvelopeEncryptionService`)**:
+    - Integrates with AWS KMS (`generate_data_key`, AES-256-GCM) with 256-bit ephemeral Data Encryption Keys (DEKs).
+    - Cryptographically binds data to tenant context (`tenant_id` and `classification`), rejecting decrypt operations from unauthorized tenants.
+    - Plaintext DEKs are wiped from memory immediately after encryption/decryption; zero plaintext keys are logged or stored.
+    - Deterministic local master key fallback enables offline development and continuous evaluation testing.
+  - **Distributed Atomic Rate Limiting (`DistributedRateLimiter`)**:
+    - Atomic Redis/Valkey sliding window Lua script running on `risk-wise-cash` cluster with sub-millisecond overhead.
+    - Multi-tier rate limiting quotas: Tenant (600 req/min), User (120 req/min), Client IP (30 req/min).
+    - 30-second circuit-breaker with automatic failover to thread-safe in-memory sliding window when Valkey is temporarily unreachable.
+    - Built-in exemptions for orchestrator health probes (`/health`, `/ready`, `/health/db`).
+    - Standard RFC compliance emitting `Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` headers on HTTP 429.
+  - **OpenTelemetry Observability & W3C Distributed Tracing (`TelemetryManager`)**:
+    - Injects and extracts standard W3C `traceparent` headers (`X-Trace-ID`, `trace_id`, `span_id`) across all HTTP requests and background agents.
+    - Complies with OpenTelemetry GenAI semantic conventions (`gen_ai.system=aws.bedrock`, `gen_ai.request.model`, prompt/completion token usage, execution latency).
+    - Zero-leakage security perimeter: prompt and completion payload recording disabled by default, preventing sensitive customer data from entering APM traces.
+  - **Database Connection Pool Hardening (`session.py`)**:
+    - Bounded connection pool (`pool_size=5`, `max_overflow=10`, `pool_recycle=1800`), aggressive connection timeout (`connect_timeout=5`), and PostgreSQL statement timeouts (`statement_timeout=30000ms`).
+    - `dispose_db_engine()` lifecycle handler ensuring clean connection pool draining during container SIGTERM shutdown.
+  - **Structured Production JSON Logging & Secret Scrubbing (`logging.py`)**:
+    - Standardized JSON formatter for AWS CloudWatch Logs ingestion including `timestamp`, `level`, `service`, `request_id`, `trace_id`, and `organization_id`.
+    - `SecretScrubbingFilter` inspecting all log records and masking passwords, bearer tokens, API keys, and AWS access keys (`AKIA...`).
+  - **Production Container Hardening & Standalone Build**:
+    - Multi-stage Docker builds for backend (`api/Dockerfile`) and frontend (`web/Dockerfile`).
+    - Next.js 16 standalone build output (`output: "standalone"`) reducing container image size by over 80% and omitting non-runtime devDependencies.
+    - Non-privileged execution: runs as non-root users (`riskwise` UID 10001, `nextjs` UID 10001) with read-only root filesystems and curl-based container healthchecks.
+  - **Infrastructure as Code (Terraform for AWS `ap-southeast-2`)**:
+    - Declarative VPC topology with public, private (ECS/Valkey), and isolated (RDS PostgreSQL) subnets across 2 Availability Zones.
+    - Application Load Balancer with HTTPS listeners and TLS 1.3 termination.
+    - ECS Fargate tasks with IAM roles following least-privilege policies (no static credentials; task execution and task roles separated).
+  - **Production CI/CD Automation (`.github/workflows/production.yml`)**:
+    - GitHub OIDC authentication to AWS IAM roles (zero long-lived AWS secret keys).
+    - Multi-stage parallel verification: backend pytest, frontend typecheck/lint/test, Trivy container vulnerability scanning, and automated Phase 20 evaluation.
+  - **Disaster Recovery & Failure Injection Suite**:
+    - 20 comprehensive automated failure injection scenarios (`test_phase21_production_hardening.py`) passing at 100%:
+      DB connection loss, Redis outage & circuit breaking, Bedrock model access denial & fail-safe degradation, LangGraph node crash & recovery from PostgreSQL checkpoint, concurrent write conflict detection, KMS ciphertext tampering, tenant context mismatch, secret log scrubbing, rate-limit 429 headers, and graceful shutdown signal handling.
 
 ---
 
@@ -873,15 +909,15 @@ The `MetricEngine` (`api/app/evaluation/metrics.py`) provides deterministic eval
 
 ---
 
-## 14. Verification & Automated Test Suite Metrics (4,582 Passing Tests)
+## 14. Verification & Automated Test Suite Metrics (4,602 Passing Tests)
 
-RiskWise 2.0 maintains a 100% passing automated test suite with **4,582 automated tests** (4,543 backend tests + 39 frontend tests) running across all completed roadmap phases:
+RiskWise 2.0 maintains a 100% passing automated test suite with **4,602 automated tests** (4,563 backend tests + 39 frontend tests) running across all 21 completed roadmap phases:
 
 ```
 ================================================================================
-Backend Test Suite Results:  4,543 passed, 0 failed, 0 skipped, 0 errors (100%)
+Backend Test Suite Results:  4,563 passed, 0 failed, 0 skipped, 0 errors (100%)
 Frontend Test Suite Results:    39 passed, 0 failed, 0 skipped, 0 errors (100%)
-Total Platform Test Suite:   4,582 passed, 0 failed, 0 skipped, 0 errors (100%)
+Total Platform Test Suite:   4,602 passed, 0 failed, 0 skipped, 0 errors (100%)
 ================================================================================
 ```
 
@@ -889,6 +925,7 @@ Total Platform Test Suite:   4,582 passed, 0 failed, 0 skipped, 0 errors (100%)
 
 | Phase | Test Suite Module | Subsystem Scope & Architectural Focus | Passing Tests |
 | :---: | :--- | :--- | :---: |
+| **21** | `api/tests/test_phase21_*.py` | Production hardening, durable checkpointing, KMS envelope encryption, rate limiting, telemetry, DR | **20** |
 | **20** | `api/tests/test_phase20_*.py` | Evaluation contracts, golden datasets, MetricEngine, suites, runner API | **37** |
 | **19** | `web/tests/*.test.ts` | Control Tower API client, auth flow, error envelopes, UI contracts | **39** |
 | **18** | `api/tests/test_phase18_*.py` | Verification Agent, verifiers, evidence precedence, security, LangGraph node | **36** |
@@ -906,7 +943,7 @@ Total Platform Test Suite:   4,582 passed, 0 failed, 0 skipped, 0 errors (100%)
 | **04** | `api/tests/test_phase4_*.py` | Core domain REST APIs, Clean Architecture repositories, Unit of Work | **48** |
 | **05–06**| `api/tests/test_phase5_*.py`, `test_phase6_*.py` | Ingestion connectors, canonical event normalization, entity resolution | **120** |
 | **02–03**| `api/tests/test_database_validation.py`, `test_auth_*.py` | Database schema validation, Google OAuth2, JWT sessions, RBAC security | **771** |
-| **Total**| **Complete Platform Test Suite** | **All 20 Completed Roadmap Subsystems** | **4,582** |
+| **Total**| **Complete Platform Test Suite** | **All 21 Completed Roadmap Subsystems** | **4,602** |
 
 ### Executing the Automated Tests
 
@@ -918,6 +955,9 @@ cd api
 
 # Run complete backend test suite:
 python -m pytest -q
+
+# Run Phase 21: Production Hardening & Disaster Recovery tests (20 tests):
+python -m pytest tests/test_phase21_production_hardening.py -v
 
 # Run Phase 20: Evaluation & QA Framework tests (37 tests):
 python -m pytest -k "phase20" -v

@@ -34,12 +34,24 @@ def init_db_engine():
         logger.info("Initialized local SQLite database.")
     else:
         try:
+            # RDS & RDS Proxy compatible bounded pool configuration:
+            # pool_size=5, max_overflow=10 per worker ensures total connections
+            # across ECS Fargate tasks (16 workers max) remain <= 160, safely within RDS limits.
+            # pool_recycle=1800 prevents stale connection drops by AWS firewalls or RDS Proxy idle timeouts.
+            connect_args = {
+                "connect_timeout": 5,
+            }
+            # Add PostgreSQL statement timeout to prevent connection pinning on long queries
+            if "psycopg" in url or "postgres" in url:
+                connect_args["options"] = "-c statement_timeout=30000"
+
             temp_engine = create_engine(
                 url,
                 pool_pre_ping=True,
-                pool_size=10,
-                max_overflow=20,
-                connect_args={"connect_timeout": 3},
+                pool_size=5,
+                max_overflow=10,
+                pool_recycle=1800,
+                connect_args=connect_args,
             )
             # In dev mode, test reachability quickly
             if settings.APP_ENV == "development":
@@ -60,6 +72,16 @@ def init_db_engine():
                 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
             else:
                 raise
+
+def dispose_db_engine() -> None:
+    """Explicitly close all pooled connections during container shutdown."""
+    global engine
+    if engine is not None:
+        try:
+            engine.dispose()
+            logger.info("Database engine connections gracefully disposed.")
+        except Exception as e:
+            logger.warning(f"Error during database engine disposal: {e}")
 
 init_db_engine()
 
