@@ -1,113 +1,122 @@
 # RiskWise 2.0
 
-> **Enterprise Autonomous Supply Chain Risk Intelligence, Multi-Agent Orchestration, Digital Twin Simulation & Governed Operational Action Platform**
+> **Enterprise Autonomous Supply Chain Risk Intelligence, Multi-Agent Orchestration, Digital Twin Simulation, Governed Operational Action & Quality Assurance Platform**
 > 
-> *A high-resilience enterprise platform integrating real-time multimodal telemetry, deterministic composite risk scoring, hybrid RAG, multi-agent LangGraph orchestration with AWS Bedrock (Claude 3.5 Sonnet & Titan), GBDT delay regression, deterministic graph digital twin synthesis, Monte Carlo disruption simulation, Google OR-Tools multi-constraint optimization, cryptographic human-in-the-loop governance, governed operational execution adapters, and authoritative post-action outcome verification.*
+> *A high-resilience, production-grade enterprise platform integrating real-time multimodal telemetry, deterministic composite risk scoring, hybrid RAG with AWS Bedrock (Claude 3.5 Sonnet & Titan 1536d), GBDT delay regression, deterministic graph digital twin synthesis (RFC 4122 UUIDv5), Monte Carlo disruption cascade simulation, Google OR-Tools multi-constraint optimization, cryptographic human-in-the-loop governance (SHA-256 state fingerprinting), governed operational execution adapters, authoritative post-action ground-truth verification (`REAL > ESTIMATED > SIMULATED`), an executive Next.js Control Tower command center (26+ views), and an automated 16-suite evaluation and quality assurance harness.*
 
 ---
 
-[![Status: Phase 18 Complete](https://img.shields.io/badge/Roadmap-Phase%2018%20Complete%20(18%2F21)-emerald?style=flat-square&logo=git)](docs/phase18-verification-agent.md)
-[![Tests: 4,506 Passing](https://img.shields.io/badge/Tests-4%2C506%20Passed%20%7C%200%20Failed%20%7C%200%20Skipped-success?style=flat-square&logo=pytest)](api/tests)
+[![Status: Phase 20 Complete](https://img.shields.io/badge/Roadmap-Phase%2020%20Complete%20(20%2F21)-emerald?style=flat-square&logo=git)](docs/)
+[![Tests: 4,582 Passing](https://img.shields.io/badge/Tests-4%2C582%20Passed%20(4%2C543%20API%20%2B%2039%20Web)%20%7C%200%20Failed-success?style=flat-square&logo=pytest)](api/tests)
 [![Code Coverage: 100%](https://img.shields.io/badge/Coverage-100%25%20Completed%20Phases-blue?style=flat-square)](api/tests)
 [![Python: 3.12 | 3.13](https://img.shields.io/badge/Python-3.12%20%7C%203.13-blue?style=flat-square&logo=python)](api/pyproject.toml)
-[![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=flat-square&logo=fastapi)](api/requirements.txt)
-[![PostgreSQL: 16 RDS](https://img.shields.io/badge/PostgreSQL-16%20RDS%20(34%20Tables)-336791?style=flat-square&logo=postgresql)](docs/database-schema-inventory.md)
-[![SQLAlchemy: 2.0](https://img.shields.io/badge/ORM-SQLAlchemy%202.0-red?style=flat-square)](api/app/models)
+[![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B%20(75%2B%20Endpoints)-009688?style=flat-square&logo=fastapi)](api/app/api/v1)
+[![PostgreSQL: 16 RDS](https://img.shields.io/badge/PostgreSQL-16%20RDS%20(34%20Core%20%2B%202%20Eval%20Tables)-336791?style=flat-square&logo=postgresql)](docs/database-schema-inventory.md)
+[![SQLAlchemy: 2.0](https://img.shields.io/badge/ORM-SQLAlchemy%202.0%20Async%20Ready-red?style=flat-square)](api/app/models)
 [![Multi-Agent: LangGraph](https://img.shields.io/badge/Multi--Agent-LangGraph%200.2%2B-purple?style=flat-square)](api/app/agents)
 [![LLM: Claude 3.5 Sonnet](https://img.shields.io/badge/Reasoning-Claude%203.5%20Sonnet%20(Bedrock)-D97706?style=flat-square)](docs/phase10-bedrock-claude.md)
 [![Optimization: OR-Tools](https://img.shields.io/badge/Solver-Google%20OR--Tools%20MILP-4285F4?style=flat-square&logo=google)](docs/phase14-optimization.md)
 [![ML: LightGBM GBDT](https://img.shields.io/badge/ML-LightGBM%20GBDT%20Regression-brightgreen?style=flat-square)](docs/phase11-ml.md)
-[![Web: Next.js 14](https://img.shields.io/badge/Frontend-Next.js%2014%20App%20Router-black?style=flat-square&logo=next.js)](web/)
+[![Frontend: Next.js App Router](https://img.shields.io/badge/Frontend-Next.js%20App%20Router%20(26%2B%20Pages)-black?style=flat-square&logo=next.js)](web/)
+[![Evaluation: 16 Suites](https://img.shields.io/badge/Evaluation-16%20Suites%20%7C%2015%20Golden%20Datasets-indigo?style=flat-square)](api/app/evaluation)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary%20Enterprise-red?style=flat-square)](LICENSE)
 
 ---
 
 ## Table of Contents
 
-1. [Executive Summary & Platform Value Proposition](#executive-summary--platform-value-proposition)
-2. [Complete End-to-End WOW Operational Flow](#complete-end-to-end-wow-operational-flow)
-   - [End-to-End Visual Architecture (Mermaid)](#end-to-end-visual-architecture-mermaid)
-   - [Real-World Incident Scenario Walkthrough](#real-world-incident-scenario-walkthrough)
-3. [Master Roadmap & Implementation Status (Phases 1–21)](#master-roadmap--implementation-status-phases-121)
-4. [Authoritative Repository Layout](#authoritative-repository-layout)
-5. [The 10 Core System Invariants & Safety Discipline](#the-10-core-system-invariants--safety-discipline)
-6. [Detailed Technical Deep-Dive of All 18 Completed Subsystems](#detailed-technical-deep-dive-of-all-18-completed-subsystems)
+1. [Executive Summary & Platform Value Proposition](#1-executive-summary--platform-value-proposition)
+2. [Complete End-to-End Operational Flow](#2-complete-end-to-end-operational-flow)
+   - [End-to-End System Architecture (Mermaid)](#end-to-end-system-architecture-mermaid)
+   - [Real-World Disruption Scenario Walkthrough](#real-world-disruption-scenario-walkthrough)
+3. [Master Roadmap & Implementation Status (Phases 1–21)](#3-master-roadmap--implementation-status-phases-121)
+4. [Authoritative Monorepo Layout](#4-authoritative-monorepo-layout)
+5. [The 10 Core Architectural Invariants & Safety Discipline](#5-the-10-core-architectural-invariants--safety-discipline)
+6. [Detailed Technical Deep-Dive of All 20 Completed Subsystems](#6-detailed-technical-deep-dive-of-all-20-completed-subsystems)
    - [Phase 01: Core Foundation & Framework Architecture](#phase-01-core-foundation--framework-architecture)
-   - [Phase 02: Database Schema & Relational Integrity](#phase-02-database-schema--relational-integrity)
-   - [Phase 03: Google Authentication & Enterprise RBAC](#phase-03-google-authentication--enterprise-rbac)
-   - [Phase 04: Core Domain APIs & Clean Architecture](#phase-04-core-domain-apis--clean-architecture)
-   - [Phase 05: External Telemetry Ingestion Connectors](#phase-05-external-telemetry-ingestion-connectors)
-   - [Phase 06: Event Normalization & Entity Resolution](#phase-06-event-normalization--entity-resolution)
-   - [Phase 07: Deterministic Multi-Factor Risk Engine](#phase-07-deterministic-multi-factor-risk-engine)
+   - [Phase 02: Relational Database Schema & Domain Integrity](#phase-02-relational-database-schema--domain-integrity)
+   - [Phase 03: Google Authentication & Enterprise RBAC Governance](#phase-03-google-authentication--enterprise-rbac-governance)
+   - [Phase 04: Core Domain REST APIs & Clean Architecture](#phase-04-core-domain-rest-apis--clean-architecture)
+   - [Phase 05: External Multimodal Telemetry Ingestion Connectors](#phase-05-external-multimodal-telemetry-ingestion-connectors)
+   - [Phase 06: Event Normalization, Deduplication & Entity Resolution](#phase-06-event-normalization-deduplication--entity-resolution)
+   - [Phase 07: Deterministic Multi-Factor Risk Scoring Engine](#phase-07-deterministic-multi-factor-risk-scoring-engine)
    - [Phase 08: Hybrid RAG Knowledge Engine & Vector Search](#phase-08-hybrid-rag-knowledge-engine--vector-search)
-   - [Phase 09: LangGraph Multi-Agent Orchestration](#phase-09-langgraph-multi-agent-orchestration)
-   - [Phase 10: AWS Bedrock & Claude 3.5 Sonnet Integration](#phase-10-aws-bedrock--claude-35-sonnet-integration)
-   - [Phase 11: Machine Learning Shipment Delay Regression](#phase-11-machine-learning-shipment-delay-regression)
-   - [Phase 12: Digital Twin Supply Chain Graph Engine](#phase-12-digital-twin-supply-chain-graph-engine)
-   - [Phase 13: Disruption Simulation & Cascade Engine](#phase-13-disruption-simulation--cascade-engine)
-   - [Phase 14: Mathematical Optimization Subsystem](#phase-14-mathematical-optimization-subsystem)
+   - [Phase 09: LangGraph Multi-Agent Orchestration Framework](#phase-09-langgraph-multi-agent-orchestration-framework)
+   - [Phase 10: AWS Bedrock & Claude 3.5 Sonnet Reasoning Layer](#phase-10-aws-bedrock--claude-35-sonnet-reasoning-layer)
+   - [Phase 11: Machine Learning Shipment Delay Regression (LightGBM)](#phase-11-machine-learning-shipment-delay-regression-lightgbm)
+   - [Phase 12: Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)](#phase-12-digital-twin-supply-chain-graph-engine-rfc-4122-uuidv5)
+   - [Phase 13: Disruption Simulation & Monte Carlo Cascade Engine](#phase-13-disruption-simulation--monte-carlo-cascade-engine)
+   - [Phase 14: Mathematical Optimization Subsystem (Google OR-Tools MILP)](#phase-14-mathematical-optimization-subsystem-google-or-tools-milp)
    - [Phase 15: Mitigation Decision Agent & Claude Synthesis](#phase-15-mitigation-decision-agent--claude-synthesis)
    - [Phase 16: Human Governance & Approval Subsystem](#phase-16-human-governance--approval-subsystem)
-   - [Phase 17: Operational Action Agent & Execution Adapters](#phase-17-operational-action-agent--execution-adapters)
-   - [Phase 18: Operational Verification Agent & Outcome Evidence](#phase-18-operational-verification-agent--outcome-evidence)
-7. [Authoritative 34-Table Database Inventory](#authoritative-34-table-database-inventory)
-8. [REST API Architecture & Comprehensive Endpoint Catalog](#rest-api-architecture--comprehensive-endpoint-catalog)
-9. [Multi-Agent LangGraph State Machine Architecture](#multi-agent-langgraph-state-machine-architecture)
-10. [Supported Operational Actions & Verification Matrix](#supported-operational-actions--verification-matrix)
-11. [Post-Action Verification Agent (Phase 18) Deep-Dive](#post-action-verification-agent-phase-18-deep-dive)
-12. [Verification & Automated Test Suite Metrics](#verification--automated-test-suite-metrics)
-13. [Local Development, Setup & Configuration Guide](#local-development-setup--configuration-guide)
-14. [Complete Documentation Index](#complete-documentation-index)
+   - [Phase 17: Operational Action Agent & Governed Execution Adapters](#phase-17-operational-action-agent--governed-execution-adapters)
+   - [Phase 18: Operational Verification Agent & Ground-Truth Outcome Evidence](#phase-18-operational-verification-agent--ground-truth-outcome-evidence)
+   - [Phase 19: Control Tower Web Application (Next.js 14/16 App Router)](#phase-19-control-tower-web-application-nextjs-app-router)
+   - [Phase 20: Comprehensive Evaluation & Quality Assurance Framework](#phase-20-comprehensive-evaluation--quality-assurance-framework)
+   - [Phase 21: Production Hardening, High Availability & Enterprise Deployment Roadmap](#phase-21-production-hardening-high-availability--enterprise-deployment-roadmap)
+7. [Authoritative Relational Database Architecture (34 Core + 2 Evaluation Tables)](#7-authoritative-relational-database-architecture-34-core--2-evaluation-tables)
+8. [Comprehensive REST API Catalog & Route Architecture](#8-comprehensive-rest-api-catalog--route-architecture)
+9. [Multi-Agent LangGraph State Machine Architecture & State Ownership Contracts](#9-multi-agent-langgraph-state-machine-architecture--state-ownership-contracts)
+10. [Supported Operational Actions & Physical Verification Matrix](#10-supported-operational-actions--physical-verification-matrix)
+11. [Post-Action Verification Agent Deep-Dive & Source Precedence](#11-post-action-verification-agent-deep-dive--source-precedence)
+12. [Control Tower UI & Design System Deep-Dive](#12-control-tower-ui--design-system-deep-dive)
+13. [Continuous Evaluation & Golden Benchmarks Deep-Dive (Phase 20)](#13-continuous-evaluation--golden-benchmarks-deep-dive-phase-20)
+14. [Verification & Automated Test Suite Metrics (4,582 Passing Tests)](#14-verification--automated-test-suite-metrics-4582-passing-tests)
+15. [Local Development, Setup & Configuration Guide](#15-local-development-setup--configuration-guide)
+16. [Complete Documentation Index](#16-complete-documentation-index)
+17. [Enterprise License & Operational Notice](#17-enterprise-license--operational-notice)
 
 ---
 
-## Executive Summary & Platform Value Proposition
+## 1. Executive Summary & Platform Value Proposition
 
-Modern global supply chains operate under extreme volatility. Geopolitical conflicts in strategic transit corridors (Suez Canal, Bab-el-Mandeb, Strait of Malacca), severe weather anomalies, port labor disputes, carrier insolvencies, and supplier disruptions routinely cascade across multi-tier networks, causing catastrophic factory shutdowns, unmet customer SLAs, and billions in unanticipated logistics costs.
+Modern global supply chains operate under extreme volatility. Geopolitical blockades in strategic maritime choke points (Suez Canal, Bab-el-Mandeb, Strait of Malacca), severe weather anomalies, port labor strikes, carrier insolvencies, and factory shutdowns routinely cascade across multi-tier networks, causing catastrophic assembly line stoppages, missed customer SLAs, and billions in unanticipated logistics expenditures.
 
-Traditional Supply Chain Management (SCM) platforms are passive and siloed:
-- **Lagging Visibility**: They surface disruptions days after they occur via static reporting dashboards.
-- **Disconnected Decision-Making**: Disruption analysis, impact modeling, and reroute planning are manual, ad-hoc spreadsheet exercises.
-- **Uncontrolled Automation**: Unregulated bot automations risk executing dangerous real-world mutations without auditability or human accountability.
-- **Blind Execution**: Systems assume dispatching an order guarantees success, lacking closed-loop operational verification.
+Traditional Supply Chain Management (SCM) platforms are passive, siloed, and brittle:
+- **Lagging Visibility**: Surface disruptions days after they occur via static, backwards-looking reports.
+- **Disconnected Decision-Making**: Reroute planning, inventory rebalancing, and impact modeling remain manual, ad-hoc spreadsheet calculations.
+- **Uncontrolled Automation**: Unregulated automation bots risk executing dangerous real-world purchase or transport mutations without auditability or human accountability.
+- **Blind Execution**: Traditional logistics software assumes dispatching an order guarantees fulfillment, lacking closed-loop operational verification against real-world ground-truth telemetry.
 
-**RiskWise 2.0** solves this paradigm through an autonomous, governed, and closed-loop multi-agent supply chain resilience platform:
-1. **Continuous Real-Time Ingestion**: Monitors maritime AIS, aviation ADS-B, road telemetry, weather forecasts, rail schedules, and global OSINT news.
-2. **Deterministic Risk & ML Forecasting**: Evaluates multi-factor risk scores and predicts consignment delays using calibrated gradient-boosted decision trees.
+**RiskWise 2.0** solves this paradigm through an autonomous, governed, closed-loop supply chain resilience platform:
+1. **Continuous Real-Time Ingestion**: Monitors maritime AIS, aviation ADS-B, road traffic congestion, marine/terrestrial weather forecasts, rail terminal schedules, multi-carrier tracking, and global OSINT news.
+2. **Deterministic Risk & ML Forecasting**: Evaluates multi-factor risk scores (Geopolitical, Climate, Transit, Financial) and predicts consignment delays using calibrated gradient-boosted decision trees (LightGBM).
 3. **Digital Twin Simulation**: Synthesizes a deterministic network topology graph using RFC 4122 UUIDv5 identities and models shock propagation via Monte Carlo cascades.
-4. **Mathematical Optimization**: Formulates and solves mixed-integer linear programming (MILP) models with Google OR-Tools to identify Pareto-optimal mitigation strategies balancing cost, delay, and carbon.
-5. **Domain-Grounded Reasoning**: Leverages Anthropic Claude 3.5 Sonnet on AWS Bedrock to synthesize transparent, executive-grade operational justifications grounded in company standard operating procedures.
-6. **Cryptographic Human Governance**: Enforces a strict human approval perimeter with SHA-256 state fingerprinting, role-gated sign-offs, and tamper prevention.
+4. **Mathematical Optimization**: Formulates and solves mixed-integer linear programming (MILP) models with Google OR-Tools to identify Pareto-optimal mitigation strategies balancing transit delay, operational cost, and carbon emissions.
+5. **Domain-Grounded Reasoning**: Leverages Anthropic Claude 3.5 Sonnet on AWS Bedrock to synthesize transparent, executive-grade operational justifications grounded in company standard operating procedures (SOPs).
+6. **Cryptographic Human Governance**: Enforces a strict human approval perimeter with SHA-256 state fingerprinting, role-gated sign-offs, and tamper prevention before any real-world mutation.
 7. **Governed Operational Execution**: Dispatches validated mitigation actions through dedicated operational adapters with strict idempotency guarantees and allowlists.
 8. **Authoritative Post-Action Verification**: Gathers post-action evidence across an authoritative source hierarchy (`REAL > ESTIMATED > SIMULATED`), deterministically verifying whether the real-world operational outcome matched business intent without permitting autonomous loops.
+9. **Executive Control Tower UI**: Provides a modern, responsive web application (Next.js App Router, Tailwind CSS v4, Lucide, Recharts) with 26+ dedicated views for real-time monitoring, triage, simulation, optimization, approvals, and quality assurance.
+10. **Continuous Quality Assurance**: Validates system integrity with 16 automated evaluation suites benchmarking against 15 versioned golden datasets to catch hallucinations, metric drift, and regression.
 
 ---
 
-## Complete End-to-End WOW Operational Flow
+## 2. Complete End-to-End Operational Flow
 
-### End-to-End Visual Architecture (Mermaid)
+### End-to-End System Architecture (Mermaid)
 
 ```mermaid
 flowchart TD
     subgraph S1["1. INGESTION & NORMALIZATION"]
-        EXT["External Telemetry Feeds<br/>(AISStream, OpenSky, TomTom, Weather, Tavily, Rail, Karrio)"]
-        NORM["Normalization & Entity Resolution Engine<br/>(Phase 5 & Phase 6: Canonical Event Model, IMO/MMSI/ICAO Matcher)"]
+        EXT["External Telemetry Feeds<br/>(AISStream, OpenSky, TomTom, Open-Meteo, Tavily, Rail, Karrio)"]
+        NORM["Normalization & Entity Resolution Engine<br/>(Canonical Event Model, Deduplication, IMO/MMSI/ICAO Matcher)"]
         EXT --> NORM
     end
 
     subgraph S2["2. MULTI-AGENT INTELLIGENCE & SCORING"]
-        RES["OSINT Research Agent<br/>(Phase 9 & 10: Tavily News Search & Hybrid RAG Retrieval)"]
-        RISK["Deterministic Risk Engine<br/>(Phase 7: Geopolitical, Climate, Transit, Financial Scoring)"]
-        ML["Predictive Machine Learning<br/>(Phase 11: LightGBM GBDT Delay Regression)"]
+        RES["OSINT Research Agent<br/>(Tavily News Search & Hybrid RAG Retrieval)"]
+        RISK["Deterministic Risk Engine<br/>(Geopolitical, Climate, Transit, Financial Scoring)"]
+        ML["Predictive Machine Learning<br/>(LightGBM GBDT Delay Regression)"]
         NORM --> RES
         NORM --> RISK
         NORM --> ML
     end
 
     subgraph S3["3. DIGITAL TWIN & SIMULATION"]
-        TWIN["Digital Twin Graph Synthesis<br/>(Phase 12: RFC 4122 UUIDv5 Topology, BFS Pathfinding)"]
-        SIM["Disruption Simulation Engine<br/>(Phase 13: Monte Carlo Cascade Stress-Testing)"]
-        OPT["Mathematical Optimization<br/>(Phase 14: Google OR-Tools Multi-Constraint MILP Solver)"]
+        TWIN["Digital Twin Graph Synthesis<br/>(RFC 4122 UUIDv5 Topology, BFS Pathfinding)"]
+        SIM["Disruption Simulation Engine<br/>(Monte Carlo Cascade Stress-Testing)"]
+        OPT["Mathematical Optimization<br/>(Google OR-Tools Multi-Constraint MILP Solver)"]
         RISK --> TWIN
         ML --> TWIN
         TWIN --> SIM
@@ -115,23 +124,35 @@ flowchart TD
     end
 
     subgraph S4["4. DECISION & HUMAN GOVERNANCE"]
-        DEC["Decision Agent<br/>(Phase 15: Ranked Mitigation Candidates & Trade-Off Matrix)"]
+        DEC["Decision Agent<br/>(Ranked Mitigation Candidates & MCDA Trade-Off Matrix)"]
         CLAUDE["Claude 3.5 Sonnet Synthesis<br/>(Domain-Grounded Justification & Trade-Off Explanation)"]
-        APPR["Human Approval Subsystem<br/>(Phase 16: Cryptographic Perimeter, Role-Gated Sign-Off)"]
+        APPR["Human Approval Perimeter<br/>(Cryptographic SHA-256 Fingerprint, Role-Gated Sign-Off)"]
         OPT --> DEC
         DEC --> CLAUDE
         CLAUDE --> APPR
     end
 
     subgraph S5["5. ACTION EXECUTION & VERIFICATION"]
-        ACT["Action Agent Execution<br/>(Phase 17: Allowlist, Idempotency Caching, Operational Adapters)"]
+        ACT["Action Agent Execution<br/>(Strict Allowlist, Idempotency Caching, Operational Adapters)"]
         AUDIT["Immutable Audit Trail<br/>(audit_logs, recommendation = EXECUTED)"]
-        VERIF["Verification Agent<br/>(Phase 18: Authoritative Post-Action Verification)"]
-        OUTCOME["Final Operational Outcome<br/>(REAL > ESTIMATED > SIMULATED, Deterministic Policy)"]
+        VERIF["Verification Agent<br/>(Authoritative Post-Action Verification: REAL > ESTIMATED > SIMULATED)"]
+        OUTCOME["Final Operational Outcome<br/>(16-Step Policy, Deterministic Outcome Code)"]
         APPR -- "APPROVED" --> ACT
         ACT --> AUDIT
         ACT --> VERIF
         VERIF --> OUTCOME
+    end
+
+    subgraph S6["6. CONTROL TOWER UI & EVALUATION HARNESS"]
+        UI["Control Tower UI (Phase 19)<br/>(Next.js App Router, 26+ Views, Real-time Dashboard, Map, Approvals)"]
+        EVAL["Evaluation & QA Harness (Phase 20)<br/>(16 Evaluation Suites, 15 Golden Datasets, MetricEngine)"]
+        NORM -.-> UI
+        RISK -.-> UI
+        TWIN -.-> UI
+        APPR <==> UI
+        ACT -.-> UI
+        VERIF -.-> UI
+        EVAL -.-> UI
     end
 
     style S1 fill:#f8fafc,stroke:#cbd5e1,stroke-width:2px
@@ -139,14 +160,15 @@ flowchart TD
     style S3 fill:#eff6ff,stroke:#93c5fd,stroke-width:2px
     style S4 fill:#fdf4ff,stroke:#f0abfc,stroke-width:2px
     style S5 fill:#fffbeb,stroke:#fde68a,stroke-width:2px
+    style S6 fill:#f5f3ff,stroke:#c4b5fd,stroke-width:2px
 ```
 
-### Real-World Incident Scenario Walkthrough
+### Real-World Disruption Scenario Walkthrough
 
-To understand the platform's power, consider a Category 4 Typhoon (*Muifa*) approaching the East China Sea, threatening Ningbo-Zhoushan Port:
+Consider a Category 4 Super Typhoon (*Muifa*) approaching the East China Sea, threatening Ningbo-Zhoushan Port:
 
 1. **Ingestion & Resolution (Phases 5 & 6)**:
-   - Open-Meteo transmits gale-force wind alerts (>45 knots) and 6-meter wave height forecasts for coastal Zhejiang.
+   - Open-Meteo transmits gale-force wind alerts (>50 knots) and 7-meter wave height forecasts for coastal Zhejiang.
    - AISStream transmits real-time GPS coordinates and speed of container vessel *MSC Oscar* (IMO: 9703291), decelerating 40 nautical miles southeast of Ningbo.
    - The normalization engine correlates telemetry with `shipment_id = "shp_oscar_001"` carrying critical lithium battery cells bound for a Munich automotive factory.
 2. **Multi-Factor Risk & ML Delay Prediction (Phases 7, 8, 10, 11)**:
@@ -160,11 +182,11 @@ To understand the platform's power, consider a Category 4 Typhoon (*Muifa*) appr
    - Phase 14 Google OR-Tools MILP solver evaluates alternate transit corridors, carrier availability, and port congestion indices.
    - Solver identifies an optimal bypass: Reroute *MSC Oscar* to discharge containers at **Port of Busan (South Korea)**, followed by expedited air freight for critical components to Munich.
    - Phase 15 Decision Agent ranks Candidate #1 (`SHIPMENT_REROUTE` to Busan + `EXPEDITE_SHIPMENT` for critical sub-lots) with an overall utility score of `0.92`, saving 78 hours of transit time at an incremental cost of `$45,000`.
-   - Claude 3.5 Sonnet formats an executive-ready operational mitigation brief.
+   - Claude 3.5 Sonnet formats an executive-ready operational mitigation brief explaining all trade-offs.
 5. **Human Approval Perimeter (Phase 16)**:
    - The recommendation triggers a mandatory human approval perimeter requiring `RiskManager` authorization.
    - The payload is locked with a SHA-256 state fingerprint `a8f9...4c21`.
-   - An authorized Risk Manager inspects the trade-off matrix on the platform and issues an `APPROVED` decision with cryptographic signature.
+   - An authorized Risk Manager inspects the trade-off matrix on the Control Tower Web UI and issues an `APPROVED` decision with cryptographic signature.
 6. **Governed Operational Execution (Phase 17)**:
    - Phase 17 Action Agent receives the approved command, validates against the strict operational allowlist, verifies role RBAC, and enforces idempotency via SHA-256 command hashing.
    - `ShipmentRerouteExecutor` executes the reroute adapter, updating operational consignment records, reassigning target waypoint coordinates to Busan, and emitting carrier EDI change orders.
@@ -175,18 +197,21 @@ To understand the platform's power, consider a Category 4 Typhoon (*Muifa*) appr
    - Confirms vessel trajectory altered to 035° heading toward Busan, speed stabilized at 18.2 knots, and carrier booking confirmed.
    - Verification policy evaluates outcome as `VERIFIED` with zero conflicting evidence.
    - The workflow cleanly halts at `selected_route = "termination"`, guaranteeing zero autonomous infinite loops.
+8. **Real-Time Visibility & Continuous QA (Phases 19 & 20)**:
+   - The Control Tower UI immediately updates the shipment's live waypoint, risk status, and execution audit badge on the live dashboard and geospatial map.
+   - The Phase 20 Evaluation Harness continuously benchmarks the multi-agent pipeline against golden datasets, verifying zero metric drift or hallucination regressions.
 
 ---
 
-## Master Roadmap & Implementation Status (Phases 1–21)
+## 3. Master Roadmap & Implementation Status (Phases 1–21)
 
 | Phase | Subsystem | Technical Scope & Architectural Capabilities | Status | Automated Test Suite |
 | :---: | :--- | :--- | :---: | :---: |
 | **01** | **Foundation Architecture** | Monorepo layout, Pydantic V2 settings, async context, structured JSON logging, error taxonomy | **COMPLETE** | 100% |
 | **02** | **Database & Models** | 34 SQLAlchemy 2.0 ORM models, 26 PostgreSQL enums, foreign keys, Alembic migrations, tenant isolation | **COMPLETE** | 100% (32 tests) |
-| **03** | **Google Authentication** | OAuth2 code-grant flow, secure HTTP-only cookies, JWT verification, 5-role RBAC security matrix | **COMPLETE** | 100% |
+| **03** | **Google Authentication** | OAuth2 code-grant flow, secure HTTP-only cookies, JWT verification, 5-role RBAC security matrix | **COMPLETE** | 100% (739 tests) |
 | **04** | **Core Domain APIs** | Clean Architecture repositories, Unit of Work, 67 REST endpoints across 103 operations | **COMPLETE** | 100% (48 tests) |
-| **05** | **External Ingestion** | 7 telemetry connectors: AISStream, OpenSky, TomTom, Weather, Tavily, Rail, Karrio | **COMPLETE** | 100% |
+| **05** | **External Ingestion** | 7 telemetry connectors: AISStream, OpenSky, TomTom, Open-Meteo, Tavily, Rail, Karrio | **COMPLETE** | 100% (120 tests) |
 | **06** | **Normalization Engine** | Canonical event transformations, entity resolution engine, IMO/MMSI/ICAO correlation | **COMPLETE** | 100% |
 | **07** | **Risk Engine** | Multi-factor deterministic risk scoring (Geopolitical, Climate, Transit, Financial), threshold alerts | **COMPLETE** | 100% (515 tests) |
 | **08** | **Hybrid RAG** | Document chunking, AWS Bedrock Titan text embeddings (1536d), pgvector cosine + BM25 keyword search | **COMPLETE** | 100% (221 tests) |
@@ -199,14 +224,14 @@ To understand the platform's power, consider a Category 4 Typhoon (*Muifa*) appr
 | **15** | **Decision Agent** | Multi-criteria mitigation evaluation, ranked candidate generation, Claude domain synthesis | **COMPLETE** | 100% (57 tests) |
 | **16** | **Human Approval** | Mandatory sign-off perimeter, cryptographic SHA-256 fingerprinting, tamper prevention | **COMPLETE** | 100% (29 tests) |
 | **17** | **Action Agent** | Governed execution, strict allowlist, idempotency caching, operational adapters (Reroute, Hold, etc.) | **COMPLETE** | 100% (69 tests) |
-| **18** | **Verification Agent** | Post-action operational outcome verification, precedence hierarchy (REAL > ESTIMATED > SIMULATED), deterministic idempotency, fail-closed policy | **COMPLETE** | 100% (36 tests) |
-| *19* | *Control Tower UI* | Real-time global dashboard, digital twin canvas, approval center, live telemetry layers | *ROADMAP* | — |
-| *20* | *Evaluation Harness* | Continuous multi-agent benchmark, hallucination detection, regression evaluation | *ROADMAP* | — |
-| *21* | *Production Hardening* | AWS VPC peering, AWS KMS envelope encryption, rate limiting, enterprise HA clustering | *ROADMAP* | — |
+| **18** | **Verification Agent** | Post-action outcome verification, precedence hierarchy (`REAL > ESTIMATED > SIMULATED`), fail-closed policy | **COMPLETE** | 100% (36 tests) |
+| **19** | **Control Tower Web UI** | Next.js App Router, 26+ pages, responsive dark/light control room interface, live telemetry, approval center | **COMPLETE** | 100% (39 tests) |
+| **20** | **Evaluation Framework** | Continuous multi-agent benchmark, 16 test suites, 15 golden datasets, MetricEngine, runner API | **COMPLETE** | 100% (37 tests) |
+| *21* | *Production Hardening* | AWS VPC peering, AWS KMS envelope encryption, rate limiting, enterprise HA clustering, CI/CD pipelines | *ROADMAP* | — |
 
 ---
 
-## Authoritative Repository Layout
+## 4. Authoritative Monorepo Layout
 
 RiskWise 2.0 maintains a strictly partitioned, modular monorepo structure:
 
@@ -215,8 +240,8 @@ riskwise/
 ├── .agents/                                   # Antigravity agent skills, plugins, and custom tooling
 ├── .env.example                               # Comprehensive environment configuration template
 ├── .gitignore                                 # Git ignore patterns for Python, Node, caches, and storage
-├── AGENTS.md                                  # Agent development guidelines and framework rules
-├── CLAUDE.md                                  # Claude code assistant workspace rules and commands
+├── AGENTS.md                                  # Next.js and agent framework development rules
+├── CLAUDE.md                                  # Code assistant workspace rules and commands
 ├── README.md                                  # Authoritative Master Project Documentation
 ├── credentials.json                           # Google OAuth2 client secrets template
 │
@@ -240,204 +265,101 @@ riskwise/
 │   │   │   ├── recovery.py                    # Fallback, retry, and node-level recovery policies
 │   │   │   ├── security.py                    # Agent action RBAC scopes and authorization guards
 │   │   │   ├── validator.py                   # State boundary and contract invariant validator
-│   │   │   │
-│   │   │   ├── verification/                  # Phase 18: Operational Verification Agent
-│   │   │   │   ├── agent.py                   # Core VerificationAgent orchestrator
-│   │   │   │   ├── contract.py                # VerificationCommand, VerificationResultPayload, enums, fingerprinting
-│   │   │   │   ├── errors.py                  # Strongly-typed verification domain error hierarchy
-│   │   │   │   ├── evidence.py                # Read-only authoritative evidence collection & temporal filtering
-│   │   │   │   ├── node.py                    # LangGraph node execution function (AgentStage.VERIFICATION)
-│   │   │   │   ├── persistence.py             # Transactional persistence & idempotency manager
-│   │   │   │   ├── policy.py                  # 16-step deterministic outcome evaluation policy
-│   │   │   │   └── verifiers.py               # Specialized domain verifiers for all 6 action types
-│   │   │   │
 │   │   │   ├── action/                        # Phase 17: Operational Action Agent & Adapters
-│   │   │   │   ├── agent.py                   # Core ActionAgent orchestrator
-│   │   │   │   ├── contract.py                # ActionCommand, ActionResult, enums & fingerprinting
-│   │   │   │   ├── errors.py                  # Strongly-typed action domain error hierarchy
-│   │   │   │   ├── executors.py               # Operational domain executors (Reroute, Reallocate, Expedite, etc.)
-│   │   │   │   ├── node.py                    # LangGraph node execution function (AgentStage.ACTION)
-│   │   │   │   ├── persistence.py             # Transactional persistence & recommendation status update
-│   │   │   │   └── policy.py                  # Safety allowlist, role checks & approval binding
-│   │   │   │
 │   │   │   ├── approval/                      # Phase 16: Human Approval Governance Agent
 │   │   │   ├── decision/                      # Phase 15: Mitigation Decision Agent
 │   │   │   ├── prediction/                    # Delay Forecasting Agent (Phases 9 & 11)
 │   │   │   ├── research/                      # OSINT Intelligence & News Research Agent (Phases 9 & 10)
 │   │   │   ├── risk/                          # Real-Time Composite Risk Evaluation Agent (Phase 9)
-│   │   │   └── scenario/                      # What-If Disruption Scenario Agent (Phase 9)
+│   │   │   ├── scenario/                      # What-If Disruption Scenario Agent (Phase 9)
+│   │   │   └── verification/                  # Phase 18: Operational Verification Agent
 │   │   │
-│   │   ├── api/                               # REST API Layer (67 Endpoints across 103 Operations)
+│   │   ├── api/                               # REST API Layer (75+ Endpoints across 23 Controllers)
 │   │   │   ├── deps.py                        # Dependencies (DB session, current user, tenant & RBAC guards)
 │   │   │   └── v1/
-│   │   │       ├── router.py                  # Consolidated v1 APIRouter registering 22 domain controllers
-│   │   │       └── endpoints/                 # Domain REST controllers
-│   │   │           ├── actions.py             # POST /actions/{id}/execute, GET /actions, GET /actions/{id}
-│   │   │           ├── approvals.py           # POST /approvals, GET /approvals/{id}
-│   │   │           ├── audit_logs.py          # GET /audit-logs
-│   │   │           ├── auth.py                # Google OAuth2 login, callback, session verification, logout
-│   │   │           ├── carriers.py            # Logistics carrier profiles and reliability ratings
-│   │   │           ├── factories.py           # Manufacturing plants and operational throughput
-│   │   │           ├── health.py              # Liveness, readiness, and database connectivity probes
-│   │   │           ├── incidents.py           # Disruption event reporting, tracking, and resolution
-│   │   │           ├── inventory.py           # Real-time stock levels and safety buffer metrics
-│   │   │           ├── inventory_movements.py # Stock transfer history and inbound/outbound adjustments
-│   │   │           ├── notifications.py       # Multi-channel alert dispatch and delivery
-│   │   │           ├── ports.py               # Maritime container terminals and dwell times
-│   │   │           ├── products.py            # SKU catalog, bills of materials, and criticality
-│   │   │           ├── recommendations.py     # Mitigation options and recommendation review
-│   │   │           ├── risk_assessments.py    # Multi-factor risk evaluations and scores
-│   │   │           ├── risk_factors.py        # Granular geopolitical, climate, transit risk drivers
-│   │   │           ├── risks.py               # Active operational risks and exposure tracking
-│   │   │           ├── routes.py              # Multi-modal transport corridors and lanes
-│   │   │           ├── shipment_events.py     # Waypoint milestones and tracking history
-│   │   │           ├── shipments.py           # Consignment lifecycle, ETA calculation, and delays
-│   │   │           ├── supplier_sites.py      # Vendor manufacturing facilities and geographic coordinates
-│   │   │           ├── suppliers.py           # Tier-1/2/3 vendor organizational profiles
-│   │   │           ├── verification_results.py# POST /verification-results/verify, GET /verification-results
-│   │   │           └── warehouses.py          # Regional distribution centers and hubs
+│   │   │       ├── router.py                  # Consolidated v1 APIRouter registering all domain controllers
+│   │   │       └── endpoints/                 # Domain REST controllers (auth, shipments, risks, evaluations, etc.)
 │   │   │
-│   │   ├── core/                              # Cross-Cutting Infrastructure
-│   │   │   ├── config.py                      # Pydantic V2 BaseSettings loaded from .env
-│   │   │   ├── errors.py                      # Global exception handlers and error envelopes
-│   │   │   └── logging.py                     # Structured JSON logging configuration
-│   │   │
-│   │   ├── db/                                # Database Connectivity & Session Lifecycle
-│   │   │   ├── base.py                        # DeclarativeBase model registry
-│   │   │   └── session.py                     # SQLAlchemy session factory and connection verification
-│   │   │
-│   │   ├── digital_twin/                      # Phase 12: Digital Twin Graph Subsystem
-│   │   │   ├── builder.py                     # Graph synthesis from relational DB models
-│   │   │   ├── contracts.py                   # TwinNode, TwinEdge, GraphSnapshot schemas
-│   │   │   ├── pathfinding.py                 # Bounded BFS and alternate route pathfinders
-│   │   │   └── query.py                       # Topological query engine and bottleneck identification
-│   │   │
-│   │   ├── simulation/                        # Phase 13: Disruption Simulation Engine
-│   │   │   ├── engine.py                      # Monte Carlo perturbation propagation engine
-│   │   │   ├── scenarios.py                   # Port closure, carrier insolvency, weather shock generators
-│   │   │   └── contracts.py                   # SimulationConfig, CascadeResult schemas
-│   │   │
-│   │   ├── optimization/                      # Phase 14: Mathematical Optimization Subsystem
-│   │   │   ├── solver.py                      # Google OR-Tools MILP solver engine
-│   │   │   ├── constraints.py                 # Capacity, lead-time, budget, inventory balance models
-│   │   │   └── contracts.py                   # OptimizationProblem, OptimizationSolution schemas
+│   │   ├── core/                              # Cross-Cutting Infrastructure (config, errors, logging)
+│   │   ├── db/                                # Database Connectivity & Session Lifecycle (base, session)
+│   │   ├── digital_twin/                      # Phase 12: Digital Twin Graph Subsystem (builder, pathfinding, query)
+│   │   ├── evaluation/                        # Phase 20: Evaluation & QA Framework
+│   │   │   ├── contracts.py                   # Strongly-typed evaluation contracts and schemas
+│   │   │   ├── errors.py                      # Evaluation domain exceptions
+│   │   │   ├── metrics.py                     # MetricEngine: precision, recall, F1, latency, hallucination detection
+│   │   │   ├── runner.py                      # EvaluationRunner orchestrator
+│   │   │   ├── datasets/                      # Versioned golden benchmark datasets & registry
+│   │   │   │   ├── contracts.py               # Dataset schemas
+│   │   │   │   ├── registry.py                # DatasetRegistry singleton
+│   │   │   │   └── golden/                    # 15 domain-specific golden test cases
+│   │   │   └── suites/                        # 16 specialized deterministic evaluation suites
 │   │   │
 │   │   ├── integrations/                      # Phase 5: External Ingestion Connectors (7 Providers)
-│   │   │   ├── aisstream.py                   # Live maritime vessel AIS WebSocket connector
-│   │   │   ├── opensky.py                     # ADS-B aviation flight tracking REST connector
-│   │   │   ├── tomtom.py                      # Road traffic congestion and routing connector
-│   │   │   ├── openweather.py                 # Marine and terrestrial weather forecast connector
-│   │   │   ├── tavily.py                      # OSINT global news and intelligence search connector
-│   │   │   ├── rail.py                        # Rail corridor delay and schedule tracking connector
-│   │   │   └── karrio.py                      # Multi-carrier logistics EDI & shipping label connector
-│   │   │
-│   │   ├── normalization/                     # Phase 6: Telemetry Normalization & Entity Correlation
-│   │   │   ├── canonical.py                   # CanonicalEvent model and standard payloads
-│   │   │   ├── entity_resolution.py           # IMO, MMSI, ICAO, UN/LOCODE matching algorithms
-│   │   │   └── deduplication.py               # Sliding-window SHA-256 telemetry deduplicator
-│   │   │
-│   │   ├── risk_engine/                       # Phase 7: Deterministic Multi-Factor Risk Engine
-│   │   │   ├── engine.py                      # Composite risk scoring orchestrator
-│   │   │   ├── factors.py                     # Geopolitical, climate, transit, financial evaluators
-│   │   │   └── alerts.py                      # Risk threshold evaluation and escalation triggers
-│   │   │
-│   │   ├── rag/                               # Phase 8: Hybrid RAG Knowledge Engine & Vector Search
-│   │   │   ├── chunking.py                    # Semantic document chunking with metadata preservation
-│   │   │   ├── embeddings.py                  # AWS Bedrock Titan text embeddings client (1536d)
-│   │   │   ├── vector_store.py                # PostgreSQL pgvector similarity search repository
-│   │   │   ├── hybrid_search.py               # Reciprocal Rank Fusion (RRF) of vector + BM25 search
-│   │   │   └── context_assembler.py           # Grounded context assembly with source citations
-│   │   │
 │   │   ├── llm/                               # Phase 10: AWS Bedrock & Claude 3.5 Sonnet Integration
-│   │   │   ├── client.py                      # AWS Bedrock Anthropic Claude client
-│   │   │   ├── prompts.py                     # Domain-grounded prompt templates
-│   │   │   ├── schemas.py                     # Pydantic structured output validation schemas
-│   │   │   └── security.py                    # Prompt injection detection and PII scrubbing
-│   │   │
 │   │   ├── ml/                                # Phase 11: Machine Learning Shipment Delay Regression
-│   │   │   ├── features.py                    # Feature engineering pipeline (distances, weather, historical)
-│   │   │   ├── dataset.py                     # Training dataset generator and split validation
-│   │   │   ├── model.py                       # LightGBM GBDT regression estimator wrapper
-│   │   │   └── registry.py                    # Local artifact registry, versioning & fallback manager
-│   │   │
-│   │   ├── models/                            # SQLAlchemy 2.0 ORM Models (Strictly 34 Tables)
-│   │   │   ├── organization.py                # Multi-tenant organization model
-│   │   │   ├── user.py                        # User account and role assignment model
-│   │   │   ├── supplier.py                    # Supplier and tier classification model
-│   │   │   ├── supplier_site.py               # Vendor manufacturing site model
-│   │   │   ├── factory.py                     # Internal assembly plant model
-│   │   │   ├── warehouse.py                   # Regional distribution center model
-│   │   │   ├── port.py                        # Maritime terminal, airport, and inland port model
-│   │   │   ├── route.py                       # Multi-modal transit corridor model
-│   │   │   ├── carrier.py                     # Freight carrier and reliability rating model
-│   │   │   ├── product.py                     # SKU catalog and criticality model
-│   │   │   ├── bill_of_materials.py           # Multi-level product component dependencies
-│   │   │   ├── inventory_item.py              # Facility stock level and safety buffer model
-│   │   │   ├── inventory_movement.py          # Inbound/outbound stock transfer ledger
-│   │   │   ├── shipment.py                    # Consignment lifecycle, ETA, and delay tracking model
-│   │   │   ├── shipment_event.py              # Telemetry tracking milestone event model
-│   │   │   ├── risk.py                        # Identified operational risk exposure model
-│   │   │   ├── risk_factor.py                 # Granular risk driver assessment model
-│   │   │   ├── risk_assessment.py             # Time-stamped composite risk evaluation model
-│   │   │   ├── incident.py                    # Disruption incident lifecycle model
-│   │   │   ├── incident_update.py             # Incident milestone progress update model
-│   │   │   ├── twin_node.py                   # Digital twin graph node snapshot model
-│   │   │   ├── twin_edge.py                   # Digital twin graph edge relationship model
-│   │   │   ├── simulation.py                  # Disruption simulation scenario configuration model
-│   │   │   ├── simulation_result.py           # Simulation outcome, cascade, and financial loss model
-│   │   │   ├── optimization_run.py            # Mathematical solver configuration and run model
-│   │   │   ├── recommendation.py              # Mitigation recommendation option model
-│   │   │   ├── approval.py                    # Cryptographic human sign-off audit model
-│   │   │   ├── action.py                      # Operational execution command and adapter log model
-│   │   │   ├── verification_result.py         # Authoritative post-action outcome verification model
-│   │   │   ├── audit_log.py                   # Immutable security and compliance audit log model
-│   │   │   ├── notification.py                # User alert dispatch and delivery record model
-│   │   │   ├── agent_run.py                   # LangGraph multi-agent execution session model
-│   │   │   ├── document.py                    # RAG document metadata and ingest status model
-│   │   │   └── document_chunk.py              # RAG chunk content and vector embedding model
-│   │   │
-│   │   ├── repositories/                      # Clean Architecture Data Access Repositories
-│   │   │   ├── base.py                        # Generic CRUD repository with tenant fencing
-│   │   │   └── uow.py                         # Unit of Work transactional manager
-│   │   │
-│   │   └── schemas/                           # Pydantic V2 Request & Response Data Transfer Objects
+│   │   ├── models/                            # SQLAlchemy 2.0 ORM Models (34 Core + 2 Evaluation)
+│   │   ├── normalization/                     # Phase 6: Telemetry Normalization & Entity Correlation
+│   │   ├── optimization/                      # Phase 14: Mathematical Optimization Subsystem (OR-Tools)
+│   │   ├── rag/                               # Phase 8: Hybrid RAG Knowledge Engine & Vector Search
+│   │   ├── repositories/                      # Clean Architecture Repositories & Unit of Work
+│   │   ├── risk_engine/                       # Phase 7: Deterministic Multi-Factor Risk Engine
+│   │   ├── schemas/                           # Pydantic V2 Request & Response Data Transfer Objects
+│   │   ├── services/                          # Business logic service layer
+│   │   └── simulation/                        # Phase 13: Disruption Simulation Engine
 │   │
-│   └── tests/                                 # Comprehensive Backend Test Suite (4,506 Passing Tests)
+│   └── tests/                                 # Comprehensive Backend Test Suite (4,543 Passing Tests)
 │
-├── web/                                       # Frontend Web Application (Next.js 14, React, Tailwind CSS)
-│   ├── app/                                   # Next.js App Router layout and pages
-│   ├── components/                            # Reusable UI component library
-│   ├── lib/                                   # API client, auth utilities, and state hooks
+├── web/                                       # Control Tower Web Application (Next.js App Router, React 19, Tailwind v4)
+│   ├── app/                                   # Next.js App Router layout and 26+ functional pages
+│   │   ├── actions/                           # Operational action dispatch console
+│   │   ├── admin/                             # System administration & tenant config
+│   │   ├── approvals/                         # Human-in-the-loop cryptographic approval center
+│   │   ├── audit/                             # Regulatory compliance & security audit ledger
+│   │   ├── auth/                              # Authentication & Google OAuth2 sign-in
+│   │   ├── carriers/                          # Logistics carrier management & reliability ratings
+│   │   ├── dashboard/                         # Executive command center & real-time KPI overview
+│   │   ├── decisions/                         # Decision agent mitigation proposals & trade-off review
+│   │   ├── digital-twin/                      # Interactive supply chain network graph canvas
+│   │   ├── evaluation/                        # Quality assurance, benchmark suites & golden datasets
+│   │   ├── factories/                         # Internal manufacturing plant capacity & assembly lines
+│   │   ├── incidents/                         # Incident management, triage, and timeline investigation
+│   │   ├── inventory/                         # Facility stock levels & safety buffer monitoring
+│   │   ├── map/                               # Live global geospatial telemetry map
+│   │   ├── notifications/                     # Multi-channel alert feeds & escalation tracking
+│   │   ├── optimization/                      # Mathematical optimization solver console & Pareto curves
+│   │   ├── ports/                             # Maritime container terminals & dwell times
+│   │   ├── products/                          # SKU master catalog & bill of materials hierarchy
+│   │   ├── recommendations/                   # Mitigation options management & scoring
+│   │   ├── risks/                             # Multi-factor risk radar & exposure tracking
+│   │   ├── routes/                            # Multimodal transit corridors & lead times
+│   │   ├── shipments/                         # Consignment lifecycle, ETA, & telemetry tracking
+│   │   ├── simulations/                       # Monte Carlo disruption simulation studio
+│   │   ├── suppliers/                         # Tier-1/2/3 vendor organizational profiles
+│   │   ├── verification/                      # Ground-truth post-action verification console
+│   │   └── warehouses/                        # Regional distribution centers & storage buffers
+│   ├── components/                            # Reusable UI component library (cards, charts, modals, badges)
+│   ├── lib/                                   # API client, TypeScript contracts, auth utilities
+│   │   └── api/                               # Unified type-safe API client (client.ts, types.ts)
+│   ├── tests/                                 # Frontend integration & logic test suite (39 Passing Tests)
 │   └── package.json                           # Frontend package dependencies and scripts
 │
-└── docs/                                      # Full Architecture & Technical Specification Index
+└── docs/                                      # Full Architecture & Technical Specification Index (70+ docs)
     ├── RiskWise_2.0_Technical_Project_Spec.md # Master Technical Project Architecture Specification
+    ├── RiskWise_2.0_UI_UX_Design_System.md    # Master UI/UX Design System Specification
     ├── database-schema-inventory.md           # Authoritative 34-table relational database inventory
     ├── authentication-architecture.md         # Google OAuth2, multi-tenancy & RBAC governance
-    ├── phase5-canonical-event-model.md        # Telemetry ingestion connectors specification
-    ├── phase6-normalization-architecture.md   # Event normalization and entity resolution
-    ├── phase7-risk-engine-architecture.md     # Deterministic multi-factor risk scoring
-    ├── phase8-rag-architecture-contracts.md   # Hybrid RAG and vector storage architecture
-    ├── phase9-langgraph-agent-state-contract.md # LangGraph multi-agent state contracts
-    ├── phase10-bedrock-claude.md              # AWS Bedrock Claude 3.5 Sonnet integration
-    ├── phase11-ml.md                          # Predictive machine learning delay estimator
-    ├── phase12-digital-twin.md                # Digital Twin graph synthesis and query engine
-    ├── phase13-simulation.md                  # Disruption simulation and scenario engine
-    ├── phase14-optimization.md                # OR-Tools mathematical optimization solver
-    ├── phase15-decision-agent.md              # Mitigation decision agent and option ranking
-    ├── phase16-human-approval.md              # Human governance and approval subsystem
-    ├── phase17-action-agent.md                # Operational action agent and execution adapters
-    └── phase18-verification-agent.md          # Post-action verification agent and outcome evidence
+    ├── phase18-verification-agent.md          # Post-action verification agent and outcome evidence
+    └── ...                                    # Complete phase-by-phase design specifications
 ```
 
 ---
 
-## The 10 Core System Invariants & Safety Discipline
+## 5. The 10 Core Architectural Invariants & Safety Discipline
 
 To guarantee enterprise compliance, deterministic outcomes, and prevent catastrophic automated actions, RiskWise 2.0 strictly enforces ten architectural invariants:
 
 1. **Singular Source of Truth Authority**: Operational database tables (`suppliers`, `shipments`, `inventory`, `ports`, `factories`) are the singular source of truth. External telemetry, digital twin graphs, and simulation outputs are derivative projections.
-2. **Zero Schema Drift Guarantee**: Exactly **34 database tables** and **26 enum domains** are maintained across all roadmap phases with zero uncoordinated migrations or schema modifications.
+2. **Zero Schema Drift Guarantee**: Exactly **34 database tables** and **26 enum domains** are maintained across all core operational models with zero uncoordinated migrations. Evaluation persistence is strictly isolated in a dedicated `EvaluationBase` to prevent operational table pollution.
 3. **Strict Multi-Tenant Isolation**: Every database query, API route, Digital Twin snapshot, simulation run, agent execution, and operational action is strictly scoped by `organization_id`. Tenant boundaries are verified in SQL queries, ORM layers, and API dependencies.
 4. **Mandatory Human Approval Perimeter**: No operational action can execute without an authentic, unexpired `ApprovalResult` in `APPROVED` status signed by an authorized human role (`RiskManager` or `Admin`).
 5. **Phase Boundary Separation**:
@@ -453,42 +375,42 @@ To guarantee enterprise compliance, deterministic outcomes, and prevent catastro
 
 ---
 
-## Detailed Technical Deep-Dive of All 18 Completed Subsystems
+## 6. Detailed Technical Deep-Dive of All 20 Completed Subsystems
 
 ### Phase 01: Core Foundation & Framework Architecture
 - **Purpose**: Establishes the enterprise monorepo foundation, environment configuration, structured logging, and centralized error envelopes.
-- **Key Features**:
+- **Key Capabilities**:
   - Pydantic V2 `BaseSettings` supporting strict type parsing from `.env` files.
   - Asynchronous application context management with graceful startup and shutdown hooks.
   - High-performance structured JSON logging with correlation IDs (`request_id`, `trace_id`).
   - Standardized JSON:API error envelopes preventing stack trace leakage.
 
-### Phase 02: Database Schema & Relational Integrity
+### Phase 02: Relational Database Schema & Domain Integrity
 - **Purpose**: Defines the authoritative relational foundation for the entire enterprise supply chain data model.
-- **Key Features**:
+- **Key Capabilities**:
   - Exactly 34 SQLAlchemy 2.0 ORM declarative models.
   - 26 PostgreSQL domain enums ensuring strict value domain integrity.
   - Foreign key constraints, cascade controls, and composite indexing on `(organization_id, id)`.
   - Alembic database migration management configured for AWS RDS PostgreSQL 16.
 
-### Phase 03: Google Authentication & Enterprise RBAC
+### Phase 03: Google Authentication & Enterprise RBAC Governance
 - **Purpose**: Governs identity, multi-tenant boundaries, and role-based access control.
-- **Key Features**:
+- **Key Capabilities**:
   - Secure Google OAuth2 code exchange flow.
   - Tamper-proof HTTP-only, SameSite cookies carrying signed JWT session tokens.
   - 5-role enterprise RBAC matrix: `Admin`, `RiskManager`, `OpsManager`, `Analyst`, `Viewer`.
   - Automated tenant context injection enforcing cross-tenant query prevention.
 
-### Phase 04: Core Domain APIs & Clean Architecture
+### Phase 04: Core Domain REST APIs & Clean Architecture
 - **Purpose**: Provides high-throughput REST CRUD services across all core business entities.
-- **Key Features**:
+- **Key Capabilities**:
   - Clean Architecture pattern: Repositories -> Unit of Work -> Services -> Routers.
   - 67 REST endpoints across 103 operations and 22 controllers.
   - Full OpenAPI 3.1 specification auto-generation with interactive Swagger UI.
 
-### Phase 05: External Telemetry Ingestion Connectors
+### Phase 05: External Multimodal Telemetry Ingestion Connectors
 - **Purpose**: Ingests real-world global telemetry across maritime, aviation, road, rail, weather, and news channels.
-- **Key Features**:
+- **Key Capabilities**:
   - **AISStream Connector**: Ingests real-time maritime AIS transponder messages (MMSI, coordinates, SOG, COG).
   - **OpenSky Connector**: Polls ADS-B flight tracking data for air freight consignments.
   - **TomTom Connector**: Captures highway congestion indices, road incidents, and transit delays.
@@ -497,138 +419,180 @@ To guarantee enterprise compliance, deterministic outcomes, and prevent catastro
   - **Rail Connector**: Ingests intermodal rail corridor throughput and terminal delays.
   - **Karrio Connector**: Connects multi-carrier logistics APIs for status milestones and tracking updates.
 
-### Phase 06: Event Normalization & Entity Resolution
+### Phase 06: Event Normalization, Deduplication & Entity Resolution
 - **Purpose**: Translates heterogeneous telemetry streams into a canonical, deduplicated event format linked to operational entities.
-- **Key Features**:
+- **Key Capabilities**:
   - Canonical Event Model schema unifying timestamp, coordinate, source, and payload attributes.
   - High-accuracy entity resolution matching IMO/MMSI to `shipments`, ICAO to air freight, and UN/LOCODE to `ports`.
   - Sliding-window SHA-256 telemetry deduplication rejecting redundant or out-of-order frames.
 
-### Phase 07: Deterministic Multi-Factor Risk Engine
+### Phase 07: Deterministic Multi-Factor Risk Scoring Engine
 - **Purpose**: Computes objective, reproducible risk scores across supply chain assets and transit lanes.
-- **Key Features**:
+- **Key Capabilities**:
   - 4 independent risk dimensions: **Geopolitical**, **Climate & Natural Hazards**, **Transit Congestion**, **Financial & Supplier Health**.
   - Calibrated deterministic weighting: `RiskScore = w_geo*S_geo + w_cli*S_cli + w_tra*S_tra + w_fin*S_fin`.
   - Dynamic threshold alerting generating automated incident candidates when risk exceeds tolerance bounds.
 
 ### Phase 08: Hybrid RAG Knowledge Engine & Vector Search
 - **Purpose**: Enhances reasoning with contextual enterprise knowledge, SOPs, and carrier contracts.
-- **Key Features**:
+- **Key Capabilities**:
   - Document chunking with semantic overlap and metadata preservation.
   - AWS Bedrock Titan text embeddings (`amazon.titan-embed-text-v1`) generating 1536-dimensional vectors.
   - Hybrid retrieval combining PostgreSQL `pgvector` cosine similarity with BM25 full-text search via Reciprocal Rank Fusion (RRF).
   - Context assembly ensuring every extracted fact includes source document and section citations.
 
-### Phase 09: LangGraph Multi-Agent Orchestration
+### Phase 09: LangGraph Multi-Agent Orchestration Framework
 - **Purpose**: Orchestrates specialized autonomous agents in a reliable, cyclic state machine.
-- **Key Features**:
+- **Key Capabilities**:
   - Immutable `AgentGraphState` contract with strict field ownership rules.
   - 6 core agent nodes: **Detection**, **Research**, **Risk Evaluation**, **Prediction**, **Scenario Analysis**, **Optimization**.
   - Deterministic routing edges with cycle counters and maximum iteration halts.
 
-### Phase 10: AWS Bedrock & Claude 3.5 Sonnet Integration
+### Phase 10: AWS Bedrock & Claude 3.5 Sonnet Reasoning Layer
 - **Purpose**: Supplies domain-grounded generative reasoning and structured synthesis.
-- **Key Features**:
+- **Key Capabilities**:
   - Direct integration with Anthropic Claude 3.5 Sonnet on AWS Bedrock.
   - Pydantic structured output validation with retry schemas.
   - Prompt sanitization stripping prompt-injection attempts and PII.
   - Deterministic fallbacks ensuring business continuity when LLM endpoints are unreachable.
 
-### Phase 11: Machine Learning Shipment Delay Regression
+### Phase 11: Machine Learning Shipment Delay Regression (LightGBM)
 - **Purpose**: Forecasts quantitative consignment arrival delays using supervised machine learning.
-- **Key Features**:
+- **Key Capabilities**:
   - Feature engineering pipeline computing distance, carrier reliability, congestion, and weather indices.
   - LightGBM Gradient-Boosted Decision Tree (GBDT) regression models trained on historical shipping logs.
   - Model registry managing semantic model versioning, artifacts, and graceful fallback heuristics.
 
-### Phase 12: Digital Twin Supply Chain Graph Engine
+### Phase 12: Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)
 - **Purpose**: Synthesizes a unified topological graph of the entire supply chain network.
-- **Key Features**:
+- **Key Capabilities**:
   - RFC 4122 UUIDv5 deterministic node and edge identity generation.
   - 6 node types (`SUPPLIER`, `SUPPLIER_SITE`, `FACTORY`, `WAREHOUSE`, `PORT`, `CUSTOMER`).
   - 4 edge types (`FLOW`, `DEPENDENCY`, `TRANSPORT`, `CONTRACT`).
   - Bounded breadth-first search (BFS) pathfinding detecting single points of failure and bottlenecks.
 
-### Phase 13: Disruption Simulation & Cascade Engine
+### Phase 13: Disruption Simulation & Monte Carlo Cascade Engine
 - **Purpose**: Quantifies systemic operational shock propagation across the supply chain network.
-- **Key Features**:
+- **Key Capabilities**:
   - Monte Carlo simulation engine executing hundreds of perturbation iterations.
   - Cascade modeling across inventory buffer depletion, production stoppage, and revenue exposure.
   - Scenario definitions for port strikes, canal blockages, supplier insolvency, and extreme storms.
 
-### Phase 14: Mathematical Optimization Subsystem
+### Phase 14: Mathematical Optimization Subsystem (Google OR-Tools MILP)
 - **Purpose**: Solves multi-objective resource reallocation problems with mathematical precision.
-- **Key Features**:
+- **Key Capabilities**:
   - Google OR-Tools mixed-integer linear programming (MILP) solver.
   - Multi-constraint modeling: factory throughput limits, carrier vessel capacities, expedited shipping budgets.
   - Multi-objective Pareto frontier generation balancing transit time, operational cost, and CO2 emissions.
 
 ### Phase 15: Mitigation Decision Agent & Claude Synthesis
 - **Purpose**: Evaluates optimization candidates and prepares executive-ready mitigation proposals.
-- **Key Features**:
+- **Key Capabilities**:
   - Multi-criteria decision analysis (MCDA) scoring mitigation options.
   - Claude 3.5 Sonnet domain-grounded synthesis explaining operational trade-offs and rationale.
   - Recommendation creation in `recommendations` table with status `PENDING`.
 
 ### Phase 16: Human Governance & Approval Subsystem
 - **Purpose**: Enforces mandatory human-in-the-loop governance before any operational mutation occurs.
-- **Key Features**:
+- **Key Capabilities**:
   - Cryptographic SHA-256 state fingerprinting binding the exact recommendation payload.
   - Role-gated approval permissions (`RiskManager`, `Admin`).
   - Tamper detection: rejects approvals if underlying operational state or recommendation was modified.
   - Approval expiration window enforcing fresh review for stale recommendations.
 
-### Phase 17: Operational Action Agent & Execution Adapters
+### Phase 17: Operational Action Agent & Governed Execution Adapters
 - **Purpose**: Executes approved mitigation actions through governed operational adapters.
-- **Key Features**:
+- **Key Capabilities**:
   - Strict operational allowlist: `SHIPMENT_REROUTE`, `CARRIER_REALLOCATION`, `FACILITY_REALLOCATION`, `EXPEDITE_SHIPMENT`, `HOLD_SHIPMENT`, `MONITOR`.
   - SHA-256 command hashing enforcing strict execution idempotency (replays return cached result).
   - Transactional state updates transitioning recommendation to `EXECUTED`.
   - Immutable audit logging recording actor, timestamps, and adapter response codes in `audit_logs`.
 
-### Phase 18: Operational Verification Agent & Outcome Evidence
+### Phase 18: Operational Verification Agent & Ground-Truth Outcome Evidence
 - **Purpose**: Gathers authoritative post-action evidence to verify whether real-world business intent succeeded.
-- **Key Features**:
+- **Key Capabilities**:
   - Strict evidence source precedence hierarchy: `REAL > ESTIMATED > SIMULATED`.
   - 16-step deterministic policy evaluation pipeline.
   - 9 verification statuses: `VERIFIED`, `PARTIALLY_VERIFIED`, `FAILED`, `PENDING`, `INSUFFICIENT_EVIDENCE`, `NOT_APPLICABLE`, `EXPIRED`, `CONFLICT`, `ERROR`.
   - Fail-closed terminal execution: halts at `TERMINATION`, strictly prohibiting autonomous retry loops.
 
+### Phase 19: Control Tower Web Application (Next.js App Router)
+- **Purpose**: Provides a unified, high-density, real-time command center interface designed for supply chain analysts, risk managers, and executives.
+- **Key Capabilities**:
+  - Built with Next.js App Router, React 19, and Tailwind CSS v4.
+  - **Calibrated Control Room Aesthetic**: Harbor blue (`#3E8EF7`) brand accent on cool slate-charcoal surfaces (`#0D1117`, `#141922`), hairline borders, tabular figures, and zero decorative fluff.
+  - **26+ Functional Views**: Executive Dashboard, Incidents & Triage, Risk Radar, Shipment Visibility, Tiered Suppliers, Factories, Warehouses, Container Ports, Freight Carriers, Products & BOMs, Inventory Buffers, Multimodal Routes, Digital Twin Canvas, Simulation Studio, Optimization Solver, Mitigation Decisions, Approval Center, Action Dispatch, Verification Evidence, Evaluation QA, Audit Ledger, Geospatial Map, Notifications, and System Administration.
+  - **Unified Type-Safe API Client**: Built-in credential propagation, automatic error envelope parsing, structured fallback values, and zero client-side token leaks.
+  - **Interactive Analytics**: Recharts data visualizations for risk breakdown, Pareto frontiers, cascade impact curves, and historical trends.
+
+### Phase 20: Comprehensive Evaluation & Quality Assurance Framework
+- **Purpose**: Provides an automated, deterministic quality assurance harness benchmarking all agent nodes, predictive models, optimization solvers, and governance boundaries against curated golden datasets.
+- **Key Capabilities**:
+  - **16 Specialized Evaluation Suites**:
+    1. `ActionSuite`: Validates Phase 17 operational execution, allowlist checks, and idempotency.
+    2. `AgentSuite`: Evaluates LangGraph state machine routing, cycle halts, and state invariants.
+    3. `ApprovalSuite`: Tests Phase 16 cryptographic fingerprinting and role RBAC enforcement.
+    4. `ClaudeSuite`: Benchmarks Claude 3.5 Sonnet domain explanation, factual grounding, and non-authority boundaries.
+    5. `DecisionSuite`: Assesses MCDA multi-criteria option ranking and candidate generation.
+    6. `DigitalTwinSuite`: Tests RFC 4122 UUIDv5 graph synthesis, topological integrity, and BFS pathfinding.
+    7. `E2ESuite`: End-to-end multi-agent pipeline validation from telemetry breach to verification.
+    8. `MLSuite`: Evaluates LightGBM delay prediction accuracy, MAE/RMSE bounds, and data leakage.
+    9. `OptimizationSuite`: Verifies Google OR-Tools MILP constraint feasibility and Pareto optimality.
+    10. `RAGSuite`: Tests vector retrieval precision, BM25 keyword fusion, and adversarial injection resistance.
+    11. `ResearchSuite`: Validates Tavily OSINT news classification and source extraction.
+    12. `RiskSuite`: Benchmarks deterministic multi-factor scoring against reference baselines.
+    13. `SecuritySuite`: Probes prompt injection defenses, tenant fencing, and parameter sanitization.
+    14. `SimulationSuite`: Tests Monte Carlo perturbation models and financial cascade loss bounds.
+    15. `VerificationSuite`: Evaluates Phase 18 authoritative outcome policy and evidence precedence rules.
+    16. `BaseSuite`: Abstract contract providing unified execution lifecycle and metrics recording.
+  - **15 Versioned Golden Benchmark Datasets**: Hand-curated, immutable test cases with anti-contamination guards (`risk_cases`, `simulation_cases`, `verification_cases`, `rag_cases`, `optimization_cases`, `ml_cases`, `e2e_cases`, `digital_twin_cases`, `decision_cases`, `claude_cases`, `approval_cases`, `agent_cases`, `action_cases`, `research_cases`, `security_cases`).
+  - **Deterministic `MetricEngine`**: Computes precision, recall, F1, latency percentiles (P50, P95), numerical error bounds, hallucination detection, and NOT_AVAILABLE safety rules.
+  - **Isolated Evaluation Persistence**: Stores evaluation runs and metric reports in dedicated `evaluation_runs` and `evaluation_results` tables under `EvaluationBase`, keeping core operational tables completely untouched.
+  - **Evaluation REST API**: Endpoints under `/api/v1/evaluations` for triggering benchmark runs, listing registered suites, querying datasets, and retrieving audit reports.
+
+### Phase 21: Production Hardening, High Availability & Enterprise Deployment Roadmap
+- **Technical Scope**:
+  - AWS VPC peering and private subnets for RDS PostgreSQL 16 and Bedrock VPC endpoints.
+  - AWS KMS envelope encryption for sensitive credentials and database volume encryption at rest.
+  - Redis distributed rate limiting and token bucket throttling across public API routes.
+  - Enterprise High Availability (HA) deployment with multi-AZ RDS failover and containerized auto-scaling on AWS ECS Fargate or EKS.
+  - Automated CI/CD GitHub Actions pipelines running linting, TypeScript type-checking, Jest tests, and Pytest suites.
+
 ---
 
-## Authoritative 34-Table Database Inventory
+## 7. Authoritative Relational Database Architecture (34 Core + 2 Evaluation Tables)
 
-The RiskWise 2.0 relational database maintains exactly 34 models organized into 10 cohesive business domains:
+RiskWise 2.0 maintains exactly 34 core operational models in `Base.metadata` and 2 isolated evaluation persistence models in `EvaluationBase`:
 
 | # | Domain | Table Name | Primary Key | Foreign Keys & Relationships | Operational Purpose |
 | :---: | :--- | :--- | :---: | :--- | :--- |
-| 1 | **Tenancy** | `organizations` | `id` (VARCHAR) | Root entity | Multi-tenant root organization entity, plans, settings |
-| 2 | **Tenancy** | `users` | `id` (VARCHAR) | `organizations.id` | User accounts, roles (`Admin`, `RiskManager`, etc.), auth |
-| 3 | **Network** | `suppliers` | `id` (VARCHAR) | `organizations.id` | Tier-1/2/3 vendor profiles, criticality, health rating |
+| 1 | **Tenancy** | `organizations` | `id` (VARCHAR) | Root entity | Multi-tenant root organization entity, subscription tiers, settings |
+| 2 | **Tenancy** | `users` | `id` (VARCHAR) | `organizations.id` | User accounts, roles (`Admin`, `RiskManager`, etc.), auth credentials |
+| 3 | **Network** | `suppliers` | `id` (VARCHAR) | `organizations.id` | Tier-1/2/3 vendor profiles, criticality, health ratings |
 | 4 | **Network** | `supplier_sites` | `id` (VARCHAR) | `organizations.id`, `suppliers.id` | Physical manufacturing facilities and geographic coordinates |
 | 5 | **Network** | `factories` | `id` (VARCHAR) | `organizations.id` | Internal manufacturing plants, lines, capacity, status |
-| 6 | **Network** | `warehouses` | `id` (VARCHAR) | `organizations.id` | Regional distribution centers, storage capacity |
-| 7 | **Network** | `ports` | `id` (VARCHAR) | `organizations.id` | Sea terminals, airports, inland ports, dwell time |
+| 6 | **Network** | `warehouses` | `id` (VARCHAR) | `organizations.id` | Regional distribution centers, storage capacity, buffer stock |
+| 7 | **Network** | `ports` | `id` (VARCHAR) | `organizations.id` | Maritime terminals, airports, inland ports, dwell time metrics |
 | 8 | **Network** | `routes` | `id` (VARCHAR) | `organizations.id`, `ports.id` | Transport corridors, transit modes, distance, typical lead-time |
 | 9 | **Network** | `carriers` | `id` (VARCHAR) | `organizations.id` | Logistics carriers, contract terms, reliability ratings |
 | 10 | **Catalog** | `products` | `id` (VARCHAR) | `organizations.id` | Finished goods and critical sub-assemblies SKU catalog |
 | 11 | **Catalog** | `bills_of_materials` | `id` (VARCHAR) | `organizations.id`, `products.id` | Multi-level product part dependencies and component ratios |
-| 12 | **Inventory** | `inventory_items` | `id` (VARCHAR) | `organizations.id`, `products.id` | Real-time facility stock levels, safety buffers, reorder points |
+| 12 | **Inventory** | `inventory_items` | `id` (VARCHAR) | `organizations.id`, `products.id` | Real-time facility stock levels, safety buffers, reorder thresholds |
 | 13 | **Inventory** | `inventory_movements` | `id` (VARCHAR) | `organizations.id`, `inventory_items.id` | Stock transfer history and inbound/outbound adjustments |
 | 14 | **Logistics** | `shipments` | `id` (VARCHAR) | `organizations.id`, `carriers.id`, `routes.id` | Consignment lifecycle, origin/dest, ETA, delay status |
-| 15 | **Logistics** | `shipment_events` | `id` (VARCHAR) | `organizations.id`, `shipments.id` | Telemetry tracking milestone events and coordinates |
+| 15 | **Logistics** | `shipment_events` | `id` (VARCHAR) | `organizations.id`, `shipments.id` | Telemetry tracking milestone events, coordinates, status codes |
 | 16 | **Risk** | `risks` | `id` (VARCHAR) | `organizations.id` | Identified operational risk exposures, severities, trends |
-| 17 | **Risk** | `risk_factors` | `id` (VARCHAR) | `organizations.id`, `risks.id` | Granular risk drivers (geopolitical, weather, transit) |
-| 18 | **Risk** | `risk_assessments` | `id` (VARCHAR) | `organizations.id`, `risks.id` | Time-stamped composite risk evaluations and scores |
+| 17 | **Risk** | `risk_factors` | `id` (VARCHAR) | `organizations.id`, `risks.id` | Granular risk drivers (geopolitical, weather, transit, financial) |
+| 18 | **Risk** | `risk_assessments` | `id` (VARCHAR) | `organizations.id`, `risks.id` | Time-stamped composite risk evaluations and dimension scores |
 | 19 | **Incident** | `incidents` | `id` (VARCHAR) | `organizations.id`, `risks.id` | Disruption incident tracking and resolution lifecycles |
-| 20 | **Incident** | `incident_updates` | `id` (VARCHAR) | `organizations.id`, `incidents.id` | Chronological incident progress updates and logs |
+| 20 | **Incident** | `incident_updates` | `id` (VARCHAR) | `organizations.id`, `incidents.id` | Chronological incident progress updates and root cause logs |
 | 21 | **Twin** | `twin_nodes` | `id` (VARCHAR) | `organizations.id` | Digital Twin graph node snapshots and RFC 4122 UUIDv5 IDs |
-| 22 | **Twin** | `twin_edges` | `id` (VARCHAR) | `organizations.id`, `twin_nodes.id` | Digital Twin graph edge dependencies and flows |
+| 22 | **Twin** | `twin_edges` | `id` (VARCHAR) | `organizations.id`, `twin_nodes.id` | Digital Twin graph edge dependencies, capacities, and flows |
 | 23 | **Simulation**| `simulations` | `id` (VARCHAR) | `organizations.id` | Disruption simulation scenario parameters and mode |
 | 24 | **Simulation**| `simulation_results` | `id` (VARCHAR) | `organizations.id`, `simulations.id` | Cascade impact metrics, delay days, financial loss values |
 | 25 | **Solver** | `optimization_runs` | `id` (VARCHAR) | `organizations.id`, `simulations.id` | OR-Tools MILP solver configuration, constraints, and status |
 | 26 | **Decision** | `recommendations` | `id` (VARCHAR) | `organizations.id`, `optimization_runs.id` | Ranked mitigation candidate options and trade-off scores |
-| 27 | **Governance**| `approvals` | `id` (VARCHAR) | `organizations.id`, `recommendations.id`, `users.id` | Cryptographic human sign-off audit records and decisions |
+| 27 | **Governance**| `approvals` | `id` (VARCHAR) | `organizations.id`, `recommendations.id`, `users.id` | Cryptographic human sign-off audit records and SHA-256 signatures |
 | 28 | **Action** | `actions` | `id` (VARCHAR) | `organizations.id`, `approvals.id` | Governed operational execution command records and adapter logs |
 | 29 | **Verify** | `verification_results` | `id` (VARCHAR) | `organizations.id`, `actions.id` | Authoritative post-action outcome verification results |
 | 30 | **Audit** | `audit_logs` | `id` (VARCHAR) | `organizations.id`, `users.id` | Immutable security, compliance, and operational audit trail |
@@ -636,17 +600,19 @@ The RiskWise 2.0 relational database maintains exactly 34 models organized into 
 | 32 | **Agents** | `agent_runs` | `id` (VARCHAR) | `organizations.id` | Multi-agent LangGraph workflow execution records and state |
 | 33 | **RAG** | `documents` | `id` (VARCHAR) | `organizations.id` | Ingested enterprise documents, SOPs, and policies |
 | 34 | **RAG** | `document_chunks` | `id` (VARCHAR) | `organizations.id`, `documents.id` | Text chunks and 1536-dimensional Titan vector embeddings |
+| *E1* | **Eval Store** | `evaluation_runs` | `id` (VARCHAR) | Isolated `EvaluationBase` | Summary metadata, suite type, dataset version, fingerprints |
+| *E2* | **Eval Store** | `evaluation_results`| `id` (VARCHAR) | `evaluation_runs.id` | Case-level test metrics, expected vs. observed, error details |
 
 ---
 
-## REST API Architecture & Comprehensive Endpoint Catalog
+## 8. Comprehensive REST API Catalog & Route Architecture
 
-The RiskWise 2.0 backend exposes 67 REST endpoints across 103 operations and 22 controllers registered under `/api/v1`:
+The RiskWise 2.0 backend exposes 75+ REST endpoints across 23 domain controllers registered under `/api/v1`:
 
 ```
 /api/v1/
 ├── /health                          # Infrastructure liveness & readiness probes
-├── /auth                            # Google OAuth2, JWT session cookies, logout
+├── /auth                            # Google OAuth2, JWT session cookies, current user, logout
 ├── /suppliers                       # Supplier organizational profiles & criticality tiers
 ├── /supplier-sites                 # Supplier manufacturing sites & geographic locations
 ├── /factories                       # Internal manufacturing plants, capacity, & status
@@ -667,16 +633,21 @@ The RiskWise 2.0 backend exposes 67 REST endpoints across 103 operations and 22 
 ├── /approvals                       # Human approval sign-off perimeter & cryptographic checks
 ├── /actions                         # Governed operational action execution adapters
 ├── /verification-results            # Authoritative post-action outcome verification
+├── /digital-twin                    # Graph synthesis, node/edge inspection, BFS pathfinding
+├── /simulation                      # Monte Carlo disruption scenario perturbation & cascade
+├── /optimization                    # Google OR-Tools MILP solver & Pareto frontier runs
+├── /decisions                       # Mitigation decision candidate ranking & synthesis
+├── /evaluations                     # Phase 20: Evaluation suites, datasets, and benchmark runner
 ├── /audit-logs                      # Immutable regulatory compliance & security audit logs
 └── /notifications                   # Multi-channel notification delivery & alert feeds
 ```
 
-### Key Endpoint Catalog by Subsystem
+### Key API Endpoint Catalog
 
 | Controller | HTTP | Endpoint Path | Operational Purpose | RBAC Scope |
 | :--- | :---: | :--- | :--- | :---: |
-| **Auth** | `POST` | `/api/v1/auth/google/login` | Initiates Google OAuth2 code exchange flow | Public |
-| **Auth** | `GET` | `/api/v1/auth/session` | Validates session cookie and returns user context | Authenticated |
+| **Auth** | `POST` | `/api/v1/auth/google/login` | Initiates Google OAuth2 authorization code flow | Public |
+| **Auth** | `GET` | `/api/v1/auth/session` | Validates session cookie and returns user profile | Authenticated |
 | **Auth** | `POST` | `/api/v1/auth/logout` | Clears HTTP-only session cookies and revokes token | Authenticated |
 | **Shipments** | `GET` | `/api/v1/shipments` | Lists consignments with filtering by origin/carrier/status | `Viewer+` |
 | **Shipments** | `POST` | `/api/v1/shipments` | Registers a new consignment tracking record | `OpsManager+` |
@@ -684,6 +655,12 @@ The RiskWise 2.0 backend exposes 67 REST endpoints across 103 operations and 22 
 | **Risks** | `GET` | `/api/v1/risks` | Queries active risk exposures and composite scores | `Viewer+` |
 | **Risks** | `POST` | `/api/v1/risks` | Creates a new identified operational risk entity | `Analyst+` |
 | **Incidents** | `GET` | `/api/v1/incidents` | Lists active disruption incidents and severity rankings | `Viewer+` |
+| **Digital Twin**| `POST` | `/api/v1/digital-twin/build`| Synthesizes digital twin topology from DB entities | `Analyst+` |
+| **Digital Twin**| `GET` | `/api/v1/digital-twin/topology`| Queries graph nodes, edges, and bottleneck paths | `Viewer+` |
+| **Simulation** | `POST` | `/api/v1/simulation/scenarios`| Configures a what-if disruption scenario | `Analyst+` |
+| **Simulation** | `POST` | `/api/v1/simulation/scenarios/{id}/simulate` | Runs Monte Carlo disruption cascade iterations | `Analyst+` |
+| **Optimization**| `POST` | `/api/v1/optimization-runs`| Executes Google OR-Tools MILP optimization solver | `OpsManager+` |
+| **Decisions** | `POST` | `/api/v1/decisions/synthesize` | Generates ranked mitigation options with Claude synthesis | `Analyst+` |
 | **Recommendations**| `GET` | `/api/v1/recommendations`| Lists ranked mitigation options generated by Decision Agent | `Viewer+` |
 | **Approvals** | `POST` | `/api/v1/approvals` | Submits human approval decision with SHA-256 fingerprint | `RiskManager`, `Admin` |
 | **Approvals** | `GET` | `/api/v1/approvals/{id}`| Retrieves cryptographic sign-off audit details | `Viewer+` |
@@ -691,13 +668,16 @@ The RiskWise 2.0 backend exposes 67 REST endpoints across 103 operations and 22 
 | **Actions** | `GET` | `/api/v1/actions/{id}` | Retrieves action execution status and adapter response code | `Viewer+` |
 | **Verification** | `POST` | `/api/v1/verification-results/verify` | Executes authoritative post-action outcome verification | `RiskManager`, `Admin` |
 | **Verification** | `GET` | `/api/v1/verification-results` | Queries historical verification results and evidence records | `Viewer+` |
+| **Evaluations** | `GET` | `/api/v1/evaluations/suites` | Lists all 16 registered evaluation benchmark suites | `Analyst+` |
+| **Evaluations** | `GET` | `/api/v1/evaluations/datasets` | Lists all 15 versioned golden evaluation datasets | `Analyst+` |
+| **Evaluations** | `POST` | `/api/v1/evaluations/run` | Triggers deterministic evaluation suite execution | `RiskManager`, `Admin` |
 | **Audit Logs** | `GET` | `/api/v1/audit-logs` | Queries immutable compliance and security audit records | `Admin`, `RiskManager` |
 | **Health** | `GET` | `/health` | Root infrastructure liveness check | Public |
 | **Health** | `GET` | `/health/db` | Database connectivity readiness probe (`SELECT 1`) | Public |
 
 ---
 
-## Multi-Agent LangGraph State Machine Architecture
+## 9. Multi-Agent LangGraph State Machine Architecture & State Ownership Contracts
 
 The RiskWise multi-agent intelligence layer is built on **LangGraph**, providing a cyclic, stateful, and deterministic orchestration machine:
 
@@ -745,7 +725,7 @@ To prevent state corruption or uncoordinated field mutations in the LangGraph sh
 
 ---
 
-## Supported Operational Actions & Verification Matrix
+## 10. Supported Operational Actions & Physical Verification Matrix
 
 The platform supports 6 governed operational action types. Each action type pairs a governed Phase 17 execution adapter with an authoritative Phase 18 outcome verification policy:
 
@@ -760,7 +740,7 @@ The platform supports 6 governed operational action types. Each action type pair
 
 ---
 
-## Post-Action Verification Agent (Phase 18) Deep-Dive
+## 11. Post-Action Verification Agent Deep-Dive & Source Precedence
 
 ### Evidence Source Precedence Hierarchy
 
@@ -809,20 +789,108 @@ flowchart TD
 
 ---
 
-## Verification & Automated Test Suite Metrics
+## 12. Control Tower UI & Design System Deep-Dive
 
-RiskWise 2.0 maintains a 100% passing automated test suite with **4,506 automated backend tests** running across all completed roadmap phases:
+RiskWise 2.0 features an executive Control Tower web application (`web/`) built with **Next.js App Router**, **React 19**, and **Tailwind CSS v4**.
+
+### Visual Philosophy & Design Principles
+- **Precision over Polish**: Flat, hairline-divided panels (`border-hairline: #28303C`) rather than exaggerated drop shadows or blur gimmicks.
+- **Harbor Blue Palette**: Primary brand identity accent `#3E8EF7` evokes maritime ports, container logistics, and global vessel tracking.
+- **Evidence Before Conclusion**: Every numeric risk score, ML prediction, or mitigation trade-off is paired with timestamps, data source provenance, and confidence intervals.
+- **Uncertainty is Visible**: Provenance tags (`REAL`, `ESTIMATED`, `SIMULATED`) are prominent, not hidden in tooltips.
+- **Tabular Figures**: Numeric values use mono/tabular fonts for rapid visual column scanning under pressure.
+
+### Complete Screen Catalog (26+ Functional Views)
+
+| Route Path | View Title | Operational Functionality |
+| :--- | :--- | :--- |
+| `/dashboard` | **Executive Control Tower** | Live KPI summary, active incidents, critical risk badges, active shipments overview |
+| `/incidents` | **Incident Triage Console** | Filterable incident registry, severity status, duration tracking, root cause tags |
+| `/incidents/[id]` | **Incident Investigation** | Chronological milestone timeline, affected supply chain nodes, agent findings dossier |
+| `/risks` | **Multi-Factor Risk Radar** | Dimension breakdown (Geopolitical, Climate, Transit, Financial), trend diffs |
+| `/shipments` | **Consignment Monitor** | Real-time shipment status, origin/destination, carrier, ETA variance, mode tags |
+| `/suppliers` | **Tiered Supplier Network** | Tier 1/2/3 vendor profiles, health ratings, active disruptions, contract terms |
+| `/factories` | **Manufacturing Plants** | Internal assembly plant status, line capacities, inventory burn rates |
+| `/warehouses` | **Distribution Hubs** | Regional warehouse buffer stocks, throughput capacity, storage constraints |
+| `/ports` | **Container Ports & Terminals** | Sea ports, dwell time indices, berth congestion, labor alert indicators |
+| `/carriers` | **Logistics Carriers** | Carrier contract terms, on-time delivery rates, mode fleet availability |
+| `/products` | **SKU Catalog & BOMs** | Finished goods, component dependencies, bill of materials criticality |
+| `/inventory` | **Inventory Buffer Monitor** | Facility stock levels, safety stock thresholds, reorder points, stockout risk |
+| `/routes` | **Multimodal Corridors** | Transport lanes, typical transit lead times, historical variance, carrier assignments |
+| `/digital-twin` | **Digital Twin Canvas** | Interactive supply chain network graph, node/edge inspection, bottleneck analysis |
+| `/simulations` | **Simulation Studio** | What-if disruption scenario generator, Monte Carlo cascade perturbation runs |
+| `/optimization` | **Optimization Solver** | Google OR-Tools MILP constraint modeling, multi-objective Pareto trade-off curve |
+| `/decisions` | **Decision Synthesis** | Ranked mitigation options, MCDA utility scores, Claude 3.5 Sonnet justifications |
+| `/recommendations` | **Mitigation Options** | Actionable recommendation review, cost/time trade-offs, approval requests |
+| `/approvals` | **Human Approval Center** | Cryptographic SHA-256 fingerprint verification, role-gated sign-off, tamper alerts |
+| `/actions` | **Action Dispatch Console** | Governed operational execution, adapter response codes, idempotency key log |
+| `/verification` | **Outcome Verification** | Ground-truth physical evidence inspection, precedence filtering, verification badges |
+| `/evaluation` | **Quality Assurance Dashboard**| Benchmark suites, golden dataset performance, latency percentiles, hallucination checks |
+| `/audit` | **Regulatory Audit Ledger** | Immutable compliance log, actor tracking, before/after state diffs, timestamps |
+| `/map` | **Geospatial Telemetry Map**| Global map view with live vessel AIS, flight ADS-B, and road incident overlays |
+| `/notifications` | **Alert Notification Center**| Real-time alerts, escalation priority badges, unread status management |
+| `/admin` | **System Administration** | Organization settings, user role assignments, database health probes, logs |
+
+---
+
+## 13. Continuous Evaluation & Golden Benchmarks Deep-Dive (Phase 20)
+
+Phase 20 introduces an automated, continuous quality assurance framework in `api/app/evaluation/` designed to prevent regressions and catch hallucinations across the platform's multi-agent intelligence and mathematical engines.
+
+### 16 Deterministic Evaluation Suites
+
+```
+api/app/evaluation/suites/
+├── base.py                   # Unified SuiteBase lifecycle & timing
+├── action_suite.py           # Phase 17 Action safety, allowlists & idempotency
+├── agent_suite.py            # LangGraph cyclic routing, stage boundaries & loop prevention
+├── approval_suite.py         # Phase 16 Cryptographic fingerprinting & RBAC guards
+├── claude_suite.py           # Claude 3.5 Sonnet explanation fidelity & non-authority boundaries
+├── decision_suite.py         # Phase 15 MCDA utility ranking & Pareto selection
+├── digital_twin_suite.py     # Phase 12 UUIDv5 topology & BFS pathfinding correctness
+├── e2e_suite.py              # End-to-end telemetry -> mitigation -> verification workflow
+├── ml_suite.py               # Phase 11 LightGBM regression accuracy & data leakage guards
+├── optimization_suite.py     # Phase 14 OR-Tools MILP solver feasibility & constraints
+├── rag_suite.py              # Phase 8 Hybrid vector + BM25 retrieval & citation grounding
+├── research_suite.py         # Phase 5/10 Tavily OSINT news classification & source extraction
+├── risk_suite.py             # Phase 7 Deterministic risk score weighting & alerting
+├── security_suite.py         # Prompt injection scrubbing, tenant isolation & sanitization
+├── simulation_suite.py       # Phase 13 Monte Carlo perturbation & financial cascade bounds
+└── verification_suite.py     # Phase 18 Ground-truth outcome verification & precedence hierarchy
+```
+
+### 15 Golden Evaluation Benchmark Datasets
+All golden datasets are versioned (`v1.0.0`), cryptographically fingerprinted, and maintained under `api/app/evaluation/datasets/golden/`:
+- `action_cases.py`, `agent_cases.py`, `approval_cases.py`, `claude_cases.py`, `decision_cases.py`, `digital_twin_cases.py`, `e2e_cases.py`, `ml_cases.py`, `optimization_cases.py`, `rag_cases.py`, `research_cases.py`, `risk_cases.py`, `security_cases.py`, `simulation_cases.py`, `verification_cases.py`.
+
+### MetricEngine Capabilities
+The `MetricEngine` (`api/app/evaluation/metrics.py`) provides deterministic evaluation metrics without reliance on probabilistic judgment:
+- **Classification & Retrieval**: Precision, Recall, F1 Score, Accuracy.
+- **Numerical & Forecasting**: Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), Relative Error %, Boundary Checking.
+- **Safety & Hallucination**: Citation overlap ratio, ungrounded claim detection, prohibited autonomous trigger detection, prompt injection bypass failure rate.
+- **Latency & Performance**: P50, P90, P95, P99 execution latency benchmarks.
+- **Strict NOT_AVAILABLE Rule**: When a metric cannot be mathematically calculated, it explicitly evaluates to `NOT_AVAILABLE` rather than defaulting to 0 or 1.
+
+---
+
+## 14. Verification & Automated Test Suite Metrics (4,582 Passing Tests)
+
+RiskWise 2.0 maintains a 100% passing automated test suite with **4,582 automated tests** (4,543 backend tests + 39 frontend tests) running across all completed roadmap phases:
 
 ```
 ================================================================================
-Backend Test Suite Results: 4,506 passed, 0 failed, 0 skipped, 0 errors (100%)
+Backend Test Suite Results:  4,543 passed, 0 failed, 0 skipped, 0 errors (100%)
+Frontend Test Suite Results:    39 passed, 0 failed, 0 skipped, 0 errors (100%)
+Total Platform Test Suite:   4,582 passed, 0 failed, 0 skipped, 0 errors (100%)
 ================================================================================
 ```
 
-### Complete Test Inventory by Subsystem
+### Comprehensive Test Inventory by Subsystem
 
-| Phase | Test Suite Module | Test Focus & Scope | Passing Tests |
+| Phase | Test Suite Module | Subsystem Scope & Architectural Focus | Passing Tests |
 | :---: | :--- | :--- | :---: |
+| **20** | `api/tests/test_phase20_*.py` | Evaluation contracts, golden datasets, MetricEngine, suites, runner API | **37** |
+| **19** | `web/tests/*.test.ts` | Control Tower API client, auth flow, error envelopes, UI contracts | **39** |
 | **18** | `api/tests/test_phase18_*.py` | Verification Agent, verifiers, evidence precedence, security, LangGraph node | **36** |
 | **17** | `api/tests/test_phase17_*.py` | Action Agent, executors, allowlist, idempotency, approval binding, security | **69** |
 | **16** | `api/tests/test_phase16_*.py` | Human Approval perimeter, SHA-256 fingerprinting, RBAC guards, tamper detection | **29** |
@@ -838,47 +906,61 @@ Backend Test Suite Results: 4,506 passed, 0 failed, 0 skipped, 0 errors (100%)
 | **04** | `api/tests/test_phase4_*.py` | Core domain REST APIs, Clean Architecture repositories, Unit of Work | **48** |
 | **05–06**| `api/tests/test_phase5_*.py`, `test_phase6_*.py` | Ingestion connectors, canonical event normalization, entity resolution | **120** |
 | **02–03**| `api/tests/test_database_validation.py`, `test_auth_*.py` | Database schema validation, Google OAuth2, JWT sessions, RBAC security | **771** |
-| **Total**| **Complete Backend Test Suite** | **All 18 Completed Roadmap Subsystems** | **4,506** |
+| **Total**| **Complete Platform Test Suite** | **All 20 Completed Roadmap Subsystems** | **4,582** |
 
-### Running the Test Suite
+### Executing the Automated Tests
 
 ```bash
+# ==============================================================================
+# 1. Run Backend Pytest Suite (api/)
+# ==============================================================================
 cd api
 
-# Run the complete test suite:
-pytest -q
+# Run complete backend test suite:
+python -m pytest -q
+
+# Run Phase 20: Evaluation & QA Framework tests (37 tests):
+python -m pytest -k "phase20" -v
 
 # Run Phase 18: Verification Agent tests (36 tests):
-pytest tests/test_phase18_*.py -v
+python -m pytest tests/test_phase18_*.py -v
 
 # Run Phase 17: Operational Action Agent tests (69 tests):
-pytest tests/test_phase17_*.py -v
+python -m pytest tests/test_phase17_*.py -v
 
 # Run Phase 16: Human Governance tests (29 tests):
-pytest tests/test_phase16_*.py -v
-
-# Run Phase 15: Mitigation Decision Agent tests (57 tests):
-pytest tests/test_phase15_*.py -v
+python -m pytest tests/test_phase16_*.py -v
 
 # Run Phase 14: Mathematical Optimization tests (36 tests):
-pytest tests/test_phase14_*.py -v
+python -m pytest tests/test_phase14_*.py -v
 
 # Run Phase 12: Digital Twin Graph tests (161 tests):
-pytest tests/test_phase12_*.py -v
+python -m pytest tests/test_phase12_*.py -v
 
-# Run Phase 09: Multi-Agent LangGraph Orchestration tests (1,284 tests):
-pytest tests/test_phase9_*.py -q
+# ==============================================================================
+# 2. Run Frontend Test Suite (web/)
+# ==============================================================================
+cd ../web
+
+# Run complete frontend test suite (39 tests):
+npm test
+
+# Run authentication integration suite:
+npm run test:auth
+
+# Run Phase 19 Control Tower UI contract suite:
+npm run test:phase19
 ```
 
 ---
 
-## Local Development, Setup & Configuration Guide
+## 15. Local Development, Setup & Configuration Guide
 
 ### 1. Prerequisites
-- **Python**: `3.12` or `3.13` (Virtual environment recommended)
-- **Node.js**: `v20.x` or later (LTS)
+- **Python**: `3.12` or `3.13` (virtual environment strongly recommended)
+- **Node.js**: `v20.x` or later (LTS recommended)
 - **npm**: `v10.x` or later
-- **PostgreSQL**: `v15` or later with `pgvector` and `pgcrypto` extensions (or SQLite for local test suite execution)
+- **PostgreSQL**: `v15` or later with `pgvector` and `pgcrypto` extensions (or SQLite for local test runs)
 - **Git**
 
 ### 2. Environment Configuration
@@ -927,7 +1009,7 @@ TAVILY_API_KEY="your-tavily-key"
 cd api
 
 # Activate virtual environment:
-# Windows:
+# Windows (PowerShell):
 .venv\Scripts\activate
 # Linux/macOS:
 source .venv/bin/activate
@@ -942,7 +1024,7 @@ alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-#### API Health Probes & Documentation:
+#### API Health Probes & Documentation
 - **Liveness Probe**: [http://localhost:8000/health](http://localhost:8000/health)
 - **Readiness Probe**: [http://localhost:8000/ready](http://localhost:8000/ready)
 - **Database Connectivity Probe**: [http://localhost:8000/health/db](http://localhost:8000/health/db)
@@ -960,16 +1042,18 @@ npm install
 # Start Next.js development server:
 npm run dev
 ```
+
 The Next.js web application is accessible at [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## Complete Documentation Index
+## 16. Complete Documentation Index
 
 Exhaustive technical documentation and architecture specifications are available in [`docs/`](docs/):
 
 - [`docs/RiskWise_2.0_Technical_Project_Spec.md`](docs/RiskWise_2.0_Technical_Project_Spec.md) — Master technical architecture and system specification
-- [`docs/database-schema-inventory.md`](docs/database-schema-inventory.md) — Complete 34-table relational database inventory and enum types
+- [`docs/RiskWise_2.0_UI_UX_Design_System.md`](docs/RiskWise_2.0_UI_UX_Design_System.md) — Complete UI/UX design tokens, control room philosophy, and screen specs
+- [`docs/database-schema-inventory.md`](docs/database-schema-inventory.md) — Authoritative 34-table relational database inventory and enum types
 - [`docs/authentication-architecture.md`](docs/authentication-architecture.md) — Google OAuth2, multi-tenancy & enterprise RBAC governance
 - [`docs/phase5-canonical-event-model.md`](docs/phase5-canonical-event-model.md) — Telemetry ingestion connectors specification
 - [`docs/phase6-normalization-architecture.md`](docs/phase6-normalization-architecture.md) — Telemetry normalization & entity resolution engine
@@ -988,7 +1072,7 @@ Exhaustive technical documentation and architecture specifications are available
 
 ---
 
-## Enterprise License & Operational Notice
+## 17. Enterprise License & Operational Notice
 
 RiskWise 2.0 is proprietary and confidential enterprise software. All rights reserved.  
 The Verification Agent enforces conservative, fail-closed operational outcome verification across all completed roadmap phases and does not permit autonomous remediation loops.
