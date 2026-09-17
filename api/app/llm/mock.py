@@ -27,6 +27,10 @@ class DeterministicMockLLMProvider(LLMProvider):
         canned_response: Optional[str] = None,
     ) -> None:
         self._allowed_models = allowed_models or [
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.0-flash",
+            "mock-gemini",
             "anthropic.claude-sonnet-4-6",
             "anthropic.claude-3-5-sonnet-20241022-v2:0",
             "mock-claude",

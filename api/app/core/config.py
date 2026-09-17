@@ -28,7 +28,24 @@ class Settings(BaseSettings):
     # AWS Infrastructure
     AWS_REGION: str = "ap-southeast-2"
 
-    # Amazon Bedrock & Claude LLM Foundation (Phase 10 Step 1)
+    # Google Gemini API Foundation (Primary LLM Provider)
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_ALLOWED_MODELS: Union[list[str], str] = [
+        "gemini-2.5-flash",
+        "gemini-2.5-pro",
+        "gemini-2.0-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro",
+    ]
+    GEMINI_MAX_OUTPUT_TOKENS: int = 4096
+    GEMINI_TIMEOUT_SECONDS: float = 30.0
+    GEMINI_MAX_RETRIES: int = 3
+    GEMINI_BACKOFF_BASE_SECONDS: float = 0.5
+    GEMINI_BACKOFF_MAX_SECONDS: float = 4.0
+    LLM_PROVIDER: str = "gemini"  # "gemini", "mock", or "bedrock" (legacy)
+
+    # Amazon Bedrock & Claude LLM (Legacy / Secondary)
     BEDROCK_REGION: str | None = None
     BEDROCK_MODEL_ID: str = "anthropic.claude-sonnet-4-6"
     BEDROCK_ALLOWED_MODELS: Union[list[str], str] = [
@@ -41,7 +58,13 @@ class Settings(BaseSettings):
     BEDROCK_MAX_RETRIES: int = 3
     BEDROCK_BACKOFF_BASE_SECONDS: float = 0.5
     BEDROCK_BACKOFF_MAX_SECONDS: float = 4.0
-    LLM_PROVIDER: str = "bedrock"  # "bedrock" or "mock"
+
+    @property
+    def effective_llm_model(self) -> str:
+        """Resolve authoritative LLM model ID based on active provider."""
+        if self.LLM_PROVIDER.lower() == "gemini":
+            return self.GEMINI_MODEL
+        return self.BEDROCK_MODEL_ID
 
     @property
     def effective_bedrock_region(self) -> str:
@@ -86,6 +109,13 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in v.split(",") if origin.strip()]
         return v
 
+    @field_validator("GEMINI_ALLOWED_MODELS", mode="before")
+    @classmethod
+    def parse_gemini_allowed_models(cls, v: Union[list[str], str]) -> list[str]:
+        if isinstance(v, str):
+            return [m.strip() for m in v.split(",") if m.strip()]
+        return v
+
     @field_validator("BEDROCK_ALLOWED_MODELS", mode="before")
     @classmethod
     def parse_allowed_models(cls, v: Union[list[str], str]) -> list[str]:
@@ -94,16 +124,53 @@ class Settings(BaseSettings):
         return v
 
     @model_validator(mode="after")
+    def validate_gemini_configuration(self) -> "Settings":
+        """Validate Gemini LLM configuration at startup without making external Google network calls."""
+        if self.LLM_PROVIDER.lower() == "gemini":
+            if not self.GEMINI_MODEL or not self.GEMINI_MODEL.strip():
+                raise ValueError("GEMINI_MODEL cannot be empty when LLM_PROVIDER is 'gemini'.")
+
+            allowed = (
+                self.GEMINI_ALLOWED_MODELS
+                if isinstance(self.GEMINI_ALLOWED_MODELS, list)
+                else []
+            )
+            if self.GEMINI_MODEL not in allowed:
+                raise ValueError(
+                    f"Configured GEMINI_MODEL '{self.GEMINI_MODEL}' is not permitted by GEMINI_ALLOWED_MODELS allowlist: {allowed}"
+                )
+
+            if self.GEMINI_MAX_OUTPUT_TOKENS <= 0 or self.GEMINI_MAX_OUTPUT_TOKENS > 16384:
+                raise ValueError(
+                    f"GEMINI_MAX_OUTPUT_TOKENS must be between 1 and 16384, got {self.GEMINI_MAX_OUTPUT_TOKENS}."
+                )
+
+            if self.GEMINI_TIMEOUT_SECONDS <= 0:
+                raise ValueError(
+                    f"GEMINI_TIMEOUT_SECONDS must be positive, got {self.GEMINI_TIMEOUT_SECONDS}."
+                )
+
+            if self.GEMINI_MAX_RETRIES < 0 or self.GEMINI_MAX_RETRIES > 10:
+                raise ValueError(
+                    f"GEMINI_MAX_RETRIES must be between 0 and 10, got {self.GEMINI_MAX_RETRIES}."
+                )
+
+        return self
+
+    @model_validator(mode="after")
     def validate_bedrock_configuration(self) -> "Settings":
         """Validate Bedrock LLM configuration at startup without making external AWS network calls."""
-        if not self.BEDROCK_MODEL_ID or not self.BEDROCK_MODEL_ID.strip():
+        if self.BEDROCK_MODEL_ID is not None and not self.BEDROCK_MODEL_ID.strip():
             raise ValueError("BEDROCK_MODEL_ID cannot be empty.")
 
-        allowed = self.BEDROCK_ALLOWED_MODELS if isinstance(self.BEDROCK_ALLOWED_MODELS, list) else []
-        if self.BEDROCK_MODEL_ID not in allowed:
-            raise ValueError(
-                f"Configured BEDROCK_MODEL_ID '{self.BEDROCK_MODEL_ID}' is not permitted by BEDROCK_ALLOWED_MODELS allowlist: {allowed}"
-            )
+        if self.BEDROCK_MODEL_ID and self.BEDROCK_MODEL_ID.strip():
+            allowed = self.BEDROCK_ALLOWED_MODELS if isinstance(self.BEDROCK_ALLOWED_MODELS, list) else []
+            if self.BEDROCK_MODEL_ID not in allowed:
+                raise ValueError(
+                    f"Configured BEDROCK_MODEL_ID '{self.BEDROCK_MODEL_ID}' is not permitted by BEDROCK_ALLOWED_MODELS allowlist: {allowed}"
+                )
+        elif self.LLM_PROVIDER.lower() == "bedrock":
+            raise ValueError("BEDROCK_MODEL_ID cannot be empty.")
 
         if self.BEDROCK_MAX_TOKENS <= 0 or self.BEDROCK_MAX_TOKENS > 16384:
             raise ValueError(f"BEDROCK_MAX_TOKENS must be between 1 and 16384, got {self.BEDROCK_MAX_TOKENS}.")

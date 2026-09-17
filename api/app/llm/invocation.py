@@ -167,7 +167,13 @@ class ClaudeInvocationService:
         else:
             from app.llm.factory import get_llm_provider
             self._provider = get_llm_provider()
-        self._model_id = model_id or settings.BEDROCK_MODEL_ID
+
+        if model_id is not None:
+            self._model_id = model_id
+        elif getattr(self._provider, "provider_name", "") == "gemini":
+            self._model_id = getattr(settings, "GEMINI_MODEL", "gemini-2.5-flash")
+        else:
+            self._model_id = getattr(settings, "BEDROCK_MODEL_ID", "anthropic.claude-sonnet-4-6")
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._budget = budget or PromptBudget()

@@ -2,6 +2,7 @@
 
 from app.llm.base import LLMProvider
 from app.llm.bedrock import BedrockLLMProvider
+from app.llm.gemini import GeminiLLMProvider
 from app.llm.contracts import (
     LLMMessage,
     LLMRequest,
@@ -31,6 +32,7 @@ from app.llm.errors import (
     StructuredOutputValidationError,
     is_retryable_llm_error,
     map_boto_exception,
+    map_gemini_exception,
     sanitize_error_message,
 )
 from app.llm.factory import LLMProviderFactory, get_llm_provider
@@ -69,6 +71,7 @@ from app.llm.security import (
 
 __all__ = [
     "LLMProvider",
+    "GeminiLLMProvider",
     "BedrockLLMProvider",
     "DeterministicMockLLMProvider",
     "LLMProviderFactory",
@@ -99,6 +102,7 @@ __all__ = [
     "InvocationConfigurationError",
     "InvocationResponseError",
     "map_boto_exception",
+    "map_gemini_exception",
     "is_retryable_llm_error",
     "sanitize_error_message",
     "validate_model_allowed",

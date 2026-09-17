@@ -8,13 +8,14 @@ from app.core.config import settings
 from app.llm.base import LLMProvider
 from app.llm.bedrock import BedrockLLMProvider
 from app.llm.errors import LLMConfigurationError
+from app.llm.gemini import GeminiLLMProvider
 from app.llm.mock import DeterministicMockLLMProvider
 
 
 class LLMProviderFactory:
     """Factory resolving LLM provider implementations without arbitrary dynamic imports."""
 
-    _SUPPORTED_PROVIDERS = frozenset({"bedrock", "mock"})
+    _SUPPORTED_PROVIDERS = frozenset({"gemini", "mock", "bedrock"})
 
     @classmethod
     def create_provider(
@@ -25,10 +26,10 @@ class LLMProviderFactory:
         """Resolve and instantiate a validated LLM provider.
         
         Args:
-            provider_name: 'bedrock' or 'mock'. Defaults to settings.LLM_PROVIDER.
-            kwargs: Provider-specific configuration overrides (e.g. boto3_client, allowed_models).
+            provider_name: 'gemini', 'mock', or 'bedrock'. Defaults to settings.LLM_PROVIDER.
+            kwargs: Provider-specific configuration overrides (e.g. api_key, allowed_models).
         """
-        raw_name = provider_name or getattr(settings, "LLM_PROVIDER", "bedrock")
+        raw_name = provider_name or getattr(settings, "LLM_PROVIDER", "gemini")
         clean_name = raw_name.strip().lower()
 
         if clean_name not in cls._SUPPORTED_PROVIDERS:
@@ -36,6 +37,9 @@ class LLMProviderFactory:
                 f"Unsupported LLM provider: '{raw_name}'. Supported providers: {sorted(list(cls._SUPPORTED_PROVIDERS))}",
                 details={"requested_provider": raw_name, "supported": sorted(list(cls._SUPPORTED_PROVIDERS))},
             )
+
+        if clean_name == "gemini":
+            return GeminiLLMProvider(**kwargs)
 
         if clean_name == "mock":
             return DeterministicMockLLMProvider(**kwargs)

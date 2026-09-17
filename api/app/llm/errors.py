@@ -51,8 +51,10 @@ CREDENTIAL_SCRUB_PATTERNS = [
     re.compile(r"aws_access_key_id[=:\s]+[A-Z0-9]{16,32}", re.IGNORECASE),
     re.compile(r"aws_secret_access_key[=:\s]+[A-Za-z0-9/+=]{30,}", re.IGNORECASE),
     re.compile(r"aws_session_token[=:\s]+[A-Za-z0-9/+=]{50,}", re.IGNORECASE),
+    re.compile(r"(AIzaSy[A-Za-z0-9_-]{33})", re.IGNORECASE),
     re.compile(r"(sk-[a-zA-Z0-9_-]{10,})", re.IGNORECASE),
     re.compile(r"(bearer\s+[a-zA-Z0-9_\-\.]+)", re.IGNORECASE),
+    re.compile(r"((?:gemini|google)?_?api_key[=:\s]+['\"]?[A-Za-z0-9_-]{20,}['\"]?)", re.IGNORECASE),
 ]
 
 
@@ -534,10 +536,136 @@ def map_boto_exception(exc: Exception) -> LLMBaseError:
     )
 
 
+def map_gemini_exception(exc: Exception) -> LLMBaseError:
+    """Deterministically map Google Gemini API exceptions into strongly typed LLMBaseError hierarchy.
+
+    Guarantees:
+    - Never leaks API keys, authorization tokens, or internal trace paths
+    - Correctly sets retryable classification (429/ResourceExhausted -> RETRYABLE, 401/403/400 -> NON_RETRYABLE)
+    - Conforms to existing RiskWise error contracts
+    """
+    if isinstance(exc, LLMBaseError):
+        return exc
+
+    exc_str = sanitize_error_message(str(exc))
+    exc_type = exc.__class__.__name__
+
+    http_status = 500
+    if hasattr(exc, "code") and isinstance(exc.code, int):
+        http_status = exc.code
+    elif hasattr(exc, "status_code") and isinstance(exc.status_code, int):
+        http_status = exc.status_code
+
+    error_code = str(getattr(exc, "status", getattr(exc, "code", ""))).strip()
+    exc_lower = exc_str.lower()
+
+    # 1. Throttling / Rate Limits / Resource Exhaustion
+    if (
+        http_status == 429
+        or error_code in {"RESOURCE_EXHAUSTED", "429"}
+        or "resource_exhausted" in exc_lower
+        or "rate limit" in exc_lower
+        or "quota" in exc_lower
+        or "too many requests" in exc_lower
+        or "throttling" in exc_lower
+    ):
+        return LLMThrottlingError(
+            message=f"Gemini API rate limit or quota exceeded: {exc_str}",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 2. Authorization / Permissions
+    if (
+        http_status == 403
+        or error_code in {"PERMISSION_DENIED", "403"}
+        or "permission_denied" in exc_lower
+        or "access denied" in exc_lower
+        or "forbidden" in exc_lower
+    ):
+        return LLMAuthorizationError(
+            message=f"Gemini API access denied: {exc_str}",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 3. Authentication / Missing or Invalid Credentials
+    if (
+        http_status == 401
+        or error_code in {"UNAUTHENTICATED", "401"}
+        or "unauthenticated" in exc_lower
+        or "invalid api key" in exc_lower
+        or "api key not valid" in exc_lower
+        or "api_key" in exc_lower
+    ):
+        return LLMAuthenticationError(
+            message="Gemini API authentication failure: Invalid or missing API credentials.",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 4. Validation / Malformed Request / Invalid Argument / Not Found
+    if (
+        http_status in {400, 404}
+        or error_code in {"INVALID_ARGUMENT", "NOT_FOUND", "400", "404"}
+        or "invalid_argument" in exc_lower
+        or "not_found" in exc_lower
+        or "validation" in exc_lower
+        or "model not found" in exc_lower
+    ):
+        return LLMValidationError(
+            message=f"Gemini API request validation failure: {exc_str}",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 5. Timeouts / Deadline Exceeded
+    if (
+        http_status in {408, 504}
+        or error_code in {"DEADLINE_EXCEEDED", "504"}
+        or "deadline_exceeded" in exc_lower
+        or "timeout" in exc_lower
+        or exc_type in {"TimeoutException", "ConnectTimeout", "ReadTimeout"}
+    ):
+        return LLMTimeoutError(
+            message=f"Gemini API request timed out: {exc_str}",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 6. Transient / Unavailable / Network Connection Failures
+    if (
+        http_status in {502, 503}
+        or error_code in {"UNAVAILABLE", "503"}
+        or "unavailable" in exc_lower
+        or "connection" in exc_lower
+        or exc_type in {"ConnectError", "NetworkError", "RemoteProtocolError"}
+    ):
+        return LLMTransientError(
+            message=f"Gemini API transient communication failure: {exc_str}",
+            details={"status_code": http_status, "provider": "gemini", "error_code": error_code},
+        )
+
+    # 7. Fallback Provider Error
+    return LLMProviderError(
+        message=f"Gemini API invocation failed: {exc_str}",
+        details={"status_code": http_status, "provider": "gemini", "exception_type": exc_type, "error_code": error_code},
+    )
+
+
 def is_retryable_llm_error(exc: Exception) -> bool:
     """Deterministically determine whether an LLM error is safe to retry."""
     if isinstance(exc, LLMBaseError):
         return exc.retryable
+
+    exc_module = getattr(exc.__class__, "__module__", "")
+    exc_type = exc.__class__.__name__
+    exc_str = str(exc).lower()
+
+    if (
+        "genai" in exc_module
+        or "google" in exc_module
+        or "gemini" in exc_type.lower()
+        or (hasattr(exc, "code") and isinstance(getattr(exc, "code", None), int))
+        or "resource_exhausted" in exc_str
+    ):
+        mapped = map_gemini_exception(exc)
+        return mapped.retryable
 
     mapped = map_boto_exception(exc)
     return mapped.retryable

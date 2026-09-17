@@ -13,6 +13,7 @@ import threading
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.core.config import settings
 from app.core.logging import get_logger
 from app.llm.contracts import LLMRequest, LLMResponse
 
@@ -154,7 +155,7 @@ def emit_llm_telemetry(
     resp_fp = compute_content_fingerprint(response.text) if response else None
 
     record = LLMTelemetryRecord(
-        provider=response.provider if response else "bedrock",
+        provider=response.provider if response else getattr(settings, "LLM_PROVIDER", "gemini"),
         model_id=request.model_id,
         status=status,
         latency_ms=round(latency_ms, 2),

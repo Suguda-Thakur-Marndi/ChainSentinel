@@ -20,15 +20,71 @@ import os
 import time
 from typing import Any, Dict, Iterator, List, Optional
 
-from opentelemetry import trace, metrics
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import (
-    BatchSpanProcessor,
-    ConsoleSpanExporter,
-    SimpleSpanProcessor,
-)
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.trace import Status, StatusCode, Span
+try:
+    from opentelemetry import trace, metrics
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import (
+        BatchSpanProcessor,
+        ConsoleSpanExporter,
+        SimpleSpanProcessor,
+    )
+    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.trace import Status, StatusCode, Span
+    HAVE_OPENTELEMETRY = True
+except ImportError:
+    HAVE_OPENTELEMETRY = False
+
+    class StatusCode:
+        OK = 1
+        ERROR = 2
+
+    class Status:
+        def __init__(self, status_code: int = StatusCode.OK, description: Optional[str] = None):
+            self.status_code = status_code
+            self.description = description
+
+    class SpanContext:
+        def __init__(self, trace_id: int = 1):
+            self.trace_id = trace_id
+
+    class Span:
+        def set_attribute(self, key: str, value: Any) -> None:
+            pass
+        def set_status(self, status: Any) -> None:
+            pass
+        def record_exception(self, exc: Exception) -> None:
+            pass
+        def end(self) -> None:
+            pass
+        def get_span_context(self) -> SpanContext:
+            return SpanContext(1)
+
+    class DummyTracer:
+        @contextmanager
+        def start_as_current_span(self, name: str, attributes: Optional[Dict[str, Any]] = None) -> Iterator[Span]:
+            yield Span()
+
+        def start_span(self, name: str, attributes: Optional[Dict[str, Any]] = None) -> Span:
+            return Span()
+
+    class TracerProvider:
+        def __init__(self, resource: Any = None):
+            pass
+
+        def get_tracer(self, name: str, version: Optional[str] = None) -> DummyTracer:
+            return DummyTracer()
+
+        def add_span_processor(self, processor: Any) -> None:
+            pass
+
+    class Resource:
+        @classmethod
+        def create(cls, attributes: Optional[Dict[str, Any]] = None) -> "Resource":
+            return cls()
+
+    class BatchSpanProcessor:
+        def __init__(self, exporter: Any):
+            pass
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
@@ -129,8 +185,9 @@ class TelemetryManager:
     ) -> None:
         """Record an LLM call strictly conforming to OpenTelemetry GenAI semantic conventions."""
         try:
+            system_val = "gemini" if getattr(settings, "LLM_PROVIDER", "gemini").lower() == "gemini" else "aws.bedrock"
             with self.start_span("gen_ai.chat") as span:
-                span.set_attribute(GenAISemanticConventions.SYSTEM, "aws.bedrock")
+                span.set_attribute(GenAISemanticConventions.SYSTEM, system_val)
                 span.set_attribute(GenAISemanticConventions.REQUEST_MODEL, model_id)
                 span.set_attribute(GenAISemanticConventions.RESPONSE_MODEL, model_id)
                 span.set_attribute(GenAISemanticConventions.OPERATION_NAME, "chat")
