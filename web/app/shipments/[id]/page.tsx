@@ -297,7 +297,7 @@ export default function ShipmentDetailPage() {
                 </h3>
 
                 <div className="space-y-3 overflow-y-auto max-h-[290px] pr-1">
-                  {events.length === 0 ? (
+                  {(!Array.isArray(events) || events.length === 0) ? (
                     <EmptyState
                       title="No Events Recorded"
                       message="No raw telemetry pings logged for this container yet."

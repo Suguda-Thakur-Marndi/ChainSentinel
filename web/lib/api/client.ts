@@ -274,8 +274,11 @@ class ApiClient {
     create: (data: ShipmentCreate): Promise<ShipmentResponse> => {
       return this.post<ShipmentResponse>("/api/v1/shipments", data);
     },
-    getEvents: (shipmentId: string): Promise<ShipmentEventResponse[]> => {
-      return this.get<ShipmentEventResponse[]>(`/api/v1/shipment-events?shipment_id=${shipmentId}`);
+    getEvents: async (shipmentId: string): Promise<ShipmentEventResponse[]> => {
+      const res = await this.get<any>(`/api/v1/shipment-events?shipment_id=${shipmentId}`);
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.items)) return res.items;
+      return [];
     },
   };
 
@@ -297,11 +300,17 @@ class ApiClient {
     create: (data: Partial<RiskResponse>): Promise<RiskResponse> => {
       return this.post<RiskResponse>("/api/v1/risks", data);
     },
-    getFactors: (riskId: string): Promise<RiskFactorResponse[]> => {
-      return this.get<RiskFactorResponse[]>(`/api/v1/risk-factors?risk_id=${riskId}`);
+    getFactors: async (riskId: string): Promise<RiskFactorResponse[]> => {
+      const res = await this.get<any>(`/api/v1/risk-factors?risk_id=${riskId}`);
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.items)) return res.items;
+      return [];
     },
-    getAssessments: (riskId: string): Promise<RiskAssessmentResponse[]> => {
-      return this.get<RiskAssessmentResponse[]>(`/api/v1/risk-assessments?risk_id=${riskId}`);
+    getAssessments: async (riskId: string): Promise<RiskAssessmentResponse[]> => {
+      const res = await this.get<any>(`/api/v1/risk-assessments?risk_id=${riskId}`);
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.items)) return res.items;
+      return [];
     },
   };
 

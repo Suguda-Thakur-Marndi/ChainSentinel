@@ -181,7 +181,7 @@ export default function RiskDetailPage() {
               </h3>
 
               <div className="space-y-3">
-                {factors.length === 0 ? (
+                {(!Array.isArray(factors) || factors.length === 0) ? (
                   <EmptyState
                     title="No Factors Disaggregated"
                     message="Authoritative backend risk engine computed a composite unified score."
@@ -221,7 +221,7 @@ export default function RiskDetailPage() {
               </h3>
 
               <div className="space-y-3">
-                {assessments.length === 0 ? (
+                {(!Array.isArray(assessments) || assessments.length === 0) ? (
                   <EmptyState
                     title="Unified Assessment"
                     message="Evaluated directly by deterministic risk scoring kernel."
