@@ -106,7 +106,7 @@ function AuthContent() {
         </div>
 
         <a
-          href={`http://localhost:8000/api/v1/auth/demo-login?return_to=${encodeURIComponent(returnTo)}`}
+          href={`/api/v1/auth/demo-login?return_to=${encodeURIComponent(returnTo)}`}
           className="w-full py-2.5 px-4 rounded-xl border border-blue-500/30 hover:border-blue-500/60 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 text-xs font-medium flex items-center justify-center gap-2 transition-colors cursor-pointer text-center"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

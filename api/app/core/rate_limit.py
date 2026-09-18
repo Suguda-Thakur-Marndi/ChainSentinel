@@ -105,7 +105,7 @@ class DistributedRateLimiter:
         self.redis_url = redis_url or settings.REDIS_URL
         self.tenant_limit = tenant_limit
         self.user_limit = user_limit
-        self.ip_limit = ip_limit
+        self.ip_limit = ip_limit if settings.APP_ENV != "development" else max(ip_limit, 300)
         self.window_seconds = window_seconds
         self._redis_client: Optional[Any] = None
         self._lua_script_sha: Optional[str] = None
@@ -241,9 +241,22 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if request.url.path in EXCLUDED_PATHS:
             return await call_next(request)
 
-        # 2. Extract tenant and user identifiers from request state or session
+        # 2. Extract tenant and user identifiers from request state or session cookie
         org_id = getattr(request.state, "organization_id", None)
         user_id = getattr(request.state, "user_id", None)
+        if not org_id or not user_id:
+            session_id = request.cookies.get(settings.SESSION_COOKIE_NAME)
+            if session_id:
+                try:
+                    from app.services.session_service import get_session_service
+                    session = get_session_service().get_session(session_id)
+                    if session and session.is_valid:
+                        org_id = session.organization_id
+                        user_id = session.user_id
+                        request.state.organization_id = org_id
+                        request.state.user_id = user_id
+                except Exception:
+                    pass
         client_ip = request.client.host if request.client else "127.0.0.1"
 
         # 3. Check rate limits

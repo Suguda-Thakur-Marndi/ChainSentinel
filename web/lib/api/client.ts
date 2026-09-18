@@ -92,7 +92,7 @@ class ApiClient {
   private unauthorizedListeners: Set<UnauthorizedListener> = new Set();
 
   constructor() {
-    this.baseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+    this.baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
   }
 
   public getBaseUrl(): string {
@@ -241,7 +241,8 @@ class ApiClient {
 
     getGoogleAuthUrl: (returnTo: string = "/"): string => {
       const sanitizedReturnTo = returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
-      const targetUrl = new URL("/api/v1/auth/google", this.baseUrl);
+      const origin = this.baseUrl || (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000");
+      const targetUrl = new URL("/api/v1/auth/google", origin);
       targetUrl.searchParams.set("return_to", sanitizedReturnTo);
       return targetUrl.href;
     },

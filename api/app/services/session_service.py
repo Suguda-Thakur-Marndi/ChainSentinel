@@ -84,7 +84,12 @@ class RedisSessionStore(BaseSessionStore):
         self._fallback = MemorySessionStore()
         try:
             import redis
-            self._client = redis.Redis.from_url(redis_url, decode_responses=True, socket_timeout=3)
+            self._client = redis.Redis.from_url(
+                redis_url,
+                decode_responses=True,
+                socket_timeout=1.0,
+                socket_connect_timeout=1.0,
+            )
             # Test connectivity
             self._client.ping()
             logger.info("Connected to Redis/Valkey session store at %s", redis_url.split("@")[-1])
