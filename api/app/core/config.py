@@ -97,7 +97,7 @@ class Settings(BaseSettings):
         return self.APP_ENV.lower() == "production"
 
     model_config = SettingsConfigDict(
-        env_file=(".env", "../.env", "../../.env"),
+        env_file=("../../.env", "../.env", ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -107,6 +107,13 @@ class Settings(BaseSettings):
     def parse_cors_origins(cls, v: Union[list[str], str]) -> list[str]:
         if isinstance(v, str):
             return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
+
+    @field_validator("REDIS_URL", mode="before")
+    @classmethod
+    def parse_redis_url(cls, v: Union[str, None]) -> Union[str, None]:
+        if v and v.strip().lower() in ("none", "disabled", "memory", '""', "''"):
+            return None
         return v
 
     @field_validator("GEMINI_ALLOWED_MODELS", mode="before")
