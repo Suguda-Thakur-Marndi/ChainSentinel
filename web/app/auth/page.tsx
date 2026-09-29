@@ -48,7 +48,7 @@ function AuthContent() {
       >
         <Loader2 className="w-6 h-6 text-blue-400 animate-spin" aria-hidden="true" />
         <p className="text-sm text-slate-300 font-medium">
-          Session verified. Redirecting to RiskWise workspace…
+          Session verified. Redirecting to CHAINSENTINEL workspace…
         </p>
       </div>
     );
@@ -124,7 +124,7 @@ function AuthLoadingFallback() {
   return (
     <div
       role="status"
-      aria-label="Loading RiskWise Authentication"
+      aria-label="Loading CHAINSENTINEL Authentication"
       className="w-full max-w-[420px] h-[520px] rounded-2xl liquid-metal-panel flex items-center justify-center"
     >
       <div className="flex flex-col items-center gap-3">
@@ -150,7 +150,7 @@ export default function AuthPage() {
       <header className="w-full max-w-5xl flex items-center justify-between text-[11px] text-slate-500 font-mono z-10 py-1">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-          <span className="tracking-widest uppercase">RISKWISE GATEWAY SECURE</span>
+          <span className="tracking-widest uppercase font-semibold">CHAINSENTINEL GATEWAY SECURE</span>
         </div>
         <div className="hidden sm:block text-slate-500 tracking-wider">
           TLS 1.3 • STRICT MULTI-TENANT
@@ -166,7 +166,7 @@ export default function AuthPage() {
 
       {/* Footer / Governance */}
       <footer className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500 z-10 py-1 border-t border-white/[0.04]">
-        <p>© {new Date().getFullYear()} RiskWise Systems Inc. Enterprise Edition.</p>
+        <p>© {new Date().getFullYear()} CHAINSENTINEL Systems Inc. Enterprise Defense Edition.</p>
         <div className="flex items-center gap-4 text-slate-400">
           <span className="hover:text-slate-200 transition-colors cursor-default">
             Security Architecture

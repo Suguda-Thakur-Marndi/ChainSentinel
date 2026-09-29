@@ -19,7 +19,7 @@ const ERROR_MESSAGES: Record<string, { title: string; detail: string }> = {
   },
   account_deactivated: {
     title: "Account Deactivated",
-    detail: "Your RiskWise account has been deactivated. Please contact your organization administrator.",
+    detail: "Your ChainSentinel account has been deactivated. Please contact your organization administrator.",
   },
   unverified_email: {
     title: "Unverified Google Account",

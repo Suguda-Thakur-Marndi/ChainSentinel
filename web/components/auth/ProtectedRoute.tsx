@@ -75,7 +75,7 @@ export function ProtectedRoute({
       >
         <Loader2 className="w-6 h-6 text-blue-400 animate-spin" aria-hidden="true" />
         <p className="mt-3 text-xs text-slate-400 font-mono">
-          REDIRECTING TO RISKWISE GATEWAY…
+          REDIRECTING TO CHAINSENTINEL GATEWAY…
         </p>
       </div>
     );
@@ -99,7 +99,7 @@ export function ProtectedRoute({
                 Organization Setup Required
               </h2>
               <p className="mt-2 text-xs text-slate-400 leading-relaxed">
-                Signed in as <span className="text-slate-200 font-medium">{user?.email}</span>. Your Google identity is authenticated, but you are not yet associated with an active RiskWise organization workspace.
+                Signed in as <span className="text-slate-200 font-medium">{user?.email}</span>. Your Google identity is authenticated, but you are not yet associated with an active ChainSentinel organization workspace.
               </p>
             </div>
 
@@ -150,7 +150,7 @@ export function ProtectedRoute({
             </div>
 
             <div className="p-3 rounded-lg bg-amber-950/20 border border-amber-500/20 text-xs text-amber-200/90 text-left">
-              Contact your RiskWise platform administrator to activate your organization subscription.
+              Contact your ChainSentinel platform administrator to activate your organization subscription.
             </div>
 
             <button

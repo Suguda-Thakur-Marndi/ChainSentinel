@@ -128,16 +128,21 @@ export function Sidebar({
     >
       {/* Brand Header */}
       <div className="h-14 border-b border-[#243044] px-4 flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white flex-shrink-0 font-black shadow-md shadow-blue-500/20">
-            RW
+        <Link href="/dashboard" className="flex items-center gap-2.5 overflow-hidden group">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-600 p-[1px] shadow-md shadow-cyan-500/20 flex-shrink-0 group-hover:scale-105 transition-transform">
+            <div className="w-full h-full rounded-[7px] bg-[#0A0E17] flex items-center justify-center font-black text-cyan-400 text-xs tracking-wider">
+              CS
+            </div>
           </div>
           {!isCollapsed && (
             <div className="flex flex-col truncate">
-              <span className="text-sm font-bold tracking-tight text-white flex items-center gap-1">
-                RiskWise <span className="text-[10px] px-1 py-0.5 rounded bg-blue-500/20 text-blue-400 font-mono">2.0</span>
+              <span className="text-xs font-black tracking-[0.14em] text-white flex items-center">
+                CHAIN<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400">SENTINEL</span>
               </span>
-              <span className="text-[10px] text-slate-400 truncate">Control Tower</span>
+              <span className="text-[9px] text-slate-400 font-mono tracking-wider flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                CONTROL TOWER
+              </span>
             </div>
           )}
         </Link>
@@ -208,7 +213,7 @@ export function Sidebar({
           {!isCollapsed && (
             <div className="truncate flex-1">
               <p className="text-xs font-medium text-slate-200 truncate">{user?.full_name || "Operator"}</p>
-              <p className="text-[10px] text-slate-500 truncate font-mono">{user?.email || "auth@riskwise.io"}</p>
+              <p className="text-[10px] text-slate-500 truncate font-mono">{user?.email || "auth@chainsentinel.internal"}</p>
             </div>
           )}
         </div>

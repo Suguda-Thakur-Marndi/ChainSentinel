@@ -82,7 +82,7 @@ export function AuthModeSwitch({ mode, onChange, disabled = false }: AuthModeSwi
         <p className="text-xs text-slate-400 leading-relaxed font-normal">
           {mode === "signin" ? (
             <span>
-              Sign in with your enterprise Google account to access your RiskWise intelligence workspace.
+              Sign in with your enterprise Google account to access your ChainSentinel intelligence workspace.
             </span>
           ) : (
             <span>

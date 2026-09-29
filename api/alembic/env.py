@@ -55,11 +55,15 @@ def run_migrations_online() -> None:
     if settings.DATABASE_URL:
         configuration["sqlalchemy.url"] = settings.DATABASE_URL
 
+    connect_args = {}
+    if settings.DATABASE_URL and not str(settings.DATABASE_URL).startswith("sqlite"):
+        connect_args["connect_timeout"] = 5
+
     connectable = engine_from_config(
         configuration,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
-        connect_args={"connect_timeout": 5},
+        connect_args=connect_args,
     )
 
     with connectable.connect() as connection:

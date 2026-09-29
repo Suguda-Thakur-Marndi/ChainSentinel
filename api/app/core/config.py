@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "RiskWise API"
+    PROJECT_NAME: str = "CHAINSENTINEL"
     VERSION: str = "1.0.0"
     APP_ENV: str = "development"
     API_PREFIX: str = "/api/v1"

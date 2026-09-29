@@ -19,7 +19,7 @@ export function AuthSecurityNotice() {
       {/* Support & Organization Notice */}
       <p className="text-center text-[11px] text-slate-500 leading-relaxed">
         Requires an active enterprise Google Workspace account. For access delegation or SSO setup, contact your{" "}
-        <span className="text-slate-400 font-medium">RiskWise Systems Administrator</span>.
+        <span className="text-slate-400 font-medium">ChainSentinel Systems Administrator</span>.
       </p>
     </div>
   );

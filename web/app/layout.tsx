@@ -23,8 +23,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "RiskWise 2.0 — Supply Chain Risk Intelligence",
-  description: "Enterprise multi-tier supply chain risk intelligence and autonomous mitigation platform.",
+  title: "CHAINSENTINEL — Autonomous Supply Chain Risk Intelligence",
+  description: "Enterprise multi-tier supply chain risk intelligence, digital twin simulation, and autonomous mitigation platform.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
