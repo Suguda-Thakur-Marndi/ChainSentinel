@@ -9,7 +9,6 @@ import {
   Truck,
   Wind,
   X,
-  Layers,
   AlertTriangle,
   ExternalLink,
 } from "lucide-react";
@@ -597,22 +596,20 @@ export function MapCard({
 
             <div className="pt-3 border-t border-[#243044] flex items-center justify-between text-[10px] font-mono text-slate-500">
               <span>Telemetry: Active Ping</span>
-              {googleMapInstanceRef.current && (
-                <button
-                  onClick={() => {
-                    if (googleMapInstanceRef.current) {
-                      googleMapInstanceRef.current.panTo({
-                        lat: selectedEntity.lat,
-                        lng: selectedEntity.lng,
-                      });
-                      googleMapInstanceRef.current.setZoom(10);
-                    }
-                  }}
-                  className="text-blue-400 hover:underline cursor-pointer"
-                >
-                  Center on Map
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  if (googleMapInstanceRef.current) {
+                    googleMapInstanceRef.current.panTo({
+                      lat: selectedEntity.lat,
+                      lng: selectedEntity.lng,
+                    });
+                    googleMapInstanceRef.current.setZoom(10);
+                  }
+                }}
+                className="text-blue-400 hover:underline cursor-pointer"
+              >
+                Center on Map
+              </button>
             </div>
           </div>
         )}

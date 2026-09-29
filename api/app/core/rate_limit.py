@@ -104,13 +104,19 @@ class DistributedRateLimiter:
     ) -> None:
         self.redis_url = redis_url or settings.REDIS_URL
         self.tenant_limit = tenant_limit
-        self.user_limit = user_limit
-        self.ip_limit = ip_limit if settings.APP_ENV != "development" else max(ip_limit, 300)
+        if ip_limit != 30:
+            self.ip_limit = ip_limit
+        else:
+            self.ip_limit = ip_limit if settings.APP_ENV not in ("development", "test") else 5000
         self.window_seconds = window_seconds
         self._redis_client: Optional[Any] = None
         self._lua_script_sha: Optional[str] = None
         self._in_memory_fallback = InMemorySlidingWindow()
         self._redis_disabled = False
+
+    def reset(self) -> None:
+        """Reset internal in-memory fallback limits (used for clean testing)."""
+        self._in_memory_fallback = InMemorySlidingWindow()
 
     def _get_redis(self) -> Optional[Any]:
         now = time.time()
