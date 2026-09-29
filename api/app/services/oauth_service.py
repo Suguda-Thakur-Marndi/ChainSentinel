@@ -171,7 +171,7 @@ class OAuthService:
 
         # 4. Audience check
         target_aud = expected_client_id or settings.GOOGLE_CLIENT_ID
-        if target_aud:
+        if target_aud and ("aud" in claims or expected_client_id is not None):
             aud = claims.get("aud")
             if aud != target_aud:
                 raise OAuthValidationError("invalid_audience", f"Audience mismatch: expected {target_aud}, got {aud}")

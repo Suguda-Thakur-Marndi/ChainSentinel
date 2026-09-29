@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str | None = None
     GOOGLE_CLIENT_SECRET: str | None = None
     GOOGLE_REDIRECT_URI: str | None = None
+    GOOGLE_PROJECT_ID: str | None = None
 
     @property
     def is_google_oauth_configured(self) -> bool:
