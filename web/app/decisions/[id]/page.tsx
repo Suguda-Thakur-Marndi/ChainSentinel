@@ -117,13 +117,13 @@ export default function DecisionDetailPage() {
               </span>
               <h1 className="text-xl font-bold text-white tracking-tight">{decision.title}</h1>
               <p className="text-xs text-slate-400 font-mono">
-                ID: {decision.decision_id} • Score: {decision.deterministic_score.toFixed(3)}
+                ID: {decision.decision_id} • Score: {decision.deterministic_score !== undefined && decision.deterministic_score !== null ? decision.deterministic_score.toFixed(3) : "N/A"}
               </p>
             </div>
 
             <div className="text-right">
               <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">Status</span>
-              <StatusBadge status={decision.decision_status} />
+              <StatusBadge status={decision.decision_status || (decision as unknown as { status?: string }).status || "PENDING"} />
             </div>
           </div>
 

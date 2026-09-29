@@ -1,0 +1,1937 @@
+[
+  {
+    "test_id": "API-001",
+    "method": "GET",
+    "path": "/",
+    "operation_id": "root__get",
+    "summary": "Root",
+    "tags": [
+      "Root"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-002",
+    "method": "GET",
+    "path": "/api/v1/actions",
+    "operation_id": "list_actions_api_v1_actions_get",
+    "summary": "List actions",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-003",
+    "method": "POST",
+    "path": "/api/v1/actions",
+    "operation_id": "create_action_api_v1_actions_post",
+    "summary": "Create action",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-004",
+    "method": "POST",
+    "path": "/api/v1/actions/execute",
+    "operation_id": "execute_approved_action_api_v1_actions_execute_post",
+    "summary": "Execute approved operational mitigation action (Phase 17)",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-005",
+    "method": "GET",
+    "path": "/api/v1/actions/{id}",
+    "operation_id": "get_action_api_v1_actions__id__get",
+    "summary": "Get action by ID",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-006",
+    "method": "PATCH",
+    "path": "/api/v1/actions/{id}",
+    "operation_id": "update_action_api_v1_actions__id__patch",
+    "summary": "Update action",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-007",
+    "method": "POST",
+    "path": "/api/v1/actions/{id}/execute",
+    "operation_id": "execute_action_api_v1_actions__id__execute_post",
+    "summary": "Execute action",
+    "tags": [
+      "Actions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 409 validated (Contract & Lifecycle enforced)",
+    "response_code": 409,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-008",
+    "method": "GET",
+    "path": "/api/v1/approvals",
+    "operation_id": "list_approvals_api_v1_approvals_get",
+    "summary": "List approvals",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-009",
+    "method": "POST",
+    "path": "/api/v1/approvals",
+    "operation_id": "create_approval_api_v1_approvals_post",
+    "summary": "Create approval",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-010",
+    "method": "GET",
+    "path": "/api/v1/approvals/pending",
+    "operation_id": "list_pending_approvals_api_v1_approvals_pending_get",
+    "summary": "List pending approvals",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-011",
+    "method": "GET",
+    "path": "/api/v1/approvals/{id}",
+    "operation_id": "get_approval_api_v1_approvals__id__get",
+    "summary": "Get approval by ID",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-012",
+    "method": "POST",
+    "path": "/api/v1/approvals/{id}/approve",
+    "operation_id": "approve_decision_api_v1_approvals__id__approve_post",
+    "summary": "Approve decision candidate",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated (Contract & Lifecycle enforced)",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-013",
+    "method": "POST",
+    "path": "/api/v1/approvals/{id}/decide",
+    "operation_id": "record_human_decision_api_v1_approvals__id__decide_post",
+    "summary": "Record human approval decision",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-014",
+    "method": "GET",
+    "path": "/api/v1/approvals/{id}/dossier",
+    "operation_id": "get_approval_dossier_api_v1_approvals__id__dossier_get",
+    "summary": "Get approval review dossier",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-015",
+    "method": "POST",
+    "path": "/api/v1/approvals/{id}/reject",
+    "operation_id": "reject_decision_api_v1_approvals__id__reject_post",
+    "summary": "Reject decision candidate",
+    "tags": [
+      "Approvals"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated (Contract & Lifecycle enforced)",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-016",
+    "method": "GET",
+    "path": "/api/v1/audit-logs",
+    "operation_id": "list_audit_logs_api_v1_audit_logs_get",
+    "summary": "List audit logs",
+    "tags": [
+      "Audit Logs"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-017",
+    "method": "GET",
+    "path": "/api/v1/audit-logs/{id}",
+    "operation_id": "get_audit_log_api_v1_audit_logs__id__get",
+    "summary": "Get audit log by ID",
+    "tags": [
+      "Audit Logs"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-018",
+    "method": "GET",
+    "path": "/api/v1/auth/google",
+    "operation_id": "initiate_google_oauth_api_v1_auth_google_get",
+    "summary": "Initiate Google Oauth",
+    "tags": [
+      "Auth"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 302 validated",
+    "response_code": 302,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-019",
+    "method": "GET",
+    "path": "/api/v1/auth/google/callback",
+    "operation_id": "google_oauth_callback_api_v1_auth_google_callback_get",
+    "summary": "Google Oauth Callback",
+    "tags": [
+      "Auth"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 302 validated",
+    "response_code": 302,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-020",
+    "method": "POST",
+    "path": "/api/v1/auth/logout",
+    "operation_id": "logout_api_v1_auth_logout_post",
+    "summary": "Logout",
+    "tags": [
+      "Auth"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 session terminated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-021",
+    "method": "GET",
+    "path": "/api/v1/auth/me",
+    "operation_id": "get_current_user_profile_api_v1_auth_me_get",
+    "summary": "Get Current User Profile",
+    "tags": [
+      "Auth"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-022",
+    "method": "GET",
+    "path": "/api/v1/carriers",
+    "operation_id": "list_carriers_api_v1_carriers_get",
+    "summary": "List carriers",
+    "tags": [
+      "Carriers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-023",
+    "method": "POST",
+    "path": "/api/v1/carriers",
+    "operation_id": "create_carrier_api_v1_carriers_post",
+    "summary": "Create carrier",
+    "tags": [
+      "Carriers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-024",
+    "method": "GET",
+    "path": "/api/v1/carriers/{id}",
+    "operation_id": "get_carrier_api_v1_carriers__id__get",
+    "summary": "Get carrier by ID",
+    "tags": [
+      "Carriers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-025",
+    "method": "PATCH",
+    "path": "/api/v1/carriers/{id}",
+    "operation_id": "update_carrier_api_v1_carriers__id__patch",
+    "summary": "Update carrier",
+    "tags": [
+      "Carriers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-026",
+    "method": "GET",
+    "path": "/api/v1/decisions",
+    "operation_id": "list_decisions_api_v1_decisions_get",
+    "summary": "List decision recommendations",
+    "tags": [
+      "Decisions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-027",
+    "method": "POST",
+    "path": "/api/v1/decisions",
+    "operation_id": "create_decision_api_v1_decisions_post",
+    "summary": "Formulate decision recommendation",
+    "tags": [
+      "Decisions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-028",
+    "method": "GET",
+    "path": "/api/v1/decisions/{decision_id}",
+    "operation_id": "get_decision_api_v1_decisions__decision_id__get",
+    "summary": "Get decision recommendation by ID",
+    "tags": [
+      "Decisions"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-029",
+    "method": "GET",
+    "path": "/api/v1/digital-twin/current",
+    "operation_id": "get_current_twin_api_v1_digital_twin_current_get",
+    "summary": "Get current Digital Twin overview",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-030",
+    "method": "GET",
+    "path": "/api/v1/digital-twin/edges",
+    "operation_id": "list_edges_api_v1_digital_twin_edges_get",
+    "summary": "List Digital Twin edges",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-031",
+    "method": "GET",
+    "path": "/api/v1/digital-twin/nodes",
+    "operation_id": "list_nodes_api_v1_digital_twin_nodes_get",
+    "summary": "List Digital Twin nodes",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-032",
+    "method": "GET",
+    "path": "/api/v1/digital-twin/nodes/{node_id}",
+    "operation_id": "get_node_by_id_api_v1_digital_twin_nodes__node_id__get",
+    "summary": "Get Digital Twin node by ID",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-033",
+    "method": "POST",
+    "path": "/api/v1/digital-twin/path",
+    "operation_id": "find_path_api_v1_digital_twin_path_post",
+    "summary": "Find deterministic path",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-034",
+    "method": "POST",
+    "path": "/api/v1/digital-twin/query",
+    "operation_id": "query_graph_api_v1_digital_twin_query_post",
+    "summary": "Execute bounded graph query",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated (Contract & Lifecycle enforced)",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-035",
+    "method": "POST",
+    "path": "/api/v1/digital-twin/refresh",
+    "operation_id": "refresh_twin_api_v1_digital_twin_refresh_post",
+    "summary": "Rebuild and refresh Digital Twin",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated (Contract & Lifecycle enforced)",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-036",
+    "method": "GET",
+    "path": "/api/v1/digital-twin/snapshot",
+    "operation_id": "get_full_snapshot_api_v1_digital_twin_snapshot_get",
+    "summary": "Get complete Digital Twin snapshot",
+    "tags": [
+      "Digital Twin"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-037",
+    "method": "GET",
+    "path": "/api/v1/evaluations/datasets",
+    "operation_id": "list_evaluation_datasets_api_v1_evaluations_datasets_get",
+    "summary": "List Evaluation Datasets",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-038",
+    "method": "POST",
+    "path": "/api/v1/evaluations/run",
+    "operation_id": "run_evaluation_suite_api_v1_evaluations_run_post",
+    "summary": "Run Evaluation Suite",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-039",
+    "method": "GET",
+    "path": "/api/v1/evaluations/runs",
+    "operation_id": "list_evaluation_runs_api_v1_evaluations_runs_get",
+    "summary": "List Evaluation Runs",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-040",
+    "method": "GET",
+    "path": "/api/v1/evaluations/runs/{run_id}",
+    "operation_id": "get_evaluation_run_api_v1_evaluations_runs__run_id__get",
+    "summary": "Get Evaluation Run",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-041",
+    "method": "GET",
+    "path": "/api/v1/evaluations/runs/{run_id}/report",
+    "operation_id": "get_evaluation_report_api_v1_evaluations_runs__run_id__report_get",
+    "summary": "Get Evaluation Report",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-042",
+    "method": "GET",
+    "path": "/api/v1/evaluations/suites",
+    "operation_id": "list_evaluation_suites_api_v1_evaluations_suites_get",
+    "summary": "List Evaluation Suites",
+    "tags": [
+      "Evaluations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-043",
+    "method": "GET",
+    "path": "/api/v1/factories",
+    "operation_id": "list_factories_api_v1_factories_get",
+    "summary": "List factories",
+    "tags": [
+      "Factories"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-044",
+    "method": "POST",
+    "path": "/api/v1/factories",
+    "operation_id": "create_factory_api_v1_factories_post",
+    "summary": "Create factory",
+    "tags": [
+      "Factories"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-045",
+    "method": "GET",
+    "path": "/api/v1/factories/{id}",
+    "operation_id": "get_factory_api_v1_factories__id__get",
+    "summary": "Get factory by ID",
+    "tags": [
+      "Factories"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-046",
+    "method": "PATCH",
+    "path": "/api/v1/factories/{id}",
+    "operation_id": "update_factory_api_v1_factories__id__patch",
+    "summary": "Update factory",
+    "tags": [
+      "Factories"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-047",
+    "method": "GET",
+    "path": "/api/v1/health",
+    "operation_id": "get_health_api_v1_health_get",
+    "summary": "Get Health",
+    "tags": [
+      "Health"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-048",
+    "method": "GET",
+    "path": "/api/v1/health/db",
+    "operation_id": "get_db_health_api_v1_health_db_get",
+    "summary": "Get Db Health",
+    "tags": [
+      "Health"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-049",
+    "method": "GET",
+    "path": "/api/v1/incidents",
+    "operation_id": "list_incidents_api_v1_incidents_get",
+    "summary": "List incidents",
+    "tags": [
+      "Incidents"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-050",
+    "method": "POST",
+    "path": "/api/v1/incidents",
+    "operation_id": "create_incident_api_v1_incidents_post",
+    "summary": "Create incident",
+    "tags": [
+      "Incidents"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-051",
+    "method": "GET",
+    "path": "/api/v1/incidents/{id}",
+    "operation_id": "get_incident_api_v1_incidents__id__get",
+    "summary": "Get incident by ID",
+    "tags": [
+      "Incidents"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-052",
+    "method": "PATCH",
+    "path": "/api/v1/incidents/{id}",
+    "operation_id": "update_incident_api_v1_incidents__id__patch",
+    "summary": "Update incident",
+    "tags": [
+      "Incidents"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-053",
+    "method": "GET",
+    "path": "/api/v1/inventory",
+    "operation_id": "list_inventory_api_v1_inventory_get",
+    "summary": "List inventory",
+    "tags": [
+      "Inventory"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-054",
+    "method": "POST",
+    "path": "/api/v1/inventory",
+    "operation_id": "create_inventory_api_v1_inventory_post",
+    "summary": "Create inventory",
+    "tags": [
+      "Inventory"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-055",
+    "method": "GET",
+    "path": "/api/v1/inventory-movements",
+    "operation_id": "list_inventory_movements_api_v1_inventory_movements_get",
+    "summary": "List inventory movements",
+    "tags": [
+      "Inventory Movements"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-056",
+    "method": "POST",
+    "path": "/api/v1/inventory-movements",
+    "operation_id": "create_inventory_movement_api_v1_inventory_movements_post",
+    "summary": "Create inventory movement",
+    "tags": [
+      "Inventory Movements"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-057",
+    "method": "GET",
+    "path": "/api/v1/inventory-movements/{id}",
+    "operation_id": "get_inventory_movement_api_v1_inventory_movements__id__get",
+    "summary": "Get inventory movement by ID",
+    "tags": [
+      "Inventory Movements"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-058",
+    "method": "GET",
+    "path": "/api/v1/inventory/{id}",
+    "operation_id": "get_inventory_api_v1_inventory__id__get",
+    "summary": "Get inventory by ID",
+    "tags": [
+      "Inventory"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-059",
+    "method": "PATCH",
+    "path": "/api/v1/inventory/{id}",
+    "operation_id": "update_inventory_api_v1_inventory__id__patch",
+    "summary": "Update inventory",
+    "tags": [
+      "Inventory"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-060",
+    "method": "GET",
+    "path": "/api/v1/notifications",
+    "operation_id": "list_notifications_api_v1_notifications_get",
+    "summary": "List notifications",
+    "tags": [
+      "Notifications"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-061",
+    "method": "POST",
+    "path": "/api/v1/notifications",
+    "operation_id": "create_notification_api_v1_notifications_post",
+    "summary": "Create notification",
+    "tags": [
+      "Notifications"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-062",
+    "method": "POST",
+    "path": "/api/v1/notifications/mark-all-read",
+    "operation_id": "mark_all_notifications_read_api_v1_notifications_mark_all_read_post",
+    "summary": "Mark all notifications read",
+    "tags": [
+      "Notifications"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated (Contract & Lifecycle enforced)",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-063",
+    "method": "GET",
+    "path": "/api/v1/notifications/{id}",
+    "operation_id": "get_notification_api_v1_notifications__id__get",
+    "summary": "Get notification by ID",
+    "tags": [
+      "Notifications"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-064",
+    "method": "PATCH",
+    "path": "/api/v1/notifications/{id}",
+    "operation_id": "update_notification_api_v1_notifications__id__patch",
+    "summary": "Update notification read status",
+    "tags": [
+      "Notifications"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-065",
+    "method": "GET",
+    "path": "/api/v1/optimization-runs",
+    "operation_id": "list_optimization_runs_api_v1_optimization_runs_get",
+    "summary": "List optimization runs",
+    "tags": [
+      "Optimization"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-066",
+    "method": "POST",
+    "path": "/api/v1/optimization-runs",
+    "operation_id": "create_optimization_run_api_v1_optimization_runs_post",
+    "summary": "Trigger mathematical optimization run",
+    "tags": [
+      "Optimization"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-067",
+    "method": "GET",
+    "path": "/api/v1/optimization-runs/{optimization_id}",
+    "operation_id": "get_optimization_run_api_v1_optimization_runs__optimization_id__get",
+    "summary": "Get optimization run result",
+    "tags": [
+      "Optimization"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-068",
+    "method": "GET",
+    "path": "/api/v1/ports",
+    "operation_id": "list_ports_api_v1_ports_get",
+    "summary": "List ports",
+    "tags": [
+      "Ports"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-069",
+    "method": "GET",
+    "path": "/api/v1/ports/{id}",
+    "operation_id": "get_port_api_v1_ports__id__get",
+    "summary": "Get port by ID",
+    "tags": [
+      "Ports"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-070",
+    "method": "GET",
+    "path": "/api/v1/products",
+    "operation_id": "list_products_api_v1_products_get",
+    "summary": "List products",
+    "tags": [
+      "Products"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-071",
+    "method": "POST",
+    "path": "/api/v1/products",
+    "operation_id": "create_product_api_v1_products_post",
+    "summary": "Create product",
+    "tags": [
+      "Products"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-072",
+    "method": "GET",
+    "path": "/api/v1/products/{id}",
+    "operation_id": "get_product_api_v1_products__id__get",
+    "summary": "Get product by ID",
+    "tags": [
+      "Products"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-073",
+    "method": "PATCH",
+    "path": "/api/v1/products/{id}",
+    "operation_id": "update_product_api_v1_products__id__patch",
+    "summary": "Update product",
+    "tags": [
+      "Products"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-074",
+    "method": "GET",
+    "path": "/api/v1/recommendations",
+    "operation_id": "list_recommendations_api_v1_recommendations_get",
+    "summary": "List recommendations",
+    "tags": [
+      "Recommendations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-075",
+    "method": "POST",
+    "path": "/api/v1/recommendations",
+    "operation_id": "create_recommendation_api_v1_recommendations_post",
+    "summary": "Create recommendation",
+    "tags": [
+      "Recommendations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-076",
+    "method": "GET",
+    "path": "/api/v1/recommendations/{id}",
+    "operation_id": "get_recommendation_api_v1_recommendations__id__get",
+    "summary": "Get recommendation by ID",
+    "tags": [
+      "Recommendations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-077",
+    "method": "PATCH",
+    "path": "/api/v1/recommendations/{id}",
+    "operation_id": "update_recommendation_api_v1_recommendations__id__patch",
+    "summary": "Update recommendation",
+    "tags": [
+      "Recommendations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-078",
+    "method": "POST",
+    "path": "/api/v1/recommendations/{id}/approve",
+    "operation_id": "approve_recommendation_api_v1_recommendations__id__approve_post",
+    "summary": "Approve recommendation",
+    "tags": [
+      "Recommendations"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 409 validated (Contract & Lifecycle enforced)",
+    "response_code": 409,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-079",
+    "method": "GET",
+    "path": "/api/v1/risk-assessments",
+    "operation_id": "list_risk_assessments_api_v1_risk_assessments_get",
+    "summary": "List risk assessments",
+    "tags": [
+      "Risk Assessments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-080",
+    "method": "POST",
+    "path": "/api/v1/risk-assessments",
+    "operation_id": "create_risk_assessment_api_v1_risk_assessments_post",
+    "summary": "Create risk assessment",
+    "tags": [
+      "Risk Assessments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-081",
+    "method": "GET",
+    "path": "/api/v1/risk-assessments/{id}",
+    "operation_id": "get_risk_assessment_api_v1_risk_assessments__id__get",
+    "summary": "Get risk assessment by ID",
+    "tags": [
+      "Risk Assessments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-082",
+    "method": "GET",
+    "path": "/api/v1/risk-factors",
+    "operation_id": "list_risk_factors_api_v1_risk_factors_get",
+    "summary": "List risk factors",
+    "tags": [
+      "Risk Factors"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-083",
+    "method": "POST",
+    "path": "/api/v1/risk-factors",
+    "operation_id": "create_risk_factor_api_v1_risk_factors_post",
+    "summary": "Create risk factor",
+    "tags": [
+      "Risk Factors"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-084",
+    "method": "DELETE",
+    "path": "/api/v1/risk-factors/{id}",
+    "operation_id": "delete_risk_factor_api_v1_risk_factors__id__delete",
+    "summary": "Delete risk factor",
+    "tags": [
+      "Risk Factors"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 verified",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-085",
+    "method": "GET",
+    "path": "/api/v1/risk-factors/{id}",
+    "operation_id": "get_risk_factor_api_v1_risk_factors__id__get",
+    "summary": "Get risk factor by ID",
+    "tags": [
+      "Risk Factors"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-086",
+    "method": "PATCH",
+    "path": "/api/v1/risk-factors/{id}",
+    "operation_id": "update_risk_factor_api_v1_risk_factors__id__patch",
+    "summary": "Update risk factor",
+    "tags": [
+      "Risk Factors"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-087",
+    "method": "GET",
+    "path": "/api/v1/risks",
+    "operation_id": "list_risks_api_v1_risks_get",
+    "summary": "List risks",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-088",
+    "method": "POST",
+    "path": "/api/v1/risks",
+    "operation_id": "create_risk_api_v1_risks_post",
+    "summary": "Create risk",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-089",
+    "method": "GET",
+    "path": "/api/v1/risks/{id}",
+    "operation_id": "get_risk_api_v1_risks__id__get",
+    "summary": "Get risk by ID",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-090",
+    "method": "PATCH",
+    "path": "/api/v1/risks/{id}",
+    "operation_id": "update_risk_api_v1_risks__id__patch",
+    "summary": "Update risk",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-091",
+    "method": "GET",
+    "path": "/api/v1/risks/{id}/assessments",
+    "operation_id": "list_assessments_for_risk_api_v1_risks__id__assessments_get",
+    "summary": "List assessments for risk",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-092",
+    "method": "GET",
+    "path": "/api/v1/risks/{id}/factors",
+    "operation_id": "list_factors_for_risk_api_v1_risks__id__factors_get",
+    "summary": "List factors for risk",
+    "tags": [
+      "Risks"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-093",
+    "method": "GET",
+    "path": "/api/v1/routes",
+    "operation_id": "list_routes_api_v1_routes_get",
+    "summary": "List routes",
+    "tags": [
+      "Routes"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-094",
+    "method": "POST",
+    "path": "/api/v1/routes",
+    "operation_id": "create_route_api_v1_routes_post",
+    "summary": "Create route",
+    "tags": [
+      "Routes"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-095",
+    "method": "GET",
+    "path": "/api/v1/routes/{id}",
+    "operation_id": "get_route_api_v1_routes__id__get",
+    "summary": "Get route by ID",
+    "tags": [
+      "Routes"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-096",
+    "method": "PATCH",
+    "path": "/api/v1/routes/{id}",
+    "operation_id": "update_route_api_v1_routes__id__patch",
+    "summary": "Update route",
+    "tags": [
+      "Routes"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-097",
+    "method": "GET",
+    "path": "/api/v1/shipment-events",
+    "operation_id": "list_shipment_events_api_v1_shipment_events_get",
+    "summary": "List shipment events",
+    "tags": [
+      "Shipment Events"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-098",
+    "method": "POST",
+    "path": "/api/v1/shipment-events",
+    "operation_id": "create_shipment_event_api_v1_shipment_events_post",
+    "summary": "Create shipment event",
+    "tags": [
+      "Shipment Events"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-099",
+    "method": "GET",
+    "path": "/api/v1/shipment-events/{id}",
+    "operation_id": "get_shipment_event_api_v1_shipment_events__id__get",
+    "summary": "Get shipment event by ID",
+    "tags": [
+      "Shipment Events"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-100",
+    "method": "GET",
+    "path": "/api/v1/shipments",
+    "operation_id": "list_shipments_api_v1_shipments_get",
+    "summary": "List shipments",
+    "tags": [
+      "Shipments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-101",
+    "method": "POST",
+    "path": "/api/v1/shipments",
+    "operation_id": "create_shipment_api_v1_shipments_post",
+    "summary": "Create shipment",
+    "tags": [
+      "Shipments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-102",
+    "method": "GET",
+    "path": "/api/v1/shipments/{id}",
+    "operation_id": "get_shipment_api_v1_shipments__id__get",
+    "summary": "Get shipment by ID",
+    "tags": [
+      "Shipments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-103",
+    "method": "PATCH",
+    "path": "/api/v1/shipments/{id}",
+    "operation_id": "update_shipment_api_v1_shipments__id__patch",
+    "summary": "Update shipment",
+    "tags": [
+      "Shipments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-104",
+    "method": "GET",
+    "path": "/api/v1/shipments/{id}/events",
+    "operation_id": "list_shipment_events_for_shipment_api_v1_shipments__id__events_get",
+    "summary": "List events for shipment",
+    "tags": [
+      "Shipments"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-105",
+    "method": "GET",
+    "path": "/api/v1/simulation/scenarios",
+    "operation_id": "list_scenarios_api_v1_simulation_scenarios_get",
+    "summary": "List what-if scenarios",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-106",
+    "method": "POST",
+    "path": "/api/v1/simulation/scenarios",
+    "operation_id": "create_scenario_api_v1_simulation_scenarios_post",
+    "summary": "Create what-if scenario",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-107",
+    "method": "GET",
+    "path": "/api/v1/simulation/scenarios/{scenario_id}",
+    "operation_id": "get_scenario_api_v1_simulation_scenarios__scenario_id__get",
+    "summary": "Get scenario by ID",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-108",
+    "method": "POST",
+    "path": "/api/v1/simulation/scenarios/{scenario_id}/simulate",
+    "operation_id": "run_simulation_api_v1_simulation_scenarios__scenario_id__simulate_post",
+    "summary": "Run what-if scenario simulation",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-109",
+    "method": "POST",
+    "path": "/api/v1/simulation/simulations/compare",
+    "operation_id": "compare_scenarios_api_v1_simulation_simulations_compare_post",
+    "summary": "Compare two scenario outcomes",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-110",
+    "method": "GET",
+    "path": "/api/v1/simulation/simulations/{simulation_id}",
+    "operation_id": "get_simulation_result_api_v1_simulation_simulations__simulation_id__get",
+    "summary": "Get simulation run result",
+    "tags": [
+      "Simulation"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-111",
+    "method": "GET",
+    "path": "/api/v1/supplier-sites",
+    "operation_id": "list_supplier_sites_api_v1_supplier_sites_get",
+    "summary": "List supplier sites",
+    "tags": [
+      "Supplier Sites"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-112",
+    "method": "POST",
+    "path": "/api/v1/supplier-sites",
+    "operation_id": "create_supplier_site_api_v1_supplier_sites_post",
+    "summary": "Create supplier site",
+    "tags": [
+      "Supplier Sites"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-113",
+    "method": "GET",
+    "path": "/api/v1/supplier-sites/{id}",
+    "operation_id": "get_supplier_site_api_v1_supplier_sites__id__get",
+    "summary": "Get supplier site by ID",
+    "tags": [
+      "Supplier Sites"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-114",
+    "method": "PATCH",
+    "path": "/api/v1/supplier-sites/{id}",
+    "operation_id": "update_supplier_site_api_v1_supplier_sites__id__patch",
+    "summary": "Update supplier site",
+    "tags": [
+      "Supplier Sites"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-115",
+    "method": "GET",
+    "path": "/api/v1/suppliers",
+    "operation_id": "list_suppliers_api_v1_suppliers_get",
+    "summary": "List suppliers",
+    "tags": [
+      "Suppliers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-116",
+    "method": "POST",
+    "path": "/api/v1/suppliers",
+    "operation_id": "create_supplier_api_v1_suppliers_post",
+    "summary": "Create supplier",
+    "tags": [
+      "Suppliers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-117",
+    "method": "GET",
+    "path": "/api/v1/suppliers/{id}",
+    "operation_id": "get_supplier_api_v1_suppliers__id__get",
+    "summary": "Get supplier by ID",
+    "tags": [
+      "Suppliers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-118",
+    "method": "PATCH",
+    "path": "/api/v1/suppliers/{id}",
+    "operation_id": "update_supplier_api_v1_suppliers__id__patch",
+    "summary": "Update supplier",
+    "tags": [
+      "Suppliers"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-119",
+    "method": "GET",
+    "path": "/api/v1/verification-results",
+    "operation_id": "list_verification_results_api_v1_verification_results_get",
+    "summary": "List verification results",
+    "tags": [
+      "Verification Results"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-120",
+    "method": "POST",
+    "path": "/api/v1/verification-results",
+    "operation_id": "create_verification_result_api_v1_verification_results_post",
+    "summary": "Create verification result",
+    "tags": [
+      "Verification Results"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-121",
+    "method": "POST",
+    "path": "/api/v1/verification-results/verify",
+    "operation_id": "verify_action_outcome_api_v1_verification_results_verify_post",
+    "summary": "Verify action outcome",
+    "tags": [
+      "Verification Results"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-122",
+    "method": "GET",
+    "path": "/api/v1/verification-results/{id}",
+    "operation_id": "get_verification_result_api_v1_verification_results__id__get",
+    "summary": "Get verification result by ID",
+    "tags": [
+      "Verification Results"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-123",
+    "method": "GET",
+    "path": "/api/v1/warehouses",
+    "operation_id": "list_warehouses_api_v1_warehouses_get",
+    "summary": "List warehouses",
+    "tags": [
+      "Warehouses"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-124",
+    "method": "POST",
+    "path": "/api/v1/warehouses",
+    "operation_id": "create_warehouse_api_v1_warehouses_post",
+    "summary": "Create warehouse",
+    "tags": [
+      "Warehouses"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 validated (Contract & Lifecycle enforced)",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-125",
+    "method": "GET",
+    "path": "/api/v1/warehouses/{id}",
+    "operation_id": "get_warehouse_api_v1_warehouses__id__get",
+    "summary": "Get warehouse by ID",
+    "tags": [
+      "Warehouses"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 404 validated",
+    "response_code": 404,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-126",
+    "method": "PATCH",
+    "path": "/api/v1/warehouses/{id}",
+    "operation_id": "update_warehouse_api_v1_warehouses__id__patch",
+    "summary": "Update warehouse",
+    "tags": [
+      "Warehouses"
+    ],
+    "auth_required": "Session Cookie",
+    "status": "PASS",
+    "test_result": "HTTP 422 verified",
+    "response_code": 422,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-127",
+    "method": "GET",
+    "path": "/health",
+    "operation_id": "health_check_health_get",
+    "summary": "Health Check",
+    "tags": [
+      "Health"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-128",
+    "method": "GET",
+    "path": "/health/db",
+    "operation_id": "db_health_check_health_db_get",
+    "summary": "Db Health Check",
+    "tags": [
+      "Health"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  },
+  {
+    "test_id": "API-129",
+    "method": "GET",
+    "path": "/ready",
+    "operation_id": "readiness_check_ready_get",
+    "summary": "Readiness Check",
+    "tags": [
+      "Health"
+    ],
+    "auth_required": "Public",
+    "status": "PASS",
+    "test_result": "HTTP 200 validated",
+    "response_code": 200,
+    "db_effect": null
+  }
+]

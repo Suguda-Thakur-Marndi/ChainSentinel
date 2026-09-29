@@ -238,10 +238,11 @@ export function StatusBadge({
   variant = "neutral",
   className = "",
 }: {
-  status: string;
+  status?: string | null;
   variant?: "success" | "warning" | "error" | "info" | "neutral";
   className?: string;
 }) {
+  const displayStatus = status || "UNKNOWN";
   let colors = "bg-slate-800 text-slate-300 border-slate-700";
   let Icon = Info;
 
@@ -269,7 +270,7 @@ export function StatusBadge({
       className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium border font-mono-tnum ${colors} ${className}`}
     >
       <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-      <span>{status.replace(/_/g, " ")}</span>
+      <span>{displayStatus.replace(/_/g, " ")}</span>
     </span>
   );
 }

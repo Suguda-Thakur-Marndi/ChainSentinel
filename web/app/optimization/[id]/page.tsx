@@ -266,7 +266,7 @@ export default function OptimizationDetailPage() {
                         )}
                       </div>
                       <span className="font-mono text-[11px] text-slate-400 block mt-0.5">
-                        Target ID: {c.target_id} • Utility: {c.utility.toFixed(3)}
+                        Target ID: {c.target_id} • Utility: {c.utility !== undefined && c.utility !== null ? c.utility.toFixed(3) : "N/A"}
                       </span>
                     </div>
 
@@ -281,7 +281,7 @@ export default function OptimizationDetailPage() {
                       </div>
                       <div>
                         <span className="text-slate-500 block text-[10px]">RISK REDUCTION</span>
-                        <span className="text-emerald-400">{(c.risk_mitigation * 100).toFixed(0)}%</span>
+                        <span className="text-emerald-400">{c.risk_mitigation !== undefined && c.risk_mitigation !== null ? (c.risk_mitigation * 100).toFixed(0) : 0}%</span>
                       </div>
                     </div>
                   </div>
