@@ -143,7 +143,7 @@ export default function DashboardPage() {
                 </span>
               </div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                MCP-Sentinel // Control Tower Overview
+                CHAINSENTINEL // Control Tower Overview
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Architectural intelligence, multi-agent sandboxing, deterministic optimization & human-governed mitigation.

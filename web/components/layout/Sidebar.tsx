@@ -152,7 +152,7 @@ export function Sidebar({
           {!isCollapsed && (
             <div className="flex flex-col truncate">
               <span className="text-xs font-black tracking-[0.16em] text-foreground flex items-center">
-                MCP<span className="text-[#D95E00]">{"//"}SENTINEL</span>
+                CHAIN<span className="text-[#D95E00]">SENTINEL</span>
               </span>
               <span className="text-[9px] text-muted-foreground font-mono tracking-wider flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse inline-block" />

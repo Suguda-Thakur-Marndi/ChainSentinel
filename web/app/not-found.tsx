@@ -59,7 +59,7 @@ export default function NotFoundPage() {
           </div>
 
           <div className="pt-4 border-t text-[10px] font-mono text-muted-foreground flex items-center justify-between" style={{ borderColor: "var(--border-arch)" }}>
-            <span>CHAINSENTINEL // MCP-SENTINEL</span>
+            <span>CHAINSENTINEL</span>
             <span className="text-[#0A7A75]">ZERO-TRUST BOUNDARY ACTIVE</span>
           </div>
         </div>

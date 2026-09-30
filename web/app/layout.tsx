@@ -24,7 +24,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "CHAINSENTINEL // MCP-SENTINEL — Autonomous Security & Risk Intelligence",
+  title: "CHAINSENTINEL — Autonomous Security & Risk Intelligence",
   description: "Enterprise multi-tier supply chain risk intelligence, digital twin simulation, and autonomous mitigation platform.",
 };
 
