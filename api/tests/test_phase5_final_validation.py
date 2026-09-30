@@ -597,6 +597,7 @@ class TestProviderFailureIsolation:
             ProviderHealthStatus.DEGRADED,
             ProviderHealthStatus.UNAVAILABLE,
             ProviderHealthStatus.UNCONFIGURED,
+            ProviderHealthStatus.UNHEALTHY,
         )
 
         # TomTom adapter is totally unaffected
@@ -622,6 +623,7 @@ class TestProviderFailureIsolation:
         assert t_health.status in (
             ProviderHealthStatus.UNAVAILABLE,
             ProviderHealthStatus.UNCONFIGURED,
+            ProviderHealthStatus.UNHEALTHY,
         )
         assert karrio_adapter.provider_name == "karrio"
         assert karrio_adapter.provider_type == ProviderType.LOGISTICS_TRACKING
