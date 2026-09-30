@@ -64,6 +64,8 @@ import type {
   EvaluationReportContract,
   EvaluationRunSummaryContract,
   EvaluationSuiteType,
+  LiveMapResponse,
+  ProvidersHealthResponse,
 } from "./types";
 
 
@@ -666,6 +668,30 @@ class ApiClient {
     },
     markAllRead: (): Promise<{ count: number }> => {
       return this.post<{ count: number }>("/api/v1/notifications/mark-all-read");
+    },
+  };
+
+  // ==========================================
+  // LIVE GEOSPATIAL MAP & TELEMETRY (Phase 21)
+  // ==========================================
+  public readonly map = {
+    getObjects: (params?: { types?: string; source?: string; bbox?: string; since?: string }): Promise<LiveMapResponse> => {
+      const q = new URLSearchParams();
+      if (params?.types) q.set("types", params.types);
+      if (params?.source) q.set("source", params.source);
+      if (params?.bbox) q.set("bbox", params.bbox);
+      if (params?.since) q.set("since", params.since);
+      const qs = q.toString() ? `?${q.toString()}` : "";
+      return this.get<LiveMapResponse>(`/api/v1/map/objects${qs}`);
+    },
+    getProvidersHealth: (): Promise<ProvidersHealthResponse> => {
+      return this.get<ProvidersHealthResponse>("/api/v1/map/providers/health");
+    },
+    getLiveWsUrl: (): string => {
+      const base = this.baseUrl || "http://127.0.0.1:8000";
+      const wsProto = base.startsWith("https") ? "wss" : "ws";
+      const host = base.replace(/^https?:\/\//, "");
+      return `${wsProto}://${host}/api/v1/map/live`;
     },
   };
 

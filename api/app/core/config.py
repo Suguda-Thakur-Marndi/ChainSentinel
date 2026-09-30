@@ -1,7 +1,18 @@
 from urllib.parse import quote_plus
 from typing import Union
+from pathlib import Path
+import dotenv
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Ensure root and local .env files are loaded into os.environ
+_base_dir = Path(__file__).resolve().parent.parent.parent
+_root_env = _base_dir.parent / ".env"
+_api_env = _base_dir / ".env"
+if _root_env.exists():
+    dotenv.load_dotenv(_root_env, override=False)
+if _api_env.exists():
+    dotenv.load_dotenv(_api_env, override=True)
 
 
 class Settings(BaseSettings):

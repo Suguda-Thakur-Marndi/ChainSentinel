@@ -21,6 +21,7 @@ from app.core.config import settings
 SENSITIVE_PATTERNS = [
     re.compile(r'(?i)(password|secret|token|api[_-]?key|bearer)\s*[:=]\s*["\']?([^"\'\s,]+)["\']?'),
     re.compile(r'(?i)(authorization\s*:\s*bearer)\s+([^\s,]+)'),
+    re.compile(r'(?i)([?&](?:key|appid|apikey|api_key|token|secret)=)([^&\s"\']+)'),
     re.compile(r'(AKIA[0-9A-Z]{16})'),
 ]
 
@@ -81,6 +82,10 @@ def setup_logging() -> None:
     root_logger = logging.getLogger()
     root_logger.setLevel(log_level)
     root_logger.handlers = [handler]
+
+    # Suppress verbose HTTP client URL query param logging
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 
 def get_logger(name: str) -> logging.Logger:

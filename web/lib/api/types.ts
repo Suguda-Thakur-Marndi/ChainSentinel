@@ -998,3 +998,80 @@ export interface EvaluationDatasetMetadata {
   is_eval_only: boolean;
 }
 
+// ==========================================
+// LIVE GEOSPATIAL MAP & MULTI-SOURCE TELEMETRY
+// ==========================================
+export type LiveMapObjectType =
+  | "vessel"
+  | "aircraft"
+  | "truck"
+  | "train"
+  | "shipment"
+  | "port"
+  | "airport"
+  | "warehouse"
+  | "factory"
+  | "supplier"
+  | "route"
+  | "incident"
+  | "risk"
+  | "weather"
+  | "transit";
+
+export interface LiveMapObject {
+  id: string;
+  type: LiveMapObjectType;
+  source: string;
+  latitude: number;
+  longitude: number;
+  heading?: number | null;
+  speed?: number | null;
+  status?: string | null;
+  name: string;
+  identifier?: string | null;
+  timestamp: string;
+  last_seen: string;
+  metadata?: Record<string, any>;
+}
+
+export type ProviderStatusType =
+  | "connected"
+  | "degraded"
+  | "disconnected"
+  | "unconfigured"
+  | "rate_limited"
+  | "error"
+  | "unavailable";
+
+export interface ProviderHealth {
+  name: string;
+  purpose: string;
+  status: ProviderStatusType;
+  last_success?: string | null;
+  last_error?: string | null;
+  latency_ms?: number | null;
+  objects: number;
+  reason?: string | null;
+}
+
+export interface LiveMapResponse {
+  items: LiveMapObject[];
+  sources: Record<
+    string,
+    {
+      status: string;
+      purpose?: string;
+      last_update?: string | null;
+      object_count?: number;
+      reason?: string | null;
+    }
+  >;
+  total_count: number;
+  timestamp: string;
+}
+
+export interface ProvidersHealthResponse {
+  providers: ProviderHealth[];
+  timestamp: string;
+}
+

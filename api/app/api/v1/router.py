@@ -26,6 +26,7 @@ from app.api.v1.endpoints import (
 from app.api.v1.endpoints import actions, approvals, audit_logs
 from app.api.v1.endpoints import decisions, digital_twin, optimization, simulation
 from app.api.v1.endpoints import evaluations
+from app.api.v1.endpoints import map as map_endpoint
 
 api_router = APIRouter()
 
@@ -73,4 +74,7 @@ api_router.include_router(decisions.router, tags=["Decisions"])
 
 # Phase 20: Evaluation & Quality Assurance
 api_router.include_router(evaluations.router, prefix="/evaluations", tags=["Evaluations"])
+
+# Live Geospatial Map & Multi-Source Telemetry (AISStream, Weather, TomTom, Shipments)
+api_router.include_router(map_endpoint.router, prefix="/map", tags=["Live Map & Telemetry"])
 

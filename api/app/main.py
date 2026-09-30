@@ -21,8 +21,12 @@ logger = get_logger("main")
 async def lifespan(app: FastAPI):
     """Lifecycle manager handling startup readiness and graceful resource draining on SIGTERM."""
     logger.info(f"Initializing {settings.PROJECT_NAME} v{settings.VERSION} [{settings.APP_ENV}]...")
+    from app.services.tracking import get_tracking_aggregator
+    aggregator = get_tracking_aggregator()
+    await aggregator.start()
     yield
-    logger.info("Service shutting down. Gracefully draining database connection pools and resources...")
+    logger.info("Service shutting down. Gracefully draining tracking providers, database pools and resources...")
+    await aggregator.stop()
     dispose_db_engine()
     logger.info("Shutdown complete.")
 
