@@ -14,14 +14,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0B0F14] flex items-center justify-center">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
+      >
         <LoadingState message="Authenticating Control Tower session..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-slate-100 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col transition-colors duration-200"
+      style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
+    >
       {/* Collapsible Navigation Sidebar */}
       <Sidebar
         isCollapsed={sidebarCollapsed}
@@ -40,7 +46,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           sidebarCollapsed ? "pl-16" : "pl-64"
         }`}
       >
-        <div className="p-6 flex-1 flex flex-col">{children}</div>
+        <div className="p-4 sm:p-6 flex-1 flex flex-col">{children}</div>
       </main>
 
       {/* Cmd+K Search Modal */}

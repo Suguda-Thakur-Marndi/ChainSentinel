@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react";
+import { ArchButton } from "@/components/ui/ArchitecturalComponents";
 
 export default function EvaluationPage() {
   const [suites, setSuites] = useState<EvaluationSuiteMetadata[]>([]);
@@ -106,68 +107,100 @@ export default function EvaluationPage() {
       <div className="space-y-8">
 
         {/* Header summary banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-8 border border-slate-800 shadow-xl">
+        <div
+          className="relative overflow-hidden rounded-xl p-6 border shadow-arch-md"
+          style={{
+            backgroundColor: "var(--bg-card-elevated)",
+            borderColor: "var(--border-arch)",
+          }}
+        >
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="flex items-center gap-2 text-indigo-400 text-xs font-semibold tracking-wider uppercase mb-2">
-                <ShieldCheck className="w-4 h-4" /> Phase 20 Quality Assurance
+              <div className="flex items-center gap-2 text-[#0A7A75] text-xs font-semibold tracking-wider uppercase mb-2 font-mono">
+                <ShieldCheck className="w-4 h-4" /> Comprehensive Security & QA Framework
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-foreground tracking-tight font-mono">
                 Deterministic Evaluation & Safety Framework
               </h1>
-              <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+              <p className="text-muted-foreground text-xs mt-1 max-w-2xl font-mono">
                 Benchmarking LangGraph agents, RAG groundedness, delay ML inference, simulation propagation, OR-Tools optimization, decision ranking, human approval gates, sensory verification, and security invariants against versioned golden datasets.
               </p>
             </div>
-            <button
+            <ArchButton
               onClick={loadData}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-xl border border-slate-700 transition"
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} /> Refresh
-            </button>
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh Benchmark
+            </ArchButton>
           </div>
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-red-950/40 border border-red-800 text-xs text-red-300">
+          <div className="p-4 rounded-xl bg-red-950/40 border border-red-800 text-xs text-red-300 font-mono">
             {error}
           </div>
         )}
 
         {/* Top KPI Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-5 rounded-xl bg-slate-900 border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div
+            className="p-4 rounded-lg border shadow-arch-sm"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              borderColor: "var(--border-arch)",
+            }}
+          >
+            <div className="flex items-center justify-between text-muted-foreground text-xs font-mono">
               <span>REGISTERED SUITES</span>
-              <Cpu className="w-4 h-4 text-indigo-400" />
+              <Cpu className="w-4 h-4 text-[#D95E00]" />
             </div>
-            <div className="text-2xl font-bold text-white mt-2">{suites.length || 15}</div>
-            <div className="text-xs text-slate-500 mt-1">Multi-Domain Coverage</div>
+            <div className="text-2xl font-bold text-foreground mt-2 font-mono-tnum">{suites.length || 15}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-mono">Multi-Domain Coverage</div>
           </div>
-          <div className="p-5 rounded-xl bg-slate-900 border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div
+            className="p-4 rounded-lg border shadow-arch-sm"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              borderColor: "var(--border-arch)",
+            }}
+          >
+            <div className="flex items-center justify-between text-muted-foreground text-xs font-mono">
               <span>GOLDEN BENCHMARKS</span>
-              <Database className="w-4 h-4 text-emerald-400" />
+              <Database className="w-4 h-4 text-[#0A7A75]" />
             </div>
-            <div className="text-2xl font-bold text-white mt-2">{datasets.length || 15}</div>
-            <div className="text-xs text-slate-500 mt-1">Anti-Contamination Guarded</div>
+            <div className="text-2xl font-bold text-foreground mt-2 font-mono-tnum">{datasets.length || 15}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-mono">Anti-Contamination Guarded</div>
           </div>
-          <div className="p-5 rounded-xl bg-slate-900 border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div
+            className="p-4 rounded-lg border shadow-arch-sm"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              borderColor: "var(--border-arch)",
+            }}
+          >
+            <div className="flex items-center justify-between text-muted-foreground text-xs font-mono">
               <span>HISTORICAL RUNS</span>
-              <Clock className="w-4 h-4 text-amber-400" />
+              <Clock className="w-4 h-4 text-[#E88D00]" />
             </div>
-            <div className="text-2xl font-bold text-white mt-2">{runs.length}</div>
-            <div className="text-xs text-slate-500 mt-1">Audit Trail Persisted</div>
+            <div className="text-2xl font-bold text-foreground mt-2 font-mono-tnum">{runs.length}</div>
+            <div className="text-xs text-muted-foreground mt-1 font-mono">Audit Trail Persisted</div>
           </div>
-          <div className="p-5 rounded-xl bg-slate-900 border border-slate-800">
-            <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
+          <div
+            className="p-4 rounded-lg border shadow-arch-sm"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              borderColor: "var(--border-arch)",
+            }}
+          >
+            <div className="flex items-center justify-between text-muted-foreground text-xs font-mono">
               <span>SAFETY INVARIANTS</span>
-              <ShieldCheck className="w-4 h-4 text-cyan-400" />
+              <ShieldCheck className="w-4 h-4 text-[#0A7A75]" />
             </div>
-            <div className="text-2xl font-bold text-white mt-2">100%</div>
-            <div className="text-xs text-slate-500 mt-1">Zero Production Mutation</div>
+            <div className="text-2xl font-bold text-foreground mt-2 font-mono-tnum">100%</div>
+            <div className="text-xs text-muted-foreground mt-1 font-mono">Zero Production Mutation</div>
           </div>
         </div>
 

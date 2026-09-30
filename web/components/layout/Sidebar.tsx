@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  Bot,
+  Wrench,
   AlertOctagon,
   Flame,
   Globe2,
@@ -31,14 +33,20 @@ import {
   ChevronLeft,
   ChevronRight,
   Shield,
+  Activity,
+  FileCheck2,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { useTheme } from "@/lib/theme/ThemeContext";
 import { RoleBadge } from "../ui/Badges";
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ElementType;
+  badge?: string;
 }
 
 interface NavGroup {
@@ -48,46 +56,54 @@ interface NavGroup {
 
 const NAVIGATION: NavGroup[] = [
   {
-    group: "Overview",
+    group: "Command Center",
     items: [
-      { label: "Control Tower", href: "/dashboard", icon: LayoutDashboard },
+      { label: "Overview & Machine", href: "/dashboard", icon: LayoutDashboard },
       { label: "Global Live Map", href: "/map", icon: Globe2 },
     ],
   },
   {
-    group: "Intelligence",
+    group: "Agentic Execution",
     items: [
-      { label: "Risks", href: "/risks", icon: AlertOctagon },
-      { label: "Incidents", href: "/incidents", icon: Flame },
+      { label: "Agent Runs", href: "/agent-runs", icon: Bot, badge: "AI" },
+      { label: "MCP Tools", href: "/mcp-tools", icon: Wrench, badge: "MCP" },
+      { label: "Action Dispatch", href: "/actions", icon: Zap },
     ],
   },
   {
-    group: "Digital Twin & Simulation",
+    group: "Governance & Policies",
     items: [
+      { label: "Approvals Queue", href: "/approvals", icon: UserCheck },
+      { label: "Policy Inspector", href: "/policy-inspector", icon: FileCheck2 },
+      { label: "Audit Ledger", href: "/audit", icon: ScrollText },
+      { label: "Decisions Log", href: "/decisions", icon: Scale },
+    ],
+  },
+  {
+    group: "Security & Intelligence",
+    items: [
+      { label: "Evaluation & QA", href: "/evaluation", icon: Shield },
+      { label: "Threat Incidents", href: "/incidents", icon: Flame },
+      { label: "Risk Matrix", href: "/risks", icon: AlertOctagon },
       { label: "Digital Twin", href: "/digital-twin", icon: Network },
       { label: "Simulations", href: "/simulations", icon: Cpu },
       { label: "Optimization", href: "/optimization", icon: Sliders },
-    ],
-  },
-  {
-    group: "Decisions & Governance",
-    items: [
       { label: "Recommendations", href: "/recommendations", icon: Sparkles },
-      { label: "Decisions", href: "/decisions", icon: Scale },
-      { label: "Approvals", href: "/approvals", icon: UserCheck },
     ],
   },
   {
-    group: "Operations",
+    group: "Infrastructure & Platform",
+    items: [
+      { label: "System Health", href: "/system-health", icon: Activity, badge: "P99" },
+      { label: "Verification", href: "/verification", icon: ShieldCheck },
+      { label: "Notifications", href: "/notifications", icon: Bell },
+      { label: "Settings", href: "/settings", icon: Settings },
+    ],
+  },
+  {
+    group: "Supply Network Assets",
     items: [
       { label: "Shipments", href: "/shipments", icon: Truck },
-      { label: "Actions", href: "/actions", icon: Zap },
-      { label: "Verification", href: "/verification", icon: ShieldCheck },
-    ],
-  },
-  {
-    group: "Network Data",
-    items: [
       { label: "Suppliers", href: "/suppliers", icon: Building2 },
       { label: "Ports", href: "/ports", icon: Anchor },
       { label: "Carriers", href: "/carriers", icon: Ship },
@@ -98,17 +114,7 @@ const NAVIGATION: NavGroup[] = [
       { label: "Inventory", href: "/inventory", icon: Boxes },
     ],
   },
-  {
-    group: "System",
-    items: [
-      { label: "Evaluation & QA", href: "/evaluation", icon: Shield },
-      { label: "Notifications", href: "/notifications", icon: Bell },
-      { label: "Audit Log", href: "/audit", icon: ScrollText },
-      { label: "Admin", href: "/admin", icon: Settings },
-    ],
-  },
 ];
-
 
 export function Sidebar({
   isCollapsed,
@@ -119,104 +125,146 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <aside
-      className={`fixed left-0 top-0 bottom-0 z-30 bg-[#0F172A] border-r border-[#243044] flex flex-col transition-all duration-200 select-none ${
+      className={`fixed left-0 top-0 bottom-0 z-30 border-r flex flex-col transition-all duration-200 select-none ${
         isCollapsed ? "w-16" : "w-64"
       }`}
+      style={{
+        backgroundColor: "var(--bg-secondary)",
+        borderColor: "var(--border-arch)",
+      }}
     >
       {/* Brand Header */}
-      <div className="h-14 border-b border-[#243044] px-4 flex items-center justify-between">
+      <div
+        className="h-14 border-b px-4 flex items-center justify-between"
+        style={{ borderColor: "var(--border-arch)" }}
+      >
         <Link href="/dashboard" className="flex items-center gap-2.5 overflow-hidden group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-600 p-[1px] shadow-md shadow-cyan-500/20 flex-shrink-0 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full rounded-[7px] bg-[#0A0E17] flex items-center justify-center font-black text-cyan-400 text-xs tracking-wider">
-              CS
-            </div>
+          {/* Architectural Hex/Prism Logo */}
+          <div className="w-8 h-8 rounded bg-[#151D2A] border border-[#D95E00]/60 p-1 flex items-center justify-center shadow-sm shadow-[#D95E00]/30 group-hover:border-[#D95E00] transition-colors flex-shrink-0">
+            <span className="font-mono font-black text-xs text-[#D95E00] tracking-wider">
+              MS
+            </span>
           </div>
           {!isCollapsed && (
             <div className="flex flex-col truncate">
-              <span className="text-xs font-black tracking-[0.14em] text-white flex items-center">
-                CHAIN<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400">SENTINEL</span>
+              <span className="text-xs font-black tracking-[0.16em] text-foreground flex items-center">
+                MCP<span className="text-[#D95E00]">{"//"}SENTINEL</span>
               </span>
-              <span className="text-[9px] text-slate-400 font-mono tracking-wider flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-                CONTROL TOWER
+              <span className="text-[9px] text-muted-foreground font-mono tracking-wider flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse inline-block" />
+                ARCHITECTURAL INTEL
               </span>
             </div>
           )}
         </Link>
         <button
           onClick={onToggleCollapse}
-          className="p-1 rounded text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+          className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* Organization Header */}
+      {/* Organization / Tenant Bar */}
       {!isCollapsed && (
-        <div className="px-3 py-2 bg-[#111827] border-b border-[#243044] flex items-center justify-between">
+        <div
+          className="px-3 py-2 border-b flex items-center justify-between"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            borderColor: "var(--border-arch)",
+          }}
+        >
           <div className="truncate">
-            <span className="text-[10px] uppercase font-semibold tracking-wider text-slate-500 block">Organization</span>
-            <span className="text-xs font-medium text-slate-200 truncate block">
-              {user?.organization?.name || "Global Enterprise"}
+            <span className="text-[9px] uppercase font-mono tracking-wider text-muted-foreground block">
+              ENTERPRISE TENANT
+            </span>
+            <span className="text-xs font-medium text-foreground truncate block font-mono">
+              {user?.organization?.name || "Global Defense Logistics"}
             </span>
           </div>
           {user?.role && <RoleBadge role={user.role} />}
         </div>
       )}
 
-      {/* Navigation Groups */}
-      <div className="flex-1 overflow-y-auto px-2 py-3 space-y-4">
-        {NAVIGATION.map((grp) => (
-          <div key={grp.group}>
+      {/* Navigation List */}
+      <div className="flex-1 overflow-y-auto px-2 py-3 space-y-5">
+        {NAVIGATION.map((group) => (
+          <div key={group.group}>
             {!isCollapsed && (
-              <h5 className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                {grp.group}
-              </h5>
+              <div className="px-2 mb-1.5 text-[9px] font-mono font-bold tracking-wider text-muted-foreground uppercase flex items-center justify-between">
+                <span>{group.group}</span>
+                <span className="text-[8px] opacity-40 font-mono">■</span>
+              </div>
             )}
-            <ul className="space-y-0.5">
-              {grp.items.map((item) => {
+            <div className="space-y-0.5">
+              {group.items.map((item) => {
+                const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
                 const Icon = item.icon;
-                const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
                 return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                        isActive
-                          ? "bg-blue-600/20 text-blue-400 border border-blue-500/30 font-semibold"
-                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                      } ${isCollapsed ? "justify-center px-0" : ""}`}
-                      title={isCollapsed ? item.label : undefined}
-                    >
-                      <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? "text-blue-400" : "text-slate-400"}`} />
-                      {!isCollapsed && <span className="truncate">{item.label}</span>}
-                    </Link>
-                  </li>
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded text-xs font-mono transition-all ${
+                      isActive
+                        ? "bg-[#D95E00]/15 text-[#D95E00] font-bold border-l-2 border-[#D95E00] shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-surface"
+                    }`}
+                    title={isCollapsed ? item.label : undefined}
+                  >
+                    <Icon
+                      className={`w-4 h-4 flex-shrink-0 ${
+                        isActive ? "text-[#D95E00]" : "text-muted-foreground"
+                      }`}
+                    />
+                    {!isCollapsed && (
+                      <div className="flex-1 flex items-center justify-between truncate">
+                        <span className="truncate">{item.label}</span>
+                        {item.badge && (
+                          <span className="ml-1.5 px-1 py-0.2 rounded text-[9px] font-mono bg-arch-elevated border border-arch text-[#0A7A75]">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </Link>
                 );
               })}
-            </ul>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Footer / User Profile summary */}
-      <div className="p-3 border-t border-[#243044] bg-[#0B0F14]/50">
-        <div className={`flex items-center gap-2.5 ${isCollapsed ? "justify-center" : ""}`}>
-          <div className="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-semibold text-slate-300 flex-shrink-0">
-            {user?.full_name ? user.full_name[0].toUpperCase() : "U"}
-          </div>
-          {!isCollapsed && (
-            <div className="truncate flex-1">
-              <p className="text-xs font-medium text-slate-200 truncate">{user?.full_name || "Operator"}</p>
-              <p className="text-[10px] text-slate-500 truncate font-mono">{user?.email || "auth@chainsentinel.internal"}</p>
-            </div>
+      {/* Footer Controls: Theme Toggle & Posture Indicator */}
+      <div
+        className="p-3 border-t flex items-center justify-between"
+        style={{
+          borderColor: "var(--border-arch)",
+          backgroundColor: "var(--bg-card)",
+        }}
+      >
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center justify-center gap-2 px-2.5 py-1.5 rounded border border-arch text-xs font-mono text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+          title="Toggle Architectural Theme (Obsidian vs Warm Ivory)"
+        >
+          {theme === "ivory" ? (
+            <>
+              <Moon className="w-3.5 h-3.5 text-[#D95E00]" />
+              {!isCollapsed && <span>OBSIDIAN DARK</span>}
+            </>
+          ) : (
+            <>
+              <Sun className="w-3.5 h-3.5 text-[#E88D00]" />
+              {!isCollapsed && <span>WARM IVORY</span>}
+            </>
           )}
-        </div>
+        </button>
       </div>
     </aside>
   );

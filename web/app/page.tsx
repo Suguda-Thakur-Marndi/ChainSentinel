@@ -14,7 +14,10 @@ export default function RootPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#0B0F14] flex items-center justify-center">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--bg-primary)" }}
+      >
         <LoadingState message="Redirecting to Control Tower..." />
       </div>
     </ProtectedRoute>

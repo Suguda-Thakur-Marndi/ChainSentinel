@@ -166,12 +166,15 @@ riskwise/
 │   ├── deployment.md                      # Infrastructure, Terraform & CI/CD
 │   ├── testing.md                         # Testing Strategy & Quality Assurance
 │   ├── security.md                        # Security, RBAC & Governance
-│   └── RiskWise_2.0_UI_UX_Design_System.md# Design System
+│   ├── RiskWise_2.0_UI_UX_Design_System.md# Design System
+│   └── screenshots/                       # Verified Browser QA Snapshots & WebP Walkthrough
+├── CLEANUP-REPORT.md                      # Build & Artifact Cleanup Report
+├── UI-REPORT.md                           # Production UI/UX Overhaul & Architectural Intelligence Report
 ├── infra/terraform/                       # AWS Infrastructure as Code (VPC, ECS, RDS)
 └── web/                                   # Next.js 16 Frontend Application
-    ├── app/                               # Next.js App Router (36 Enterprise Views)
-    ├── components/                        # UI Components (MapCard, AppShell, Badges)
-    ├── lib/                               # API Client, Types, Contexts
+    ├── app/                               # Next.js App Router (38 Enterprise Views)
+    ├── components/                        # UI Components (SecurityMachine3D, AceternityCard, Magic, Arch)
+    ├── lib/                               # Theme Engine, API Client, Types, Contexts
     ├── tests/                             # Frontend Integration Tests
     ├── package.json                       # Frontend Dependencies
     └── tsconfig.json                      # TypeScript Configuration

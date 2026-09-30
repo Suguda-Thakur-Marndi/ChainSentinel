@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Instrument_Serif } from "next/font/google";
+import { ThemeProvider } from "@/lib/theme/ThemeContext";
 import { AuthProvider } from "@/lib/auth/AuthContext";
 import "./globals.css";
 
@@ -23,7 +24,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "CHAINSENTINEL — Autonomous Supply Chain Risk Intelligence",
+  title: "CHAINSENTINEL // MCP-SENTINEL — Autonomous Security & Risk Intelligence",
   description: "Enterprise multi-tier supply chain risk intelligence, digital twin simulation, and autonomous mitigation platform.",
 };
 
@@ -36,9 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body
         suppressHydrationWarning
-        className="min-h-full flex flex-col bg-[#0B0F14] text-slate-100 font-sans selection:bg-blue-500/30 selection:text-blue-200"
+        className="min-h-full flex flex-col font-sans selection:bg-[#D95E00]/30 selection:text-white"
       >
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

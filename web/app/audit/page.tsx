@@ -3,11 +3,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   RefreshCw,
+  ScrollText,
+  Shield,
+  FileCheck2,
+  Terminal,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import { ArchBadge, ArchButton } from "@/components/ui/ArchitecturalComponents";
 import { apiClient } from "@/lib/api/client";
 import type { AuditLogResponse } from "@/lib/api/types";
 
@@ -32,7 +37,8 @@ export default function AuditLogPage() {
 
   useEffect(() => {
     let cancelled = false;
-    apiClient.audit.list({ limit: 100 })
+    apiClient.audit
+      .list({ limit: 100 })
       .then((res) => {
         if (!cancelled) {
           setLogs(res.items || []);
@@ -67,7 +73,7 @@ export default function AuditLogPage() {
       sortable: true,
       width: "180px",
       render: (row) => (
-        <span className="font-mono text-xs text-slate-300">
+        <span className="font-mono text-xs text-foreground font-mono-tnum">
           {new Date(row.timestamp).toISOString()}
         </span>
       ),
@@ -77,16 +83,14 @@ export default function AuditLogPage() {
       header: "Actor",
       sortable: true,
       render: (row) => (
-        <span
-          className={`font-mono text-[11px] px-2 py-0.5 rounded uppercase ${
-            row.actor_type === "AGENT"
-              ? "bg-purple-950 text-purple-300 border border-purple-800"
-              : row.actor_type === "USER"
-              ? "bg-blue-950 text-blue-300 border border-blue-800"
-              : "bg-slate-800 text-slate-300 border border-slate-700"
-          }`}
-        >
-          {row.actor_type}
+        <span className="font-mono text-[11px]">
+          {row.actor_type === "AGENT" ? (
+            <ArchBadge variant="orange">AGENT</ArchBadge>
+          ) : row.actor_type === "USER" ? (
+            <ArchBadge variant="teal">USER</ArchBadge>
+          ) : (
+            <ArchBadge variant="outline">{row.actor_type || "SYSTEM"}</ArchBadge>
+          )}
         </span>
       ),
     },
@@ -94,13 +98,15 @@ export default function AuditLogPage() {
       key: "action",
       header: "Audit Action",
       sortable: true,
-      render: (row) => <span className="font-mono text-xs text-white">{row.action}</span>,
+      render: (row) => (
+        <span className="font-mono text-xs text-foreground font-bold">{row.action}</span>
+      ),
     },
     {
       key: "entity_type",
       header: "Target Resource",
       render: (row) => (
-        <span className="font-mono text-[11px] text-slate-400">
+        <span className="font-mono text-[11px] text-muted-foreground">
           {row.entity_type || "SYSTEM"}:{row.entity_id ? ` ${row.entity_id.slice(0, 8)}...` : ""}
         </span>
       ),
@@ -110,14 +116,12 @@ export default function AuditLogPage() {
       header: "Status",
       sortable: true,
       render: (row) => (
-        <span
-          className={`font-mono text-[10px] px-1.5 py-0.5 rounded ${
-            row.status === "SUCCESS"
-              ? "bg-emerald-950 text-emerald-300"
-              : "bg-rose-950 text-rose-300"
-          }`}
-        >
-          {row.status}
+        <span className="font-mono text-[10px]">
+          {row.status === "SUCCESS" ? (
+            <ArchBadge variant="teal">SUCCESS</ArchBadge>
+          ) : (
+            <ArchBadge variant="danger">FAILURE</ArchBadge>
+          )}
         </span>
       ),
     },
@@ -125,8 +129,8 @@ export default function AuditLogPage() {
       key: "fingerprint",
       header: "SHA-256 Hash",
       render: (row) => (
-        <span className="font-mono text-[10px] text-slate-500 truncate max-w-[120px] block">
-          {row.fingerprint || "SECURE_HASH"}
+        <span className="font-mono text-[10px] text-[#0A7A75] truncate max-w-[130px] block">
+          {row.fingerprint || "SHA256://SEALED"}
         </span>
       ),
     },
@@ -136,27 +140,38 @@ export default function AuditLogPage() {
     <ProtectedRoute>
       <AppShell>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
+          <div
+            className="flex flex-wrap items-center justify-between gap-4 border-b pb-4"
+            style={{ borderColor: "var(--border-arch)" }}
+          >
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Enterprise Immutable Audit Log
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  Cryptographically Sealed
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#0A7A75]/15 text-[#0A7A75] border border-[#0A7A75]/30">
+                  COMPLIANCE LEDGER
                 </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
+                <span className="text-[11px] font-mono text-muted-foreground uppercase">
+                  CRYPTOGRAPHICALLY SEALED
+                </span>
+              </div>
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
+                Enterprise Immutable Audit Ledger
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Append-only compliance ledger tracking all agent actions, human sign-offs, and solver telemetry.
               </p>
             </div>
 
-            <button
+            <ArchButton
               onClick={fetchLogs}
               disabled={isLoading}
-              className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
-              title="Refresh"
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-            </button>
+              <span>Refresh Ledger</span>
+            </ArchButton>
           </div>
 
           {error && <ErrorState message={error} onRetry={fetchLogs} />}

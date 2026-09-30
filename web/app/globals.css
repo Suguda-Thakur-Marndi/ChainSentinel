@@ -1,31 +1,97 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: #111827;
-  --color-surface-high: #1A2332;
-  --color-border-hairline: #243044;
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --color-surface: var(--bg-secondary);
+  --color-surface-high: var(--bg-card-elevated);
+  --color-border-hairline: var(--border-arch);
+  
+  /* Architectural Intelligence Design Tokens */
+  --color-arch-bg: var(--bg-primary);
+  --color-arch-surface: var(--bg-secondary);
+  --color-arch-card: var(--bg-card);
+  --color-arch-elevated: var(--bg-card-elevated);
+  --color-arch-text: var(--text-primary);
+  --color-arch-muted: var(--text-secondary);
+  --color-arch-subtle: var(--text-muted);
+  --color-arch-orange: #D95E00;
+  --color-arch-orange-hover: #BF5300;
+  --color-arch-teal: #0A7A75;
+  --color-arch-teal-hover: #08635F;
+  --color-arch-amber: #E88D00;
+  --color-arch-danger: #B71C1C;
+  --color-arch-border: var(--border-arch);
+  --color-arch-border-subtle: var(--border-arch-subtle);
+
   --font-sans: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-serif: var(--font-instrument-serif), Georgia, serif;
 }
 
 :root {
-  --background: #0B0F14;
-  --foreground: #F8FAFC;
-  --card: #111827;
-  --card-elevated: #1A2332;
-  --card-border: #243044;
-  --primary: #3B82F6;
-  --primary-hover: #2563EB;
+  /* Default: Architectural Intelligence - Dark Obsidian (Engineered High-Contrast Command Center) */
+  --bg-primary: #0A0E14;
+  --bg-secondary: #111827;
+  --bg-card: #151D2A;
+  --bg-card-elevated: #1C2638;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --accent-orange: #D95E00;
+  --accent-orange-hover: #BF5300;
+  --accent-teal: #0A7A75;
+  --accent-teal-hover: #08635F;
+  --warning-amber: #E88D00;
+  --danger-red: #B71C1C;
+  --border-arch: #243044;
+  --border-arch-subtle: rgba(255, 255, 255, 0.08);
+  --border-arch-focus: #D95E00;
+  
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  
+  --shadow-arch-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-arch-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-arch-lg: 0 10px 28px rgba(0, 0, 0, 0.65);
+  --shadow-accent-glow: 0 0 20px rgba(217, 94, 0, 0.25);
+  --shadow-teal-glow: 0 0 20px rgba(10, 122, 117, 0.25);
+}
+
+/* Warm Ivory Theme Mode (Specified in deep-research-report.md) */
+[data-theme="architectural-ivory"],
+.theme-ivory {
+  --bg-primary: #F5F4F0;
+  --bg-secondary: #E2DFDA;
+  --bg-card: #FFFFFF;
+  --bg-card-elevated: #ECE9E4;
+  --text-primary: #1E1E1E;
+  --text-secondary: #4A4A4A;
+  --text-muted: #737373;
+  --accent-orange: #D95E00;
+  --accent-orange-hover: #BF5300;
+  --accent-teal: #0A7A75;
+  --accent-teal-hover: #08635F;
+  --warning-amber: #E88D00;
+  --danger-red: #B71C1C;
+  --border-arch: #CCCCCC;
+  --border-arch-subtle: rgba(0, 0, 0, 0.09);
+  --border-arch-focus: #D95E00;
+
+  --shadow-arch-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-arch-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-arch-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --shadow-accent-glow: 0 0 16px rgba(217, 94, 0, 0.2);
+  --shadow-teal-glow: 0 0 16px rgba(10, 122, 117, 0.2);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* Tabular figures for monospace technical values */
@@ -34,36 +100,87 @@ body {
   font-feature-settings: "tnum" 1, "zero" 1;
 }
 
-/* Stitch Surface Panels */
+/* Architectural blueprint grid background */
+.bg-grid-architectural {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+[data-theme="architectural-ivory"] .bg-grid-architectural,
+.theme-ivory .bg-grid-architectural {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* Architectural Panels */
+.arch-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-arch);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-arch-sm);
+  transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+}
+
+.arch-panel:hover {
+  border-color: rgba(217, 94, 0, 0.4);
+}
+
+.arch-panel-elevated {
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border-arch);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-arch-md);
+}
+
+/* Legacy stitch panel aliases for backwards compatibility */
 .stitch-panel {
-  background-color: #111827;
-  border: 1px solid #243044;
-  border-radius: 0.5rem;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-arch);
+  border-radius: var(--radius-md);
 }
 
 .stitch-panel-high {
-  background-color: #1A2332;
-  border: 1px solid #243044;
-  border-radius: 0.5rem;
+  background-color: var(--bg-card-elevated);
+  border: 1px solid var(--border-arch);
+  border-radius: var(--radius-md);
 }
 
-/* Custom sleek dark scrollbar */
+/* 3D Transform Utilities */
+.perspective-800 {
+  perspective: 800px;
+}
+.perspective-1000 {
+  perspective: 1000px;
+}
+.perspective-1500 {
+  perspective: 1500px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Custom sleek architectural scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0F14;
+  background: var(--bg-primary);
 }
 ::-webkit-scrollbar-thumb {
-  background: #243044;
+  background: var(--border-arch);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--text-muted);
 }
 
-/* Subtle glowing status indicator dots */
+/* Status Indicator Dots with Architectural Glow */
 .pulse-dot {
   position: relative;
   display: inline-block;
@@ -88,6 +205,25 @@ body {
   100% { transform: scale(0.95); opacity: 0; }
 }
 
+/* 3D Security Machine Keyframes */
+@keyframes securityCoreOrbit {
+  0% { transform: rotateY(0deg) rotateX(15deg); }
+  50% { transform: rotateY(180deg) rotateX(25deg); }
+  100% { transform: rotateY(360deg) rotateX(15deg); }
+}
+
+@keyframes scanLaser {
+  0% { transform: translateY(-100%); opacity: 0; }
+  25% { opacity: 0.8; }
+  75% { opacity: 0.8; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes borderBeamSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -97,5 +233,8 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .security-machine-animated {
+    animation: none !important;
   }
 }

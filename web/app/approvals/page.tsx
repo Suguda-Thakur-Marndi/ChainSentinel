@@ -267,37 +267,52 @@ export default function ApprovalsPage() {
     <ProtectedRoute>
       <AppShell>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
+          <div
+            className="flex flex-wrap items-center justify-between gap-4 border-b pb-4"
+            style={{ borderColor: "var(--border-arch)" }}
+          >
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Human-in-the-Loop Governance Sign-Off
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">
-                  Phase 16
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#D95E00]/15 text-[#D95E00] border border-[#D95E00]/30">
+                  GOVERNANCE GATE
                 </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D95E00] animate-pulse" />
+                <span className="text-[11px] font-mono text-muted-foreground uppercase">
+                  HUMAN-IN-THE-LOOP CONTROL
+                </span>
+              </div>
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
+                Human Governance Approvals & Sign-Off
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Mandatory operational governance gate. Autonomous execution requires explicit authorized sign-off.
               </p>
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex rounded-md bg-[#111827] p-1 border border-[#243044]">
+              <div
+                className="flex rounded-md p-1 border font-mono"
+                style={{
+                  backgroundColor: "var(--bg-secondary)",
+                  borderColor: "var(--border-arch)",
+                }}
+              >
                 <button
                   onClick={() => setTab("pending")}
-                  className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors ${
                     tab === "pending"
-                      ? "bg-blue-600 text-white"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-[#D95E00] text-white shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   Pending Review ({pendingItems.length})
                 </button>
                 <button
                   onClick={() => setTab("history")}
-                  className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors ${
                     tab === "history"
-                      ? "bg-blue-600 text-white"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-[#D95E00] text-white shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   Sign-Off Archive
@@ -305,9 +320,13 @@ export default function ApprovalsPage() {
               </div>
 
               <button
-                onClick={() => (tab === "pending" ? fetchPending() : fetchHistory())}
+                onClick={() => (tab === "pending" ? fetchPending(true) : fetchHistory(true))}
                 disabled={isLoading}
-                className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
+                className="p-2 rounded-md border text-muted-foreground hover:text-foreground transition-colors"
+                style={{
+                  backgroundColor: "var(--bg-card)",
+                  borderColor: "var(--border-arch)",
+                }}
                 title="Refresh"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
