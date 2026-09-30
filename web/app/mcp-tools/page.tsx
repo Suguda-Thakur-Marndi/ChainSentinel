@@ -262,11 +262,11 @@ export default function McpToolsPage() {
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#D95E00] animate-pulse" />
                 <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  SANDBOXED MCP TOOLS
+                  SANDBOXED AGENT TOOLS
                 </span>
               </div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                MCP Tool Inventory & Schemas
+                Agent Tool Registry & Schemas
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Model Context Protocol (MCP) tool registrations, input/output contracts, and access control governance.
@@ -283,7 +283,7 @@ export default function McpToolsPage() {
                 <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Filter MCP tools by name, description, or endpoint..."
+                  placeholder="Filter agent tools by name, description, or endpoint..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 pr-3 py-1.5 rounded border text-xs font-mono bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#D95E00]"

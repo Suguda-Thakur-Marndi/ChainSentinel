@@ -66,7 +66,7 @@ const NAVIGATION: NavGroup[] = [
     group: "Agentic Execution",
     items: [
       { label: "Agent Runs", href: "/agent-runs", icon: Bot, badge: "AI" },
-      { label: "MCP Tools", href: "/mcp-tools", icon: Wrench, badge: "MCP" },
+      { label: "Agent Tools", href: "/mcp-tools", icon: Wrench, badge: "TOOLS" },
       { label: "Action Dispatch", href: "/actions", icon: Zap },
     ],
   },

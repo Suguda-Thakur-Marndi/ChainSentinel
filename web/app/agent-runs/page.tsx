@@ -278,7 +278,7 @@ export default function AgentRunsPage() {
                 AI Agent Runs & Execution Traces
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Full-fidelity audit of autonomous decisions, MCP tool calls, policy evaluations, and cryptographic proof hashes.
+                Full-fidelity audit of autonomous decisions, agent tool calls, policy evaluations, and cryptographic proof hashes.
               </p>
             </div>
 
@@ -360,7 +360,7 @@ export default function AgentRunsPage() {
                     <th className="py-3 px-4">Agent Identity & Task</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4">Model & Runtime</th>
-                    <th className="py-3 px-4">MCP Tools Invoked</th>
+                    <th className="py-3 px-4">Agent Tools Invoked</th>
                     <th className="py-3 px-4">Latency</th>
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>

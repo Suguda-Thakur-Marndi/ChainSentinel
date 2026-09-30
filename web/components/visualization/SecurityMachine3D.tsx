@@ -32,7 +32,7 @@ interface SecurityNode {
 const SECURITY_NODES: SecurityNode[] = [
   {
     id: "mcp-gateway",
-    name: "MCP TOOL GATEWAY",
+    name: "AGENT TOOL GATEWAY",
     role: "Sandboxed MCP Protocol Interconnect",
     status: "VERIFIED",
     metric: "18 Tools",

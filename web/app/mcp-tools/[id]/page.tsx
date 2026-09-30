@@ -31,7 +31,7 @@ export default function McpToolDetailPage({
               className="inline-flex items-center gap-1.5 text-xs font-mono text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to MCP Tool Registry</span>
+              <span>Back to Agent Tool Registry</span>
             </Link>
           </div>
 
@@ -47,7 +47,7 @@ export default function McpToolDetailPage({
                 <span className="text-[11px] font-mono text-muted-foreground">ID: {id}</span>
               </div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                MCP Tool Contract: mcp:{id}
+                Agent Tool Contract: mcp:{id}
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Authoritative schema definition, RBAC gating policy, and sandboxed test execution parameters.

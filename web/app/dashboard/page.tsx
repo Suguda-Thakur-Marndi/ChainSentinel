@@ -248,7 +248,7 @@ export default function DashboardPage() {
                       <Wrench className="w-3.5 h-3.5 text-[#0A7A75]" />
                       <span className="text-[10px]">TOOLS</span>
                     </div>
-                    <span className="font-semibold text-foreground truncate">MCP Tool Schemas</span>
+                    <span className="font-semibold text-foreground truncate">Agent Tool Schemas</span>
                   </Link>
 
                   <Link
