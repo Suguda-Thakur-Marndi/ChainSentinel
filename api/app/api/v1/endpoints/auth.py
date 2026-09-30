@@ -77,6 +77,7 @@ def get_current_user_profile(
         full_name=context.user.full_name,
         role=context.user.role,
         org_id=context.organization_id,
+        organization_id=context.organization_id,
         organization=org_summary,
         permissions=get_role_permissions(context.user.role),
     )

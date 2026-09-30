@@ -20,6 +20,7 @@ export interface UserMeResponse {
   full_name: string | null;
   role: string;
   org_id: string | null;
+  organization_id?: string | null;
   organization: OrganizationSummary | null;
   permissions: string[];
 }

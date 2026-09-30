@@ -15,12 +15,23 @@ Enforces:
 from __future__ import annotations
 
 import logging
-from typing import List, Optional
+from datetime import datetime, timezone
+from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from app.agents.contracts import AgentLimitation, LimitationCategory
 from app.agents.decision.agent import DecisionAgent
-from app.agents.decision.contract import DecisionRequest, DecisionResult
+from app.agents.decision.contract import (
+    DecisionBasis,
+    DecisionCandidate,
+    DecisionConstraint,
+    DecisionRationale,
+    DecisionRequest,
+    DecisionResult,
+    DecisionStatus,
+    DecisionType,
+)
 from app.agents.decision.errors import (
     DecisionAgentError,
     DecisionFreshnessError,
@@ -115,6 +126,126 @@ def create_decision(
         )
 
 
+def _normalize_legacy_decision_record(rec: Any) -> DecisionResult:
+    """Normalize legacy Recommendation records into strongly-typed DecisionResult contracts.
+
+    Backward-compatible fallback for recommendations created prior to Phase 15.
+    Preserves all raw legacy attributes in provenance['legacy_data'].
+    """
+    raw = rec.expected_benefit_json if isinstance(rec.expected_benefit_json, dict) else {}
+    decision_id = str(rec.id)
+    org_id = str(rec.org_id or raw.get("organization_id") or "org_unknown")
+
+    # 1. Map recommendation_type or fallback
+    rec_type_raw = str(raw.get("recommendation_type") or "OPERATIONAL_REVIEW")
+    try:
+        dec_type = DecisionType(rec_type_raw)
+    except ValueError:
+        dec_type = DecisionType.OPERATIONAL_REVIEW
+
+    # 2. Constraints normalization
+    constraints: List[DecisionConstraint] = []
+    for idx, c in enumerate(raw.get("constraints", [])):
+        if isinstance(c, str):
+            constraints.append(
+                DecisionConstraint(
+                    constraint_type="OPERATIONAL",
+                    name=f"constraint_{idx + 1}",
+                    value=c[:128],
+                )
+            )
+        elif isinstance(c, dict):
+            try:
+                constraints.append(DecisionConstraint.model_validate(c))
+            except Exception:
+                pass
+
+    # 3. Limitations normalization
+    limitations: List[AgentLimitation] = []
+    for idx, lim in enumerate(raw.get("limitations", [])):
+        if isinstance(lim, str):
+            limitations.append(
+                AgentLimitation(
+                    limitation_id=f"lim_{idx + 1}",
+                    category=LimitationCategory.INSUFFICIENT_EVIDENCE,
+                    description=lim[:4000],
+                )
+            )
+        elif isinstance(lim, dict):
+            try:
+                limitations.append(AgentLimitation.model_validate(lim))
+            except Exception:
+                pass
+
+    # 4. Formulate candidate
+    title = str(getattr(rec, "title", None) or raw.get("title") or "Recommended Action")
+    description = str(getattr(rec, "rationale", None) or raw.get("rationale") or title)
+    candidate = DecisionCandidate(
+        candidate_id=f"cand-{decision_id[:32]}",
+        action_type=rec_type_raw[:64],
+        title=title[:255],
+        description=description[:2000],
+        priority=str(raw.get("priority", "MEDIUM"))[:32],
+        requires_human_approval=bool(raw.get("requires_human_approval", True)),
+        parameters={"scope": raw.get("scope"), "scope_entity_id": raw.get("scope_entity_id")}
+        if raw.get("scope")
+        else {},
+        provenance={"legacy_source": "recommendations_table"},
+    )
+
+    # 5. Rationale
+    rationales: List[DecisionRationale] = []
+    if description:
+        rationales.append(
+            DecisionRationale(
+                basis_type=DecisionBasis.POLICY,
+                rule_id="legacy_recommendation_policy",
+                explanation_code=str(raw.get("expected_objective", "DETERMINISTIC_EVALUATION"))[:64],
+                provenance={"rationale": description[:500]},
+            )
+        )
+
+    # 6. Provenance preserving all raw legacy fields
+    clean_raw = {k: v for k, v in raw.items() if not k.startswith("_")}
+    provenance = {
+        "is_legacy_normalized": True,
+        "legacy_recommendation_id": raw.get("recommendation_id", decision_id),
+        "legacy_data": clean_raw,
+    }
+
+    eval_time = getattr(rec, "created_at", None)
+    if not isinstance(eval_time, datetime):
+        eval_time = datetime.now(timezone.utc)
+    elif eval_time.tzinfo is None:
+        eval_time = eval_time.replace(tzinfo=timezone.utc)
+
+    rec_status = getattr(rec, "status", None)
+    status_val = str(rec_status) if rec_status else DecisionStatus.REQUIRES_APPROVAL.value
+
+    rec_conf = getattr(rec, "confidence", None)
+    confidence_val = float(rec_conf) if rec_conf is not None else float(raw.get("confidence", 1.0))
+    confidence_val = max(0.0, min(1.0, confidence_val))
+
+    return DecisionResult(
+        decision_id=decision_id,
+        organization_id=org_id,
+        decision_type=dec_type,
+        status=status_val,
+        candidates=[candidate],
+        preferred_candidate=candidate,
+        preferred_candidate_id=candidate.candidate_id,
+        risk_assessment_id=raw.get("assessment_id"),
+        rationales=rationales,
+        constraints=constraints,
+        limitations=limitations,
+        requires_human_approval=bool(raw.get("requires_human_approval", True)),
+        confidence=confidence_val,
+        fingerprint=str(raw.get("fingerprint") or decision_id)[:64],
+        provenance=provenance,
+        evaluated_at=eval_time,
+    )
+
+
 @router.get(
     "/decisions",
     response_model=List[DecisionResult],
@@ -148,8 +279,14 @@ def list_decisions(
                 try:
                     res = DecisionResult.model_validate(rec.expected_benefit_json)
                     results.append(res)
+                    continue
                 except Exception as parse_err:
-                    logger.warning("Could not deserialize decision record '%s': %s", rec.id, parse_err)
+                    logger.debug("Decision record '%s' requires legacy normalization: %s", rec.id, parse_err)
+            try:
+                res = _normalize_legacy_decision_record(rec)
+                results.append(res)
+            except Exception as norm_err:
+                logger.warning("Could not deserialize decision record '%s': %s", rec.id, norm_err)
         return results
     except DecisionTenantIsolationError as e:
         raise HTTPException(
@@ -196,12 +333,26 @@ def get_decision(
             )
 
         if not rec.expected_benefit_json or not isinstance(rec.expected_benefit_json, dict):
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Decision payload for '{decision_id}' is empty or corrupt.",
-            )
+            try:
+                return _normalize_legacy_decision_record(rec)
+            except Exception:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Decision payload for '{decision_id}' is empty or corrupt.",
+                )
 
-        return DecisionResult.model_validate(rec.expected_benefit_json)
+        try:
+            return DecisionResult.model_validate(rec.expected_benefit_json)
+        except Exception as parse_err:
+            logger.info("Decision record '%s' requires legacy normalization: %s", decision_id, parse_err)
+            try:
+                return _normalize_legacy_decision_record(rec)
+            except Exception as norm_err:
+                logger.error("Failed to normalize legacy decision '%s': %s", decision_id, norm_err)
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    detail=f"Decision payload for '{decision_id}' is invalid and could not be normalized: {str(norm_err)}",
+                )
 
     except DecisionTenantIsolationError as e:
         raise HTTPException(

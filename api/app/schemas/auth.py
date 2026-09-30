@@ -1,6 +1,6 @@
-"""Pydantic schemas for authentication contracts (Phase 3 Step 4)."""
+from __future__ import annotations
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class OrganizationSummary(BaseModel):
@@ -21,8 +21,17 @@ class UserMeResponse(BaseModel):
     full_name: Optional[str] = None
     role: str
     org_id: Optional[str] = None
+    organization_id: Optional[str] = None
     organization: Optional[OrganizationSummary] = None
     permissions: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def sync_organization_id(self) -> UserMeResponse:
+        if not self.organization_id and self.org_id:
+            self.organization_id = self.org_id
+        elif not self.org_id and self.organization_id:
+            self.org_id = self.organization_id
+        return self
 
 
 class LogoutResponse(BaseModel):
