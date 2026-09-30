@@ -351,3 +351,93 @@ export function ArchModal({
     </div>
   );
 }
+
+// ==========================================
+// 6. FORM CONTROLS (shadcn-inspired Architectural Inputs)
+// ==========================================
+export interface ArchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: string;
+}
+
+export function ArchInput({ className = "", error, ...props }: ArchInputProps) {
+  return (
+    <input
+      className={`w-full px-3 py-2 text-xs font-mono rounded bg-card border ${
+        error ? "border-[#B71C1C] focus:border-[#B71C1C]" : "border-arch focus:border-[#D95E00]"
+      } text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors ${className}`}
+      style={{
+        backgroundColor: "var(--bg-card)",
+        borderColor: error ? "var(--danger-red)" : "var(--border-arch)",
+      }}
+      {...props}
+    />
+  );
+}
+
+export interface ArchSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  error?: string;
+}
+
+export function ArchSelect({ className = "", error, children, ...props }: ArchSelectProps) {
+  return (
+    <select
+      className={`w-full px-3 py-2 text-xs font-mono rounded bg-card border ${
+        error ? "border-[#B71C1C] focus:border-[#B71C1C]" : "border-arch focus:border-[#D95E00]"
+      } text-foreground focus:outline-none transition-colors ${className}`}
+      style={{
+        backgroundColor: "var(--bg-card)",
+        borderColor: error ? "var(--danger-red)" : "var(--border-arch)",
+      }}
+      {...props}
+    >
+      {children}
+    </select>
+  );
+}
+
+export function ArchLabel({
+  children,
+  className = "",
+  required = false,
+  ...props
+}: React.LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean }) {
+  return (
+    <label
+      className={`block text-[11px] font-mono font-medium text-muted-foreground uppercase tracking-wider mb-1 ${className}`}
+      {...props}
+    >
+      {children}
+      {required && <span className="text-[#D95E00] ml-1">*</span>}
+    </label>
+  );
+}
+
+export interface ArchTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  error?: string;
+}
+
+export function ArchTextarea({ className = "", error, ...props }: ArchTextareaProps) {
+  return (
+    <textarea
+      className={`w-full px-3 py-2 text-xs font-mono rounded bg-card border ${
+        error ? "border-[#B71C1C] focus:border-[#B71C1C]" : "border-arch focus:border-[#D95E00]"
+      } text-foreground placeholder:text-muted-foreground focus:outline-none transition-colors ${className}`}
+      style={{
+        backgroundColor: "var(--bg-card)",
+        borderColor: error ? "var(--danger-red)" : "var(--border-arch)",
+      }}
+      {...props}
+    />
+  );
+}
+
+export function ArchFormGroup({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={`space-y-1 ${className}`}>{children}</div>;
+}
+

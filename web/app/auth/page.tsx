@@ -98,18 +98,21 @@ function AuthContent() {
         />
 
         <div className="relative flex items-center justify-center py-1">
-          <div className="border-t border-slate-800 w-full" />
-          <span className="bg-[#111827] px-2 text-[10px] uppercase font-mono text-slate-500 tracking-wider">
+          <div className="border-t border-arch w-full" />
+          <span
+            className="px-2 text-[10px] uppercase font-mono text-muted-foreground tracking-wider"
+            style={{ backgroundColor: "var(--bg-card)" }}
+          >
             OR
           </span>
-          <div className="border-t border-slate-800 w-full" />
+          <div className="border-t border-arch w-full" />
         </div>
 
         <a
           href={`/api/v1/auth/demo-login?return_to=${encodeURIComponent(returnTo)}`}
-          className="w-full py-2.5 px-4 rounded-xl border border-blue-500/30 hover:border-blue-500/60 bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 text-xs font-medium flex items-center justify-center gap-2 transition-colors cursor-pointer text-center"
+          className="w-full py-2.5 px-4 rounded-xl border border-[#D95E00]/40 hover:border-[#D95E00]/80 bg-[#D95E00]/10 hover:bg-[#D95E00]/20 text-[#D95E00] text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all cursor-pointer text-center shadow-sm shadow-[#D95E00]/10 select-none"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#0A7A75] animate-pulse" />
           Enter Mission Control (Demo Access)
         </a>
       </div>

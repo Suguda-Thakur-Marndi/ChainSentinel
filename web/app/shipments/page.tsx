@@ -5,13 +5,22 @@ import { useRouter } from "next/navigation";
 import {
   Plus,
   RefreshCw,
-  X,
+  Truck,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { EvidenceBadge, StatusBadge } from "@/components/ui/Badges";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import {
+  ArchButton,
+  ArchModal,
+  ArchInput,
+  ArchSelect,
+  ArchLabel,
+  ArchBadge,
+  ArchFormGroup,
+} from "@/components/ui/ArchitecturalComponents";
 import { apiClient } from "@/lib/api/client";
 import type { ShipmentCreate, ShipmentResponse } from "@/lib/api/types";
 
@@ -192,35 +201,39 @@ export default function ShipmentsPage() {
       <AppShell>
         <div className="space-y-4">
           {/* Top Page Header */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-arch pb-4">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
+                <Truck className="w-5 h-5 text-[#D95E00]" />
                 Shipments Monitor
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800">
+                <ArchBadge variant="orange">
                   {shipments.length} Total
-                </span>
+                </ArchBadge>
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Real-time multi-tier logistics tracking, carrier telemetry & predicted delays.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
+            <div className="flex items-center gap-2.5">
+              <ArchButton
+                variant="outline"
+                size="sm"
                 onClick={fetchShipments}
                 disabled={isLoading}
-                className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
-                title="Refresh"
+                title="Refresh shipments"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              </button>
-              <button
+                <span>Refresh</span>
+              </ArchButton>
+              <ArchButton
+                variant="default"
+                size="sm"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white shadow-md transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Register Shipment</span>
-              </button>
+              </ArchButton>
             </div>
           </div>
 
@@ -236,7 +249,8 @@ export default function ShipmentsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-[#111827] border border-[#243044] text-xs text-slate-300 rounded-md px-2.5 py-1.5 focus:outline-none"
+              className="bg-card border border-arch text-xs font-mono text-muted-foreground rounded px-2.5 py-1.5 focus:outline-none focus:border-[#D95E00]"
+              style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-arch)" }}
             >
               <option value="ALL">All Statuses</option>
               <option value="IN_TRANSIT">In Transit</option>
@@ -250,7 +264,8 @@ export default function ShipmentsPage() {
             <select
               value={modeFilter}
               onChange={(e) => setModeFilter(e.target.value)}
-              className="bg-[#111827] border border-[#243044] text-xs text-slate-300 rounded-md px-2.5 py-1.5 focus:outline-none"
+              className="bg-card border border-arch text-xs font-mono text-muted-foreground rounded px-2.5 py-1.5 focus:outline-none focus:border-[#D95E00]"
+              style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-arch)" }}
             >
               <option value="ALL">All Modes</option>
               <option value="OCEAN">Ocean</option>
@@ -271,97 +286,84 @@ export default function ShipmentsPage() {
           />
 
           {/* Register Shipment Modal */}
-          {showCreateModal && (
-            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="w-full max-w-md rounded-lg border border-[#243044] bg-[#111827] shadow-2xl p-6">
-                <div className="flex items-center justify-between border-b border-[#243044] pb-3 mb-4">
-                  <h3 className="text-sm font-bold text-white">Register Authoritative Shipment</h3>
-                  <button
-                    onClick={() => setShowCreateModal(false)}
-                    className="p-1 rounded text-slate-400 hover:text-slate-200"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {createError && (
-                  <div className="mb-4 p-3 rounded bg-rose-950/40 border border-rose-800 text-xs text-rose-300">
-                    {createError}
-                  </div>
-                )}
-
-                <form onSubmit={handleCreateShipment} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-slate-300 font-medium mb-1">
-                      Tracking / Container Number *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newTracking}
-                      onChange={(e) => setNewTracking(e.target.value)}
-                      placeholder="e.g. MAEU98234123"
-                      className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Origin Hub</label>
-                      <input
-                        type="text"
-                        value={newOrigin}
-                        onChange={(e) => setNewOrigin(e.target.value)}
-                        placeholder="e.g. Port of Shanghai"
-                        className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Destination Hub</label>
-                      <input
-                        type="text"
-                        value={newDestination}
-                        onChange={(e) => setNewDestination(e.target.value)}
-                        placeholder="e.g. Port of Rotterdam"
-                        className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-300 font-medium mb-1">Transport Mode</label>
-                    <select
-                      value={newMode}
-                      onChange={(e) => setNewMode(e.target.value)}
-                      className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 focus:outline-none focus:border-blue-500"
-                    >
-                      <option value="OCEAN">Ocean (Maritime AIS)</option>
-                      <option value="AIR">Air Freight</option>
-                      <option value="ROAD">Road Logistics</option>
-                      <option value="RAIL">Intermodal Rail</option>
-                    </select>
-                  </div>
-
-                  <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#243044]">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(false)}
-                      className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-colors disabled:opacity-50"
-                    >
-                      {isSubmitting ? "Creating..." : "Save Shipment"}
-                    </button>
-                  </div>
-                </form>
+          <ArchModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            title="Register Authoritative Shipment"
+            subtitle="Deterministic Multi-tier Logistics Tracking"
+          >
+            {createError && (
+              <div className="mb-4 p-3 rounded bg-rose-950/40 border border-rose-800 text-xs text-rose-300 font-mono">
+                {createError}
               </div>
-            </div>
-          )}
+            )}
+
+            <form onSubmit={handleCreateShipment} className="space-y-4">
+              <ArchFormGroup>
+                <ArchLabel required>Tracking / Container Number</ArchLabel>
+                <ArchInput
+                  type="text"
+                  required
+                  value={newTracking}
+                  onChange={(e) => setNewTracking(e.target.value)}
+                  placeholder="e.g. MAEU98234123"
+                />
+              </ArchFormGroup>
+
+              <div className="grid grid-cols-2 gap-3">
+                <ArchFormGroup>
+                  <ArchLabel>Origin Hub</ArchLabel>
+                  <ArchInput
+                    type="text"
+                    value={newOrigin}
+                    onChange={(e) => setNewOrigin(e.target.value)}
+                    placeholder="e.g. Port of Shanghai"
+                  />
+                </ArchFormGroup>
+                <ArchFormGroup>
+                  <ArchLabel>Destination Hub</ArchLabel>
+                  <ArchInput
+                    type="text"
+                    value={newDestination}
+                    onChange={(e) => setNewDestination(e.target.value)}
+                    placeholder="e.g. Port of Rotterdam"
+                  />
+                </ArchFormGroup>
+              </div>
+
+              <ArchFormGroup>
+                <ArchLabel>Transport Mode</ArchLabel>
+                <ArchSelect
+                  value={newMode}
+                  onChange={(e) => setNewMode(e.target.value)}
+                >
+                  <option value="OCEAN">Ocean (Maritime AIS)</option>
+                  <option value="AIR">Air Freight</option>
+                  <option value="ROAD">Road Logistics</option>
+                  <option value="RAIL">Intermodal Rail</option>
+                </ArchSelect>
+              </ArchFormGroup>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-arch">
+                <ArchButton
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCreateModal(false)}
+                >
+                  Cancel
+                </ArchButton>
+                <ArchButton
+                  type="submit"
+                  variant="default"
+                  size="sm"
+                  isLoading={isSubmitting}
+                >
+                  Save Shipment
+                </ArchButton>
+              </div>
+            </form>
+          </ArchModal>
         </div>
       </AppShell>
     </ProtectedRoute>

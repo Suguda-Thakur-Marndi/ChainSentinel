@@ -2,12 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Play, RefreshCw } from "lucide-react";
+import { Play, RefreshCw, Sliders } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable } from "@/components/ui/DataTable";
 import { OptimizationStatusBadge } from "@/components/ui/Badges";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import {
+  ArchButton,
+  ArchBadge,
+} from "@/components/ui/ArchitecturalComponents";
 import { apiClient } from "@/lib/api/client";
 import type { OptimizationRequest, OptimizationResult } from "@/lib/api/types";
 
@@ -117,36 +121,40 @@ export default function OptimizationPage() {
     <ProtectedRoute>
       <AppShell>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-arch pb-4">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
+                <Sliders className="w-5 h-5 text-[#D95E00]" />
                 Mathematical Optimization Engine
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
+                <ArchBadge variant="orange">
                   Google OR-Tools
-                </span>
+                </ArchBadge>
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Deterministic Mixed-Integer Linear Programming (MILP) solver for multi-objective cost, delay & risk trade-offs.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
+            <div className="flex items-center gap-2.5">
+              <ArchButton
+                variant="outline"
+                size="sm"
                 onClick={fetchRuns}
                 disabled={isLoading}
-                className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
-                title="Refresh"
+                title="Refresh optimization runs"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              </button>
-              <button
+                <span>Refresh</span>
+              </ArchButton>
+              <ArchButton
+                variant="default"
+                size="sm"
                 onClick={handleTriggerRun}
-                disabled={isSolving}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white shadow-md transition-colors disabled:opacity-50"
+                isLoading={isSolving}
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isSolving ? "Solving MILP..." : "Trigger Optimization Run"}</span>
-              </button>
+              </ArchButton>
             </div>
           </div>
 

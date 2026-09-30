@@ -14,6 +14,12 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { RiskBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import {
+  ArchButton,
+  ArchBadge,
+  ArchCard,
+  ArchCardContent,
+} from "@/components/ui/ArchitecturalComponents";
 import { apiClient } from "@/lib/api/client";
 import type { IncidentResponse, RecommendationResponse } from "@/lib/api/types";
 
@@ -174,8 +180,8 @@ export default function IncidentDetailPage() {
                         <div
                           className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-mono font-bold ${
                             isCompleted
-                              ? "bg-blue-600 text-white"
-                              : "bg-slate-800 text-slate-500 border border-slate-700"
+                              ? "bg-[#D95E00] text-white"
+                              : "bg-surface text-muted-foreground border border-arch"
                           }`}
                         >
                           {idx + 1}
@@ -183,10 +189,10 @@ export default function IncidentDetailPage() {
                         <span
                           className={`text-xs font-mono ${
                             isCurrent
-                              ? "text-blue-400 font-bold"
+                              ? "text-[#D95E00] font-bold"
                               : isCompleted
-                              ? "text-slate-300"
-                              : "text-slate-500"
+                              ? "text-foreground"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {stage}
@@ -195,7 +201,7 @@ export default function IncidentDetailPage() {
                       {idx < STAGES.length - 1 && (
                         <div
                           className={`flex-1 h-0.5 mx-3 min-w-[24px] ${
-                            currentStageIndex > idx ? "bg-blue-600" : "bg-slate-800"
+                            currentStageIndex > idx ? "bg-[#D95E00]" : "bg-arch"
                           }`}
                         />
                       )}
@@ -207,58 +213,62 @@ export default function IncidentDetailPage() {
           </div>
 
           {/* Description & Impact Summary */}
-          <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-              Disruption Narrative
-            </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {incident.description || "Operational disruption reported across primary logistics corridors. Active automated root-cause research dispatched."}
-            </p>
-          </div>
+          <ArchCard>
+            <ArchCardContent className="space-y-2">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
+                Disruption Narrative
+              </h3>
+              <p className="text-xs font-mono text-muted-foreground leading-relaxed">
+                {incident.description || "Operational disruption reported across primary logistics corridors. Active automated root-cause research dispatched."}
+              </p>
+            </ArchCardContent>
+          </ArchCard>
 
           {/* Linked Formulated Recommendations */}
-          <div className="p-4 rounded-lg bg-[#111827] border border-[#243044]">
-            <div className="flex items-center justify-between border-b border-[#243044] pb-2 mb-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center gap-2">
-                <Scale className="w-4 h-4 text-purple-400" /> Synthesized Mitigation Candidates
-              </h3>
-              <Link
-                href="/recommendations"
-                className="text-xs text-blue-400 hover:underline flex items-center gap-1"
-              >
-                Recommendations Queue <ExternalLink className="w-3 h-3" />
-              </Link>
-            </div>
+          <ArchCard>
+            <div className="p-4">
+              <div className="flex items-center justify-between border-b border-arch pb-2 mb-3">
+                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-[#D95E00]" /> Synthesized Mitigation Candidates
+                </h3>
+                <Link
+                  href="/recommendations"
+                  className="text-xs font-mono text-[#D95E00] hover:underline flex items-center gap-1"
+                >
+                  Recommendations Queue <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
 
-            <div className="space-y-3">
-              {recommendations.length === 0 ? (
-                <EmptyState
-                  title="No Mitigation Actions Formulated"
-                  message="Run simulation or optimization to synthesize algorithmic mitigation candidates."
-                />
-              ) : (
-                recommendations.map((rec) => (
-                  <div
-                    key={rec.id}
-                    className="p-3 rounded bg-[#1A2332]/60 border border-slate-800 text-xs flex items-center justify-between gap-4"
-                  >
-                    <div>
-                      <span className="font-semibold text-slate-200 block text-sm">{rec.title}</span>
-                      <p className="text-[11px] text-slate-400 mt-0.5">
-                        {rec.rationale || "Mathematical mitigation proposed by solver."}
-                      </p>
-                    </div>
-                    <Link
-                      href={`/recommendations/${rec.id}`}
-                      className="px-3 py-1.5 rounded bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 flex-shrink-0 transition-colors"
+              <div className="space-y-3">
+                {recommendations.length === 0 ? (
+                  <EmptyState
+                    title="No Mitigation Actions Formulated"
+                    message="Run simulation or optimization to synthesize algorithmic mitigation candidates."
+                  />
+                ) : (
+                  recommendations.map((rec) => (
+                    <div
+                      key={rec.id}
+                      className="p-3 rounded border border-arch text-xs font-mono flex items-center justify-between gap-4 bg-surface"
+                      style={{ backgroundColor: "var(--bg-secondary)", borderColor: "var(--border-arch)" }}
                     >
-                      Review Decision Candidate
-                    </Link>
-                  </div>
-                ))
-              )}
+                      <div>
+                        <span className="font-semibold text-foreground block text-sm font-mono">{rec.title}</span>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 font-mono">
+                          {rec.rationale || "Mathematical mitigation proposed by solver."}
+                        </p>
+                      </div>
+                      <Link href={`/recommendations/${rec.id}`}>
+                        <ArchButton variant="outline" size="sm">
+                          Review Candidate
+                        </ArchButton>
+                      </Link>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
-          </div>
+          </ArchCard>
         </div>
       </AppShell>
     </ProtectedRoute>

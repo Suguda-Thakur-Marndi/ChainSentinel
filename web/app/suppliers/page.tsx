@@ -4,12 +4,21 @@ import React, { useEffect, useState } from "react";
 import {
   Plus,
   RefreshCw,
-  X,
+  Building2,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import {
+  ArchButton,
+  ArchModal,
+  ArchInput,
+  ArchSelect,
+  ArchLabel,
+  ArchBadge,
+  ArchFormGroup,
+} from "@/components/ui/ArchitecturalComponents";
 import { apiClient } from "@/lib/api/client";
 import type { SupplierCreate, SupplierResponse } from "@/lib/api/types";
 
@@ -101,8 +110,8 @@ export default function SuppliersPage() {
       sortable: true,
       render: (row) => (
         <div>
-          <span className="font-semibold text-slate-200 block">{row.name}</span>
-          <span className="text-[11px] font-mono text-slate-500">{row.code || "NO_CODE"}</span>
+          <span className="font-semibold text-foreground block font-mono">{row.name}</span>
+          <span className="text-[11px] font-mono text-muted-foreground">{row.code || "NO_CODE"}</span>
         </div>
       ),
     },
@@ -110,17 +119,27 @@ export default function SuppliersPage() {
       key: "country",
       header: "Country / Jurisdiction",
       sortable: true,
-      render: (row) => <span className="text-slate-300">{row.country || "Global"}</span>,
+      render: (row) => <span className="text-muted-foreground font-mono">{row.country || "Global"}</span>,
     },
     {
       key: "tier",
       header: "Criticality Tier",
       sortable: true,
-      render: (row) => (
-        <span className="font-mono text-xs text-amber-400 px-2 py-0.5 rounded bg-amber-950/40 border border-amber-800">
-          {row.tier || "MEDIUM"}
-        </span>
-      ),
+      render: (row) => {
+        const tierVariant =
+          row.tier === "CRITICAL"
+            ? "danger"
+            : row.tier === "HIGH"
+            ? "amber"
+            : row.tier === "MEDIUM"
+            ? "orange"
+            : "teal";
+        return (
+          <ArchBadge variant={tierVariant}>
+            {row.tier || "MEDIUM"}
+          </ArchBadge>
+        );
+      },
     },
     {
       key: "reliability_score",
@@ -128,7 +147,7 @@ export default function SuppliersPage() {
       sortable: true,
       align: "right",
       render: (row) => (
-        <span className="font-mono text-xs font-bold text-slate-200">
+        <span className="font-mono text-xs font-bold text-foreground">
           {row.reliability_score !== null && row.reliability_score !== undefined
             ? `${Math.round(row.reliability_score)}/100`
             : "—"}
@@ -141,7 +160,7 @@ export default function SuppliersPage() {
       sortable: true,
       align: "right",
       render: (row) => (
-        <span className="font-mono text-xs text-slate-300">
+        <span className="font-mono text-xs text-muted-foreground">
           {row.financial_exposure !== null && row.financial_exposure !== undefined
             ? `$${row.financial_exposure.toLocaleString()}`
             : "—"}
@@ -154,35 +173,39 @@ export default function SuppliersPage() {
     <ProtectedRoute>
       <AppShell>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-arch pb-4">
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
+                <Building2 className="w-5 h-5 text-[#D95E00]" />
                 Suppliers Directory
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
+                <ArchBadge variant="orange">
                   {suppliers.length} Registered
-                </span>
+                </ArchBadge>
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5 font-mono">
                 Multi-tier supplier profiles, tier criticalities, and financial exposures.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
+            <div className="flex items-center gap-2.5">
+              <ArchButton
+                variant="outline"
+                size="sm"
                 onClick={fetchSuppliers}
                 disabled={isLoading}
-                className="p-2 rounded-md bg-[#111827] hover:bg-[#1A2332] text-slate-300 border border-[#243044] transition-colors"
-                title="Refresh"
+                title="Refresh suppliers"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              </button>
-              <button
+                <span>Refresh</span>
+              </ArchButton>
+              <ArchButton
+                variant="default"
+                size="sm"
                 onClick={() => setShowCreateModal(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white shadow-md transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Register Supplier</span>
-              </button>
+              </ArchButton>
             </div>
           </div>
 
@@ -202,89 +225,78 @@ export default function SuppliersPage() {
             emptyMessage="Register your first tier-1 or tier-2 supplier."
           />
 
-          {showCreateModal && (
-            <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="w-full max-w-md rounded-lg border border-[#243044] bg-[#111827] shadow-2xl p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-[#243044] pb-3">
-                  <h3 className="text-sm font-bold text-white">Register Authoritative Supplier</h3>
-                  <button
-                    onClick={() => setShowCreateModal(false)}
-                    className="text-slate-400 hover:text-slate-200"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+          <ArchModal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            title="Register Authoritative Supplier"
+            subtitle="Deterministic Multi-tier Supplier Profile Creation"
+          >
+            <form onSubmit={handleCreateSupplier} className="space-y-4">
+              <ArchFormGroup>
+                <ArchLabel required>Supplier Name</ArchLabel>
+                <ArchInput
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Taiwan Semiconductor Corp"
+                />
+              </ArchFormGroup>
 
-                <form onSubmit={handleCreateSupplier} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-slate-300 font-medium mb-1">Supplier Name *</label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="e.g. Taiwan Semiconductor Corp"
-                      className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Supplier Code</label>
-                      <input
-                        type="text"
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="e.g. TSMC-01"
-                        className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none font-mono"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Country</label>
-                      <input
-                        type="text"
-                        value={country}
-                        onChange={(e) => setCountry(e.target.value)}
-                        placeholder="e.g. Taiwan"
-                        className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-300 font-medium mb-1">Criticality Tier</label>
-                    <select
-                      value={tier}
-                      onChange={(e) => setTier(e.target.value as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")}
-                      className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 focus:outline-none"
-                    >
-                      <option value="CRITICAL">Tier 1 — Critical SPOF</option>
-                      <option value="HIGH">Tier 2 — High Criticality</option>
-                      <option value="MEDIUM">Tier 3 — Medium</option>
-                      <option value="LOW">Tier 4 — Standard Commodity</option>
-                    </select>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-3 border-t border-[#243044]">
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(false)}
-                      className="px-3 py-1.5 rounded bg-slate-800 text-slate-300"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-semibold disabled:opacity-50"
-                    >
-                      {isSubmitting ? "Registering..." : "Save Supplier"}
-                    </button>
-                  </div>
-                </form>
+              <div className="grid grid-cols-2 gap-3">
+                <ArchFormGroup>
+                  <ArchLabel>Supplier Code</ArchLabel>
+                  <ArchInput
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="e.g. TSMC-01"
+                  />
+                </ArchFormGroup>
+                <ArchFormGroup>
+                  <ArchLabel>Country / Jurisdiction</ArchLabel>
+                  <ArchInput
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    placeholder="e.g. Taiwan"
+                  />
+                </ArchFormGroup>
               </div>
-            </div>
-          )}
+
+              <ArchFormGroup>
+                <ArchLabel>Criticality Tier</ArchLabel>
+                <ArchSelect
+                  value={tier}
+                  onChange={(e) => setTier(e.target.value as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL")}
+                >
+                  <option value="CRITICAL">Tier 1 — Critical SPOF</option>
+                  <option value="HIGH">Tier 2 — High Criticality</option>
+                  <option value="MEDIUM">Tier 3 — Medium</option>
+                  <option value="LOW">Tier 4 — Standard Commodity</option>
+                </ArchSelect>
+              </ArchFormGroup>
+
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-arch">
+                <ArchButton
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowCreateModal(false)}
+                >
+                  Cancel
+                </ArchButton>
+                <ArchButton
+                  type="submit"
+                  variant="default"
+                  size="sm"
+                  isLoading={isSubmitting}
+                >
+                  Save Supplier
+                </ArchButton>
+              </div>
+            </form>
+          </ArchModal>
         </div>
       </AppShell>
     </ProtectedRoute>

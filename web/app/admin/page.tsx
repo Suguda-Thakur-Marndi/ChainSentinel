@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Building2,
   Lock,
@@ -11,216 +11,208 @@ import {
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { RoleBadge } from "@/components/ui/Badges";
+import {
+  ArchBadge,
+  ArchCard,
+  ArchCardContent,
+  ArchTabs,
+  ArchTabsList,
+  ArchTabsTrigger,
+  ArchTabsContent,
+  ArchInput,
+  ArchLabel,
+  ArchFormGroup,
+} from "@/components/ui/ArchitecturalComponents";
 import { useAuth } from "@/lib/auth/AuthContext";
 
 export default function AdminPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"org" | "users" | "integrations" | "security">("org");
 
   return (
     <ProtectedRoute>
       <AppShell>
         <div className="space-y-6 max-w-5xl">
-          <div className="border-b border-[#243044] pb-4">
-            <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <div className="border-b border-arch pb-4">
+            <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
+              <Shield className="w-5 h-5 text-[#D95E00]" />
               Tenant Administration & RBAC Controls
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
+              <ArchBadge variant="orange">
                 Enterprise
-              </span>
+              </ArchBadge>
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5 font-mono">
               Multi-tenant boundary enforcement, role-based access control, and backend system configuration.
             </p>
           </div>
 
-          {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 border-b border-[#243044] pb-2 text-xs">
-            <button
-              onClick={() => setActiveTab("org")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activeTab === "org"
-                  ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Organization Settings
-            </button>
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activeTab === "users"
-                  ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Users & Roles (RBAC)
-            </button>
-            <button
-              onClick={() => setActiveTab("integrations")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activeTab === "integrations"
-                  ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Telemetry Integrations
-            </button>
-            <button
-              onClick={() => setActiveTab("security")}
-              className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
-                activeTab === "security"
-                  ? "bg-blue-600/20 text-blue-400 border border-blue-500/30"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Audit & Compliance
-            </button>
-          </div>
+          <ArchTabs defaultValue="org">
+            <ArchTabsList>
+              <ArchTabsTrigger value="org">Organization Settings</ArchTabsTrigger>
+              <ArchTabsTrigger value="users">Users & Roles (RBAC)</ArchTabsTrigger>
+              <ArchTabsTrigger value="integrations">Telemetry Integrations</ArchTabsTrigger>
+              <ArchTabsTrigger value="security">Audit & Compliance</ArchTabsTrigger>
+            </ArchTabsList>
 
-          {/* Tab 1: Organization */}
-          {activeTab === "org" && (
-            <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] space-y-4">
-              <div className="flex items-center justify-between border-b border-[#243044] pb-3">
-                <div className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-blue-400" />
-                  <h3 className="text-sm font-bold text-white">Active Tenant Boundary</h3>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  TENANT ISOLATED
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div>
-                  <span className="text-slate-400 block mb-1">Organization Name</span>
-                  <input
-                    type="text"
-                    disabled
-                    value={user?.organization?.name || "Active Organization"}
-                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-100 disabled:opacity-80"
-                  />
-                </div>
-                <div>
-                  <span className="text-slate-400 block mb-1">Domain Boundary / Slug</span>
-                  <input
-                    type="text"
-                    disabled
-                    value={user?.organization?.slug || user?.org_id || "default"}
-                    className="w-full px-3 py-2 rounded bg-[#1A2332] border border-slate-700 text-slate-400 font-mono disabled:opacity-80"
-                  />
-                </div>
-                <div>
-                  <span className="text-slate-400 block mb-1">Tenant Organization ID</span>
-                  <span className="font-mono text-slate-300 block py-2">
-                    {user?.org_id || "—"}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block mb-1">Database Schema Isolation</span>
-                  <span className="font-mono text-emerald-400 block py-2">
-                    Row-Level Security (RLS) Active
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Tab 2: Users & Roles */}
-          {activeTab === "users" && (
-            <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] space-y-4">
-              <div className="flex items-center justify-between border-b border-[#243044] pb-3">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-blue-400" />
-                  <h3 className="text-sm font-bold text-white">Role-Based Access Control (RBAC)</h3>
-                </div>
-                <span className="text-xs text-slate-400 font-mono">5 Defined Roles</span>
-              </div>
-
-              <div className="space-y-3 text-xs">
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-white block">Current Operator</span>
-                    <span className="font-mono text-[11px] text-slate-400">{user?.email}</span>
+            {/* Tab 1: Organization */}
+            <ArchTabsContent value="org">
+              <ArchCard elevated>
+                <div className="p-5 space-y-4 font-mono">
+                  <div className="flex items-center justify-between border-b border-arch pb-3">
+                    <div className="flex items-center gap-2">
+                      <Building2 className="w-4 h-4 text-[#D95E00]" />
+                      <h3 className="text-sm font-bold text-foreground font-mono">Active Tenant Boundary</h3>
+                    </div>
+                    <ArchBadge variant="teal">
+                      TENANT ISOLATED
+                    </ArchBadge>
                   </div>
-                  <RoleBadge role={user?.role || "Viewer"} />
-                </div>
 
-                <div className="p-4 rounded bg-[#070A0E] border border-slate-800/80 space-y-2 text-[11px]">
-                  <h5 className="font-semibold text-slate-300 uppercase tracking-wider">
-                    Authoritative Role Hierarchy:
-                  </h5>
-                  <ul className="space-y-1 text-slate-400 font-mono">
-                    <li>• <strong className="text-purple-400">ADMIN:</strong> Full tenant governance, user management, integration secrets.</li>
-                    <li>• <strong className="text-rose-400">RISKMANAGER:</strong> Authority to approve critical mitigation recommendations.</li>
-                    <li>• <strong className="text-amber-400">OPSMANAGER:</strong> Authority to trigger executions and rerouting commands.</li>
-                    <li>• <strong className="text-blue-400">ANALYST:</strong> Run what-if simulations, formulate decisions, inspect ML models.</li>
-                    <li>• <strong className="text-slate-400">VIEWER:</strong> Read-only observability across Control Tower telemetry.</li>
-                  </ul>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+                    <ArchFormGroup>
+                      <ArchLabel>Organization Name</ArchLabel>
+                      <ArchInput
+                        type="text"
+                        disabled
+                        value={user?.organization?.name || "Active Organization"}
+                        className="disabled:opacity-80"
+                      />
+                    </ArchFormGroup>
+                    <ArchFormGroup>
+                      <ArchLabel>Domain Boundary / Slug</ArchLabel>
+                      <ArchInput
+                        type="text"
+                        disabled
+                        value={user?.organization?.slug || user?.org_id || "default"}
+                        className="disabled:opacity-80"
+                      />
+                    </ArchFormGroup>
+                    <ArchFormGroup>
+                      <ArchLabel>Tenant Organization ID</ArchLabel>
+                      <span className="font-mono text-foreground block py-2">
+                        {user?.org_id || "—"}
+                      </span>
+                    </ArchFormGroup>
+                    <ArchFormGroup>
+                      <ArchLabel>Database Schema Isolation</ArchLabel>
+                      <span className="font-mono text-[#0A7A75] font-semibold block py-2">
+                        Row-Level Security (RLS) Active
+                      </span>
+                    </ArchFormGroup>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </ArchCard>
+            </ArchTabsContent>
 
-          {/* Tab 3: Integrations (Authoritative notice per Section 25) */}
-          {activeTab === "integrations" && (
-            <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] space-y-4">
-              <div className="flex items-center justify-between border-b border-[#243044] pb-3">
-                <div className="flex items-center gap-2">
-                  <Server className="w-4 h-4 text-blue-400" />
-                  <h3 className="text-sm font-bold text-white">Telemetry & Adapter Integrations</h3>
-                </div>
-                <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                  BACKEND SECRETS VAULT
-                </span>
-              </div>
+            {/* Tab 2: Users & Roles */}
+            <ArchTabsContent value="users">
+              <ArchCard elevated>
+                <div className="p-5 space-y-4 font-mono">
+                  <div className="flex items-center justify-between border-b border-arch pb-3">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-[#D95E00]" />
+                      <h3 className="text-sm font-bold text-foreground font-mono">Role-Based Access Control (RBAC)</h3>
+                    </div>
+                    <span className="text-xs text-muted-foreground font-mono">5 Defined Roles</span>
+                  </div>
 
-              <div className="p-4 rounded bg-[#1A2332] border border-slate-800 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Lock className="w-4 h-4 text-amber-400" />
-                  <span className="font-semibold">Credentials Managed Server-Side</span>
-                </div>
-                <p className="text-slate-400 leading-relaxed text-[11px]">
-                  Telemetry adapter credentials (such as AIS transponders, weather feeds, and ERP execution connectors) are securely configured and managed directly in backend environment configurations and secret stores.
-                </p>
-                <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                  <span>UI Credential Management:</span>
-                  <span className="text-amber-400 font-medium">Not available / Configuration managed via backend environment</span>
-                </div>
-              </div>
+                  <div className="space-y-3 text-xs font-mono">
+                    <div className="p-3 rounded border border-arch flex items-center justify-between bg-surface">
+                      <div>
+                        <span className="font-semibold text-foreground block">Current Operator</span>
+                        <span className="font-mono text-[11px] text-muted-foreground">{user?.email}</span>
+                      </div>
+                      <RoleBadge role={user?.role || "Viewer"} />
+                    </div>
 
-              <div className="pt-2 border-t border-[#243044] text-[11px] text-slate-500 font-mono">
-                Security Policy: Secrets, API keys, and connection credentials are never transmitted to browser clients.
-              </div>
-            </div>
-          )}
+                    <div
+                      className="p-4 rounded border border-arch space-y-2 text-[11px] bg-card"
+                      style={{ backgroundColor: "var(--bg-primary)" }}
+                    >
+                      <h5 className="font-semibold text-foreground uppercase tracking-wider">
+                        Authoritative Role Hierarchy:
+                      </h5>
+                      <ul className="space-y-1 text-muted-foreground font-mono">
+                        <li>• <strong className="text-[#D95E00]">ADMIN:</strong> Full tenant governance, user management, integration secrets.</li>
+                        <li>• <strong className="text-[#B71C1C]">RISKMANAGER:</strong> Authority to approve critical mitigation recommendations.</li>
+                        <li>• <strong className="text-[#E88D00]">OPSMANAGER:</strong> Authority to trigger executions and rerouting commands.</li>
+                        <li>• <strong className="text-[#0A7A75]">ANALYST:</strong> Run what-if simulations, formulate decisions, inspect ML models.</li>
+                        <li>• <strong className="text-muted-foreground">VIEWER:</strong> Read-only observability across Control Tower telemetry.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </ArchCard>
+            </ArchTabsContent>
 
-          {/* Tab 4: Security */}
-          {activeTab === "security" && (
-            <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] space-y-4 text-xs">
-              <div className="flex items-center justify-between border-b border-[#243044] pb-3">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-sm font-bold text-white">Compliance & Cryptographic Verification</h3>
-                </div>
-                <span className="text-xs font-mono text-slate-400">SOC2 Type II Ready</span>
-              </div>
+            {/* Tab 3: Integrations */}
+            <ArchTabsContent value="integrations">
+              <ArchCard elevated>
+                <div className="p-5 space-y-4 font-mono">
+                  <div className="flex items-center justify-between border-b border-arch pb-3">
+                    <div className="flex items-center gap-2">
+                      <Server className="w-4 h-4 text-[#D95E00]" />
+                      <h3 className="text-sm font-bold text-foreground font-mono">Telemetry & Adapter Integrations</h3>
+                    </div>
+                    <ArchBadge variant="default">
+                      BACKEND SECRETS VAULT
+                    </ArchBadge>
+                  </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 space-y-1">
-                  <span className="font-semibold text-slate-200 block">Session Management</span>
-                  <p className="text-slate-400 text-[11px]">
-                    Strict HttpOnly, SameSite=Lax session cookies. Zero browser token exposure.
-                  </p>
+                  <div className="p-4 rounded border border-arch text-xs space-y-3 bg-surface">
+                    <div className="flex items-center gap-2 text-foreground font-mono">
+                      <Lock className="w-4 h-4 text-[#E88D00]" />
+                      <span className="font-semibold">Credentials Managed Server-Side</span>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed text-[11px] font-mono">
+                      Telemetry adapter credentials (such as AIS transponders, weather feeds, and ERP execution connectors) are securely configured and managed directly in backend environment configurations and secret stores.
+                    </p>
+                    <div className="pt-2 border-t border-arch flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                      <span>UI Credential Management:</span>
+                      <span className="text-[#E88D00] font-medium font-mono">Not available / Configuration managed via backend environment</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-arch text-[11px] text-muted-foreground font-mono">
+                    Security Policy: Secrets, API keys, and connection credentials are never transmitted to browser clients.
+                  </div>
                 </div>
-                <div className="p-3 rounded bg-[#1A2332] border border-slate-800 space-y-1">
-                  <span className="font-semibold text-slate-200 block">Immutable Audit Trails</span>
-                  <p className="text-slate-400 text-[11px]">
-                    Cryptographically sealed SHA-256 fingerprints recorded for all solver executions and approvals.
-                  </p>
+              </ArchCard>
+            </ArchTabsContent>
+
+            {/* Tab 4: Security */}
+            <ArchTabsContent value="security">
+              <ArchCard elevated>
+                <div className="p-5 space-y-4 text-xs font-mono">
+                  <div className="flex items-center justify-between border-b border-arch pb-3">
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-[#0A7A75]" />
+                      <h3 className="text-sm font-bold text-foreground font-mono">Compliance & Cryptographic Verification</h3>
+                    </div>
+                    <ArchBadge variant="teal">SOC2 Type II Ready</ArchBadge>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ArchCard>
+                      <ArchCardContent className="space-y-1">
+                        <span className="font-semibold text-foreground block font-mono">Session Management</span>
+                        <p className="text-muted-foreground text-[11px] font-mono">
+                          Strict HttpOnly, SameSite=Lax session cookies. Zero browser token exposure.
+                        </p>
+                      </ArchCardContent>
+                    </ArchCard>
+                    <ArchCard>
+                      <ArchCardContent className="space-y-1">
+                        <span className="font-semibold text-foreground block font-mono">Immutable Audit Trails</span>
+                        <p className="text-muted-foreground text-[11px] font-mono">
+                          Cryptographically sealed SHA-256 fingerprints recorded for all solver executions and approvals.
+                        </p>
+                      </ArchCardContent>
+                    </ArchCard>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </ArchCard>
+            </ArchTabsContent>
+          </ArchTabs>
         </div>
       </AppShell>
     </ProtectedRoute>
