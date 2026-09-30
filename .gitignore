@@ -13,6 +13,7 @@ apps/web/node_modules/
 # Next.js & Frontend Build Outputs
 .next/
 web/.next/
+web/web/
 apps/web/.next/
 out/
 web/out/
@@ -69,6 +70,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # Test & QA Artifacts
+scratch/
 artifacts/qa/screenshots/
 artifacts/qa/pages/
 *.tmp
