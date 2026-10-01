@@ -48,10 +48,10 @@ async function runMapAudit() {
   const leakedSecretsFound = [];
 
   const SENSITIVE_KEYWORDS = [
-    "AIzaSyD2ftX7Anh",
-    "G85tItblhAzCY7",
-    "f155cb036817",
-  ];
+    process.env.GOOGLE_MAPS_API_KEY,
+    process.env.AISSTREAM_API_KEY,
+    process.env.OPENWEATHER_API_KEY,
+  ].filter((s) => Boolean(s && s.length >= 8));
 
   page.on("request", (req) => {
     const url = req.url();
@@ -186,11 +186,11 @@ async function runMapAudit() {
 
     // Verify backend secrets did NOT leak
     const backendSecretKeywords = [
-      "G85tItblhAzCY7", // AISStream
-      "f155cb036817",   // OpenWeather
-      "a6ef1394-1da6",   // Project44
-      "eyJhbGciOiJSUzI", // Mobility GCIP
-    ];
+      process.env.AISSTREAM_API_KEY,
+      process.env.OPENWEATHER_API_KEY,
+      process.env.PROJECT44_CLIENT_SECRET,
+      process.env.MOBILITY_DATABASE_ACCESS_TOKEN,
+    ].filter((s) => Boolean(s && s.length >= 8));
     const backendLeaks = [];
     for (const reqUrl of interceptedRequests) {
       for (const secret of backendSecretKeywords) {

@@ -36,12 +36,11 @@ class GeminiLLMProvider(LLMProvider):
         retry_policy: Optional[LLMRetryPolicy] = None,
         timeout_seconds: Optional[float] = None,
     ) -> None:
-        # Resolve API key strictly server-side without logging or persisting
+        # Resolve API key strictly from GEMINI_API_KEY without logging or persisting
         self._api_key = (
             api_key
             or getattr(settings, "GEMINI_API_KEY", None)
             or os.environ.get("GEMINI_API_KEY")
-            or os.environ.get("GOOGLE_API_KEY")
         )
         self._allowed_models = (
             allowed_models
@@ -95,7 +94,6 @@ class GeminiLLMProvider(LLMProvider):
             self._api_key
             or getattr(settings, "GEMINI_API_KEY", None)
             or os.environ.get("GEMINI_API_KEY")
-            or os.environ.get("GOOGLE_API_KEY")
         )
         if not resolved_key or not resolved_key.strip():
             raise LLMAuthenticationError(

@@ -20,6 +20,8 @@ web/out/
 apps/web/out/
 build/
 dist/
+coverage/
+web/coverage/
 *.tsbuildinfo
 next-env.d.ts
 web/next-env.d.ts
@@ -28,11 +30,16 @@ apps/web/next-env.d.ts
 
 # Python & Virtual Environments
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
 .pytest_cache/
 api/.pytest_cache/
 apps/api/.pytest_cache/
+.mypy_cache/
+api/.mypy_cache/
+.ruff_cache/
+api/.ruff_cache/
 .venv/
 api/.venv/
 apps/api/.venv/
@@ -46,6 +53,8 @@ api/storage/
 apps/api/storage/
 *.joblib
 *.db
+*.sqlite
+*.sqlite3
 
 # Sensitive Files, Credentials & Environment Secrets
 .env
@@ -54,6 +63,7 @@ apps/api/storage/
 credentials.json
 *.pem
 *.key
+*.secret
 
 # System & IDE
 .DS_Store
@@ -62,16 +72,19 @@ Thumbs.db
 .idea/
 .agents/
 
-# Logs
+# Logs & Temporary Files
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-
-# Test & QA Artifacts
-scratch/
-artifacts/qa/screenshots/
-artifacts/qa/pages/
+tmp/
 *.tmp
+
+# Test, QA & Verification Artifacts
+scratch/
+artifacts/
+screenshots/
+reports/
 test_page_*.js
