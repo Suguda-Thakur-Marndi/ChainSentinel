@@ -60,7 +60,7 @@ apps/api/storage/
 .env
 .env.*
 !.env.example
-credentials.json
+credentials*.json
 *.pem
 *.key
 *.secret

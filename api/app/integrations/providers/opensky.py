@@ -489,7 +489,12 @@ class OpenSkyAdapter(BaseProviderAdapter):
 
     def resolve_client_id(self) -> str:
         """Resolve OpenSky client ID securely without exposing credentials."""
-        if self._explicit_client_id:
+        if self._explicit_client_id is not None:
+            if not self._explicit_client_id.strip():
+                raise ProviderConfigurationError(
+                    "Missing OpenSky client ID. Configure via extra_settings['client_id_ref'] or OPENSKY_CLIENT_ID.",
+                    provider_name=self.provider_name,
+                )
             return self._explicit_client_id
 
         extra = getattr(self.config, "extra_settings", {}) or {}
@@ -509,7 +514,12 @@ class OpenSkyAdapter(BaseProviderAdapter):
 
     def resolve_client_secret(self) -> str:
         """Resolve OpenSky client secret securely without exposing credentials."""
-        if self._secret:
+        if self._secret is not None:
+            if not self._secret.strip():
+                raise ProviderConfigurationError(
+                    "Missing OpenSky client secret. Configure via secret_ref or OPENSKY_CLIENT_SECRET.",
+                    provider_name=self.provider_name,
+                )
             return self._secret
 
         secret_ref = getattr(self.config, "secret_ref", None) or "env:OPENSKY_CLIENT_SECRET"

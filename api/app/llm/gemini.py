@@ -167,7 +167,7 @@ class GeminiLLMProvider(LLMProvider):
                 elif hasattr(raw_response, "candidates") and raw_response.candidates:
                     parts = []
                     for c in raw_response.candidates:
-                        if hasattr(c, "content") and c.content and hasattr(c.content, "parts"):
+                        if hasattr(c, "content") and c.content and getattr(c.content, "parts", None):
                             for p in c.content.parts:
                                 if hasattr(p, "text") and p.text:
                                     parts.append(p.text)

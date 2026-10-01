@@ -25,8 +25,8 @@
     }
   ],
   "timings": {
-    "navigationMs": 183,
-    "firstDataMs": 7666
+    "navigationMs": 138,
+    "firstDataMs": 13569
   },
   "backendLeakedSecrets": 0
 }
