@@ -1,4 +1,4 @@
-# RiskWise 2.0 / MCP-Sentinel — Comprehensive UI/UX Audit & Delivery Report
+# RiskWise 2.0 — Comprehensive UI/UX Audit & Delivery Report
 
 **Auditor & Lead**: Senior Product Designer & Lead Systems Architect  
 **Date**: September 30, 2026  
@@ -82,7 +82,7 @@ All 20+ primary platform views specified in `deep-research-report (2).md` were s
 | `/incidents/[id]` | `web/app/incidents/[id]/page.tsx`| Incident stage stepper, mitigation candidates | **Verified (200 OK)** |
 | `/agent-runs` | `web/app/agent-runs/page.tsx` | LangGraph agent trace replay & token breakdown | **Verified (200 OK)** |
 | `/agent-runs/[id]` | `web/app/agent-runs/[id]/page.tsx`| Step-by-step trace inspection, tool dispatch | **Verified (200 OK)** |
-| `/mcp-tools` | `web/app/mcp-tools/page.tsx` | FastMCP protocol catalog, tool schema viewer | **Verified (200 OK)** |
+| `/mcp-tools` | `[HISTORICAL / REMOVED]` | Retired during complete MCP removal — direct service integration | **Deprecated & Removed** |
 | `/digital-twin` | `web/app/digital-twin/page.tsx` | Deterministic graph digital twin topology (UUIDv5) | **Verified (200 OK)** |
 | `/simulations` | `web/app/simulations/page.tsx` | Monte Carlo What-If Simulation Engine & Wizard | **Verified (200 OK)** |
 | `/simulations/[id]`| `web/app/simulations/[id]/page.tsx`| Cascade failure tree, exposure curves | **Verified (200 OK)** |

@@ -69,7 +69,7 @@ const SERVICES: ServiceNode[] = [
   {
     id: "policy-sentinel",
     name: "Zero-Trust Policy Enforcer",
-    role: "Sandboxed MCP Validation & Escalation Caps",
+    role: "Sandboxed Policy Validation & Escalation Caps",
     status: "OPERATIONAL",
     latencyMs: 4,
     uptime: "100.0%",
@@ -89,14 +89,14 @@ const SERVICES: ServiceNode[] = [
     icon: Database,
   },
   {
-    id: "mcp-broker",
-    name: "MCP Protocol Agent Broker",
-    role: "Sandboxed Tool Gateway & Telemetry Bridge",
+    id: "integration-engine",
+    name: "API Integration Adapter Engine",
+    role: "Typed External Telemetry & Solvers (AIS, Weather, OR-Tools)",
     status: "OPERATIONAL",
     latencyMs: 18,
     uptime: "99.92%",
-    port: 9000,
-    protocol: "MCP JSON-RPC",
+    port: 8000,
+    protocol: "HTTPS / WebSocket",
     icon: Zap,
   },
   {
@@ -196,9 +196,9 @@ export default function SystemHealthPage() {
               variant="default"
             />
             <MetricCard
-              title="Active MCP Workers"
+              title="Active Pipeline Workers"
               value="8 / 8"
-              subtext="Zero Dropped Packets"
+              subtext="Zero Dropped Tasks"
               icon={Cpu}
               variant="orange"
             />
@@ -258,11 +258,11 @@ export default function SystemHealthPage() {
                   <div className="text-[10px] text-emerald-400 font-mono mt-2">14ms Compute</div>
                 </div>
 
-                {/* Stage 5: MCP & Storage */}
+                {/* Stage 5: Adapters & Storage */}
                 <div className="p-3 rounded border border-arch bg-surface/90 text-center space-y-1">
                   <div className="text-[10px] font-mono text-[#0A7A75] uppercase font-bold">STAGE 5</div>
-                  <div className="text-xs font-bold text-foreground font-mono">MCP Protocol & DB</div>
-                  <div className="text-[10px] text-muted-foreground font-mono">Sandboxed Tools & ACID</div>
+                  <div className="text-xs font-bold text-foreground font-mono">API Adapters & DB</div>
+                  <div className="text-[10px] text-muted-foreground font-mono">Typed Services & ACID</div>
                   <div className="text-[10px] text-emerald-400 font-mono mt-2">PostgreSQL 16</div>
                 </div>
               </div>

@@ -63,7 +63,7 @@ const DEFAULT_RUNS: AgentRun[] = [
     model: "claude-3-5-sonnet-20241022",
     status: "COMPLETED",
     trigger: "Telemetry Exception: Vessel 9301 Speed < 2 knots",
-    toolsUsed: ["mcp:maritime_ais", "mcp:route_optimizer", "mcp:carrier_contract"],
+    toolsUsed: ["maritime_ais", "route_optimizer", "carrier_contract"],
     policiesChecked: ["POL-004: Alternative Route Cost Cap", "POL-012: ETA Deviation Limits"],
     latencyMs: 342,
     startedAt: new Date(Date.now() - 1000 * 60 * 14).toISOString(),
@@ -73,7 +73,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 1,
         title: "Telemetry Ingestion",
-        action: "mcp:maritime_ais:getVesselLocation",
+        action: "maritime_ais:getVesselLocation",
         status: "OK",
         durationMs: 42,
         details: "Vessel IMO 948271 anchored outside Port Said. Speed 0.4 knots.",
@@ -89,7 +89,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 3,
         title: "Route Graph Calculation",
-        action: "mcp:route_optimizer:solveCapeRoute",
+        action: "route_optimizer:solveCapeRoute",
         status: "OK",
         durationMs: 248,
         details: "Cape of Good Hope transit calculated. ETA delta +6 days, cost delta +$24,100.",
@@ -97,7 +97,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 4,
         title: "Carrier Booking Dispatch",
-        action: "mcp:carrier_contract:reserveBunker",
+        action: "carrier_contract:reserveBunker",
         status: "OK",
         durationMs: 44,
         details: "Contract reserved with Maersk Maritime line. Awaiting human sign-off dossier.",
@@ -111,7 +111,7 @@ const DEFAULT_RUNS: AgentRun[] = [
     model: "gpt-4o-2024-08-06",
     status: "COMPLETED",
     trigger: "Vendor Onboarding: Tokyo Precision Optics",
-    toolsUsed: ["mcp:ofac_sanctions", "mcp:duns_registry", "mcp:contract_validator"],
+    toolsUsed: ["ofac_sanctions", "duns_registry", "contract_validator"],
     policiesChecked: ["POL-001: Zero-Trust Sanctions List", "POL-009: Dual-Use Tech Validation"],
     latencyMs: 184,
     startedAt: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
@@ -121,7 +121,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 1,
         title: "Entity Identity Resolution",
-        action: "mcp:duns_registry:verifyDUNS",
+        action: "duns_registry:verifyDUNS",
         status: "OK",
         durationMs: 52,
         details: "Verified registered entity in Chiyoda-ku, Tokyo. Registration active.",
@@ -129,7 +129,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 2,
         title: "Cross-jurisdiction Sanctions Scan",
-        action: "mcp:ofac_sanctions:queryEntity",
+        action: "ofac_sanctions:queryEntity",
         status: "OK",
         durationMs: 98,
         details: "Zero matches found across US OFAC, EU Consolidated, and UN Security Council lists.",
@@ -151,7 +151,7 @@ const DEFAULT_RUNS: AgentRun[] = [
     model: "claude-3-5-sonnet-20241022",
     status: "BLOCKED",
     trigger: "IoT Alert: Reefer Container RF-910 Temp Exceeded 6.5°C",
-    toolsUsed: ["mcp:reefer_iot", "mcp:depot_allocator"],
+    toolsUsed: ["reefer_iot", "depot_allocator"],
     policiesChecked: ["POL-018: Pharma Cold Chain Destruction Escalate"],
     latencyMs: 290,
     startedAt: new Date(Date.now() - 1000 * 60 * 75).toISOString(),
@@ -160,7 +160,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 1,
         title: "Reefer Telemetry Diagnostics",
-        action: "mcp:reefer_iot:getCompressorStatus",
+        action: "reefer_iot:getCompressorStatus",
         status: "WARN",
         durationMs: 78,
         details: "Secondary compressor failure detected. Temperature 7.1°C (Threshold 4.0°C).",
@@ -176,7 +176,7 @@ const DEFAULT_RUNS: AgentRun[] = [
       {
         step: 3,
         title: "Human Governance Ticket Creation",
-        action: "mcp:approvals:createDossier",
+        action: "approvals:createDossier",
         status: "OK",
         durationMs: 200,
         details: "Ticket APP-0082 created. Execution blocked pending Quality Assurance sign-off.",
@@ -212,7 +212,7 @@ export default function AgentRunsPage() {
                 ? "FAILED"
                 : "BLOCKED",
             trigger: `Target Entity: ${act.target_entity_id || act.target_entity_type || "Supply Chain Object"}`,
-            toolsUsed: ["mcp:action_dispatcher", "mcp:verification_engine"],
+            toolsUsed: ["action_dispatcher", "verification_engine"],
             policiesChecked: ["POL-GLOBAL-RBAC", "POL-AUDIT-HASH"],
             latencyMs: 120 + idx * 25,
             startedAt: act.executed_at,
@@ -229,7 +229,7 @@ export default function AgentRunsPage() {
               {
                 step: 2,
                 title: "Execution Dispatch",
-                action: "mcp:actions:dispatchExecution",
+                action: "actions:dispatchExecution",
                 status: act.status === "FAILED" ? "FAIL" : "OK",
                 durationMs: 86,
                 details: typeof act.result_payload?.message === "string" ? act.result_payload.message : "Dispatched to authoritative target endpoint.",
@@ -416,7 +416,7 @@ export default function AgentRunsPage() {
                                 key={t}
                                 className="px-1.5 py-0.5 rounded text-[9px] bg-surface border border-arch text-muted-foreground truncate"
                               >
-                                {t.replace("mcp:", "")}
+                                {t}
                               </span>
                             ))}
                           </div>

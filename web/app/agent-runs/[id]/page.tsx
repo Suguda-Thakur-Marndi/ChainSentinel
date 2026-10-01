@@ -94,7 +94,7 @@ export default function AgentRunDetailPage({
                   <span className="text-[#0A7A75]">42ms</span>
                 </div>
                 <div className="text-[11px] text-muted-foreground">
-                  Invoked: <code className="text-[#D95E00]">mcp:maritime_ais:getVesselLocation</code>
+                  Invoked: <code className="text-[#D95E00]">maritime_ais:getVesselLocation</code>
                 </div>
                 <p className="text-[11px] text-foreground bg-black/20 p-2 rounded border border-arch">
                   Target vessel IMO 948271 anchored outside Port Said. Speed 0.4 knots.
@@ -120,7 +120,7 @@ export default function AgentRunDetailPage({
                   <span className="text-[#0A7A75]">248ms</span>
                 </div>
                 <div className="text-[11px] text-muted-foreground">
-                  Invoked: <code className="text-[#D95E00]">mcp:route_optimizer:solveCapeRoute</code>
+                  Invoked: <code className="text-[#D95E00]">route_optimizer:solveCapeRoute</code>
                 </div>
                 <p className="text-[11px] text-foreground bg-black/20 p-2 rounded border border-arch">
                   Cape of Good Hope transit calculated. ETA delta +6 days, cost delta +$24,100. Optimal path selected.

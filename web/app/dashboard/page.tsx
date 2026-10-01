@@ -12,7 +12,6 @@ import {
   Truck,
   UserCheck,
   Bot,
-  Wrench,
   Activity,
   FileCheck2,
   Zap,
@@ -241,14 +240,14 @@ export default function DashboardPage() {
                   </Link>
 
                   <Link
-                    href="/mcp-tools"
+                    href="/actions"
                     className="p-2.5 rounded border border-arch bg-surface hover:bg-surface-high hover:border-[#0A7A75]/60 transition-all flex flex-col justify-between"
                   >
                     <div className="flex items-center justify-between text-muted-foreground mb-1">
-                      <Wrench className="w-3.5 h-3.5 text-[#0A7A75]" />
-                      <span className="text-[10px]">TOOLS</span>
+                      <Zap className="w-3.5 h-3.5 text-[#0A7A75]" />
+                      <span className="text-[10px]">DISPATCH</span>
                     </div>
-                    <span className="font-semibold text-foreground truncate">Agent Tool Schemas</span>
+                    <span className="font-semibold text-foreground truncate">Action Dispatcher</span>
                   </Link>
 
                   <Link

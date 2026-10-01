@@ -35,7 +35,7 @@
    - [5.4 Machine Learning Shipment Delay Regression (LightGBM)](#54-machine-learning-shipment-delay-regression-lightgbm)
    - [5.5 LangGraph Multi-Agent Reasoning Architecture (Gemini 2.5 Flash)](#55-langgraph-multi-agent-reasoning-architecture-gemini-25-flash)
    - [5.6 Hybrid RAG Contract Knowledge Engine & Vector Retrieval](#56-hybrid-rag-contract-knowledge-engine--vector-retrieval)
-   - [5.7 Agent Gateway & Model Context Protocol (MCP)](#57-agent-gateway--model-context-protocol-mcp)
+   - [5.7 Agent Gateway & External API Adapters Subsystem](#57-agent-gateway--external-api-adapters-subsystem)
    - [5.8 Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)](#58-digital-twin-supply-chain-graph-engine-rfc-4122-uuidv5)
    - [5.9 Disruption Simulation & Monte Carlo Cascade Engine](#59-disruption-simulation--monte-carlo-cascade-engine)
    - [5.10 Mathematical Optimization Subsystem (Google OR-Tools)](#510-mathematical-optimization-subsystem-google-or-tools)
@@ -358,18 +358,20 @@ Located in `api/app/rag/`:
 
 ---
 
-### 5.7 Agent Gateway & Model Context Protocol (MCP)
+### 5.7 Agent Gateway & External API Adapters Subsystem
 
-Located in `web/app/mcp-tools/` and `api/app/agents/`:
+Located in `api/app/integrations/` and `api/app/agents/`:
 
-* **Protocol Standard**: Built on Anthropic's **Model Context Protocol (MCP)** specification.
-* **Agent Gateway Interface**: Visual discovery and parameter schema inspector for all agent capabilities:
-  * `mcp:route_optimizer`: Multi-modal alternative routing engine.
-  * `mcp:maritime_ais`: Real-time vessel position and corridor verification.
-  * `mcp:ofac_sanctions`: Automated denied-party screening.
-  * `mcp:carrier_contract`: SLA and demurrage term extraction.
-  * `mcp:reefer_iot`: Cold-chain temperature telemetry monitoring.
-  * `mcp:customs_validator`: Cross-border tariff and documentation validator.
+* **Direct Adapter Architecture**: Standard typed Python service adapters interface external APIs (AISStream, OpenSky, OpenWeatherMap, GDELT) directly into normalized canonical event representations without intermediate agent tool protocols.
+* **Target Architecture Pipeline**:
+  `External APIs → Adapters → Ingestion → Normalization → PostgreSQL → Risk Engine → Agents/RAG/Gemini → ML → Digital Twin → Simulation → Optimization → Decision → Approval → Action → Verification → Audit → Dashboard`
+* **Authoritative Service Execution**: LangGraph agent reasoning nodes interface directly with typed domain services (`OptimizationService`, `LogisticsService`, `RiskEvaluationService`, `GovernanceService`):
+  * `route_optimizer`: Multi-modal alternative routing engine powered by Google OR-Tools.
+  * `maritime_ais`: Real-time vessel position and corridor verification via AISStream adapter.
+  * `ofac_sanctions`: Automated denied-party screening and supplier provenance verification.
+  * `carrier_contract`: SLA and demurrage term extraction via Hybrid RAG.
+  * `reefer_iot`: Cold-chain temperature telemetry monitoring and anomaly detection.
+  * `customs_validator`: Cross-border tariff and documentation validator.
 
 ---
 

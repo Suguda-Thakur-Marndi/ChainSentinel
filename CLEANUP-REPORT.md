@@ -1,4 +1,4 @@
-# Cleanup Report — MCP-Sentinel / RiskWise UI Redesign
+# Cleanup Report — RiskWise 2.0 Architectural & UI Optimization
 
 **Date**: September 30, 2026  
 **Execution Environment**: Windows PowerShell / Next.js 16 App Router  
@@ -19,7 +19,7 @@ During the comprehensive UI/UX overhaul specified in `deep-research-report.md`, 
   - Replaced manual/partial skill directories with canonical, verified installations:
     - `.agents/skills/design-taste-frontend/` (Leonxlnx Taste Skill v2)
     - `.agents/skills/no-slop-design/` (agshinrajabov No-Slop AI Art Director)
-    - `.agents/skills/better-design/` (marvkr Better Design system tokens & MCP)
+    - `[HISTORICAL / REMOVED]`: `.agents/skills/better-design/` (removed during comprehensive MCP deprecation)
 - **Ignored / Cached**:
   - Validated that Next.js `.next` local caches and Node modules are clean and correctly ignored by `.gitignore`.
 
@@ -36,5 +36,5 @@ During the comprehensive UI/UX overhaul specified in `deep-research-report.md`, 
 ## 3. Preserved Invariants
 
 1. **Zero Token Leak Auth**: HttpOnly session cookie architecture (`auth.py` + `useAuth.tsx`) was strictly preserved.
-2. **Backend API Contracts**: 100% of real endpoints for FastAPI (`http://localhost:8000`) and FastMCP protocol remained intact. No mock stubs or fake successes were introduced.
+2. **Backend API Contracts**: 100% of real endpoints for FastAPI (`http://localhost:8000`) and typed service adapters remained intact. All historical MCP/FastMCP protocol wrappers were fully deprecated and removed. No mock stubs or fake successes were introduced.
 3. **Unit & Integration Tests**: All 39 test suites in `web/tests/` pass with zero failures.

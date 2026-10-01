@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Bot,
-  Wrench,
   AlertOctagon,
   Flame,
   Globe2,
@@ -66,7 +65,6 @@ const NAVIGATION: NavGroup[] = [
     group: "Agentic Execution",
     items: [
       { label: "Agent Runs", href: "/agent-runs", icon: Bot, badge: "AI" },
-      { label: "Agent Tools", href: "/mcp-tools", icon: Wrench, badge: "TOOLS" },
       { label: "Action Dispatch", href: "/actions", icon: Zap },
     ],
   },
