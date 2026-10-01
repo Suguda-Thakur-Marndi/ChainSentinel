@@ -51,10 +51,17 @@ export default function RoutesPage() {
 
   const filtered = routes.filter((r) => {
     const q = searchQuery.toLowerCase();
+    const origin = (r.origin_facility_id || r.origin_id || "").toLowerCase();
+    const dest = (r.destination_facility_id || r.destination_id || "").toLowerCase();
+    const name = (r.name || "").toLowerCase();
+    const mode = (r.mode || "").toLowerCase();
+    const id = (r.id || "").toLowerCase();
     return (
-      r.origin_id.toLowerCase().includes(q) ||
-      r.destination_id.toLowerCase().includes(q) ||
-      r.mode.toLowerCase().includes(q)
+      origin.includes(q) ||
+      dest.includes(q) ||
+      name.includes(q) ||
+      mode.includes(q) ||
+      id.includes(q)
     );
   });
 
@@ -64,20 +71,34 @@ export default function RoutesPage() {
       header: "Route ID",
       sortable: true,
       render: (row) => (
-        <span className="font-mono text-xs text-blue-400 font-bold">{row.id.slice(0, 8)}...</span>
+        <span className="font-mono text-xs text-blue-400 font-bold">{row.id?.slice(0, 8)}...</span>
       ),
+    },
+    {
+      key: "name",
+      header: "Route Name",
+      sortable: true,
+      render: (row) => <span className="font-medium text-xs text-slate-200">{row.name || row.id}</span>,
     },
     {
       key: "origin_id",
       header: "Origin Hub",
       sortable: true,
-      render: (row) => <span className="font-mono text-xs text-slate-200">{row.origin_id}</span>,
+      render: (row) => (
+        <span className="font-mono text-xs text-slate-300">
+          {row.origin_facility_id || row.origin_id || "—"}
+        </span>
+      ),
     },
     {
       key: "destination_id",
       header: "Destination Hub",
       sortable: true,
-      render: (row) => <span className="font-mono text-xs text-slate-200">{row.destination_id}</span>,
+      render: (row) => (
+        <span className="font-mono text-xs text-slate-300">
+          {row.destination_facility_id || row.destination_id || "—"}
+        </span>
+      ),
     },
     {
       key: "mode",
@@ -85,7 +106,7 @@ export default function RoutesPage() {
       sortable: true,
       render: (row) => (
         <span className="font-mono text-[11px] uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-          {row.mode}
+          {row.mode || "—"}
         </span>
       ),
     },
@@ -94,22 +115,27 @@ export default function RoutesPage() {
       header: "Lead Time (Days)",
       sortable: true,
       align: "right",
-      render: (row) => (
-        <span className="font-mono text-xs text-slate-300">
-          {row.transit_time_days !== null && row.transit_time_days !== undefined
-            ? `${row.transit_time_days} days`
-            : "—"}
-        </span>
-      ),
+      render: (row) => {
+        const lead = row.standard_lead_time_days ?? row.transit_time_days;
+        return (
+          <span className="font-mono text-xs text-slate-300">
+            {lead !== null && lead !== undefined ? `${lead} days` : "—"}
+          </span>
+        );
+      },
     },
     {
       key: "cost_usd",
-      header: "Baseline Cost",
+      header: "Baseline Cost / Dist",
       sortable: true,
       align: "right",
       render: (row) => (
         <span className="font-mono text-xs text-slate-300">
-          {row.cost_usd !== null && row.cost_usd !== undefined ? `$${row.cost_usd.toLocaleString()}` : "—"}
+          {row.cost_usd !== null && row.cost_usd !== undefined
+            ? `$${row.cost_usd.toLocaleString()}`
+            : row.distance_km !== null && row.distance_km !== undefined
+            ? `${row.distance_km.toLocaleString()} km`
+            : "—"}
         </span>
       ),
     },

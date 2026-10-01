@@ -820,12 +820,18 @@ export interface WarehouseResponse {
 
 export interface RouteResponse {
   id: string;
-  origin_id: string;
-  destination_id: string;
+  name?: string;
+  origin_id?: string;
+  destination_id?: string;
+  origin_facility_id?: string | null;
+  destination_facility_id?: string | null;
   mode: string;
+  distance_km?: number | null;
+  standard_lead_time_days?: number | null;
   transit_time_days?: number | null;
   cost_usd?: number | null;
-  status: string;
+  risk_score?: number | null;
+  status?: string;
 }
 
 export interface ProductResponse {

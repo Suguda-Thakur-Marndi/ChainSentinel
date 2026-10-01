@@ -52,7 +52,8 @@ export default function InventoryPage() {
   const filtered = inventory.filter((inv) => {
     const q = searchQuery.toLowerCase();
     return (
-      inv.product_id.toLowerCase().includes(q) || inv.warehouse_id.toLowerCase().includes(q)
+      (inv.product_id || "").toLowerCase().includes(q) ||
+      (inv.warehouse_id || "").toLowerCase().includes(q)
     );
   });
 

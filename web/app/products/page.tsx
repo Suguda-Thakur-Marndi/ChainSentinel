@@ -52,8 +52,8 @@ export default function ProductsPage() {
   const filtered = products.filter((p) => {
     const q = searchQuery.toLowerCase();
     return (
-      p.name.toLowerCase().includes(q) ||
-      p.sku.toLowerCase().includes(q) ||
+      (p.name || "").toLowerCase().includes(q) ||
+      (p.sku || "").toLowerCase().includes(q) ||
       (p.category && p.category.toLowerCase().includes(q))
     );
   });

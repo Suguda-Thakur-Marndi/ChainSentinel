@@ -52,8 +52,8 @@ export default function WarehousesPage() {
   const filtered = warehouses.filter((w) => {
     const q = searchQuery.toLowerCase();
     return (
-      w.name.toLowerCase().includes(q) ||
-      w.country.toLowerCase().includes(q) ||
+      (w.name || "").toLowerCase().includes(q) ||
+      (w.country || "").toLowerCase().includes(q) ||
       (w.city && w.city.toLowerCase().includes(q))
     );
   });

@@ -53,8 +53,8 @@ export default function FactoriesPage() {
   const filtered = factories.filter((f) => {
     const q = searchQuery.toLowerCase();
     return (
-      f.name.toLowerCase().includes(q) ||
-      f.country.toLowerCase().includes(q) ||
+      (f.name || "").toLowerCase().includes(q) ||
+      (f.country || "").toLowerCase().includes(q) ||
       (f.city && f.city.toLowerCase().includes(q))
     );
   });

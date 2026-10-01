@@ -50,7 +50,7 @@ export default function CarriersPage() {
 
   const filtered = carriers.filter((c) => {
     const q = searchQuery.toLowerCase();
-    return c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q);
+    return (c.name || "").toLowerCase().includes(q) || (c.code || "").toLowerCase().includes(q);
   });
 
   const columns: Column<CarrierResponse>[] = [

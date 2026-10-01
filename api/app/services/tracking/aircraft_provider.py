@@ -13,7 +13,7 @@ import asyncio
 from datetime import datetime, timezone
 import logging
 import os
-from typing import Callable, Coroutine, Dict, List, Optional
+from typing import Any, Callable, Coroutine, Dict, List, Optional
 
 import httpx
 from app.services.tracking.base import TrackingProvider

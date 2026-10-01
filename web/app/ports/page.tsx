@@ -53,9 +53,9 @@ export default function PortsPage() {
   const filtered = ports.filter((p) => {
     const q = searchQuery.toLowerCase();
     return (
-      p.name.toLowerCase().includes(q) ||
-      p.code.toLowerCase().includes(q) ||
-      p.country.toLowerCase().includes(q)
+      (p.name || "").toLowerCase().includes(q) ||
+      (p.code || "").toLowerCase().includes(q) ||
+      (p.country || "").toLowerCase().includes(q)
     );
   });
 
