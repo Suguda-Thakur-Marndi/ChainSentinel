@@ -25,7 +25,7 @@ export function GoogleAuthButton({
     try {
       setIsInitiating(true);
 
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || (typeof window !== "undefined" ? window.location.origin : "http://localhost:8000");
       const sanitizedReturnTo = returnTo.startsWith("/") && !returnTo.startsWith("//") ? returnTo : "/";
       const targetUrl = new URL("/api/v1/auth/google", apiBase);
       targetUrl.searchParams.set("return_to", sanitizedReturnTo);

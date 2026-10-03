@@ -359,7 +359,12 @@ def decision_node(
         }
 
         step_count = state.get("step_count", 0) + 1
-        requires_approval = bool(result.requires_human_approval or any(c.requires_human_approval for c in result.candidates))
+        if "requires_human_approval" in state and state.get("requires_human_approval") is not None:
+            requires_approval = bool(state.get("requires_human_approval"))
+        else:
+            requires_approval = bool(
+                result.candidates and (result.requires_human_approval or any(c.requires_human_approval for c in result.candidates))
+            )
 
         update_payload: Dict[str, Any] = {
             "decision_id": result.decision_id,

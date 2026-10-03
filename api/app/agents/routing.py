@@ -159,9 +159,19 @@ def make_conditional_routing_fn(
 ) -> Any:
     """Create a LangGraph-compatible conditional routing function."""
     ev = evaluator or RouteEvaluator()
+    from datetime import datetime, timezone
 
     def route_condition(state: AgentGraphStateDict) -> str:
         decision = ev.evaluate(state)
+        history = state.get("route_history")
+        if isinstance(history, list):
+            history.append({
+                "from_node": state.get("current_node", "UNKNOWN"),
+                "to_node": decision.next_node,
+                "reason_code": decision.reason_code,
+                "step_number": state.get("step_count", 0),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
         return decision.next_node
 
     return route_condition

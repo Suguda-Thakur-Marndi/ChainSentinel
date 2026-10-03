@@ -64,11 +64,11 @@ class AgentGraphBuilder:
             registry=self.registry,
             edge_registry=self.edge_registry,
         )
-        self._ensure_foundational_nodes_registered()
+        self._ensure_foundational_nodes_registered(register_domain_nodes=auto_register_foundational_edges)
         if auto_register_foundational_edges:
             self._ensure_foundational_edges_registered()
 
-    def _ensure_foundational_nodes_registered(self) -> None:
+    def _ensure_foundational_nodes_registered(self, register_domain_nodes: bool = True) -> None:
         """Register the foundational infrastructure nodes if not already present."""
         if not self.registry.has_node("initialization"):
             self.registry.register_node(INITIALIZATION_NODE_CONTRACT, initialization_node)
@@ -79,6 +79,33 @@ class AgentGraphBuilder:
         if not self.registry.has_node("human_approval"):
             self.registry.register_node(HUMAN_APPROVAL_NODE_CONTRACT, human_approval_node)
 
+        if not register_domain_nodes:
+            return
+
+        # Multi-agent domain nodes
+        from app.agents.research.node import RESEARCH_NODE_CONTRACT, research_node
+        from app.agents.risk.node import RISK_NODE_CONTRACT, risk_node
+        from app.agents.prediction.node import PREDICTION_NODE_CONTRACT, prediction_node
+        from app.agents.scenario.node import SCENARIO_NODE_CONTRACT, scenario_node
+        from app.agents.decision.node import DECISION_NODE_CONTRACT, decision_node
+        from app.agents.action.node import ACTION_NODE_CONTRACT, action_node
+        from app.agents.verification.node import VERIFICATION_NODE_CONTRACT, verification_node
+
+        if not self.registry.has_node("research_agent"):
+            self.registry.register_node(RESEARCH_NODE_CONTRACT, research_node)
+        if not self.registry.has_node("risk_agent"):
+            self.registry.register_node(RISK_NODE_CONTRACT, risk_node)
+        if not self.registry.has_node("prediction_agent"):
+            self.registry.register_node(PREDICTION_NODE_CONTRACT, prediction_node)
+        if not self.registry.has_node("scenario_agent"):
+            self.registry.register_node(SCENARIO_NODE_CONTRACT, scenario_node)
+        if not self.registry.has_node("decision_agent"):
+            self.registry.register_node(DECISION_NODE_CONTRACT, decision_node)
+        if not self.registry.has_node("action_agent"):
+            self.registry.register_node(ACTION_NODE_CONTRACT, action_node)
+        if not self.registry.has_node("verification_agent"):
+            self.registry.register_node(VERIFICATION_NODE_CONTRACT, verification_node)
+
     def _ensure_foundational_edges_registered(self) -> None:
         """Register default foundational edges if not already present."""
         foundational_edges = [
@@ -88,6 +115,13 @@ class AgentGraphBuilder:
                 to_node="initialization",
                 edge_type=EdgeType.NORMAL,
                 reason_code=RoutingReasonCode.GRAPH_START.value,
+            ),
+            AgentEdgeContract(
+                edge_id="init_to_research",
+                from_node="initialization",
+                to_node="research_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
             ),
             AgentEdgeContract(
                 edge_id="init_to_termination",
@@ -104,11 +138,130 @@ class AgentGraphBuilder:
                 reason_code=RoutingReasonCode.APPROVAL_REQUIRED.value,
             ),
             AgentEdgeContract(
+                edge_id="research_to_risk",
+                from_node="research_agent",
+                to_node="risk_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="research_to_termination",
+                from_node="research_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="risk_to_prediction",
+                from_node="risk_agent",
+                to_node="prediction_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="risk_to_termination",
+                from_node="risk_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="prediction_to_scenario",
+                from_node="prediction_agent",
+                to_node="scenario_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="prediction_to_decision",
+                from_node="prediction_agent",
+                to_node="decision_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="prediction_to_termination",
+                from_node="prediction_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="scenario_to_decision",
+                from_node="scenario_agent",
+                to_node="decision_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="scenario_to_termination",
+                from_node="scenario_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="decision_to_approval_boundary",
+                from_node="decision_agent",
+                to_node="approval_boundary",
+                edge_type=EdgeType.APPROVAL_GATE,
+                reason_code=RoutingReasonCode.APPROVAL_REQUIRED.value,
+            ),
+            AgentEdgeContract(
+                edge_id="decision_to_human_approval",
+                from_node="decision_agent",
+                to_node="human_approval",
+                edge_type=EdgeType.APPROVAL_GATE,
+                reason_code=RoutingReasonCode.APPROVAL_REQUIRED.value,
+            ),
+            AgentEdgeContract(
+                edge_id="decision_to_termination",
+                from_node="decision_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.NO_ACTION_REQUIRED.value,
+            ),
+            AgentEdgeContract(
                 edge_id="approval_to_termination",
                 from_node="approval_boundary",
                 to_node="termination",
                 edge_type=EdgeType.NORMAL,
                 reason_code=RoutingReasonCode.APPROVAL_GRANTED.value,
+            ),
+            AgentEdgeContract(
+                edge_id="human_approval_to_action",
+                from_node="human_approval",
+                to_node="action_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.APPROVAL_GRANTED.value,
+            ),
+            AgentEdgeContract(
+                edge_id="human_approval_to_termination",
+                from_node="human_approval",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="action_to_verification",
+                from_node="action_agent",
+                to_node="verification_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="action_to_termination",
+                from_node="action_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="verification_to_termination",
+                from_node="verification_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
             ),
             AgentEdgeContract(
                 edge_id="termination_to_end",

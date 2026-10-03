@@ -688,7 +688,7 @@ class ApiClient {
       return this.get<ProvidersHealthResponse>("/api/v1/map/providers/health");
     },
     getLiveWsUrl: (): string => {
-      const base = this.baseUrl || "http://127.0.0.1:8001";
+      const base = this.baseUrl || "http://127.0.0.1:8000";
       const wsProto = base.startsWith("https") ? "wss" : "ws";
       const host = base.replace(/^https?:\/\//, "");
       return `${wsProto}://${host}/api/v1/map/live`;

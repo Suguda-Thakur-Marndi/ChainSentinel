@@ -84,6 +84,17 @@ def verification_node(
     trace_id = str(state.get("trace_id", "trace_verif"))
 
     try:
+        resolved_uow = uow or state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+        if resolved_uow is None and hasattr(state, "get"):
+            # Also check if session_factory or db is present
+            db_session = state.get("db") or state.get("session")
+            if db_session:
+                agent = VerificationAgent(db=db_session)
+
         # 1. Tenant boundary enforcement
         if not org_id:
             raise VerificationTenantIsolationError("organization_id is missing from agent state.")
@@ -154,8 +165,9 @@ def verification_node(
         # 4. Invoke VerificationAgent
         if agent is not None:
             verif_agent = agent
-        elif uow is not None:
-            verif_agent = VerificationAgent(db=uow.session)
+        elif resolved_uow is not None:
+            sess = resolved_uow.session() if callable(resolved_uow.session) else resolved_uow.session
+            verif_agent = VerificationAgent(db=sess)
         else:
             raise VerificationAgentError("No database session or UnitOfWork provided to verification node.")
 

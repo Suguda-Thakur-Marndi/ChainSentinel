@@ -85,6 +85,12 @@ def action_node(
     trace_id = str(state.get("trace_id", "trace_action"))
 
     try:
+        resolved_uow = uow or state.get("uow") or (
+            state.get("input_references", {}).get("uow")
+            if isinstance(state.get("input_references"), dict)
+            else None
+        )
+
         # 1. Tenant boundary validation
         if not org_id:
             raise ActionTenantIsolationError("organization_id is missing from agent state.")
@@ -136,6 +142,8 @@ def action_node(
             or pref_candidate.get("parameters", {}).get("shipment_id")
             or state.get("target_reference")
             or state.get("shipment_id")
+            or state.get("input_reference")
+            or (state.get("input_references", {}).get("shipment_id") if isinstance(state.get("input_references"), dict) else None)
             or "target_default"
         )
 
@@ -171,8 +179,8 @@ def action_node(
 
         # 5. Execute ActionAgent
         action_agent = agent or ActionAgent()
-        db_session = uow.session if uow else None
-        result, findings = action_agent.execute(command=command, approval=approval_result, db=db_session, uow=uow)
+        db_session = resolved_uow.session if resolved_uow else None
+        result, findings = action_agent.execute(command=command, approval=approval_result, db=db_session, uow=resolved_uow)
 
         # 6. Assemble state updates
         existing_findings = list(state.get("structured_findings", []))
@@ -203,7 +211,7 @@ def action_node(
             "findings": current_findings,
             "current_stage": AgentStage.ACTION.value,
             "current_node": "action_agent",
-            "selected_route": "termination",
+            "selected_route": "verification_agent" if state.get("enable_verification", False) else "termination",
             "route_reason": "Action execution completed. Ready for verification.",
             "step_count": step_count,
             "warnings": warnings,

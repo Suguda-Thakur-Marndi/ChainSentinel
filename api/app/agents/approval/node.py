@@ -231,7 +231,8 @@ def human_approval_node(
             update_payload["route_reason"] = "Awaiting explicit human sign-off."
         elif result.status == ApprovalStatus.APPROVED.value:
             warnings.append(f"Human approval granted by actor '{result.actor_id}'. Ready for action stage.")
-            update_payload["selected_route"] = "termination"
+            next_route = "action_agent" if state.get("enable_action", False) else "termination"
+            update_payload["selected_route"] = next_route
             update_payload["route_reason"] = "Candidate approved by human authority. Ready for action stage."
         elif result.status == ApprovalStatus.REJECTED.value:
             warnings.append(f"Candidate rejected by human approver '{result.actor_id}'. Halting execution.")
