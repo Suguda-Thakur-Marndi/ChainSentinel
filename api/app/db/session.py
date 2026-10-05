@@ -10,11 +10,24 @@ logger = get_logger("db")
 engine = None
 SessionLocal = None
 
-def ensure_tables_exist(bind_engine=None):
+def ensure_tables_exist(bind_engine=None) -> None:
+    """Bootstrap tables only in local development environment.
+
+    Production environments strictly rely on Alembic migrations and must never
+    invoke Base.metadata.create_all() at runtime.
+    """
+    if settings.APP_ENV != "development":
+        logger.info(
+            "Runtime schema creation bypassed: APP_ENV is %s (managed via Alembic migrations).",
+            settings.APP_ENV,
+        )
+        return
+
     global engine
     target = bind_engine or engine
     if target is not None:
         import app.models as models
+        logger.info("Development mode: ensuring tables exist via Base.metadata.create_all.")
         models.Base.metadata.create_all(bind=target)
 
 def init_db_engine():

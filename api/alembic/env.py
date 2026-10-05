@@ -33,7 +33,11 @@ def run_migrations_offline() -> None:
     Calls to context.execute() here emit the given string to the
     script output.
     """
-    url = settings.DATABASE_URL
+    import os
+    x_args = context.get_x_argument(as_dictionary=True)
+    url = x_args.get("url") or os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+    if url and url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -51,12 +55,18 @@ def run_migrations_online() -> None:
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
+    import os
+    x_args = context.get_x_argument(as_dictionary=True)
+    url = x_args.get("url") or os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+    if url and url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     configuration = config.get_section(config.config_ini_section) or {}
-    if settings.DATABASE_URL:
-        configuration["sqlalchemy.url"] = settings.DATABASE_URL
+    if url:
+        configuration["sqlalchemy.url"] = url
 
     connect_args = {}
-    if settings.DATABASE_URL and not str(settings.DATABASE_URL).startswith("sqlite"):
+    if url and not str(url).startswith("sqlite"):
         connect_args["connect_timeout"] = 5
 
     connectable = engine_from_config(
