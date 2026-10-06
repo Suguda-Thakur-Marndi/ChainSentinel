@@ -8,7 +8,6 @@ from app.evaluation.suites import (
     ResearchEvaluationSuite,
     RiskEvaluationSuite,
     RAGEvaluationSuite,
-    ClaudeEvaluationSuite,
 )
 
 
@@ -47,12 +46,3 @@ def test_rag_evaluation_suite_injection_defense():
     report = suite.run(dataset)
     assert report.status == EvaluationStatus.PASSED
     assert report.failed_cases == 0
-
-
-def test_claude_evaluation_suite_non_authoritative_boundary():
-    suite = ClaudeEvaluationSuite()
-    dataset = DatasetRegistry.get_dataset(EvaluationSuiteType.CLAUDE_EVALUATION)
-    report = suite.run(dataset)
-    assert report.status == EvaluationStatus.PASSED
-    # Verify Claude never usurps authority
-    assert all(r.passed for r in report.results)

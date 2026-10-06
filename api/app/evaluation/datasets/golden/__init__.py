@@ -16,7 +16,6 @@ GOLDEN_AGENT_CASES: List[EvaluationCase] = _load_cases("agent_cases", "GOLDEN_AG
 GOLDEN_RESEARCH_CASES: List[EvaluationCase] = _load_cases("research_cases", "GOLDEN_RESEARCH_CASES", "get_research_evaluation_cases")
 GOLDEN_RISK_CASES: List[EvaluationCase] = _load_cases("risk_cases", "GOLDEN_RISK_CASES", "get_risk_evaluation_cases")
 GOLDEN_RAG_CASES: List[EvaluationCase] = _load_cases("rag_cases", "GOLDEN_RAG_CASES", "get_rag_evaluation_cases")
-GOLDEN_CLAUDE_CASES: List[EvaluationCase] = _load_cases("claude_cases", "GOLDEN_CLAUDE_CASES", "get_claude_evaluation_cases")
 GOLDEN_ML_CASES: List[EvaluationCase] = _load_cases("ml_cases", "GOLDEN_ML_CASES", "get_ml_evaluation_cases")
 GOLDEN_DIGITAL_TWIN_CASES: List[EvaluationCase] = _load_cases("digital_twin_cases", "GOLDEN_DIGITAL_TWIN_CASES", "get_digital_twin_evaluation_cases")
 GOLDEN_SIMULATION_CASES: List[EvaluationCase] = _load_cases("simulation_cases", "GOLDEN_SIMULATION_CASES", "get_simulation_evaluation_cases")
@@ -33,7 +32,6 @@ ALL_GOLDEN_CASES: List[EvaluationCase] = (
     + GOLDEN_RESEARCH_CASES
     + GOLDEN_RISK_CASES
     + GOLDEN_RAG_CASES
-    + GOLDEN_CLAUDE_CASES
     + GOLDEN_ML_CASES
     + GOLDEN_DIGITAL_TWIN_CASES
     + GOLDEN_SIMULATION_CASES
@@ -51,7 +49,6 @@ __all__ = [
     "GOLDEN_RESEARCH_CASES",
     "GOLDEN_RISK_CASES",
     "GOLDEN_RAG_CASES",
-    "GOLDEN_CLAUDE_CASES",
     "GOLDEN_ML_CASES",
     "GOLDEN_DIGITAL_TWIN_CASES",
     "GOLDEN_SIMULATION_CASES",

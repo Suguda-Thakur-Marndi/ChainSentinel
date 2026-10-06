@@ -7,19 +7,6 @@ LangGraph execution node, and typed exceptions.
 from __future__ import annotations
 
 from app.agents.scenario.agent import ScenarioAgent
-from app.agents.scenario.claude_contract import (
-    ClaudeAssumptionExplanation,
-    ClaudeScenarioExplanation,
-    ClaudeScenarioParameterExplanation,
-    ScenarioConstraintExplanationInput,
-    ScenarioExplanationInput,
-    ScenarioExplanationResult,
-    ScenarioExplanationStatus,
-    ScenarioParameterExplanationInput,
-    ScenarioTriggerExplanationInput,
-    compute_scenario_explanation_fingerprint,
-)
-from app.agents.scenario.claude_service import ClaudeScenarioExplanationService
 from app.agents.scenario.contract import (
     ScenarioConstraint,
     ScenarioDefinition,
@@ -75,19 +62,6 @@ __all__ = [
     "ScenarioResult",
     "generate_deterministic_scenario_id",
     "compute_scenario_fingerprint",
-    # Claude Explanation Contracts
-    "ScenarioExplanationStatus",
-    "ScenarioParameterExplanationInput",
-    "ScenarioTriggerExplanationInput",
-    "ScenarioConstraintExplanationInput",
-    "ScenarioExplanationInput",
-    "ClaudeScenarioParameterExplanation",
-    "ClaudeAssumptionExplanation",
-    "ClaudeScenarioExplanation",
-    "ScenarioExplanationResult",
-    "compute_scenario_explanation_fingerprint",
-    # Claude Explanation Service
-    "ClaudeScenarioExplanationService",
     # Errors
     "ScenarioAgentError",
     "InvalidScenarioRequestError",

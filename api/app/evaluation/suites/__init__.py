@@ -7,7 +7,6 @@ from app.evaluation.suites.agent_suite import AgentEvaluationSuite
 from app.evaluation.suites.research_suite import ResearchEvaluationSuite
 from app.evaluation.suites.risk_suite import RiskEvaluationSuite
 from app.evaluation.suites.rag_suite import RAGEvaluationSuite
-from app.evaluation.suites.claude_suite import ClaudeEvaluationSuite
 from app.evaluation.suites.ml_suite import MLEvaluationSuite
 from app.evaluation.suites.digital_twin_suite import DigitalTwinEvaluationSuite
 from app.evaluation.suites.simulation_suite import SimulationEvaluationSuite
@@ -24,7 +23,6 @@ SUITE_REGISTRY: Dict[EvaluationSuiteType, Type[BaseEvaluationSuite]] = {
     EvaluationSuiteType.RESEARCH_EVALUATION: ResearchEvaluationSuite,
     EvaluationSuiteType.RISK_EVALUATION: RiskEvaluationSuite,
     EvaluationSuiteType.RAG_EVALUATION: RAGEvaluationSuite,
-    EvaluationSuiteType.CLAUDE_EVALUATION: ClaudeEvaluationSuite,
     EvaluationSuiteType.ML_EVALUATION: MLEvaluationSuite,
     EvaluationSuiteType.DIGITAL_TWIN_EVALUATION: DigitalTwinEvaluationSuite,
     EvaluationSuiteType.SIMULATION_EVALUATION: SimulationEvaluationSuite,
@@ -51,7 +49,6 @@ __all__ = [
     "ResearchEvaluationSuite",
     "RiskEvaluationSuite",
     "RAGEvaluationSuite",
-    "ClaudeEvaluationSuite",
     "MLEvaluationSuite",
     "DigitalTwinEvaluationSuite",
     "SimulationEvaluationSuite",

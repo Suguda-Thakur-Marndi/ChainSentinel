@@ -22,7 +22,6 @@ from app.agents.contracts import (
 )
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.scenario.agent import ScenarioAgent
-from app.agents.scenario.claude_service import ClaudeScenarioExplanationService
 from app.agents.scenario.contract import (
     ScenarioParameter,
     ScenarioRequest,
@@ -122,6 +121,7 @@ SCENARIO_NODE_CONTRACT = AgentNodeContract(
 def scenario_node(
     state: AgentGraphStateDict,
     generator: Optional[ScenarioGenerator] = None,
+    explanation_service: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """Execute the Scenario Agent node within a LangGraph StateGraph pipeline.
 
@@ -193,9 +193,7 @@ def scenario_node(
 
         scenario = result.scenario_definition
         warnings = list(state.get("warnings", []))
-        if use_claude and scenario is not None and result.status == "READY":
-            llm_provider = state.get("llm_provider")
-            explanation_service = ClaudeScenarioExplanationService(llm_provider=llm_provider)
+        if use_claude and scenario is not None and result.status == "READY" and explanation_service is not None:
             _emit_scenario_audit(
                 action="SCENARIO_LLM_EXPLANATION_STARTED",
                 organization_id=org_id.strip(),

@@ -376,10 +376,8 @@ def test_optimization_optimal():
 # 15. LLM explanation failure does not destroy DecisionResult
 def test_llm_explanation_failure_isolation():
     from unittest.mock import MagicMock
-    from app.agents.decision.claude_service import ClaudeDecisionExplanationService
-
-    mock_service = MagicMock(spec=ClaudeDecisionExplanationService)
-    mock_service.execute.side_effect = RuntimeError("Bedrock endpoint timeout")
+    mock_service = MagicMock()
+    mock_service.execute.side_effect = RuntimeError("LLM endpoint timeout")
 
     state = cast(
         AgentGraphStateDict,

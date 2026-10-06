@@ -7,22 +7,6 @@ LangGraph execution node, Claude explanation contracts & service, and typed exce
 from __future__ import annotations
 
 from app.agents.decision.agent import DecisionAgent
-from app.agents.decision.claude_contract import (
-    ClaudeCandidateTradeoff,
-    ClaudeDecisionExplanation,
-    DecisionCandidateExplanationInput,
-    DecisionConstraintExplanationInput,
-    DecisionExplanationInput,
-    DecisionExplanationResult,
-    DecisionExplanationStatus,
-    DecisionRationaleExplanationInput,
-    compute_decision_explanation_fingerprint,
-)
-from app.agents.decision.claude_service import (
-    ClaudeDecisionExplanationService,
-    DECISION_EXPLANATION_PROMPT_VERSION,
-    MAX_DECISION_EXPLANATION_CONTEXT_CHARS,
-)
 from app.agents.decision.contract import (
     AlternativeEvaluation,
     DecisionBasis,
@@ -101,20 +85,6 @@ __all__ = [
     "DecisionRiskSummary",
     "DecisionPredictionSummary",
     "DecisionScenarioSummary",
-    # Claude Explanation Contracts
-    "DecisionExplanationStatus",
-    "DecisionCandidateExplanationInput",
-    "DecisionConstraintExplanationInput",
-    "DecisionRationaleExplanationInput",
-    "DecisionExplanationInput",
-    "ClaudeCandidateTradeoff",
-    "ClaudeDecisionExplanation",
-    "DecisionExplanationResult",
-    "compute_decision_explanation_fingerprint",
-    # Claude Explanation Service
-    "ClaudeDecisionExplanationService",
-    "DECISION_EXPLANATION_PROMPT_VERSION",
-    "MAX_DECISION_EXPLANATION_CONTEXT_CHARS",
     # Rule Engine & Policy
     "DecisionRuleEngine",
     "RULE_VERSION",

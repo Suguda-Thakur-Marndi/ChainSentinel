@@ -6,21 +6,6 @@ Provides the Claude Risk Explanation Service for controlled natural language exp
 """
 
 from app.agents.risk.agent import RiskAgent
-from app.agents.risk.claude_contract import (
-    ClaudeEvidenceExplanation,
-    ClaudeRiskConflictExplanation,
-    ClaudeRiskDriverExplanation,
-    ClaudeRiskExplanation,
-    RiskExplanationInput,
-    RiskExplanationResult,
-    RiskExplanationStatus,
-    RiskFactorExplanationInput,
-    compute_explanation_fingerprint,
-)
-from app.agents.risk.claude_service import (
-    ClaudeRiskExplanationService,
-    RISK_EXPLANATION_PROMPT_VERSION,
-)
 from app.agents.risk.contract import (
     RiskAgentRequest,
     RiskAgentResult,
@@ -58,19 +43,6 @@ __all__ = [
     "RiskAgentRequest",
     "RiskAgentResult",
     "generate_deterministic_risk_request_id",
-    # Claude Explanation Contracts
-    "ClaudeEvidenceExplanation",
-    "ClaudeRiskConflictExplanation",
-    "ClaudeRiskDriverExplanation",
-    "ClaudeRiskExplanation",
-    "RiskExplanationInput",
-    "RiskExplanationResult",
-    "RiskExplanationStatus",
-    "RiskFactorExplanationInput",
-    "compute_explanation_fingerprint",
-    # Service
-    "ClaudeRiskExplanationService",
-    "RISK_EXPLANATION_PROMPT_VERSION",
     # Errors
     "RiskAgentError",
     "InvalidRiskRequestError",

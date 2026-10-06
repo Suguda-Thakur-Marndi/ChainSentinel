@@ -21,7 +21,6 @@ from app.agents.contracts import (
     validate_state_update,
 )
 from app.agents.decision.agent import DecisionAgent
-from app.agents.decision.claude_service import ClaudeDecisionExplanationService
 from app.agents.decision.contract import (
     DecisionRequest,
     DecisionResult,
@@ -133,7 +132,7 @@ DECISION_NODE_CONTRACT = AgentNodeContract(
 def decision_node(
     state: AgentGraphStateDict,
     rule_engine: Optional[DecisionRuleEngine] = None,
-    explanation_service: Optional[ClaudeDecisionExplanationService] = None,
+    explanation_service: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """Execute the Decision Agent node within a LangGraph StateGraph pipeline.
 
@@ -256,10 +255,7 @@ def decision_node(
         )
 
         warnings = list(state.get("warnings", []))
-        if use_claude and result.candidates:
-            if explanation_service is None:
-                llm_provider = state.get("llm_provider")
-                explanation_service = ClaudeDecisionExplanationService(llm_provider=llm_provider)
+        if use_claude and result.candidates and explanation_service is not None:
             _emit_decision_audit(
                 action="DECISION_LLM_EXPLANATION_STARTED",
                 organization_id=org_id.strip(),

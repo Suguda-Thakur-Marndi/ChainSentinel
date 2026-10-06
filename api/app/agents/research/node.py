@@ -21,7 +21,6 @@ from app.agents.contracts import (
 )
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.research.agent import ResearchAgent
-from app.agents.research.claude_service import ClaudeResearchService
 from app.agents.research.contract import (
     ResearchRequest,
     generate_deterministic_research_id,
@@ -115,7 +114,7 @@ def _emit_research_audit(
 
 def research_node(
     state: AgentGraphStateDict,
-    service: Optional[ClaudeResearchService] = None,
+    service: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """LangGraph node function executing research synthesis.
 
@@ -310,32 +309,8 @@ def research_node(
         if not llm_provider and isinstance(state.get("input_references"), dict):
             llm_provider = state["input_references"].get("llm_provider")
 
-        use_claude = state.get("use_claude")
-        if use_claude is None:
-            use_claude = (
-                (llm_provider is not None)
-                or (service is not None)
-                or (state.get("use_llm") is True)
-            )
-
-        deterministic_mode = (
-            use_claude is False
-            or state.get("deterministic_fallback") is True
-            or isinstance(getattr(ResearchAgent, "execute", None), MagicMock)
-        )
-
-        if deterministic_mode:
-            # Deterministic execution path (for tests explicitly requesting fallback or patching ResearchAgent.execute)
-            agent = ResearchAgent()
-            result = agent.execute(
-                request=request,
-                bundle=bundle if isinstance(bundle, RAGEvidenceBundle) else None,
-                require_evidence=False,
-            )
-        else:
-            # Target Phase 10 Step 3 flow:
-            # retrieve validated evidence -> build research prompt -> ClaudeInvocationService ->
-            # validate structured response -> validate citations -> map to ResearchResult
+        if service is not None:
+            # Service execution path (when an explicit research service is injected)
             _emit_research_audit(
                 action="RESEARCH_LLM_STARTED",
                 organization_id=organization_id,
@@ -345,10 +320,8 @@ def research_node(
                 uow=uow,
             )
 
-            research_svc = service or ClaudeResearchService(llm_provider=llm_provider)
-
             try:
-                result = research_svc.execute(
+                result = service.execute(
                     request=request,
                     bundle=bundle if isinstance(bundle, RAGEvidenceBundle) else None,
                     require_evidence=False,
@@ -389,6 +362,14 @@ def research_node(
                     uow=uow,
                 )
                 raise
+        else:
+            # Deterministic execution path via authoritative ResearchAgent
+            agent = ResearchAgent()
+            result = agent.execute(
+                request=request,
+                bundle=bundle if isinstance(bundle, RAGEvidenceBundle) else None,
+                require_evidence=False,
+            )
 
         step_count = state.get("step_count", 0) + 1
 

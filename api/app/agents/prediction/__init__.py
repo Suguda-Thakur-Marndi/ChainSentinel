@@ -12,22 +12,6 @@ Provides:
 
 from app.agents.prediction.adapter import PredictionFeatureExtractor
 from app.agents.prediction.agent import PredictionAgent
-from app.agents.prediction.claude_contract import (
-    ClaudeFeatureExplanation,
-    ClaudePredictionExplanation,
-    ModelMetadataExplanationInput,
-    PredictionExplanationInput,
-    PredictionExplanationResult,
-    PredictionExplanationStatus,
-    PredictionFeatureExplanationInput,
-    PredictionUncertaintyExplanationInput,
-    compute_prediction_explanation_fingerprint,
-)
-from app.agents.prediction.claude_service import (
-    MAX_PREDICTION_EXPLANATION_CONTEXT_CHARS,
-    PREDICTION_EXPLANATION_PROMPT_VERSION,
-    ClaudePredictionExplanationService,
-)
 from app.agents.prediction.contract import (
     ModelMetadata,
     PredictionFeature,
@@ -91,18 +75,6 @@ __all__ = [
     "ModelExecutionError",
     "InvalidModelOutputError",
     "PredictionAuthorizationError",
-    "ClaudePredictionExplanationService",
-    "PredictionExplanationInput",
-    "PredictionExplanationResult",
-    "PredictionExplanationStatus",
-    "ClaudePredictionExplanation",
-    "ClaudeFeatureExplanation",
-    "PredictionFeatureExplanationInput",
-    "PredictionUncertaintyExplanationInput",
-    "ModelMetadataExplanationInput",
-    "compute_prediction_explanation_fingerprint",
-    "PREDICTION_EXPLANATION_PROMPT_VERSION",
-    "MAX_PREDICTION_EXPLANATION_CONTEXT_CHARS",
     "PredictionExplanationError",
     "PredictionValueContradictionError",
     "PredictionStatusContradictionError",

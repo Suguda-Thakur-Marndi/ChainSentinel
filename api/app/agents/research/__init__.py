@@ -8,15 +8,6 @@ authoritative risk scores.
 from __future__ import annotations
 
 from app.agents.research.agent import ResearchAgent
-from app.agents.research.claude_contract import (
-    ClaudeConflictItem,
-    ClaudeFindingItem,
-    ClaudeResearchResponse,
-)
-from app.agents.research.claude_service import (
-    ClaudeResearchService,
-    RESEARCH_PROMPT_VERSION,
-)
 from app.agents.research.contract import (
     FindingType,
     ResearchFinding,
@@ -47,10 +38,6 @@ from app.agents.research.node import (
 )
 
 __all__ = [
-    "ClaudeConflictItem",
-    "ClaudeFindingItem",
-    "ClaudeResearchResponse",
-    "ClaudeResearchService",
     "EvidenceIntegrityError",
     "EvidenceValidationResult",
     "EvidenceValidator",
@@ -59,7 +46,6 @@ __all__ = [
     "InvalidResearchRequestError",
     "MissingEvidenceError",
     "RESEARCH_NODE_CONTRACT",
-    "RESEARCH_PROMPT_VERSION",
     "ResearchAgent",
     "ResearchCitationIntegrityError",
     "ResearchError",

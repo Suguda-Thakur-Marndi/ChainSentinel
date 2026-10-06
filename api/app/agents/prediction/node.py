@@ -22,7 +22,6 @@ from app.agents.contracts import (
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.prediction.adapter import PredictionFeatureExtractor
 from app.agents.prediction.agent import PredictionAgent
-from app.agents.prediction.claude_service import ClaudePredictionExplanationService
 from app.agents.prediction.contract import (
     PredictionRequest,
     PredictionResult,
@@ -127,6 +126,7 @@ PREDICTION_NODE_CONTRACT = AgentNodeContract(
 def prediction_node(
     state: AgentGraphStateDict,
     service: Optional[BasePredictionService] = None,
+    explanation_service: Optional[Any] = None,
 ) -> Dict[str, Any]:
     """Execute the Prediction Agent node within a LangGraph StateGraph pipeline.
 
@@ -253,9 +253,7 @@ def prediction_node(
 
         warnings = list(state.get("warnings", []))
 
-        if use_claude:
-            llm_provider = state.get("llm_provider")
-            explanation_service = ClaudePredictionExplanationService(llm_provider=llm_provider)
+        if use_claude and explanation_service is not None:
             _emit_prediction_audit(
                 action="PREDICTION_LLM_EXPLANATION_STARTED",
                 organization_id=org_id.strip(),

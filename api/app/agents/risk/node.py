@@ -22,7 +22,6 @@ from app.agents.contracts import (
 from app.agents.observability import AgentObservability, NodeExecutionTelemetry
 from app.agents.research.contract import ResearchFinding, ResearchResult
 from app.agents.risk.agent import RiskAgent
-from app.agents.risk.claude_service import ClaudeRiskExplanationService
 from app.agents.risk.contract import RiskAgentRequest, RiskAgentResult, generate_deterministic_risk_request_id
 from app.agents.risk.errors import InvalidRiskRequestError, RiskTenantIsolationError
 from app.agents.security import sanitize_sensitive_data
@@ -193,7 +192,10 @@ def _extract_research_result_from_state(state: AgentGraphStateDict) -> Optional[
     )
 
 
-def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
+def risk_node(
+    state: AgentGraphStateDict,
+    explanation_service: Optional[Any] = None,
+) -> Dict[str, Any]:
     """LangGraph node function executing Risk Agent orchestration.
 
     Reads research output from AgentGraphState, translates findings to Risk Engine inputs,
@@ -282,9 +284,7 @@ def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
         )
 
         assessment = result.assessment
-        if use_claude and assessment is not None and result.status != "INSUFFICIENT_EVIDENCE":
-            llm_provider = state.get("llm_provider")
-            explanation_service = ClaudeRiskExplanationService(llm_provider=llm_provider)
+        if use_claude and assessment is not None and result.status != "INSUFFICIENT_EVIDENCE" and explanation_service is not None:
             _emit_risk_audit(
                 action="RISK_LLM_EXPLANATION_STARTED",
                 organization_id=organization_id,

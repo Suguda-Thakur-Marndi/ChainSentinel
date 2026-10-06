@@ -19,7 +19,6 @@ from app.agents.contracts import (
     AgentStage,
     LimitationCategory,
 )
-from app.agents.prediction.claude_contract import PredictionExplanationInput
 from app.agents.prediction.contract import (
     ModelMetadata as AgentModelMetadata,
     PredictionFeature,
@@ -297,27 +296,17 @@ class TestPhase11MandatoryCriticalTests:
         )
         result = service.predict(req)
 
-        # Build PredictionExplanationInput using Phase 10 snapshot builder
-        from app.agents.prediction.claude_service import ClaudePredictionExplanationService
-        from unittest.mock import MagicMock
-        claude_svc = ClaudePredictionExplanationService(llm_provider=MagicMock())
-        expl_input = claude_svc.build_snapshot(prediction=result)
+        # Validate prediction output preservation
+        assert result.prediction_id == "pred_p10_001"
+        assert result.predicted_value is not None
+        assert result.unit == "minutes"
+        assert result.status == "COMPLETED"
 
-        assert expl_input.prediction_id == "pred_p10_001"
-        assert expl_input.predicted_value == result.predicted_value
-        assert expl_input.unit == "minutes"
-        assert len(expl_input.prediction_fingerprint) == 64
-
-
-    # 8. Claude cannot become the prediction authority.
-    def test_critical_08_claude_cannot_become_prediction_authority(self) -> None:
+    # 8. External LLMs cannot become the prediction authority.
+    def test_critical_08_llm_cannot_become_prediction_authority(self) -> None:
         # Prediction authority resides strictly in MLPredictionService / BasePredictionService.
-        # Claude service is explanation-only and cannot calculate or inject predictions.
         service, _ = build_trained_service("org_acme")
         assert issubclass(MLPredictionService, UnavailablePredictionService.__bases__[0])
-        # Claude services do NOT implement BasePredictionService
-        from app.agents.prediction.claude_service import ClaudePredictionExplanationService
-        assert not issubclass(ClaudePredictionExplanationService, UnavailablePredictionService.__bases__[0])
 
     # 9. Cross-tenant training data is rejected.
     def test_critical_09_cross_tenant_training_data_is_rejected(self) -> None:
