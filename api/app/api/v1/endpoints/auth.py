@@ -114,7 +114,16 @@ def demo_login(
     session_service: SessionService = Depends(get_session_service),
     oauth_service: OAuthService = Depends(get_oauth_service),
 ) -> RedirectResponse:
-    """Development and demo workspace login: provisions an ADMIN session and sets session cookie."""
+    """Development and demo workspace login: provisions an ADMIN session and sets session cookie.
+    
+    Strictly blocked in production environments to prevent unauthorized administrative session creation.
+    """
+    if settings.APP_ENV.lower() not in ("development", "test", "testing"):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Endpoint not found",
+        )
+
     from app.db.session import ensure_tables_exist
     ensure_tables_exist()
     org = db.query(models.Organization).filter_by(slug="acme-global").first()

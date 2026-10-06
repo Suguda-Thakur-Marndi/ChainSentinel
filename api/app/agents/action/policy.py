@@ -158,6 +158,8 @@ class ActionSafetyPolicy:
 
         # 1. Tenant match
         appr_org = _extract_approval_field(approval, "organization_id", "org_id")
+        if not appr_org and hasattr(approval, "recommendation") and approval.recommendation:
+            appr_org = getattr(approval.recommendation, "org_id", None)
         if appr_org and str(appr_org).strip() != command.organization_id:
             raise ActionTenantIsolationError(
                 f"Cross-tenant approval: approval tenant '{appr_org}' does not match command tenant '{command.organization_id}'.",

@@ -46,12 +46,14 @@ async def lifespan(app: FastAPI):
     logger.info("Shutdown complete.")
 
 
+is_production = settings.APP_ENV.lower() in ("production", "prod")
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    openapi_url="/openapi.json",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    openapi_url=None if is_production else "/openapi.json",
+    docs_url=None if is_production else "/docs",
+    redoc_url=None if is_production else "/redoc",
     description="RiskWise API — Supply Chain Risk Intelligence & Decision Platform",
     lifespan=lifespan,
 )
@@ -64,7 +66,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"],
     allow_headers=["*"],
 )
 
@@ -77,7 +79,7 @@ app.add_middleware(TelemetryMiddleware)
 
 @app.middleware("http")
 async def request_context_middleware(request, call_next):
-    """Correlate and propagate request ID for end-to-end operational observability."""
+    """Correlate request ID and enforce robust baseline HTTP security headers."""
     request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
     request.state.request_id = request_id
     response = await call_next(request)
@@ -86,6 +88,14 @@ async def request_context_middleware(request, call_next):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = (
+        "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    )
+    if is_production or request.url.scheme == "https":
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+    if request.url.path.startswith(settings.API_PREFIX):
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
     return response
 
 

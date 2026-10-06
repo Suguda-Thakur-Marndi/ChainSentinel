@@ -189,11 +189,13 @@ def execute_approved_action(
 
     try:
         with uow:
-            # Query approval record
+            # Query approval record scoped strictly to authenticated tenant
             approval = (
                 uow.session.query(Approval)
+                .join(Recommendation, Approval.recommendation_id == Recommendation.id)
                 .filter(
-                    (Approval.id == body.approval_id) | (Approval.recommendation_id == body.decision_id)
+                    Recommendation.org_id == org_id,
+                    (Approval.id == body.approval_id) | (Approval.recommendation_id == body.decision_id),
                 )
                 .first()
             )

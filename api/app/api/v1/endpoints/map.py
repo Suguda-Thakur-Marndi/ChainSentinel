@@ -6,8 +6,10 @@ from datetime import datetime, timezone
 import json
 import logging
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, Response, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, Response, WebSocket, WebSocketDisconnect, status
 
+from app.core.config import settings
+from app.services.session_service import get_session_service
 from app.services.tracking import (
     LiveMapResponse,
     ProvidersHealthResponse,
@@ -73,7 +75,10 @@ async def get_providers_health() -> ProvidersHealthResponse:
 
 
 @router.websocket("/live")
-async def websocket_map_live(websocket: WebSocket):
+async def websocket_map_live(
+    websocket: WebSocket,
+    token: Optional[str] = Query(None, description="Optional session token for authentication"),
+):
     """Real-time bi-directional telemetry stream.
 
     Pushes:
@@ -82,12 +87,45 @@ async def websocket_map_live(websocket: WebSocket):
     - 'remove' frames when transponders age out
     - 'provider_status' notifications
     """
+    # 1. Validate Origin header to prevent Cross-Site WebSocket Hijacking (CSWSH)
+    origin = websocket.headers.get("origin")
+    if origin:
+        allowed_origins = set(settings.CORS_ORIGINS) if isinstance(settings.CORS_ORIGINS, list) else set()
+        if settings.FRONTEND_URL:
+            allowed_origins.add(settings.FRONTEND_URL.rstrip("/"))
+        is_dev = settings.APP_ENV.lower() in ("development", "dev", "test", "testing")
+
+        origin_clean = origin.rstrip("/")
+        is_allowed = origin_clean in allowed_origins or any(
+            origin_clean.startswith(allowed.rstrip("/")) for allowed in allowed_origins
+        )
+        if is_dev and ("localhost" in origin_clean or "127.0.0.1" in origin_clean):
+            is_allowed = True
+
+        if not is_allowed:
+            logger.warning(f"[MapWebSocket] Rejected connection from unauthorized origin: {origin}")
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Unauthorized origin")
+            return
+
+    # 2. Authenticate session
+    session_id = websocket.cookies.get(settings.SESSION_COOKIE_NAME) or token or websocket.query_params.get("session_id")
+    is_prod = settings.APP_ENV.lower() in ("production", "prod")
+    session = None
+    if session_id:
+        session_svc = get_session_service()
+        session = await session_svc.get_session(session_id)
+
+    if is_prod and not session:
+        logger.warning("[MapWebSocket] Rejected unauthenticated connection in production.")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Authentication required")
+        return
+
     await websocket.accept()
     aggregator = get_tracking_aggregator()
     await aggregator.register_client(websocket)
 
     try:
-        # 1. Send initial state snapshot
+        # Send initial state snapshot
         initial_data = await aggregator.get_objects()
         await websocket.send_text(
             json.dumps({
@@ -98,10 +136,13 @@ async def websocket_map_live(websocket: WebSocket):
             })
         )
 
-        # 2. Keep connection open, handle client heartbeats/pings
+        # Keep connection open, handle client heartbeats/pings with size bounds
         while True:
-            # Wait for client messages (e.g. ping, filter adjustments)
             data = await websocket.receive_text()
+            if len(data) > 4096:
+                logger.warning(f"[MapWebSocket] Client sent oversized frame ({len(data)} bytes). Closing.")
+                await websocket.close(code=status.WS_1009_MESSAGE_TOO_BIG, reason="Message too large")
+                break
             try:
                 msg = json.loads(data)
                 if msg.get("action") == "ping":

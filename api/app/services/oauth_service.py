@@ -36,17 +36,17 @@ class OAuthValidationError(Exception):
         self.detail = detail or error_code
 
 
+# Cryptographically random ephemeral secret fallback to prevent forgery if GOOGLE_CLIENT_SECRET is unset
+_EPHEMERAL_STATE_SECRET = secrets.token_hex(32)
+
+
 class OAuthService:
     """Service handling OAuth state protection, OIDC validation, and user/org resolution."""
 
     def __init__(self, signing_secret: Optional[str] = None):
-        # Use GOOGLE_CLIENT_SECRET or fallback to PROJECT_NAME for signing
-        self._secret = (
-            signing_secret
-            or settings.GOOGLE_CLIENT_SECRET
-            or settings.PROJECT_NAME
-            or "riskwise_default_signing_secret"
-        ).encode("utf-8")
+        # Use provided secret or GOOGLE_CLIENT_SECRET or unpredictable ephemeral secret
+        raw_secret = signing_secret or settings.GOOGLE_CLIENT_SECRET or _EPHEMERAL_STATE_SECRET
+        self._secret = raw_secret.encode("utf-8")
         # In-memory single-use replay prevention set
         self._used_states: set[str] = set()
 

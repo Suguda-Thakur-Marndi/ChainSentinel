@@ -121,8 +121,14 @@ class Settings(BaseSettings):
     @classmethod
     def parse_cors_origins(cls, v: Union[list[str], str]) -> list[str]:
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+            origins = [origin.strip() for origin in v.split(",") if origin.strip()]
+        elif isinstance(v, (list, tuple, set)):
+            origins = [str(origin).strip() for origin in v if str(origin).strip()]
+        else:
+            origins = ["http://localhost:3000"]
+        # Disallow insecure wildcard '*' in credentialed CORS environments
+        filtered = [o for o in origins if o != "*"]
+        return filtered if filtered else ["http://localhost:3000"]
 
     @field_validator("REDIS_URL", mode="before")
     @classmethod
