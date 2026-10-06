@@ -1,7 +1,6 @@
 """RiskWise LLM Provider Abstraction & Safe Claude Invocation Layer (Phase 10 Steps 1 & 2)."""
 
 from app.llm.base import LLMProvider
-from app.llm.bedrock import BedrockLLMProvider
 from app.llm.gemini import GeminiLLMProvider
 from app.llm.contracts import (
     LLMMessage,
@@ -72,7 +71,6 @@ from app.llm.security import (
 __all__ = [
     "LLMProvider",
     "GeminiLLMProvider",
-    "BedrockLLMProvider",
     "DeterministicMockLLMProvider",
     "LLMProviderFactory",
     "get_llm_provider",

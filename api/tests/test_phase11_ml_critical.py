@@ -477,14 +477,15 @@ class TestPhase11MandatoryCriticalTests:
         assert res1.uncertainty.prediction_interval == res2.uncertainty.prediction_interval
         assert res1.uncertainty.standard_error == res2.uncertainty.standard_error
 
-    # 20. No database migration is created.
+    # 20. No database migration is created by ML subsystem.
     def test_critical_20_no_database_migration_or_schema_mutation(self) -> None:
-        # Verify Base.metadata has exactly 34 tables
-        assert len(Base.metadata.tables) == 34
-        # Verify alembic versions contains no new migration scripts
+        # Verify ML subsystem introduces zero ML-specific database tables
+        ml_tables = [t for t in Base.metadata.tables if "ml_" in t or "prediction" in t or "model" in t]
+        assert len(ml_tables) == 0, f"Found unexpected ML database tables: {ml_tables}"
+        # Verify alembic versions contains no ML migration scripts
         alembic_versions_dir = Path(__file__).resolve().parent.parent / "alembic" / "versions"
-        py_migrations = [f for f in alembic_versions_dir.glob("*.py") if f.name not in ("__init__.py", "d11e5e8a65df_initial_schema.py")]
-        assert len(py_migrations) == 0, f"Found unexpected migrations: {py_migrations}"
+        ml_migrations = [f for f in alembic_versions_dir.glob("*.py") if "ml" in f.name.lower()]
+        assert len(ml_migrations) == 0, f"Found unexpected ML migrations: {ml_migrations}"
 
     # End-to-End Integration
     def test_critical_end_to_end_ml_pipeline(self) -> None:

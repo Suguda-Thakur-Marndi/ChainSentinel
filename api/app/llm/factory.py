@@ -6,7 +6,6 @@ from typing import Any, Dict, Optional
 
 from app.core.config import settings
 from app.llm.base import LLMProvider
-from app.llm.bedrock import BedrockLLMProvider
 from app.llm.errors import LLMConfigurationError
 from app.llm.gemini import GeminiLLMProvider
 from app.llm.mock import DeterministicMockLLMProvider
@@ -15,7 +14,7 @@ from app.llm.mock import DeterministicMockLLMProvider
 class LLMProviderFactory:
     """Factory resolving LLM provider implementations without arbitrary dynamic imports."""
 
-    _SUPPORTED_PROVIDERS = frozenset({"gemini", "mock", "bedrock"})
+    _SUPPORTED_PROVIDERS = frozenset({"gemini", "mock"})
 
     @classmethod
     def create_provider(
@@ -26,11 +25,17 @@ class LLMProviderFactory:
         """Resolve and instantiate a validated LLM provider.
         
         Args:
-            provider_name: 'gemini', 'mock', or 'bedrock'. Defaults to settings.LLM_PROVIDER.
+            provider_name: 'gemini' or 'mock'. Defaults to settings.LLM_PROVIDER.
             kwargs: Provider-specific configuration overrides (e.g. api_key, allowed_models).
         """
         raw_name = provider_name or getattr(settings, "LLM_PROVIDER", "gemini")
         clean_name = raw_name.strip().lower()
+
+        if clean_name == "bedrock":
+            raise LLMConfigurationError(
+                "AWS Bedrock provider has been retired. RiskWise exclusively uses Gemini.",
+                details={"requested_provider": raw_name, "supported": sorted(list(cls._SUPPORTED_PROVIDERS))},
+            )
 
         if clean_name not in cls._SUPPORTED_PROVIDERS:
             raise LLMConfigurationError(
@@ -43,9 +48,6 @@ class LLMProviderFactory:
 
         if clean_name == "mock":
             return DeterministicMockLLMProvider(**kwargs)
-
-        if clean_name == "bedrock":
-            return BedrockLLMProvider(**kwargs)
 
         raise LLMConfigurationError(f"Provider resolution failed for '{clean_name}'.")
 
