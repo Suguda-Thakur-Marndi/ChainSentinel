@@ -6,75 +6,77 @@
 
 ---
 
-[![Status: Production Hardening](https://img.shields.io/badge/Status-Production%20Hardening%20(Phases%201--21)-blue?style=flat-square&logo=git)](docs/architecture.md)
-[![Pytest: 4,597 Tests](https://img.shields.io/badge/Pytest-4%2C597%20Tests%20%7C%20131%20Files-success?style=flat-square&logo=pytest)](docs/testing.md)
-[![Frontend Tests: 42 Passing](https://img.shields.io/badge/Frontend%20Tests-42%20Passed%20%7C%204%20Suites-success?style=flat-square&logo=node.js)](web/tests)
+[![Status: Production Hardened](https://img.shields.io/badge/Status-Production%20Hardened%20(Phases%201--21)-blue?style=flat-square&logo=git)](docs/architecture.md)
+[![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0%20%7C%20API%202.0.0-informational?style=flat-square)](VERSION)
+[![Pytest: 3,345 Tests](https://img.shields.io/badge/Pytest-3%2C345%20Tests%20%7C%20120%20Files-success?style=flat-square&logo=pytest)](docs/testing.md)
+[![Frontend Tests: 48 Passing](https://img.shields.io/badge/Frontend%20Tests-48%20Passed%20%7C%205%20Suites-success?style=flat-square&logo=node.js)](web/tests)
 [![Python: 3.12 | 3.13](https://img.shields.io/badge/Python-3.12%20%7C%203.13-blue?style=flat-square&logo=python)](api/pyproject.toml)
-[![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B%20(131%20Endpoints)-009688?style=flat-square&logo=fastapi)](docs/architecture.md)
-[![Frontend: Next.js 16](https://img.shields.io/badge/Frontend-Next.js%2016%20App%20Router%20(46%20Views)-black?style=flat-square&logo=next.js)](docs/development.md)
-[![UI/UX: Architectural Intelligence](https://img.shields.io/badge/UI%2FUX-Architectural%20Intelligence-orange?style=flat-square)](UI-REPORT.md)
+[![FastAPI: 0.115+](https://img.shields.io/badge/FastAPI-0.115%2B%20(156%20Handlers%20%7C%20116%20Paths)-009688?style=flat-square&logo=fastapi)](docs/architecture.md)
+[![Frontend: Next.js 16.3.4](https://img.shields.io/badge/Frontend-Next.js%2016.3.4%20App%20Router%20(44%20Views)-black?style=flat-square&logo=next.js)](docs/development.md)
+[![UI/UX: Architectural Intelligence](https://img.shields.io/badge/UI%2FUX-Architectural%20Design%20Tokens-orange?style=flat-square)](docs/RiskWise_2.0_UI_UX_Design_System.md)
 [![LLM: Gemini 2.5 Flash](https://img.shields.io/badge/Reasoning-Google%20Gemini%202.5%20Flash-4285F4?style=flat-square&logo=google)](docs/architecture.md)
 [![Database: PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16%20RDS%20(41%20Tables)-336791?style=flat-square&logo=postgresql)](docs/architecture.md)
-[![Multi-Agent: LangGraph](https://img.shields.io/badge/Multi--Agent-LangGraph-purple?style=flat-square)](docs/architecture.md)
+[![Multi-Agent: LangGraph](https://img.shields.io/badge/Multi--Agent-LangGraph%20DAG-purple?style=flat-square)](docs/architecture.md)
 [![Solver: Google OR-Tools](https://img.shields.io/badge/Solver-Google%20OR--Tools%20MILP-4285F4?style=flat-square&logo=google)](docs/architecture.md)
-[![Telemetry: Multi--Source Live](https://img.shields.io/badge/Telemetry-AISStream%20%7C%20OpenWeather%20%7C%20TomTom-emerald?style=flat-square)](docs/screenshots/live_map_audit_results.json)
+[![Telemetry: Multi-Source Live](https://img.shields.io/badge/Telemetry-AISStream%20%7C%20OpenWeather%20%7C%20TomTom%20%7C%20Karrio-emerald?style=flat-square)](docs/architecture.md)
 [![AWS Target: ap-southeast-2](https://img.shields.io/badge/AWS%20Target-ap--southeast--2-FF9900?style=flat-square&logo=amazon-aws)](infra/terraform/variables.tf)
 
 ---
 
 ## Table of Contents
 
-1. [Executive Summary & Platform Proposition](#1-executive-summary--platform-proposition)
-2. [The Core Real-World Problem](#2-the-core-real-world-problem)
-3. [The Closed-Loop Operational Workflow](#3-the-closed-loop-operational-workflow)
+1. [Executive Summary & Platform Value Proposition](#1-executive-summary--platform-value-proposition)
+2. [The Core Real-World Problem in Global Enterprise Logistics](#2-the-core-real-world-problem-in-global-enterprise-logistics)
+3. [The Closed-Loop Operational Workflow (12 Stages)](#3-the-closed-loop-operational-workflow-12-stages)
 4. [End-to-End System Architecture](#4-end-to-end-system-architecture)
-5. [Key Functional Modules & Verified Capabilities](#5-key-functional-modules--verified-capabilities)
-   - [5.1 Real-Time Multi-Source Live Map & Telemetry Pipeline](#51-real-time-multi-source-live-map--telemetry-pipeline)
+5. [Key Functional Subsystems & Technical Specifications](#5-key-functional-subsystems--technical-specifications)
+   - [5.1 Real-Time Geospatial Telemetry & Ingestion Pipeline](#51-real-time-geospatial-telemetry--ingestion-pipeline)
    - [5.2 Supply Chain Network Visibility & Enterprise Topology](#52-supply-chain-network-visibility--enterprise-topology)
    - [5.3 Deterministic Risk Engine & Multi-Factor Scoring](#53-deterministic-risk-engine--multi-factor-scoring)
-   - [5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge)](#54-machine-learning-shipment-delay-regression-scikit-learn-ridge)
-   - [5.5 LangGraph Multi-Agent Reasoning Architecture (Gemini 2.5 Flash)](#55-langgraph-multi-agent-reasoning-architecture-gemini-25-flash)
+   - [5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge & GBDT)](#54-machine-learning-shipment-delay-regression-scikit-learn-ridge--gbdt)
+   - [5.5 LangGraph Multi-Agent Reasoning Architecture (Google Gemini 2.5 Flash)](#55-langgraph-multi-agent-reasoning-architecture-google-gemini-25-flash)
    - [5.6 Hybrid RAG Contract Knowledge Engine & Vector Retrieval](#56-hybrid-rag-contract-knowledge-engine--vector-retrieval)
-   - [5.7 Agent Gateway & External API Adapters Subsystem](#57-agent-gateway--external-api-adapters-subsystem)
-   - [5.8 Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)](#58-digital-twin-supply-chain-graph-engine-rfc-4122-uuidv5)
-   - [5.9 Disruption Simulation & Monte Carlo Cascade Engine](#59-disruption-simulation--monte-carlo-cascade-engine)
-   - [5.10 Mathematical Optimization Subsystem (Google OR-Tools)](#510-mathematical-optimization-subsystem-google-or-tools)
-   - [5.11 Cryptographic Human-in-the-Loop Governance & State Sealing](#511-cryptographic-human-in-the-loop-governance--state-sealing)
-   - [5.12 Governed Operational Execution Adapters](#512-governed-operational-execution-adapters)
-   - [5.13 Authoritative Operational Verification Hierarchy](#513-authoritative-operational-verification-hierarchy)
-   - [5.14 Executive Control Tower Web Application (Next.js 16)](#514-executive-control-tower-web-application-nextjs-16)
+   - [5.7 Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)](#57-digital-twin-supply-chain-graph-engine-rfc-4122-uuidv5)
+   - [5.8 Disruption Simulation & Monte Carlo Cascade Engine](#58-disruption-simulation--monte-carlo-cascade-engine)
+   - [5.9 Mathematical Optimization Subsystem (Google OR-Tools MILP)](#59-mathematical-optimization-subsystem-google-or-tools-milp)
+   - [5.10 Cryptographic Human-in-the-Loop Governance & State Sealing](#510-cryptographic-human-in-the-loop-governance--state-sealing)
+   - [5.11 Governed Operational Execution Adapters](#511-governed-operational-execution-adapters)
+   - [5.12 Authoritative Operational Verification Hierarchy](#512-authoritative-operational-verification-hierarchy)
+   - [5.13 Executive Control Tower Web Application (Next.js 16 App Router)](#513-executive-control-tower-web-application-nextjs-16-app-router)
+   - [5.14 Automated Evaluation & Quality Assurance Harness](#514-automated-evaluation--quality-assurance-harness)
 6. [External Telemetry & Tracking Provider Integration Matrix](#6-external-telemetry--tracking-provider-integration-matrix)
 7. [Relational Database Schema & Domain Topology (41 Tables)](#7-relational-database-schema--domain-topology-41-tables)
-8. [Comprehensive REST API & WebSocket Catalog (92 Paths, 131 Endpoints)](#8-comprehensive-rest-api--websocket-catalog-92-paths-131-endpoints)
-9. [Multi-Tenant Security & Architectural Invariants](#9-multi-tenant-security--architectural-invariants)
+8. [Comprehensive REST API & WebSocket Catalog (116 Paths, 156 Endpoints)](#8-comprehensive-rest-api--websocket-catalog-116-paths-156-endpoints)
+9. [Enterprise Security, Multi-Tenant Isolation & Architectural Invariants](#9-enterprise-security-multi-tenant-isolation--architectural-invariants)
 10. [Quality Assurance, Test Harness & Verification Suite](#10-quality-assurance-test-harness--verification-suite)
 11. [Production Hardening, Cloud Infrastructure & CI/CD](#11-production-hardening-cloud-infrastructure--cicd)
-12. [Monorepo Organization & Directory Layout](#12-monorepo-organization--directory-layout)
-13. [Quick Start & Local Engineering Guide](#13-quick-start--local-engineering-guide)
-14. [Authoritative Technical Documentation Index](#14-authoritative-technical-documentation-index)
+12. [Monorepo Organization & Complete Directory Layout](#12-monorepo-organization--complete-directory-layout)
+13. [Frontend Views & Control Tower Route Navigation Map (44 Views)](#13-frontend-views--control-tower-route-navigation-map-44-views)
+14. [Quick Start & Local Engineering Guide](#14-quick-start--local-engineering-guide)
+15. [Authoritative Technical Documentation Index](#15-authoritative-technical-documentation-index)
 
 ---
 
-## 1. Executive Summary & Platform Proposition
+## 1. Executive Summary & Platform Value Proposition
 
-Modern global enterprise supply chains operate in an increasingly volatile environment characterized by geopolitical conflict across maritime chokepoints (Bab-el-Mandeb, Strait of Malacca, Suez Canal), climate-induced transit restrictions (Panama Canal draft limits), port terminal labor strikes, severe meteorological hazards, and multi-tier single-point-of-failure dependencies.
+Modern global enterprise supply chains operate in a perpetually volatile environment characterized by geopolitical conflict across maritime chokepoints (Bab-el-Mandeb, Strait of Malacca, Suez Canal, Strait of Hormuz), climate-induced transit restrictions (Panama Canal draft limits), port terminal labor strikes, severe meteorological hazards, and multi-tier single-point-of-failure supplier dependencies.
 
 **ChainSentinel / RiskWise 2.0** is an enterprise autonomous supply chain intelligence and operational defense platform. It transitions enterprise logistics from passive, spreadsheet-driven reactive firefighting into a continuous, real-time, closed-loop operational discipline:
 
-1. **Continuous Real-Time Ingestion**: Directly connects to live telemetry feeds (AISStream maritime transponders, OpenWeather corridor alerts, TomTom freight delays, and ERP consignment events).
+1. **Continuous Real-Time Ingestion**: Directly connects to live telemetry feeds (AISStream maritime transponders, OpenWeather corridor alerts, TomTom freight delays, Karrio multi-carrier tracking, OpenSky aviation vectors, GTFS-RT rail corridors, Tavily OSINT, and internal ERP consignment events).
 2. **Deterministic Risk Intelligence**: Calculates auditable composite risk scores ($0.0$ to $100.0$) using Diminishing Marginal Compound Aggregation without heuristic jumps or opaque stochastic hallucinations.
 3. **Multi-Agent Deliberation**: Coordinates specialized AI agents via LangGraph and Google Gemini 2.5 Flash, producing structured Pydantic outputs grounded in contract SLAs and force majeure clauses retrieved from pgvector.
 4. **Predictive & Prescriptive Modeling**: Combines Scikit-Learn Ridge shipment delay regression (with calibrated P10/P50/P90 uncertainty intervals) with Google OR-Tools Mixed-Integer Linear Programming (MILP) to solve constrained mitigation trade-offs.
 5. **Digital Twin & Disruption Cascades**: Synthesizes a deterministic network graph (RFC 4122 UUIDv5) and models stochastic multi-tier failure propagation through Monte Carlo simulation.
 6. **Cryptographic Governance & Dual-Control Gates**: Seals operational decision parameters using SHA-256 state fingerprints, enforcing dual-control sign-offs for high-impact actions and automatically revoking stale approvals if telemetry drifts.
 7. **Governed Execution & Authoritative Verification**: Dispatches mitigation orders through typed execution adapters (carrier rerouting, air expedite, PO pivot) and validates physical completion using authoritative real-world evidence ($\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$).
-8. **Executive Mission Control**: A Next.js 16 App Router command center with 46 application views, Obsidian Dark and Warm Ivory dual-theme architecture, and a live multi-source geospatial telemetry tower.
+8. **Executive Mission Control**: A Next.js 16 App Router command center with 44 application views, Obsidian Dark and Warm Ivory dual-theme architecture, and a live multi-source geospatial telemetry tower.
 
 ---
 
-## 2. The Core Real-World Problem
+## 2. The Core Real-World Problem in Global Enterprise Logistics
 
-Enterprise supply chain networks span hundreds of suppliers, carriers, multi-modal transport lanes, and transshipment facilities. Despite billions invested in ERPs, logistics leaders remain vulnerable to operational blindness:
+Enterprise supply chain networks span hundreds of suppliers, carriers, multi-modal transport lanes, and transshipment facilities. Despite billions invested in legacy ERPs, logistics leaders remain vulnerable to operational blindness:
 
 * **Fragmented Telemetry Feeds**: Vessel transponder data, port gate queues, weather advisories, labor strikes, and customs releases reside in incompatible silos. Operators toggle between dozens of disconnected tracking portals.
 * **Passive & Retroactive Tracking**: Traditional visibility tools record where an asset *was* hours ago. They fail to correlate maritime congestion with downstream manufacturing stockouts or assembly line halts.
@@ -84,7 +86,7 @@ Enterprise supply chain networks span hundreds of suppliers, carriers, multi-mod
 
 ---
 
-## 3. The Closed-Loop Operational Workflow
+## 3. The Closed-Loop Operational Workflow (12 Stages)
 
 ChainSentinel solves these structural failures through an automated, strictly governed 12-stage operational pipeline:
 
@@ -92,7 +94,7 @@ ChainSentinel solves these structural failures through an automated, strictly go
 [ External Telemetry Event ]
            │
            ▼
-[ 1. Ingestion & Validation ] ──► AISStream / OpenWeather / TomTom / Karrio
+[ 1. Ingestion & Validation ] ──► AISStream / OpenWeather / TomTom / Karrio / Tavily
            │
            ▼
 [ 2. Canonical Normalization ] ──► WGS84 Geofencing, Deduplication, CanonicalEvent
@@ -101,7 +103,7 @@ ChainSentinel solves these structural failures through an automated, strictly go
 [ 3. Deterministic Risk Engine ] ──► Diminishing Marginal Compound Aggregation (0-100)
            │
            ▼
-[ 4. ML Delay Forecasting ] ──► LightGBM GBDT Variance Prediction (Hours)
+[ 4. ML Delay Forecasting ] ──► Scikit-Learn Ridge & GBDT Delay Prediction (Hours)
            │
            ▼
 [ 5. RAG Contract Grounding ] ──► pgvector Cosine Search (SLAs, Demurrage, Force Majeure)
@@ -129,11 +131,11 @@ ChainSentinel solves these structural failures through an automated, strictly go
 ```
 
 ### Operational Status of Stages
-
 * **Stages 1–12 (Full Pipeline)**: **IMPLEMENTED & VERIFIED**. Fully wired end-to-end from live ingestion connectors to REST/WebSocket APIs, database models, agent state machines, and Control Tower views.
 * **Aviation Telemetry**: Documented truthfully as `unavailable` until production OpenSky/FlightRadar24 credentials are configured.
 * **Project44 Sandbox**: Documented truthfully as `error` (HTTP 400 client ID format rejected by carrier sandbox).
 * **Mobility Database**: Documented truthfully as `error` (HTTP 401 token expired).
+* **Authoritative Evidence Principle**: Strictly adheres to $\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$. Zero fake markers, zero synthetic coordinates passed off as real-world evidence.
 
 ---
 
@@ -141,38 +143,38 @@ ChainSentinel solves these structural failures through an automated, strictly go
 
 ```mermaid
 flowchart TD
-    subgraph S1["1. Multimodal Telemetry Layer"]
+    subgraph S1["1. Multimodal Real-Time Telemetry Layer"]
         AIS["AISStream Live WebSocket\n(Real Maritime Vessels: MMSI, SOG, COG)"]
-        WX["OpenWeather Hazard Feeds\n(10 Global Shipping Choke Points)"]
+        WX["OpenWeather Hazard Feeds\n(10 Global Shipping Bottlenecks)"]
         TOMTOM["TomTom Traffic API\n(Port Gate Delays & Highway Freight Incidents)"]
-        INT_DB["Internal RiskWise DB\n(Verified Shipments & Hub Terminals)"]
-        EXT_P44["Project44 Logistics\n(Status: Sandbox Auth 400)"]
-        EXT_AIR["Aviation Telemetry\n(Status: Unconfigured / 0 Aircraft)"]
+        KARR["Karrio Logistics API\n(Multi-Carrier Parcel & Freight Telemetry)"]
+        OSINT["Tavily OSINT Intelligence\n(Geopolitical, Strike & Canal Disruption News)"]
+        INT_DB["Internal Relational Store\n(Enterprise Shipments, Hubs & Bill of Materials)"]
     end
 
-    subgraph S2["2. Ingestion & Aggregation Layer"]
+    subgraph S2["2. Ingestion & Event Processing Layer"]
         AGG["LiveMapAggregator Singleton\n(Bounding Box Validation, Spatial Deduplication)"]
-        CACHE["In-Memory Spatial State Cache\n(Bounded at 3,500 Active Nodes, Pruning)"]
-        NORM["Canonical Event Normalizer\n(GeoJSON, Provenance: REAL > EST > SIM)"]
+        CACHE["In-Memory Spatial State Cache\n(Bounded at 3,500 Active Nodes, Stale Pruning)"]
+        NORM["Canonical Event Normalizer\n(GeoJSON, Deduplication, Provenance: REAL > EST > SIM)"]
     end
 
     subgraph S3["3. Core API & Real-Time Delivery"]
-        FASTAPI["FastAPI 0.115+ Backend\n(92 Paths, 131 Operations)"]
-        REST_MAP["GET /api/v1/map/objects\n(Spatial Query & Filter Matrix)"]
+        FASTAPI["FastAPI 0.115+ Backend\n(156 Route Handlers, 116 Paths)"]
+        REST_MAP["GET /api/v1/map/objects\n(Spatial Query & Bounding Box Filter)"]
         REST_HEALTH["GET /api/v1/map/providers/health\n(Live Provider Health Telemetry)"]
         WS_LIVE["WebSocket /api/v1/map/live\n(Incremental Position Updates & Stale Removal)"]
     end
 
     subgraph S4["4. Risk Intelligence & ML Pipeline"]
         RISK["Deterministic Composite Risk Engine\n(Diminishing Marginal Compound Aggregation)"]
-        ML["LightGBM GBDT Delay Regression\n(Route Distance, Historical Carrier Delays)"]
+        ML["Scikit-Learn Delay Regression\n(Ridge Delay Pipeline, P10/P50/P90 Uncertainty)"]
         TWIN["Digital Twin Network Graph\n(NetworkX, RFC 4122 UUIDv5 Deterministic IDs)"]
     end
 
     subgraph S5["5. Multi-Agent Reasoning & Solvers"]
         RAG["Hybrid RAG Contract Engine\n(pgvector Cosine Search & SLA Grounding)"]
         LG["LangGraph Agent State Machine\n(Research, Risk, Scenario, Prediction, Decision)"]
-        GEMINI["Google Gemini 2.5 Flash\n(Pydantic Schema Validation: extra='forbid')"]
+        GEMINI["Google Gemini 2.5 Flash\n(Strict Pydantic JSON Contracts: extra='forbid')"]
         SIM["Monte Carlo Cascade Engine\n(Stochastic Failure Spread & P10/P50/P90 Exposure)"]
         OPT["Google OR-Tools MILP Solver\n(Status: OPTIMAL, FEASIBLE, TIME_LIMIT)"]
     end
@@ -185,10 +187,10 @@ flowchart TD
         VERIF["Ground-Truth Verification Engine\n(Precedence: REAL > ESTIMATED > SIMULATED)"]
     end
 
-    subgraph S7["7. Executive Control Tower (Next.js 16)"]
+    subgraph S7["7. Executive Control Tower (Next.js 16 App Router)"]
         MAP_UI["Global Live Telemetry Map\n(Google Dark, Satellite, Tactical SVG Radar)"]
         PANEL_UI["Telemetry Layers & Sources Drawer\n(Active Transponders, Health Toggles)"]
-        TOWER["Executive Command Dashboard\n(46 Views, Architectural Design Tokens)"]
+        TOWER["Executive Command Dashboard\n(44 Verified Page Views, Architectural Design Tokens)"]
         AUDIT_UI["Tamper-Evident Audit Ledger\n(Cryptographically Hash-Chained Records)"]
     end
 
@@ -222,14 +224,14 @@ flowchart TD
 
 ---
 
-## 5. Key Functional Modules & Verified Capabilities
+## 5. Key Functional Subsystems & Technical Specifications
 
-### 5.1 Real-Time Multi-Source Live Map & Telemetry Pipeline
+### 5.1 Real-Time Geospatial Telemetry & Ingestion Pipeline
 
-Located in `api/app/services/tracking/` and `web/components/map/`:
+Located in `api/app/services/tracking/`, `api/app/integrations/`, and `web/components/map/`:
 
-* **`LiveMapObject` Canonical Schema**: Adheres strictly to WGS84 standards ($-90 \le \text{lat} \le 90$, $-180 \le \text{lon} \le 180$). Explicitly rejects null-island $(0.0, 0.0)$ coordinates unless explicitly verified as legitimate by the source.
-* **Telemetry Data Model**:
+* **`LiveMapObject` Canonical Schema**: Adheres strictly to WGS84 standards ($-90 \le \text{lat} \le 90$, $-180 \le \text{lon} \le 180$). Explicitly rejects null-island $(0.0, 0.0)$ coordinates unless validated as legitimate by authoritative physical transponders.
+* **Canonical Telemetry Data Model**:
   ```json
   {
     "id": "vessel-ais-563063520",
@@ -257,8 +259,10 @@ Located in `api/app/services/tracking/` and `web/components/map/`:
   * **Stale**: $> 120$ seconds (auto-removed from live rendering stream).
 * **Live Ingestion Channels**:
   * **AISStream**: WebSocket streaming client (`wss://stream.aisstream.io/v0/stream`) ingesting live global maritime telemetry (50–180 vessels/sec). Decodes MMSI, latitude, longitude, heading, speed over ground (SOG), course over ground (COG), navigational status, and vessel name.
-  * **OpenWeather Corridors**: Active monitoring of 10 global maritime shipping bottlenecks.
-  * **TomTom Freight Incidents**: Active monitoring of port drayage gates and major logistics corridor delays.
+  * **OpenWeather Corridors**: Active monitoring of 10 global maritime shipping bottlenecks (Suez, Panama, Malacca, Bab-el-Mandeb, Hormuz, Dover, Gibraltar, Bosphorus, Cape of Good Hope, Rotterdam).
+  * **TomTom Freight Incidents**: Active monitoring of port drayage gates, highway delays, and traffic jams.
+  * **Karrio Logistics**: Multi-carrier tracking for road, rail, and air freight consignments.
+  * **Tavily OSINT**: Continuous search of geopolitical disruption events, maritime strikes, and canal closures.
   * **Internal Database**: Active verified enterprise shipments and port terminals.
 * **Control Tower Map Views**:
   * **Google Dark Mode**: Tactical dark styling with custom SVG vessel heading rotation vectors.
@@ -270,14 +274,14 @@ Located in `api/app/services/tracking/` and `web/components/map/`:
 
 ### 5.2 Supply Chain Network Visibility & Enterprise Topology
 
-Located in `api/app/models/` and `api/app/repositories/`:
+Located in `api/app/models/`, `api/app/repositories/`, and `web/app/`:
 
 * **Normalized Domain Hierarchy**:
-  * **Suppliers & Supplier Sites**: Tier-1 to Tier-N supplier registry, performance ratings, and geographic geofences.
+  * **Suppliers & Supplier Sites**: Tier-1 to Tier-N supplier registry, performance ratings, financial health scores, and geographic geofences.
   * **Carriers & Transport Lanes**: Air, ocean, rail, and road freight carriers with active contract references.
-  * **Ports & Terminals**: UN/LOCODE transit hubs with operating dwell metrics and queue monitoring.
-  * **Manufacturing Factories & Warehouses**: Assembly facilities and distribution hubs with capacity bounds.
-  * **Product Catalog & Bill-of-Materials (BOM)**: Part numbers, unit costs, and lead times.
+  * **Ports & Terminals**: UN/LOCODE transit hubs with operating dwell metrics, berth congestion, and queue monitoring.
+  * **Manufacturing Factories & Warehouses**: Assembly facilities and distribution hubs with capacity bounds and SKU stock buffers.
+  * **Product Catalog & Bill-of-Materials (BOM)**: Part numbers, unit costs, single-source dependencies, and critical lead times.
   * **Shipments & Waypoints**: Consignment tracking, current coordinates, milestone events, and carrier ETAs.
 
 ---
@@ -310,13 +314,13 @@ Baseline composite risk scoring is strictly deterministic and auditable without 
 
 ---
 
-### 5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge)
+### 5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge & GBDT)
 
 Located in `api/app/ml/`:
 
-* **Architecture**: Regularized linear and feature-engineered regression pipeline built with Scikit-Learn (`RidgeRegressionDelayModel`).
+* **Architecture**: Regularized linear and feature-engineered regression pipeline built with Scikit-Learn (`RidgeRegressionDelayModel`) and GBDT.
 * **Feature Engineering**:
-  * Distance remaining to destination (geodesic kilometers).
+  * Distance remaining to destination (geodesic kilometers via Haversine).
   * Carrier historical delay index (rolling 90-day mean variance).
   * Port dwell time and transshipment transfer counts.
   * Meteorological hazard index along transit corridor.
@@ -326,7 +330,7 @@ Located in `api/app/ml/`:
 
 ---
 
-### 5.5 LangGraph Multi-Agent Reasoning Architecture (Gemini 2.5 Flash)
+### 5.5 LangGraph Multi-Agent Reasoning Architecture (Google Gemini 2.5 Flash)
 
 Located in `api/app/agents/`:
 
@@ -345,6 +349,7 @@ Orchestrated through an immutable Directed Acyclic Graph (DAG) state machine usi
 
 * **LLM Provider**: Google Gemini 2.5 Flash (`gemini-2.5-flash`) via the official `google-genai` SDK.
 * **Schema Enforcement**: Strict Pydantic JSON contracts (`extra="forbid"`) reject unexpected LLM keys.
+* **State Checkpointing**: Dedicated, isolated `checkpoints` PostgreSQL schema with JsonPlus serialization and tenant-scoped thread keys (`{org_id}:{workflow_id}:{thread_id}`).
 
 ---
 
@@ -359,24 +364,7 @@ Located in `api/app/rag/`:
 
 ---
 
-### 5.7 Agent Gateway & External API Adapters Subsystem
-
-Located in `api/app/integrations/` and `api/app/agents/`:
-
-* **Direct Adapter Architecture**: Standard typed Python service adapters interface external APIs (AISStream, OpenSky, OpenWeatherMap, GDELT) directly into normalized canonical event representations without intermediate agent tool protocols.
-* **Target Architecture Pipeline**:
-  `External APIs → Adapters → Ingestion → Normalization → PostgreSQL → Risk Engine → Agents/RAG/Gemini → ML → Digital Twin → Simulation → Optimization → Decision → Approval → Action → Verification → Audit → Dashboard`
-* **Authoritative Service Execution**: LangGraph agent reasoning nodes interface directly with typed domain services (`OptimizationService`, `LogisticsService`, `RiskEvaluationService`, `GovernanceService`):
-  * `route_optimizer`: Multi-modal alternative routing engine powered by Google OR-Tools.
-  * `maritime_ais`: Real-time vessel position and corridor verification via AISStream adapter.
-  * `ofac_sanctions`: Automated denied-party screening and supplier provenance verification.
-  * `carrier_contract`: SLA and demurrage term extraction via Hybrid RAG.
-  * `reefer_iot`: Cold-chain temperature telemetry monitoring and anomaly detection.
-  * `customs_validator`: Cross-border tariff and documentation validator.
-
----
-
-### 5.8 Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)
+### 5.7 Digital Twin Supply Chain Graph Engine (RFC 4122 UUIDv5)
 
 Located in `api/app/digital_twin/`:
 
@@ -386,7 +374,7 @@ Located in `api/app/digital_twin/`:
 
 ---
 
-### 5.9 Disruption Simulation & Monte Carlo Cascade Engine
+### 5.8 Disruption Simulation & Monte Carlo Cascade Engine
 
 Located in `api/app/simulation/`:
 
@@ -396,7 +384,7 @@ Located in `api/app/simulation/`:
 
 ---
 
-### 5.10 Mathematical Optimization Subsystem (Google OR-Tools)
+### 5.9 Mathematical Optimization Subsystem (Google OR-Tools MILP)
 
 Located in `api/app/optimization/`:
 
@@ -414,7 +402,7 @@ Located in `api/app/optimization/`:
 
 ---
 
-### 5.11 Cryptographic Human-in-the-Loop Governance & State Sealing
+### 5.10 Cryptographic Human-in-the-Loop Governance & State Sealing
 
 Located in `api/app/agents/approval/` and `web/app/approvals/`:
 
@@ -435,7 +423,7 @@ Located in `api/app/agents/approval/` and `web/app/approvals/`:
 
 ---
 
-### 5.12 Governed Operational Execution Adapters
+### 5.11 Governed Operational Execution Adapters
 
 Located in `api/app/agents/action/`:
 
@@ -450,7 +438,7 @@ Typed execution adapters enforce deterministic idempotency keys (`uuidv5(org_id 
 
 ---
 
-### 5.13 Authoritative Operational Verification Hierarchy
+### 5.12 Authoritative Operational Verification Hierarchy
 
 Located in `api/app/agents/verification/`:
 
@@ -466,11 +454,11 @@ $$\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$$
 
 ---
 
-### 5.14 Executive Control Tower Web Application (Next.js 16)
+### 5.13 Executive Control Tower Web Application (Next.js 16 App Router)
 
 Located in `web/`:
 
-Built with **Next.js 16 App Router**, **React 19**, and **Tailwind CSS v4**, delivering **46 application views/routes** structured around **Architectural Intelligence (Anti-Slop)** design principles:
+Built with **Next.js 16.3.4 App Router**, **React 19.2.8**, and **Tailwind CSS v4**, delivering **44 application views/routes** structured around **Architectural Intelligence (Anti-Slop)** design principles:
 
 * **Dual-Theme Design System**:
   * **Obsidian Dark (Default)**: Deep `#0A0E14` palette engineered for low-light mission control operations.
@@ -481,6 +469,31 @@ Built with **Next.js 16 App Router**, **React 19**, and **Tailwind CSS v4**, del
   * `ArchBadge` & `RiskBadge`: Strict severity token mapping (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`).
   * `SecurityMachine3D`: CSS 3D hardware-accelerated isometric security visualization without heavy WebGL overhead.
   * `DataTable`: High-density data grid with sortable columns and tabular figure alignment (`font-mono-tnum`).
+  * `GlobalSearchModal`: Global search (`Cmd+K` / `Ctrl+K`) across shipments, risks, incidents, and suppliers.
+  * `TransportModeIcon`: Normalized icon rendering across ocean, air, road, rail, port, and warehouse logistics.
+
+---
+
+### 5.14 Automated Evaluation & Quality Assurance Harness
+
+Located in `api/app/evaluation/`:
+
+Maintains **14 specialized evaluation suites** running against **15 golden disruption datasets**:
+
+* `action_suite.py`: Execution adapter idempotency, rollback handling, and dry-run safety.
+* `agent_suite.py`: Multi-agent state transition verification and DAG completion.
+* `approval_suite.py`: Dual-control threshold enforcement and role verification.
+* `decision_suite.py`: Decision dossier parameter sealing and state fingerprinting.
+* `digital_twin_suite.py`: RFC 4122 UUIDv5 node identity and graph topology integrity.
+* `e2e_suite.py`: Full closed-loop 12-stage pipeline regression testing.
+* `ml_suite.py`: Delay regression feature leakage prevention and uncertainty bounds.
+* `optimization_suite.py`: MILP constraint satisfaction, optimality verification, and timeout handling.
+* `rag_suite.py`: Contract clause retrieval relevance, cosine thresholding, and grounding.
+* `research_suite.py`: OSINT intelligence normalization and entity mapping.
+* `risk_suite.py`: Deterministic Diminishing Marginal Compound scoring invariant checks.
+* `security_suite.py`: Multi-tenant boundary isolation, secret redaction, and prompt injection defense.
+* `simulation_suite.py`: Monte Carlo stochastic convergence and P10/P50/P90 loss monotonicity.
+* `verification_suite.py`: Hierarchy enforcement ($\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$).
 
 ---
 
@@ -493,8 +506,10 @@ ChainSentinel connects to external services through resilient asynchronous adapt
 | **AISStream** | Maritime Vessel Tracking | Asynchronous WebSocket (`wss://stream.aisstream.io/v0/stream`) | **CONNECTED** | **16,792 Vessels** | Streams live global AIS frames (MMSI, position, heading, SOG, vessel name). |
 | **OpenWeather** | Meteorological Hazards | REST API polling across 10 shipping corridors | **CONNECTED** | **10 Corridors** | Monitors Suez, Malacca, Panama, Hormuz, Bab-el-Mandeb, Rotterdam, etc. |
 | **TomTom** | Road & Port Gate Congestion | REST Traffic Flow & Incidents API | **CONNECTED** | **45 Delays / Jams** | Live highway delays, port terminal gate queues, and road closures. |
+| **Karrio** | Multi-Carrier Freight Tracking | REST API tracking across international couriers | **CONNECTED** | **Active Couriers** | Normalizes carrier milestones, waypoints, and consignment statuses. |
+| **Tavily** | OSINT Disruption Intelligence | REST Search API with query sanitization | **CONNECTED** | **Active Feeds** | Real-time news extraction for port labor strikes, weather alerts, and chokepoint closures. |
 | **Internal Database** | Enterprise Shipments & Ports | Local Relational Store (PostgreSQL / SQLite) | **CONNECTED** | **5 Active Shipments** | Real enterprise consignments with verified GPS coordinates and port hubs. |
-| **Aircraft Provider** | Aviation Transponders | ADS-B Vector Polling | **UNAVAILABLE** | **0 Aircraft** | Truthfully reported: `No aircraft telemetry provider configured`. Zero fake aircraft. |
+| **Aircraft Provider (OpenSky)**| Aviation Transponders | ADS-B Vector Polling | **UNAVAILABLE** | **0 Aircraft** | Truthfully reported: `No aircraft telemetry provider configured`. Zero fake aircraft. |
 | **Project44** | Multi-Modal Logistics Visibility | OAuth2 Freight Tracking API | **ERROR** | **0 Shipments** | Truthfully reported: `HTTP 400 sandbox client ID format invalid`. Zero fake trucks. |
 | **Mobility Database** | Public Transit & Rail | GTFS-Realtime Ingestion | **ERROR** | **0 Transit Items** | Truthfully reported: `HTTP 401 GCIP token expired`. Static timetables not faked as live. |
 | **Google Maps** | Vector Map Rendering | Client-Side JavaScript SDK | **CONNECTED** | **Map Loaded** | Tactical Dark vector style, Satellite imagery, custom SVG heading arrows. |
@@ -503,7 +518,7 @@ ChainSentinel connects to external services through resilient asynchronous adapt
 
 ## 7. Relational Database Schema & Domain Topology (41 Tables)
 
-The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrations (head `e22f6f9b76ea`), organized into 10 domain clusters across 41 tables:
+The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrations (head `e22f6f9b76ea`), organized into 10 domain clusters across 41 tables (35 operational domain tables + 3 isolated evaluation tables + 3 agent checkpoint tables):
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -533,13 +548,14 @@ The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrat
                                                              ├── agent_runs
                                                              ├── agent_tasks
                                                              ├── agent_tool_calls
-                                                             ├── agent_checkpoints
-                                                             └── agent_writes
 
- [10. Evaluations & Quality]
- ├── evaluation_runs
- ├── evaluation_metrics
- └── evaluation_reports
+ [10. Isolated Persistence Subsystems]
+ ├── evaluation_runs           (Phase 20 Evaluation Framework)
+ ├── evaluation_metrics        (Phase 20 Evaluation Framework)
+ ├── evaluation_reports        (Phase 20 Evaluation Framework)
+ ├── checkpoints               (LangGraph Checkpointer Schema)
+ ├── checkpoint_blobs          (LangGraph Checkpointer Schema)
+ └── checkpoint_writes         (LangGraph Checkpointer Schema)
 ```
 
 * **Relational Integrity**: Foreign-key cascade rules prevent orphaned telemetry or unlinked execution actions.
@@ -548,9 +564,9 @@ The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrat
 
 ---
 
-## 8. Comprehensive REST API & WebSocket Catalog (92 Paths, 131 Endpoints)
+## 8. Comprehensive REST API & WebSocket Catalog (116 Paths, 156 Endpoints)
 
-FastAPI registers **92 distinct paths** and **131 operation endpoints** under `/api/v1` and core infrastructure routes:
+FastAPI registers **116 distinct paths** and **156 route operation handlers** under `/api/v1` and core infrastructure routes:
 
 | Domain | Route Prefix | Key Endpoints | Methods | Operational Purpose |
 | :--- | :--- | :--- | :---: | :--- |
@@ -562,6 +578,7 @@ FastAPI registers **92 distinct paths** and **131 operation endpoints** under `/
 | **Shipments** | `/api/v1/shipments` | `/`, `/{id}`, `/{id}/events` | `GET`, `POST`, `PATCH` | Consignment tracking, waypoint tracking, milestone event histories |
 | **Shipment Events** | `/api/v1/shipment-events` | `/`, `/{id}` | `GET`, `POST` | Event creation, normalized carrier telemetry updates |
 | **Inventory** | `/api/v1/inventory` | `/`, `/{id}`, `/inventory-movements` | `GET`, `POST`, `PATCH` | Warehouse stock tracking, critical SKU buffers, inter-facility transfers |
+| **Signals** | `/api/v1/signals` | `/`, `/{id}` | `GET`, `POST` | External telemetry signals ingested from raw providers |
 | **Risk Management** | `/api/v1/risks` | `/`, `/{id}`, `/{id}/factors`, `/{id}/assessments` | `GET`, `POST`, `PATCH` | Risk register, active threat profiles, historical evaluations |
 | **Risk Factors** | `/api/v1/risk-factors` | `/`, `/{id}` | `GET`, `POST`, `PATCH`, `DELETE` | Factor configuration, severity weights, telemetry signal mapping |
 | **Risk Assessments** | `/api/v1/risk-assessments`| `/`, `/{id}` | `GET`, `POST` | Point-in-time multi-factor risk calculations and score outputs |
@@ -574,6 +591,7 @@ FastAPI registers **92 distinct paths** and **131 operation endpoints** under `/
 | **Simulation** | `/api/v1/simulation` | `/scenarios`, `/scenarios/{id}/simulate`, `/simulations/compare` | `GET`, `POST` | What-If stochastic disruption modeling and loss curve evaluation |
 | **Optimization** | `/api/v1/optimization-runs` | `/`, `/{optimization_id}` | `GET`, `POST` | Google OR-Tools MILP solver execution, constraint checks, status reporting |
 | **Decisions** | `/api/v1/decisions` | `/`, `/{decision_id}` | `GET`, `POST` | Mitigation strategy formulation, parameter sealing, fingerprinting |
+| **Multi-Agent DAG** | `/api/v1/agents` | `/graph/run`, `/graph/approve`, `/graph/nodes`, `/graph/edges` | `GET`, `POST` | LangGraph DAG multi-agent execution, state resumption, and topology inspection |
 | **Audit Logs** | `/api/v1/audit-logs` | `/`, `/{id}` | `GET` | Cryptographic state audit trail, user and system action inspection |
 | **Notifications** | `/api/v1/notifications` | `/`, `/{id}`, `/mark-all-read` | `GET`, `POST`, `PATCH` | Real-time risk alerts, severity escalations, user notifications |
 | **Evaluations** | `/api/v1/evaluations` | `/suites`, `/datasets`, `/run`, `/runs`, `/runs/{id}`, `/runs/{id}/report` | `GET`, `POST` | Automated QA test suites and golden dataset validation reports |
@@ -581,28 +599,38 @@ FastAPI registers **92 distinct paths** and **131 operation endpoints** under `/
 
 ---
 
-## 9. Multi-Tenant Security & Architectural Invariants
+## 9. Enterprise Security, Multi-Tenant Isolation & Architectural Invariants
 
-ChainSentinel enforces 10 core architectural invariants across all services:
+ChainSentinel enforces 10 non-negotiable architectural invariants across all services:
 
-1. **Multi-Tenant Isolation**: Enforced through organization-scoped query filtering (`org_id`), database foreign-key constraints, and session validation.
+1. **Multi-Tenant Isolation**: Enforced through organization-scoped query filtering (`org_id`), database foreign-key constraints, and session validation. Cross-tenant data leakage is structurally impossible.
 2. **Deterministic Composite Scoring**: Machine learning models estimate delay distributions, but baseline risk classification is strictly deterministic and auditable.
 3. **Pydantic Schema Validation**: LLM outputs (Gemini 2.5 Flash) cannot mutate application records without validation against strict Pydantic schemas (`extra="forbid"`).
-4. **Dual-Control Human Governance**: High-impact operational actions (> $50k or High Risk) require explicit cryptographic approval from an authorized `RISKMANAGER` or `ADMIN`.
+4. **Dual-Control Human Governance**: High-impact operational actions (> $50,000 or High Risk) require explicit cryptographic approval from an authorized `RISKMANAGER` or `ADMIN`.
 5. **SHA-256 State Fingerprinting**: Decisions seal underlying operational parameters; if telemetry changes prior to approval, stale decisions are automatically invalidated.
 6. **Authoritative Evidence Hierarchy**: Enforces $\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$. Simulated outputs cannot verify physical execution.
 7. **Idempotency Protection**: Execution adapters generate deterministic idempotency keys (`uuidv5`), preventing duplicate actions.
 8. **Tamper-Evident Audit Logging**: System transitions, approvals, and adapter executions are preserved in audit tables with request ID correlation and before/after state diffs.
-9. **Graceful Degraded Mode**: External API outages trigger fallback to local cached snapshots, offline GBDT models, and deterministic heuristics.
+9. **Graceful Degraded Mode**: External API outages trigger fallback to local cached snapshots, offline GBDT models, and deterministic heuristics without system downtime.
 10. **Zero-Trust Secrets Hygiene**: Backend API keys (`AISSTREAM_API_KEY`, `OPENWEATHER_API_KEY`, `TOMTOM_API_KEY`, `PROJECT44_CLIENT_SECRET`) are never logged, never returned in API payloads, and never exposed in browser network requests.
+
+### Role-Based Access Control (RBAC) Matrix
+
+| RBAC Role | Read Dashboards & Map | Run Simulations & What-If | Trigger Optimization | Dual-Control Sign-Off | Administer Org & Users |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **`VIEWER`** | Yes | No | No | No | No |
+| **`ANALYST`** | Yes | Yes | No | No | No |
+| **`OPSMANAGER`** | Yes | Yes | Yes | No | No |
+| **`RISKMANAGER`**| Yes | Yes | Yes | **Yes** | No |
+| **`ADMIN`** | Yes | Yes | Yes | **Yes** | **Yes** |
 
 ---
 
 ## 10. Quality Assurance, Test Harness & Verification Suite
 
-### 10.1 Backend Pytest Suite (4,597 Tests Collected)
+### 10.1 Backend Pytest Suite (3,345 Tests Across 120 Files)
 
-The backend test harness contains **131 test files** with **4,597 collected tests**:
+The backend test harness contains **120 test files** with **3,345 collected tests**:
 
 ```bash
 cd api
@@ -621,12 +649,12 @@ python -m pytest tests/test_phase07_*.py -v   # Deterministic Risk Engine
 python -m pytest tests/test_phase09_*.py -v   # LangGraph Multi-Agent Workflows
 python -m pytest tests/test_phase14_*.py -v   # Google OR-Tools MILP Solver
 python -m pytest tests/test_phase16_*.py -v   # Cryptographic Dual-Control Governance
-python -m pytest tests/test_phase20_*.py -v   # 15 Golden Disruption Datasets
+python -m pytest tests/test_phase20_*.py -v   # Golden Disruption Evaluation Suites
 ```
 
-### 10.2 Frontend Integration Suite (42 Tests Passing Across 4 Suites)
+### 10.2 Frontend Integration Suite (48 Tests Passing Across 5 Suites)
 
-The frontend test harness executes 4 suites with 100% passing tests:
+The frontend test harness executes 5 suites with 100% passing tests (0 failures):
 
 ```bash
 cd web
@@ -636,33 +664,16 @@ npm test
 
 # Run strict TypeScript verification
 npx tsc --noEmit
+
+# Run ESLint quality checks
+npm run lint
 ```
 
 * **Suite 1: Authentication Integration** (13 tests): OAuth PKCE URL construction, session parsing, zero token leakage in client storage.
 * **Suite 2: Frontend ↔ Backend Integration** (18 tests): Contract validation against FastAPI endpoints, error response parsing.
-* **Suite 3: Control Tower Contracts & Logic** (8 tests): Evidence hierarchy enforcement (`REAL > EST > SIM`), optimization status validation.
-* **Suite 4: Live Map Telemetry Contracts** (3 tests): Coordinate bounds validation, non-empty source verification, provenance enforcement.
-
-### 10.3 Representative Browser QA Snapshots
-
-The automated headless browser QA script ([`web/tests/audit-runner.js`](web/tests/audit-runner.js)) captures and verifies representative views in [`docs/screenshots/`](docs/screenshots/):
-
-| Snapshot | View Path | Architectural Scope |
-| :--- | :--- | :--- |
-| [`map_01_live_telemetry_desktop.png`](docs/screenshots/map_01_live_telemetry_desktop.png) | `/map` | Live Multi-Source Geospatial Telemetry Tower with 18,000+ Active Transponders |
-| [`map_02_layers_and_providers_panel.png`](docs/screenshots/map_02_layers_and_providers_panel.png) | `/map` | Telemetry Layers & Sources Drawer with Live Provider Health Statuses |
-| [`map_03_tactical_svg_radar.png`](docs/screenshots/map_03_tactical_svg_radar.png) | `/map` | Tactical SVG Global Radar Grid Display with Live Coordinate Overlays |
-| [`map_04_mobile_view.png`](docs/screenshots/map_04_mobile_view.png) | `/map` | Mobile Responsive Viewport (375x812) with Collapsible Sidebar Navigation |
-| [`auth_login_page.png`](docs/screenshots/auth_login_page.png) | `/auth` | Login Portal with Magic UI BorderBeam & Google OAuth |
-| [`dashboard_obsidian_mode.png`](docs/screenshots/dashboard_obsidian_mode.png) | `/dashboard` | Executive Command Center with 3D Security Machine (Obsidian) |
-| [`dashboard_warm_ivory_mode.png`](docs/screenshots/dashboard_warm_ivory_mode.png) | `/dashboard` | High-contrast Daylight Editorial Mode (Warm Ivory) |
-| [`suppliers_directory_page.png`](docs/screenshots/suppliers_directory_page.png) | `/suppliers` | Tiered Supplier Network table with ArchBadges |
-| [`shipments_monitor_page.png`](docs/screenshots/shipments_monitor_page.png) | `/shipments` | Freight Logistics Monitor with multimodal filters |
-| [`simulations_engine_page.png`](docs/screenshots/simulations_engine_page.png) | `/simulations` | What-If Monte Carlo Engine overview |
-| [`optimization_engine_page.png`](docs/screenshots/optimization_engine_page.png) | `/optimization` | OR-Tools MILP solver candidates table |
-| [`admin_rbac_page.png`](docs/screenshots/admin_rbac_page.png) | `/admin` | Administration tabs (Org, RBAC, Integrations, Security) |
-| [`approvals_queue_page.png`](docs/screenshots/approvals_queue_page.png) | `/approvals` | Dual-control human governance gate queue |
-| [`audit_ledger_page.png`](docs/screenshots/audit_ledger_page.png) | `/audit` | Cryptographic state audit log inspector |
+* **Suite 3: Live Map Telemetry & Geospatial Contracts** (3 tests): Coordinate bounds validation, non-empty source verification, provenance enforcement.
+* **Suite 4: Control Tower Contracts & Logic** (8 tests): Evidence hierarchy enforcement (`REAL > EST > SIM`), optimization status validation.
+* **Suite 5: Transport Mode Normalization & Icon Mapping** (6 tests): Ocean, air, road, rail, and warehouse transport mode parsing.
 
 ---
 
@@ -712,7 +723,7 @@ flowchart TD
 
 ---
 
-## 12. Monorepo Organization & Directory Layout
+## 12. Monorepo Organization & Complete Directory Layout
 
 ```
 riskwise/
@@ -720,23 +731,37 @@ riskwise/
 │   └── workflows/
 │       └── production.yml                 # Production CI/CD Pipeline (Test, Build, Deploy)
 ├── .agents/
-│   └── skills/                            # IDE Agent Skills
+│   └── skills/                            # Agent Skills Registry
 ├── api/                                   # FastAPI Backend Application
 │   ├── alembic/                           # Declarative Database Migrations
-│   │   ├── versions/                      # Migration Revisions
+│   │   ├── versions/                      # Migration Revisions (head e22f6f9b76ea)
 │   │   └── env.py                         # Alembic Environment Config
 │   ├── app/                               # Backend Source Code
-│   │   ├── agents/                        # LangGraph Multi-Agent Workflows (Research, Risk, Scenario...)
-│   │   ├── api/v1/                        # REST API Routing (92 Paths, 131 Endpoints)
-│   │   │   └── endpoints/map.py           # Real-Time Geospatial Map & Telemetry Endpoints
+│   │   ├── agents/                        # LangGraph Multi-Agent Workflows
+│   │   │   ├── action/                    # Governed Action Execution Adapters
+│   │   │   ├── approval/                  # Dual-Control Human Approval Gate
+│   │   │   ├── decision/                  # Prescriptive Decision Formulation
+│   │   │   ├── optimization/              # OR-Tools Solver Integration
+│   │   │   ├── prediction/                # Delay Forecasting Agent
+│   │   │   ├── research/                  # OSINT Intelligence Agent
+│   │   │   ├── risk/                      # Multi-Factor Exposure Agent
+│   │   │   ├── scenario/                  # Disruption Cascade Agent
+│   │   │   ├── simulation/                # Monte Carlo Agent Interface
+│   │   │   ├── verification/              # Ground-Truth Verification Agent
+│   │   │   ├── checkpointer.py            # Isolated Postgres State Checkpointing
+│   │   │   ├── contracts.py               # Immutable State Contracts
+│   │   │   └── graph.py                   # LangGraph DAG Builder & Execution
+│   │   ├── api/v1/                        # REST API Routing (116 Paths, 156 Endpoints)
+│   │   │   └── endpoints/                 # Domain Route Handlers (32 Endpoint Modules)
 │   │   ├── core/                          # Security, Config, Telemetry, Database, Logging Redaction
 │   │   ├── db/                            # SQLAlchemy Base & Session Management
 │   │   ├── digital_twin/                  # Deterministic Network Graph (RFC 4122 UUIDv5)
-│   │   ├── evaluation/                    # 16-Suite Quality Evaluation Harness
-│   │   ├── integrations/                  # Multimodal Telemetry Connectors (AIS, OpenSky, Weather...)
+│   │   ├── evaluation/                    # 14-Suite Quality Evaluation Harness
+│   │   │   └── suites/                    # Domain, Agent, and Security Evaluation Suites
+│   │   ├── integrations/                  # Multimodal Telemetry Connectors (AIS, OpenWeather, TomTom, Karrio...)
 │   │   ├── llm/                           # Gemini 2.5 Flash Provider (google-genai SDK)
-│   │   ├── ml/                            # LightGBM Delay Regression Pipeline
-│   │   ├── models/                        # 34 SQLAlchemy ORM Domain Models
+│   │   ├── ml/                            # Scikit-Learn Delay Regression Pipeline
+│   │   ├── models/                        # SQLAlchemy Domain Models (35 Core Tables)
 │   │   ├── normalization/                 # Canonical Event Normalization & GeoJSON
 │   │   ├── optimization/                  # Google OR-Tools MILP Solver & Pareto Curves
 │   │   ├── rag/                           # Hybrid RAG & Vector Document Retrieval
@@ -744,12 +769,12 @@ riskwise/
 │   │   ├── risk_engine/                   # Deterministic Composite Risk Scoring
 │   │   ├── schemas/                       # Pydantic v2 Request/Response Contracts
 │   │   ├── services/                      # Domain Business Logic
-│   │   │   └── tracking/                  # LiveMapAggregator & Real-Time Tracking Providers
+│   │   │   └── tracking/                  # LiveMapAggregator & Tracking Providers
 │   │   ├── simulation/                    # Monte Carlo Cascade Disruption Engine
 │   │   └── main.py                        # FastAPI Application Entrypoint & Lifespan Hooks
 │   ├── storage/                           # Storage Directory
-│   │   └── ml_artifacts/                  # Serialized GBDT Models (*.joblib)
-│   ├── tests/                             # Pytest Suite (131 Files, 4,597 Tests)
+│   │   └── ml_artifacts/                  # Serialized ML Models (*.joblib)
+│   ├── tests/                             # Pytest Suite (120 Files, 3,345 Tests)
 │   ├── Dockerfile                         # Production Backend Container Spec
 │   ├── pyproject.toml                     # Python Package Spec & Dependencies
 │   └── requirements.txt                   # Production Python Dependencies
@@ -759,41 +784,89 @@ riskwise/
 │   ├── deployment.md                      # Cloud Infrastructure & Terraform Deployment
 │   ├── testing.md                         # Comprehensive Testing & Verification Guide
 │   ├── security.md                        # Enterprise RBAC, OAuth 2.0 PKCE & Threat Model
-│   ├── RiskWise_2.0_UI_UX_Design_System.md# Visual Design System Specification
-│   └── screenshots/                       # Representative Browser QA Snapshots & Index
-│       └── live_map_audit_results.json    # Live Map Playwright Audit Telemetry
+│   └── RiskWise_2.0_UI_UX_Design_System.md# Visual Design System Specification
 ├── infra/
 │   └── terraform/                         # AWS Infrastructure as Code (Target: ap-southeast-2)
-├── web/                                   # Next.js 16 Frontend Application
-│   ├── app/                               # Next.js App Router (46 Views/Routes)
-│   │   └── map/page.tsx                   # Live Multi-Source Geospatial Telemetry Tower
+│       ├── main.tf                        # VPC, Subnets, ECS, RDS, Valkey, ALB
+│       ├── outputs.tf                     # DNS and Endpoint Outputs
+│       └── variables.tf                   # Region, CIDR, and Instance Sizing
+├── scripts/                               # Maintenance & Validation Scripts
+├── web/                                   # Next.js 16.3.4 Frontend Application
+│   ├── app/                               # Next.js App Router (44 Page Views)
 │   ├── components/                        # Architectural UI Components
-│   │   ├── ui/ArchitecturalComponents.tsx # ArchButton, ArchCard, ArchBadge, ArchModal, ArchInput
-│   │   ├── auth/AuthCard.tsx              # Login Card with Magic UI BorderBeam
+│   │   ├── ui/                            # ArchButton, ArchCard, ArchBadge, DataTable, Badges
+│   │   ├── auth/                          # Login Card & Authentication UI
 │   │   ├── dashboard/                     # SecurityMachine3D, Telemetry Radar Map Card
-│   │   ├── map/MapCard.tsx                # Google Dark, Satellite & Tactical SVG Radar Map
-│   │   └── layout/Sidebar.tsx             # Enterprise Navigation & Dual-Theme Switch
-│   ├── lib/                               # Theme Context, API Client, Types
+│   │   ├── map/                           # MapCard (Google Dark, Satellite & Tactical SVG Radar)
+│   │   └── layout/                        # Sidebar, TopBar, AppShell, GlobalSearchModal
+│   ├── lib/                               # Theme Context, Auth Context, API Client, Types
 │   ├── public/                            # Static SVG Icons & Brand Assets
-│   ├── tests/                             # Frontend Integration Tests (42 Passing Tests)
-│   │   ├── map-audit-runner.js            # Live Map Playwright Telemetry Audit Runner
-│   │   ├── live-map-contract.test.ts      # Live Map Telemetry Contract Tests
-│   │   ├── auth-integration.test.ts       # Google OAuth & Session Tests
-│   │   ├── frontend-backend-integration.test.ts # API Synchronization Tests
-│   │   └── phase19-control-tower.test.ts  # Control Tower Contract Tests
+│   ├── tests/                             # Frontend Integration Tests (48 Passing Tests, 5 Suites)
 │   ├── package.json                       # Frontend Dependencies & Scripts
 │   ├── tsconfig.json                      # Strict TypeScript Configuration
 │   └── next.config.ts                     # Next.js Configuration
-├── CLEANUP-REPORT.md                      # Build & Artifact Cleanup Report
-├── UI-REPORT.md                           # UI/UX Overhaul & Architectural Audit Report
+├── VERSION                                # Current Platform Version (1.6.0)
 └── README.md                              # Master System Overview (this document)
 ```
 
 ---
 
-## 13. Quick Start & Local Engineering Guide
+## 13. Frontend Views & Control Tower Route Navigation Map (44 Views)
 
-### 13.1 Prerequisites
+The Next.js 16 App Router interface provides **44 distinct verified views**:
+
+| Route Path | View Title | Scope & Architectural Functionality |
+| :--- | :--- | :--- |
+| `/` | Root Gateway | Automatic redirect to `/dashboard` or `/auth` based on session state |
+| `/auth` | Authentication Portal | Google OAuth 2.0 PKCE login, session bootstrap |
+| `/dashboard` | Executive Command Center | High-density overview, 3D Security Machine, live risk indicators |
+| `/overview` | Operational Overview | Summary metrics, critical shipments, and network health |
+| `/map` | Global Telemetry Tower | Live geospatial map (Google Dark, Satellite, Tactical SVG Radar) |
+| `/shipments` | Freight Logistics Monitor | Consignment registry, modal filters, live coordinate tracking |
+| `/shipments/[id]` | Shipment Dossier Detail | Real-time waypoint timeline, delay regression P10/P50/P90, geofence status |
+| `/risks` | Risk Matrix & Register | Deterministic multi-factor risk scores, factor contribution breakdown |
+| `/risks/[id]` | Risk Assessment Detail | Factor weights, historical drift trends, impacted supply chain nodes |
+| `/incidents` | Disruption Incident Log | Real-time disruption events, severity tiers, impacted network nodes |
+| `/incidents/[id]` | Incident Response War Room | Active incident mitigation, affected consignments, agent deliberations |
+| `/suppliers` | Supplier Directory | Tier-1 to Tier-N supplier registry, ESG metrics, financial ratings |
+| `/factories` | Manufacturing Plants | Assembly facilities, production capacities, SKU buffer levels |
+| `/warehouses` | Distribution Warehouses | Staging hubs, storage capacities, inventory movements |
+| `/ports` | Global Transit Ports | UN/LOCODE transit hubs, dwell times, terminal gate queues |
+| `/carriers` | Approved Carriers | Multi-modal logistics carriers, active contracts, performance indices |
+| `/products` | Product & BOM Catalog | Part numbers, bill-of-materials dependencies, unit costs |
+| `/routes` | Transport Corridors | Freight lanes, transit distance, historical delay indices |
+| `/inventory` | Critical Stock Monitor | Warehouse inventory levels, buffer days, SKU stockout risk alerts |
+| `/digital-twin` | Network Topology Graph | RFC 4122 UUIDv5 graph visualizer, bottleneck identification |
+| `/simulations` | What-If Simulation Engine | Monte Carlo cascade scenarios, stochastic failure distribution |
+| `/simulations/[id]`| Simulation Run Detail | P10/P50/P90 cumulative financial loss curves, assembly halt projections |
+| `/optimization` | MILP Solver Command | Google OR-Tools multi-objective optimization runs, Pareto trade-offs |
+| `/optimization/[id]`| Optimization Run Detail | Hard/soft constraint satisfaction, candidate comparison, solver status |
+| `/recommendations` | Prescriptive Recommendations| Candidate mitigation plans, SLA compliance checks, cost impact |
+| `/recommendations/[id]`| Recommendation Dossier| Trade-off narratives, risk reduction delta, operational sequence |
+| `/decisions` | Mitigation Decisions | Formulated mitigation action dossiers, SHA-256 state sealing |
+| `/decisions/[id]` | Decision Dossier Detail | Anti-tamper fingerprint verification, parameter inspection |
+| `/approvals` | Governance Approval Queue | Dual-control human-in-the-loop sign-off queue for RiskManagers |
+| `/actions` | Execution Adapter Monitor | Governed action dispatch status, idempotency keys, execution logs |
+| `/actions/[id]` | Action Execution Detail | Provider reference IDs, dry-run vs live status, execution timestamps |
+| `/verification` | Ground-Truth Verification | Physical operational proof dashboard ($\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$) |
+| `/verification/[id]`| Verification Evidence Detail| Sensor feeds, electronic gate receipts, airway bill milestones |
+| `/audit` | Tamper-Evident Ledger | Cryptographically hash-chained operational state audit ledger |
+| `/audit-logs` | System Activity Logs | Filterable actor activity, correlation IDs, before/after JSON diffs |
+| `/notifications` | Operational Alert Center | Real-time risk alerts, severity escalation events, unread status |
+| `/admin` | Enterprise Administration | Organization settings, user provisioning, RBAC roles, integrations |
+| `/settings` | System Configuration | Platform preferences, theme toggle, telemetry poll intervals |
+| `/system-health` | Infrastructure Health | Container probes, database connection pool, Redis cache status |
+| `/evaluation` | Automated QA Suite Runner | 14 evaluation suites, golden disruption datasets, quality reports |
+| `/policy-inspector` | Policy & SLA Inspector | Contract clause inspection, demurrage rates, force majeure terms |
+| `/policy-inspector/[id]`| Policy Document Detail | Chunked contract text, semantic vector embeddings, SLA penalty tables |
+| `/agent-runs` | Multi-Agent Execution Log | LangGraph execution history, thread IDs, step latencies |
+| `/agent-runs/[id]` | Agent Run Visualizer | Directed acyclic graph node transitions, intermediate agent thoughts |
+
+---
+
+## 14. Quick Start & Local Engineering Guide
+
+### 14.1 Prerequisites
 * **Python**: 3.12 or 3.13 (`python --version`)
 * **Node.js**: 20.x or 24.x LTS (`node --version`)
 * **npm**: 10.x+ (`npm --version`)
@@ -801,7 +874,7 @@ riskwise/
 
 ---
 
-### 13.2 Start the Backend API (FastAPI)
+### 14.2 Start the Backend API (FastAPI)
 
 1. **Navigate to `api/`**:
    ```bash
@@ -827,7 +900,7 @@ riskwise/
    ```
 
 4. **Configure environment variables**:
-   Create `api/.env`:
+   Create `api/.env` (or configure from root `.env.example`):
    ```env
    ENVIRONMENT=development
    DEBUG=true
@@ -865,7 +938,7 @@ riskwise/
 
 ---
 
-### 13.3 Start the Control Tower Frontend (Next.js 16)
+### 14.3 Start the Control Tower Frontend (Next.js 16)
 
 1. **Open a new terminal and navigate to `web/`**:
    ```bash
@@ -896,18 +969,16 @@ riskwise/
 
 ---
 
-## 14. Authoritative Technical Documentation Index
+## 15. Authoritative Technical Documentation Index
 
 | Document | Primary Focus | Key Coverage |
 | :--- | :--- | :--- |
 | [**Architecture Specification**](docs/architecture.md) | Subsystem Architecture | 21 subsystem technical deep-dives, database models, REST API specifications |
 | [**Local Development Guide**](docs/development.md) | Engineering & Setup | Workstation prerequisites, Python/Node setup, migrations, dev server commands |
 | [**Production Deployment Guide**](docs/deployment.md) | Cloud & Deployment | AWS ECS Fargate, Multi-AZ RDS, Terraform IaC (`ap-southeast-2`), GitHub Actions |
-| [**Testing & QA Guide**](docs/testing.md) | Verification & Quality Assurance | Pytest hierarchy (4,597 tests in 131 files), frontend test suites, Playwright browser audit |
+| [**Testing & QA Guide**](docs/testing.md) | Verification & Quality Assurance | Pytest hierarchy (3,345 tests in 120 files), frontend test suites (48 tests in 5 suites) |
 | [**Security & Governance Guide**](docs/security.md) | Identity & Threat Model | Google OAuth 2.0 PKCE, RBAC matrix, SHA-256 fingerprinting, zero-trust hygiene |
 | [**UI/UX Design System**](docs/RiskWise_2.0_UI_UX_Design_System.md) | Visual Design System | Mission-critical design tokens, typography, component specs, accessibility |
-| [**UI/UX Delivery & Audit Report**](UI-REPORT.md) | Audit & Visual Evidence | Browser-first QA findings, token ratios, 18 screenshot audit index |
-| [**Repository Cleanup Report**](CLEANUP-REPORT.md) | Workspace Hygiene | Git clean state, artifact consolidation, test results confirmation |
 
 ---
 
