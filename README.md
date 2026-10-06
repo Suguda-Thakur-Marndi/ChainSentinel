@@ -2,7 +2,7 @@
 
 > **Enterprise Autonomous Supply Chain Risk Intelligence, Multi-Agent Orchestration, Digital Twin Simulation, Governed Operational Action & Continuous Verification Platform**
 >
-> *ChainSentinel (the evolution of the RiskWise 2.0 platform) combines real-time multi-source geospatial telemetry ingestion, a deterministic composite risk engine, hybrid RAG with Google Gemini 2.5 Flash, GBDT shipment delay regression, deterministic graph digital twin synthesis (RFC 4122 UUIDv5), Monte Carlo cascade disruption simulation, Google OR-Tools mathematical optimization, cryptographic human-in-the-loop governance (SHA-256 state fingerprinting), governed operational action adapters, authoritative post-action ground-truth verification (`REAL > ESTIMATED > SIMULATED`), an executive Next.js Control Tower command center, and an automated multi-suite quality assurance harness.*
+> *ChainSentinel (the evolution of the RiskWise 2.0 platform) combines real-time multi-source geospatial telemetry ingestion, a deterministic composite risk engine, hybrid RAG with Google Gemini 2.5 Flash, Scikit-Learn Ridge shipment delay regression, deterministic graph digital twin synthesis (RFC 4122 UUIDv5), Monte Carlo cascade disruption simulation, Google OR-Tools mathematical optimization, cryptographic human-in-the-loop governance (SHA-256 state fingerprinting), governed operational action adapters, authoritative post-action ground-truth verification (`REAL > ESTIMATED > SIMULATED`), an executive Next.js Control Tower command center, and an automated multi-suite quality assurance harness.*
 
 ---
 
@@ -14,7 +14,7 @@
 [![Frontend: Next.js 16](https://img.shields.io/badge/Frontend-Next.js%2016%20App%20Router%20(46%20Views)-black?style=flat-square&logo=next.js)](docs/development.md)
 [![UI/UX: Architectural Intelligence](https://img.shields.io/badge/UI%2FUX-Architectural%20Intelligence-orange?style=flat-square)](UI-REPORT.md)
 [![LLM: Gemini 2.5 Flash](https://img.shields.io/badge/Reasoning-Google%20Gemini%202.5%20Flash-4285F4?style=flat-square&logo=google)](docs/architecture.md)
-[![Database: PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16%20RDS%20(34%20Tables)-336791?style=flat-square&logo=postgresql)](docs/architecture.md)
+[![Database: PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16%20RDS%20(41%20Tables)-336791?style=flat-square&logo=postgresql)](docs/architecture.md)
 [![Multi-Agent: LangGraph](https://img.shields.io/badge/Multi--Agent-LangGraph-purple?style=flat-square)](docs/architecture.md)
 [![Solver: Google OR-Tools](https://img.shields.io/badge/Solver-Google%20OR--Tools%20MILP-4285F4?style=flat-square&logo=google)](docs/architecture.md)
 [![Telemetry: Multi--Source Live](https://img.shields.io/badge/Telemetry-AISStream%20%7C%20OpenWeather%20%7C%20TomTom-emerald?style=flat-square)](docs/screenshots/live_map_audit_results.json)
@@ -32,7 +32,7 @@
    - [5.1 Real-Time Multi-Source Live Map & Telemetry Pipeline](#51-real-time-multi-source-live-map--telemetry-pipeline)
    - [5.2 Supply Chain Network Visibility & Enterprise Topology](#52-supply-chain-network-visibility--enterprise-topology)
    - [5.3 Deterministic Risk Engine & Multi-Factor Scoring](#53-deterministic-risk-engine--multi-factor-scoring)
-   - [5.4 Machine Learning Shipment Delay Regression (LightGBM)](#54-machine-learning-shipment-delay-regression-lightgbm)
+   - [5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge)](#54-machine-learning-shipment-delay-regression-scikit-learn-ridge)
    - [5.5 LangGraph Multi-Agent Reasoning Architecture (Gemini 2.5 Flash)](#55-langgraph-multi-agent-reasoning-architecture-gemini-25-flash)
    - [5.6 Hybrid RAG Contract Knowledge Engine & Vector Retrieval](#56-hybrid-rag-contract-knowledge-engine--vector-retrieval)
    - [5.7 Agent Gateway & External API Adapters Subsystem](#57-agent-gateway--external-api-adapters-subsystem)
@@ -44,7 +44,7 @@
    - [5.13 Authoritative Operational Verification Hierarchy](#513-authoritative-operational-verification-hierarchy)
    - [5.14 Executive Control Tower Web Application (Next.js 16)](#514-executive-control-tower-web-application-nextjs-16)
 6. [External Telemetry & Tracking Provider Integration Matrix](#6-external-telemetry--tracking-provider-integration-matrix)
-7. [Relational Database Schema & Domain Topology (34 Tables)](#7-relational-database-schema--domain-topology-34-tables)
+7. [Relational Database Schema & Domain Topology (41 Tables)](#7-relational-database-schema--domain-topology-41-tables)
 8. [Comprehensive REST API & WebSocket Catalog (92 Paths, 131 Endpoints)](#8-comprehensive-rest-api--websocket-catalog-92-paths-131-endpoints)
 9. [Multi-Tenant Security & Architectural Invariants](#9-multi-tenant-security--architectural-invariants)
 10. [Quality Assurance, Test Harness & Verification Suite](#10-quality-assurance-test-harness--verification-suite)
@@ -64,7 +64,7 @@ Modern global enterprise supply chains operate in an increasingly volatile envir
 1. **Continuous Real-Time Ingestion**: Directly connects to live telemetry feeds (AISStream maritime transponders, OpenWeather corridor alerts, TomTom freight delays, and ERP consignment events).
 2. **Deterministic Risk Intelligence**: Calculates auditable composite risk scores ($0.0$ to $100.0$) using Diminishing Marginal Compound Aggregation without heuristic jumps or opaque stochastic hallucinations.
 3. **Multi-Agent Deliberation**: Coordinates specialized AI agents via LangGraph and Google Gemini 2.5 Flash, producing structured Pydantic outputs grounded in contract SLAs and force majeure clauses retrieved from pgvector.
-4. **Predictive & Prescriptive Modeling**: Combines LightGBM shipment delay regression with Google OR-Tools Mixed-Integer Linear Programming (MILP) to solve constrained mitigation trade-offs.
+4. **Predictive & Prescriptive Modeling**: Combines Scikit-Learn Ridge shipment delay regression (with calibrated P10/P50/P90 uncertainty intervals) with Google OR-Tools Mixed-Integer Linear Programming (MILP) to solve constrained mitigation trade-offs.
 5. **Digital Twin & Disruption Cascades**: Synthesizes a deterministic network graph (RFC 4122 UUIDv5) and models stochastic multi-tier failure propagation through Monte Carlo simulation.
 6. **Cryptographic Governance & Dual-Control Gates**: Seals operational decision parameters using SHA-256 state fingerprints, enforcing dual-control sign-offs for high-impact actions and automatically revoking stale approvals if telemetry drifts.
 7. **Governed Execution & Authoritative Verification**: Dispatches mitigation orders through typed execution adapters (carrier rerouting, air expedite, PO pivot) and validates physical completion using authoritative real-world evidence ($\mathbf{REAL} > \mathbf{ESTIMATED} > \mathbf{SIMULATED}$).
@@ -310,18 +310,19 @@ Baseline composite risk scoring is strictly deterministic and auditable without 
 
 ---
 
-### 5.4 Machine Learning Shipment Delay Regression (LightGBM)
+### 5.4 Machine Learning Shipment Delay Regression (Scikit-Learn Ridge)
 
 Located in `api/app/ml/`:
 
-* **Architecture**: Gradient Boosted Decision Tree (GBDT) regression pipeline built with LightGBM and Scikit-Learn.
+* **Architecture**: Regularized linear and feature-engineered regression pipeline built with Scikit-Learn (`RidgeRegressionDelayModel`).
 * **Feature Engineering**:
   * Distance remaining to destination (geodesic kilometers).
   * Carrier historical delay index (rolling 90-day mean variance).
   * Port dwell time and transshipment transfer counts.
   * Meteorological hazard index along transit corridor.
   * Current vessel/vehicle speed variance from scheduled speed.
-* **Model Registry**: Serialized artifacts stored in `api/storage/ml_artifacts/*.joblib` with temporal train/validation splitting to eliminate data leakage.
+* **Uncertainty Calibration**: Outputs expected delay hours with calibrated P10, P50, and P90 uncertainty intervals.
+* **Model Registry**: Automated discovery and loading of serialized `.joblib` model artifacts from `api/storage/ml_artifacts/*.joblib` registered into `default_model_registry` during application lifecycle initialization.
 
 ---
 
@@ -336,7 +337,7 @@ Orchestrated through an immutable Directed Acyclic Graph (DAG) state machine usi
 | **`ResearchAgent`** | Ground disruption context in contract SLAs and open-source intelligence | Incident ID, Entity IDs, External event signal | `research_dossier`, `contract_references` | Hybrid RAG (pgvector), Tavily OSINT search, Contract chunk store |
 | **`RiskAgent`** | Compute multi-factor exposure across affected network nodes | Normalized signals, Supplier profiles, Shipment paths | `risk_score`, `severity_tier`, `factor_breakdown` | Deterministic Risk Engine, Signal contribution matrix |
 | **`ScenarioAgent`** | Evaluate cascade disruption propagation across network tiers | Network topology, Inventory levels, Chokepoint delays | `disruption_scenarios`, `bom_stockout_dates` | Monte Carlo cascade engine, Digital Twin graph |
-| **`PredictionAgent`** | Forecast arrival variance and downstream assembly impacts | Real-time transit speed, Historical carrier variance | `predicted_delay_hours`, `eta_variance_p50_p90` | LightGBM regression pipeline, Feature extractor |
+| **`PredictionAgent`** | Forecast arrival variance and downstream assembly impacts | Real-time transit speed, Historical carrier variance | `predicted_delay_hours`, `eta_variance_p50_p90` | Scikit-Learn Ridge regression pipeline, Feature extractor |
 | **`DecisionAgent`** | Formulate prescriptive mitigation action plans with cost-benefit analysis | Risk dossier, Predicted delays, Supplier SLA limits | `mitigation_candidates`, `recommended_actions` | Google OR-Tools MILP solver, Pydantic schema validator |
 | **`ApprovalGate`** | Human-in-the-loop governance boundary | Sealed decision dossier, SHA-256 fingerprint | `approval_status`, `signature`, `rejection_reason` | Cryptographic fingerprint validator, RBAC token checker |
 | **`ActionAgent`** | Dispatch approved operational commands to execution adapters | Approved action command, Idempotency key | `execution_result`, `provider_reference` | Typed execution adapters (EDI, Broker, Warehouse) |
@@ -500,9 +501,9 @@ ChainSentinel connects to external services through resilient asynchronous adapt
 
 ---
 
-## 7. Relational Database Schema & Domain Topology (34 Tables)
+## 7. Relational Database Schema & Domain Topology (41 Tables)
 
-The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrations, organized into 9 domain clusters:
+The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrations (head `e22f6f9b76ea`), organized into 10 domain clusters across 41 tables:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -512,8 +513,8 @@ The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrat
  [1. Identity & Tenancy]       [2. Network Topology]         [3. Logistics & Telemetry]
  ├── organizations             ├── suppliers                 ├── shipments
  ├── users                     ├── supplier_sites            ├── shipment_events
-                               ├── factories                 └── routes
-                               ├── warehouses
+                               ├── factories                 ├── routes
+                               ├── warehouses                └── signals
                                ├── ports
                                ├── carriers
                                └── products
@@ -531,7 +532,14 @@ The database schema is defined in SQLAlchemy 2.0 with declarative Alembic migrat
  └── simulations               └── verification_results      ├── document_chunks
                                                              ├── agent_runs
                                                              ├── agent_tasks
-                                                             └── agent_tool_calls
+                                                             ├── agent_tool_calls
+                                                             ├── agent_checkpoints
+                                                             └── agent_writes
+
+ [10. Evaluations & Quality]
+ ├── evaluation_runs
+ ├── evaluation_metrics
+ └── evaluation_reports
 ```
 
 * **Relational Integrity**: Foreign-key cascade rules prevent orphaned telemetry or unlinked execution actions.
