@@ -90,3 +90,32 @@ class Incident(Base):
 
     # Relationships
     risk: Mapped[Optional["Risk"]] = relationship("Risk", back_populates="incidents")
+
+
+class Signal(Base):
+    """Normalized risk signal persisted from external telemetry ingestion."""
+    __tablename__ = "signals"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True, default=generate_uuid)
+    signal_id: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    org_id: Mapped[Optional[str]] = mapped_column(String(64), ForeignKey("organizations.id"), nullable=True, index=True)
+    domain: Mapped[str] = mapped_column(String(50), default="GENERAL", nullable=False)
+    signal_type: Mapped[str] = mapped_column(String(50), default="STATUS_UPDATE", nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="ACTIVE", nullable=False)
+    severity: Mapped[str] = mapped_column(String(50), default="LOW", nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    source: Mapped[str] = mapped_column(String(100), nullable=False)
+    provider: Mapped[str] = mapped_column(String(100), nullable=False)
+    canonical_event_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    latitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    longitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    location_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    summary: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)
+    entity_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    entity_id: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    delay_minutes: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    payload_json: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
+    detected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+

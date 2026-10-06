@@ -97,12 +97,13 @@ class MobilityTrackingProvider(TrackingProvider):
                     self._last_error = None
                     self._reason = None
                 else:
-                    self._status = ProviderHealthStatus.ERROR
+                    self._status = ProviderHealthStatus.DEGRADED
                     err_msg = f"HTTP {res.status_code}: GCIP token invalid or expired"
                     self._last_error = err_msg
-                    self._reason = f"Mobility Database token rejected ({err_msg})"
+                    self._reason = f"Mobility Database token rejected ({err_msg}); provider operating in DEGRADED mode."
                     logger.warning(f"[MobilityProvider] Probe failed: {self._reason}")
         except Exception as e:
-            self._status = ProviderHealthStatus.ERROR
+            self._status = ProviderHealthStatus.DEGRADED
             self._last_error = f"{type(e).__name__}: {str(e)}"
-            self._reason = self._last_error
+            self._reason = f"Mobility Database probe exception ({self._last_error}); provider operating in DEGRADED mode."
+

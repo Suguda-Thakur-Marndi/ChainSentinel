@@ -205,6 +205,7 @@ class DocumentStatus(str, Enum):
 
 class EmbeddingProvider(str, Enum):
     """Supported embedding model provider backends."""
+    GEMINI = "GEMINI"
     OPENAI = "OPENAI"
     BEDROCK = "BEDROCK"
     COHERE = "COHERE"

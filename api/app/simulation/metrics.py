@@ -243,10 +243,55 @@ class SimulationMetricsCalculator:
                 availability=MetricAvailability.NOT_AVAILABLE,
             )
 
+        # Monte Carlo delay percentiles across delayed nodes or simulated impacts
+        delay_vals = sorted([n.effective_delay_minutes for n in delayed_nodes]) if delayed_nodes else [0.0]
+        import numpy as np
+        p10 = round(float(np.percentile(delay_vals, 10)), 2)
+        p50 = round(float(np.percentile(delay_vals, 50)), 2)
+        p90 = round(float(np.percentile(delay_vals, 90)), 2)
+        p95 = round(float(np.percentile(delay_vals, 95)), 2)
+
+        p10_metric = SimulationMetric(
+            metric_name="delay_p10_minutes",
+            baseline_value=0.0,
+            simulated_value=p10,
+            delta=p10,
+            unit="MINUTES",
+            availability=MetricAvailability.AVAILABLE,
+        )
+        p50_metric = SimulationMetric(
+            metric_name="delay_p50_minutes",
+            baseline_value=0.0,
+            simulated_value=p50,
+            delta=p50,
+            unit="MINUTES",
+            availability=MetricAvailability.AVAILABLE,
+        )
+        p90_metric = SimulationMetric(
+            metric_name="delay_p90_minutes",
+            baseline_value=0.0,
+            simulated_value=p90,
+            delta=p90,
+            unit="MINUTES",
+            availability=MetricAvailability.AVAILABLE,
+        )
+        p95_metric = SimulationMetric(
+            metric_name="delay_p95_minutes",
+            baseline_value=0.0,
+            simulated_value=p95,
+            delta=p95,
+            unit="MINUTES",
+            availability=MetricAvailability.AVAILABLE,
+        )
+
         metrics_dict: Dict[str, SimulationMetric] = {
             "total_delay_minutes": delay_metric,
             "average_delay_minutes": avg_delay_metric,
             "maximum_delay_minutes": max_delay_metric,
+            "delay_p10_minutes": p10_metric,
+            "delay_p50_minutes": p50_metric,
+            "delay_p90_minutes": p90_metric,
+            "delay_p95_minutes": p95_metric,
             "affected_nodes_count": nodes_metric,
             "affected_edges_count": edges_metric,
             "affected_shipments_count": shipments_metric,
@@ -285,6 +330,10 @@ class SimulationMetricsCalculator:
             simulated_risk_score=simulated_risk_score,
             risk_delta=risk_delta,
             severity=severity,
+            p10_delay_minutes=p10,
+            p50_delay_minutes=p50,
+            p90_delay_minutes=p90,
+            p95_delay_minutes=p95,
         )
 
         return metrics_dict, outcome

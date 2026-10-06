@@ -55,7 +55,7 @@ def _emit_prediction_audit(
         status,
         clean_details,
     )
-    if uow is not None and hasattr(uow, "audit_logs"):
+    if uow is not None:
         try:
             from app.services.audit_service import AuditService
             AuditService.log_event(
@@ -241,8 +241,9 @@ def prediction_node(
 
         step_count = state.get("step_count", 0) + 1
 
-        # 6b. Generate Claude Prediction Explanation (Phase 10 Step 6)
-        use_claude = state.get("use_claude", True)
+        use_claude = state.get("use_claude")
+        if use_claude is None:
+            use_claude = bool(state.get("llm_provider") is not None or state.get("use_llm") is True)
         explanation_payload: Optional[Dict[str, Any]] = None
         uow = state.get("uow") or (
             state.get("input_references", {}).get("uow")

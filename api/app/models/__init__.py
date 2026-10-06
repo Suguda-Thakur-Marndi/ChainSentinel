@@ -33,6 +33,7 @@ from app.models.risk import (
     Risk,
     RiskAssessment,
     RiskFactor,
+    Signal,
 )
 
 # Digital Twin Graph
@@ -82,6 +83,7 @@ __all__ = [
     "RiskFactor",
     "RiskAssessment",
     "Incident",
+    "Signal",
     # Digital Twin
     "TwinNode",
     "TwinEdge",

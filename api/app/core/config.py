@@ -55,6 +55,7 @@ class Settings(BaseSettings):
     GEMINI_BACKOFF_BASE_SECONDS: float = 0.5
     GEMINI_BACKOFF_MAX_SECONDS: float = 4.0
     LLM_PROVIDER: str = "gemini"  # "gemini", "mock", or "bedrock" (legacy)
+    TAVILY_API_KEY: str | None = None
 
     # Amazon Bedrock & Claude LLM (Legacy / Secondary)
     BEDROCK_REGION: str | None = None
@@ -100,6 +101,8 @@ class Settings(BaseSettings):
     SESSION_SECURE: bool | None = None
     REDIS_URL: str | None = None
     FRONTEND_URL: str = "http://localhost:3000"
+    TELEMETRY_POLL_INTERVAL_SECONDS: int = 60
+    ENABLE_TELEMETRY_WORKER: bool = True
 
     @property
     def session_cookie_secure(self) -> bool:
@@ -212,6 +215,13 @@ class Settings(BaseSettings):
             self.DATABASE_URL = f"postgresql+psycopg://{auth}{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         elif self.DATABASE_URL and self.DATABASE_URL.startswith("postgresql://"):
             self.DATABASE_URL = self.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+        elif self.DATABASE_URL and self.DATABASE_URL.startswith("sqlite:///"):
+            raw_path = self.DATABASE_URL[len("sqlite:///"):]
+            # Check if path is relative (does not start with '/' and is not a Windows absolute drive path like 'C:')
+            if not raw_path.startswith("/") and not (len(raw_path) > 1 and raw_path[1] == ":"):
+                clean_rel = raw_path.lstrip("./").lstrip(".\\")
+                abs_db_path = (_base_dir / clean_rel).resolve()
+                self.DATABASE_URL = f"sqlite:///{abs_db_path.as_posix()}"
         return self
 
 

@@ -373,6 +373,32 @@ export function MapCard({
             <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? "bg-emerald-400 animate-ping" : "bg-amber-400"}`} />
             {wsConnected ? "LIVE STREAM" : "POLLING"}
           </span>
+          {(() => {
+            const hasLiveProvider = providers?.some((p) => p.status === "connected");
+            const hasSimulated = allObjects.some((o) => o.source === "simulated" || (o.metadata && o.metadata.provenance === "SIMULATED"));
+            let badgeClass = "bg-emerald-950/80 text-emerald-300 border-emerald-800/80";
+            let dotColor = "bg-emerald-400";
+            let label = "LIVE TELEMETRY";
+            if (hasSimulated) {
+              badgeClass = "bg-slate-900/80 text-slate-300 border-slate-700/80";
+              dotColor = "bg-slate-400";
+              label = "SIMULATED FIXTURES";
+            } else if (!hasLiveProvider && allObjects.length > 0) {
+              badgeClass = "bg-amber-950/80 text-amber-300 border-amber-800/80";
+              dotColor = "bg-amber-400";
+              label = "CACHED TELEMETRY";
+            } else if (!hasLiveProvider && allObjects.length === 0) {
+              badgeClass = "bg-rose-950/80 text-rose-300 border-rose-800/80";
+              dotColor = "bg-rose-400";
+              label = "UNAVAILABLE";
+            }
+            return (
+              <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium border ${badgeClass}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+                {label}
+              </span>
+            );
+          })()}
           <span className="text-[11px] font-mono text-slate-400 border-l border-[#243044] pl-2">
             <strong className="text-sky-300">{filteredObjects.length}</strong> / {allObjects.length} nodes
           </span>

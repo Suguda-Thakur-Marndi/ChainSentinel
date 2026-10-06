@@ -20,10 +20,35 @@ from app.ml.training.artifacts import ArtifactManager
 class ModelRegistry:
     """Registry maintaining active and registered models with tenant isolation enforcement."""
 
-    def __init__(self, artifact_dir: Optional[Path] = None) -> None:
+    def __init__(self, artifact_dir: Optional[Path] = None, auto_discover: bool = False) -> None:
         self._artifact_dir = Path(artifact_dir or ml_config.ARTIFACT_DIR).resolve()
         # In-memory registry mapping model_id -> (model, pipeline, metadata)
         self._models: Dict[str, Tuple[BasePredictionModel, BaseFeaturePipeline, MLModelMetadata]] = {}
+        if auto_discover:
+            self.auto_discover_artifacts()
+
+    def auto_discover_artifacts(self) -> List[str]:
+        """Automatically scan and register valid serialized model artifacts from the artifact directory.
+
+        Fails safely on corrupt or unreadable artifacts without halting startup.
+        Does not retrain models.
+        """
+        registered_ids: List[str] = []
+        if not self._artifact_dir.is_dir():
+            return registered_ids
+
+        for artifact_path in sorted(self._artifact_dir.glob("*.joblib")):
+            try:
+                loaded_model, loaded_pipe, loaded_meta = ArtifactManager.load_artifact(
+                    artifact_path=artifact_path,
+                    base_dir=self._artifact_dir,
+                )
+                self.register_model(loaded_model, loaded_pipe, loaded_meta)
+                registered_ids.append(loaded_meta.model_id)
+            except Exception:
+                # Corrupt or unreadable artifact fails safely
+                continue
+        return registered_ids
 
     def clear(self) -> None:
         """Reset in-memory registry (used in test teardown)."""
@@ -130,4 +155,5 @@ class ModelRegistry:
         return results
 
 
-default_model_registry = ModelRegistry()
+default_model_registry = ModelRegistry(auto_discover=True)
+

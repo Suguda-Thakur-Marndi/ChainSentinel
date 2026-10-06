@@ -142,13 +142,39 @@ def validate_structured_output(parsed_json: Any, schema_cls: Type[T]) -> T:
             details={"type": type(parsed_json).__name__},
         )
 
+    # 1. Direct validation attempt
     try:
         return schema_cls.model_validate(parsed_json)
-    except ValidationError as val_err:
+    except ValidationError as initial_val_err:
+        # 2. Check if LLM wrapped response in a single root key or standard envelope
+        snake_name = re.sub(r"(?<!^)(?=[A-Z])", "_", schema_cls.__name__).lower()
+        candidate_keys = [
+            snake_name,
+            schema_cls.__name__.lower(),
+            "prediction_explanation",
+            "decision_explanation",
+            "data",
+            "result",
+            "output",
+            "response",
+        ]
+        # Also check single-key dicts
+        if len(parsed_json) == 1:
+            first_key = next(iter(parsed_json.keys()))
+            if first_key not in candidate_keys:
+                candidate_keys.append(first_key)
+
+        for key in candidate_keys:
+            if key in parsed_json and isinstance(parsed_json[key], dict):
+                try:
+                    return schema_cls.model_validate(parsed_json[key])
+                except ValidationError:
+                    pass
+
         raise StructuredOutputValidationError(
-            f"LLM structured response failed schema validation for {schema_cls.__name__}: {val_err.error_count()} errors.",
-            details={"errors": val_err.errors()},
-        ) from val_err
+            f"LLM structured response failed schema validation for {schema_cls.__name__}: {initial_val_err.error_count()} errors.",
+            details={"errors": initial_val_err.errors()},
+        ) from initial_val_err
 
 
 class ClaudeInvocationService:

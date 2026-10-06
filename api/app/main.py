@@ -24,8 +24,23 @@ async def lifespan(app: FastAPI):
     from app.services.tracking import get_tracking_aggregator
     aggregator = get_tracking_aggregator()
     await aggregator.start()
+
+    from app.integrations.worker import get_telemetry_worker
+    worker = get_telemetry_worker()
+    if getattr(settings, "ENABLE_TELEMETRY_WORKER", True):
+        worker.start()
+
+    try:
+        from app.ml.registry.registry import default_model_registry
+        discovered_models = default_model_registry.auto_discover_artifacts()
+        logger.info(f"ML Model Registry initialized: {len(discovered_models)} model(s) discovered.")
+    except Exception as ml_err:
+        logger.warning(f"ML Model Registry startup discovery failed: {ml_err}")
+
     yield
     logger.info("Service shutting down. Gracefully draining tracking providers, database pools and resources...")
+    if getattr(settings, "ENABLE_TELEMETRY_WORKER", True):
+        await worker.stop()
     await aggregator.stop()
     dispose_db_engine()
     logger.info("Shutdown complete.")

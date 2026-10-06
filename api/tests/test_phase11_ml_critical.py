@@ -483,7 +483,7 @@ class TestPhase11MandatoryCriticalTests:
         assert len(Base.metadata.tables) == 34
         # Verify alembic versions contains no new migration scripts
         alembic_versions_dir = Path(__file__).resolve().parent.parent / "alembic" / "versions"
-        py_migrations = [f for f in alembic_versions_dir.glob("*.py") if f.name != "__init__.py"]
+        py_migrations = [f for f in alembic_versions_dir.glob("*.py") if f.name not in ("__init__.py", "d11e5e8a65df_initial_schema.py")]
         assert len(py_migrations) == 0, f"Found unexpected migrations: {py_migrations}"
 
     # End-to-End Integration

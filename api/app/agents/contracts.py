@@ -57,6 +57,8 @@ class AgentStage(str, Enum):
     PREDICTION = "PREDICTION"
     SCENARIO_ANALYSIS = "SCENARIO_ANALYSIS"
     SCENARIO = "SCENARIO_ANALYSIS"
+    SIMULATION = "SIMULATION"
+    OPTIMIZATION = "OPTIMIZATION"
     DECISION = "DECISION"
     APPROVAL = "APPROVAL"
     ACTION = "ACTION"
@@ -65,8 +67,14 @@ class AgentStage(str, Enum):
 
     @classmethod
     def _missing_(cls, value: object) -> Any:
-        if isinstance(value, str) and value.upper() == "SCENARIO":
-            return cls.SCENARIO_ANALYSIS
+        if isinstance(value, str):
+            val_upper = value.upper()
+            if val_upper == "SCENARIO":
+                return cls.SCENARIO_ANALYSIS
+            if val_upper in ("SIMULATION_ANALYSIS", "SIM"):
+                return cls.SIMULATION
+            if val_upper in ("OPTIMIZATION_ANALYSIS", "OPT"):
+                return cls.OPTIMIZATION
         return super()._missing_(value)
 
 
@@ -388,12 +396,22 @@ AUTHORITATIVE_FIELD_OWNERS: Dict[str, Set[AgentStage]] = {
     "scenario_reference": {AgentStage.SCENARIO_ANALYSIS},
     "scenario_result": {AgentStage.SCENARIO_ANALYSIS},
     "scenario_explanation": {AgentStage.SCENARIO_ANALYSIS},
+    "simulation_id": {AgentStage.SIMULATION},
+    "simulation_reference": {AgentStage.SIMULATION},
+    "simulation_result": {AgentStage.SIMULATION},
+    "simulation_results": {AgentStage.SIMULATION},
+    "simulation_explanation": {AgentStage.SIMULATION},
+    "optimization_id": {AgentStage.OPTIMIZATION},
+    "optimization_reference": {AgentStage.OPTIMIZATION},
+    "optimization_result": {AgentStage.OPTIMIZATION},
+    "optimization_plan": {AgentStage.OPTIMIZATION},
+    "optimization_explanation": {AgentStage.OPTIMIZATION},
     "decision_id": {AgentStage.DECISION},
     "decision_reference": {AgentStage.DECISION},
     "decision_result": {AgentStage.DECISION},
     "decision_explanation": {AgentStage.DECISION},
     "recommendation_references": {AgentStage.DECISION},
-    "requires_human_approval": {AgentStage.APPROVAL, AgentStage.INITIALIZATION},
+    "requires_human_approval": {AgentStage.APPROVAL, AgentStage.INITIALIZATION, AgentStage.DECISION},
     "approval_id": {AgentStage.APPROVAL},
     "approval_reference": {AgentStage.APPROVAL},
     "approval_result": {AgentStage.APPROVAL},
@@ -468,6 +486,20 @@ class AgentGraphState(BaseModel):
     scenario_reference: Optional[Dict[str, Any]] = None
     scenario_result: Optional[Dict[str, Any]] = None
     scenario_explanation: Optional[Dict[str, Any]] = None
+
+    # H.1 Simulation References
+    simulation_id: Optional[str] = None
+    simulation_reference: Optional[Dict[str, Any]] = None
+    simulation_result: Optional[Dict[str, Any]] = None
+    simulation_results: Optional[Dict[str, Any]] = None
+    simulation_explanation: Optional[Dict[str, Any]] = None
+
+    # H.2 Optimization References
+    optimization_id: Optional[str] = None
+    optimization_reference: Optional[Dict[str, Any]] = None
+    optimization_result: Optional[Dict[str, Any]] = None
+    optimization_plan: Optional[Dict[str, Any]] = None
+    optimization_explanation: Optional[Dict[str, Any]] = None
 
     # I. Decision References
     decision_id: Optional[str] = None
@@ -591,6 +623,34 @@ class AgentGraphState(BaseModel):
             if scen_ref_org and scen_ref_org != self.organization_id:
                 raise AgentTenantIsolationError(
                     f"Cross-tenant scenario reference belongs to '{scen_ref_org}', state scoped to '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation on simulation result / reference
+        if self.simulation_result and isinstance(self.simulation_result, dict):
+            sim_org = self.simulation_result.get("organization_id")
+            if sim_org and sim_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant simulation result belongs to '{sim_org}', state scoped to '{self.organization_id}'."
+                )
+        if self.simulation_reference and isinstance(self.simulation_reference, dict):
+            sim_ref_org = self.simulation_reference.get("organization_id")
+            if sim_ref_org and sim_ref_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant simulation reference belongs to '{sim_ref_org}', state scoped to '{self.organization_id}'."
+                )
+
+        # Enforce tenant isolation on optimization result / reference
+        if self.optimization_result and isinstance(self.optimization_result, dict):
+            opt_org = self.optimization_result.get("organization_id")
+            if opt_org and opt_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant optimization result belongs to '{opt_org}', state scoped to '{self.organization_id}'."
+                )
+        if self.optimization_reference and isinstance(self.optimization_reference, dict):
+            opt_ref_org = self.optimization_reference.get("organization_id")
+            if opt_ref_org and opt_ref_org != self.organization_id:
+                raise AgentTenantIsolationError(
+                    f"Cross-tenant optimization reference belongs to '{opt_ref_org}', state scoped to '{self.organization_id}'."
                 )
 
         # Enforce tenant isolation on decision result / reference
@@ -871,6 +931,18 @@ class AgentGraphStateDict(TypedDict, total=False):
     scenario_reference: Optional[Dict[str, Any]]
     scenario_result: Optional[Dict[str, Any]]
     scenario_explanation: Optional[Dict[str, Any]]
+    # Simulation
+    simulation_id: Optional[str]
+    simulation_reference: Optional[Dict[str, Any]]
+    simulation_result: Optional[Dict[str, Any]]
+    simulation_results: Optional[Dict[str, Any]]
+    simulation_explanation: Optional[Dict[str, Any]]
+    # Optimization
+    optimization_id: Optional[str]
+    optimization_reference: Optional[Dict[str, Any]]
+    optimization_result: Optional[Dict[str, Any]]
+    optimization_plan: Optional[Dict[str, Any]]
+    optimization_explanation: Optional[Dict[str, Any]]
     # Decision
     decision_id: Optional[str]
     decision_reference: Optional[Dict[str, Any]]

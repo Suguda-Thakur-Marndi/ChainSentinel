@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         destination: `${BACKEND_URL}/health`,
       },
       {
+        source: "/health/db",
+        destination: `${BACKEND_URL}/health/db`,
+      },
+      {
         source: "/ready",
         destination: `${BACKEND_URL}/ready`,
       },

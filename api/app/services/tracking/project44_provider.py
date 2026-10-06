@@ -121,13 +121,13 @@ class Project44TrackingProvider(TrackingProvider):
                     self._reason = None
                     logger.info("[Project44] OAuth2 authentication successful.")
                 else:
-                    self._status = ProviderHealthStatus.ERROR
+                    self._status = ProviderHealthStatus.DEGRADED
                     err_msg = f"HTTP {resp.status_code}: client ID format invalid or unauthorized in {self._env_name}"
                     self._last_error = err_msg
-                    self._reason = f"Project44 sandbox client credentials rejected ({err_msg})"
+                    self._reason = f"Project44 sandbox client credentials rejected ({err_msg}); provider operating in DEGRADED mode."
                     logger.warning(f"[Project44] Auth failed: {self._reason}")
         except Exception as e:
-            self._status = ProviderHealthStatus.ERROR
+            self._status = ProviderHealthStatus.DEGRADED
             self._last_error = f"{type(e).__name__}: {str(e)}"
-            self._reason = self._last_error
+            self._reason = f"Project44 probe exception ({self._last_error}); provider operating in DEGRADED mode."
             logger.warning(f"[Project44] Probe failed: {e}")

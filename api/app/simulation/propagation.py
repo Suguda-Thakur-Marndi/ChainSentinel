@@ -229,6 +229,7 @@ class SimulationPropagationEngine:
                             queue.append((dest_node_id, depth + 1, new_path, new_delay))
 
         self.entity_impacts = sorted(recorded_impacts.values(), key=lambda x: x.entity_id)
+        downstream_nodes = sorted(list(visited_nodes - set(all_origin_nodes)))
         self.propagation_summary = SimulationPropagation(
             origin_nodes=all_origin_nodes,
             max_depth_reached=max_depth_reached,
@@ -236,6 +237,7 @@ class SimulationPropagationEngine:
             edges_traversed_count=len(traversed_edges),
             effects_generated_count=len(effects),
             propagation_paths=propagation_paths[:50],  # bounded sample for audit
+            downstream_affected_nodes=downstream_nodes,
         )
 
         return effects, len(visited_nodes), len(traversed_edges)

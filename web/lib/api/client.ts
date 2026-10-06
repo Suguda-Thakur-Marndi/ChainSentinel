@@ -94,11 +94,28 @@ class ApiClient {
   private unauthorizedListeners: Set<UnauthorizedListener> = new Set();
 
   constructor() {
-    this.baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+    if (typeof window === "undefined") {
+      const serverUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+      this.baseUrl = serverUrl.replace(/\/+$/, "");
+    } else {
+      this.baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+    }
   }
 
   public getBaseUrl(): string {
     return this.baseUrl;
+  }
+
+  public async getSystemHealth(): Promise<SystemHealthResponse> {
+    return this.request<SystemHealthResponse>("/api/v1/system/health");
+  }
+
+  public async getHealth(): Promise<{ status: string }> {
+    return this.request<{ status: string }>("/health");
+  }
+
+  public async getReady(): Promise<{ status: string }> {
+    return this.request<{ status: string }>("/ready");
   }
 
   /**

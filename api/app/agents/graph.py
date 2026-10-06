@@ -91,6 +91,9 @@ class AgentGraphBuilder:
         from app.agents.action.node import ACTION_NODE_CONTRACT, action_node
         from app.agents.verification.node import VERIFICATION_NODE_CONTRACT, verification_node
 
+        from app.agents.simulation.node import SIMULATION_NODE_CONTRACT, simulation_node
+        from app.agents.optimization.node import OPTIMIZATION_NODE_CONTRACT, optimization_node
+
         if not self.registry.has_node("research_agent"):
             self.registry.register_node(RESEARCH_NODE_CONTRACT, research_node)
         if not self.registry.has_node("risk_agent"):
@@ -99,6 +102,10 @@ class AgentGraphBuilder:
             self.registry.register_node(PREDICTION_NODE_CONTRACT, prediction_node)
         if not self.registry.has_node("scenario_agent"):
             self.registry.register_node(SCENARIO_NODE_CONTRACT, scenario_node)
+        if not self.registry.has_node("simulation_node"):
+            self.registry.register_node(SIMULATION_NODE_CONTRACT, simulation_node)
+        if not self.registry.has_node("optimization_node"):
+            self.registry.register_node(OPTIMIZATION_NODE_CONTRACT, optimization_node)
         if not self.registry.has_node("decision_agent"):
             self.registry.register_node(DECISION_NODE_CONTRACT, decision_node)
         if not self.registry.has_node("action_agent"):
@@ -117,18 +124,18 @@ class AgentGraphBuilder:
                 reason_code=RoutingReasonCode.GRAPH_START.value,
             ),
             AgentEdgeContract(
-                edge_id="init_to_research",
-                from_node="initialization",
-                to_node="research_agent",
-                edge_type=EdgeType.NORMAL,
-                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
-            ),
-            AgentEdgeContract(
                 edge_id="init_to_termination",
                 from_node="initialization",
                 to_node="termination",
                 edge_type=EdgeType.NORMAL,
                 reason_code=RoutingReasonCode.NO_ACTION_REQUIRED.value,
+            ),
+            AgentEdgeContract(
+                edge_id="init_to_research",
+                from_node="initialization",
+                to_node="research_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
             ),
             AgentEdgeContract(
                 edge_id="init_to_approval",
@@ -187,6 +194,13 @@ class AgentGraphBuilder:
                 reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
             ),
             AgentEdgeContract(
+                edge_id="scenario_to_simulation",
+                from_node="scenario_agent",
+                to_node="simulation_node",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
                 edge_id="scenario_to_decision",
                 from_node="scenario_agent",
                 to_node="decision_agent",
@@ -196,6 +210,41 @@ class AgentGraphBuilder:
             AgentEdgeContract(
                 edge_id="scenario_to_termination",
                 from_node="scenario_agent",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="simulation_to_optimization",
+                from_node="simulation_node",
+                to_node="optimization_node",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="simulation_to_decision",
+                from_node="simulation_node",
+                to_node="decision_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="simulation_to_termination",
+                from_node="simulation_node",
+                to_node="termination",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="optimization_to_decision",
+                from_node="optimization_node",
+                to_node="decision_agent",
+                edge_type=EdgeType.NORMAL,
+                reason_code=RoutingReasonCode.EXPLICIT_SELECTION.value,
+            ),
+            AgentEdgeContract(
+                edge_id="optimization_to_termination",
+                from_node="optimization_node",
                 to_node="termination",
                 edge_type=EdgeType.NORMAL,
                 reason_code=RoutingReasonCode.DEFAULT_COMPLETION.value,
@@ -420,7 +469,7 @@ def execute_agent_graph(
             checkpoint_manager.save_checkpoint(state.run_id, state, step=state.step_count)
 
         # Emit audit log: GRAPH_STARTED
-        if uow is not None and hasattr(uow, "audit_logs"):
+        if uow is not None:
             try:
                 from app.services.audit_service import AuditService
                 AuditService.log_event(
@@ -487,7 +536,7 @@ def execute_agent_graph(
         AgentObservability.record_run_telemetry(run_telemetry)
 
         # Emit audit log: GRAPH_TERMINATED / GRAPH_COMPLETED
-        if uow is not None and hasattr(uow, "audit_logs"):
+        if uow is not None:
             try:
                 from app.services.audit_service import AuditService
                 action = "GRAPH_TERMINATED" if final_state.status.value == "TERMINATED" else "GRAPH_SUCCEEDED"
@@ -543,7 +592,7 @@ def execute_agent_graph(
         )
         AgentObservability.record_run_telemetry(run_telemetry)
 
-        if uow is not None and hasattr(uow, "audit_logs"):
+        if uow is not None:
             try:
                 from app.services.audit_service import AuditService
                 AuditService.log_event(

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 import json
 import logging
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, Response, WebSocket, WebSocketDisconnect
 
 from app.services.tracking import (
     LiveMapResponse,
@@ -21,6 +21,7 @@ router = APIRouter()
 
 @router.get("/objects", response_model=LiveMapResponse, summary="Query live map objects")
 async def get_map_objects(
+    response: Response,
     types: Optional[str] = Query(None, description="Comma-separated list of types: vessel,aircraft,shipment,weather,incident,port"),
     source: Optional[str] = Query(None, description="Filter by telemetry source (e.g. aisstream, openweather)"),
     bbox: Optional[str] = Query(None, description="Bounding box: minLon,minLat,maxLon,maxLat"),
@@ -45,12 +46,23 @@ async def get_map_objects(
         except ValueError:
             parsed_bbox = None
 
-    return await aggregator.get_objects(
+    result = await aggregator.get_objects(
         types=parsed_types,
         source=source,
         bbox=parsed_bbox,
         since=since,
     )
+
+    # Determine aggregated data source provenance
+    has_live = any(s.get("is_live", False) for s in result.sources.values())
+    if has_live:
+        response.headers["X-Data-Source"] = "live"
+    elif result.total_count > 0:
+        response.headers["X-Data-Source"] = "cached"
+    else:
+        response.headers["X-Data-Source"] = "unavailable"
+
+    return result
 
 
 @router.get("/providers/health", response_model=ProvidersHealthResponse, summary="Telemetry provider health metrics")

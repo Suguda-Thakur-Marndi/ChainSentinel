@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import time
+import uuid
 from typing import Any, Dict, List, Optional
 from unittest.mock import MagicMock
 
@@ -96,7 +97,7 @@ def _emit_research_audit(
         status,
         clean_details,
     )
-    if uow is not None and hasattr(uow, "audit_logs"):
+    if uow is not None:
         try:
             from app.services.audit_service import AuditService
             AuditService.log_event(
@@ -158,6 +159,118 @@ def research_node(
             input_refs = state.get("input_references", {})
             if isinstance(input_refs, dict) and isinstance(input_refs.get("evidence_bundle"), RAGEvidenceBundle):
                 bundle = input_refs["evidence_bundle"]
+
+        provider_status = "UNCONFIGURED"
+        if bundle is None:
+            # 1a. Attempt external research via Tavily adapter if configured
+            try:
+                from app.integrations.providers.tavily import TavilyAdapter, TavilySearchRequest
+                from app.rag.contracts import GroundingStatus, RAGContextCitation, RAGEvidenceItem, RetrievalProvenance
+                adapter = TavilyAdapter()
+                api_key = adapter.resolve_api_key()
+                if api_key:
+                    search_resp = adapter.search(
+                        TavilySearchRequest(query=objective, max_results=5),
+                        org_id=organization_id,
+                    )
+                    if search_resp and search_resp.results:
+                        provider_status = "LIVE"
+                        items: List[RAGEvidenceItem] = []
+                        citations: List[RAGContextCitation] = []
+                        for idx, res in enumerate(search_resp.results, start=1):
+                            ev_id = f"ev_tavily_{idx}"
+                            cit_key = f"[CIT-TAV-{idx}]"
+                            cit_id = f"cit_tavily_{idx}"
+                            excerpt = (res.content[:250] + "...") if len(res.content) > 250 else res.content
+                            ret_id = f"ret_tavily_{idx}"
+                            prov = RetrievalProvenance(
+                                retrieval_id=ret_id,
+                                document_id=f"doc_tavily_{idx}",
+                                chunk_id=f"chk_tavily_{idx}",
+                                organization_id=organization_id,
+                                chunk_index=idx,
+                                document_title=res.title or "External Intelligence",
+                                source_url=res.url,
+                                similarity_score=round(res.score, 4) if res.score is not None else 0.85,
+                                rank=idx,
+                            )
+                            items.append(
+                                RAGEvidenceItem(
+                                    evidence_id=ev_id,
+                                    citation_id=cit_id,
+                                    citation_key=cit_key,
+                                    document_id=prov.document_id,
+                                    chunk_id=prov.chunk_id,
+                                    organization_id=organization_id,
+                                    document_title=prov.document_title,
+                                    excerpt=excerpt or "External report findings.",
+                                    source_url=res.url,
+                                    confidence_score=round(res.score, 2) if res.score is not None else 0.85,
+                                    provenance=prov,
+                                )
+                            )
+                            citations.append(
+                                RAGContextCitation(
+                                    citation_key=cit_key,
+                                    citation_id=cit_id,
+                                    organization_id=organization_id,
+                                    document_id=prov.document_id,
+                                    chunk_id=prov.chunk_id,
+                                    document_title=prov.document_title,
+                                    chunk_index=idx,
+                                    source_url=res.url,
+                                    excerpt=excerpt,
+                                )
+                            )
+                        bundle = RAGEvidenceBundle(
+                            bundle_id=f"bnd_tavily_{uuid.uuid4().hex[:8]}",
+                            organization_id=organization_id,
+                            query_text=objective,
+                            context_id=f"ctx_tavily_{uuid.uuid4().hex[:8]}",
+                            retrieval_id=f"ret_tavily_{uuid.uuid4().hex[:8]}",
+                            evidence_items=items,
+                            citations=citations,
+                            grounding_status=GroundingStatus.GROUNDED,
+                            total_evidence_units=len(items),
+                        )
+                    else:
+                        provider_status = "DEGRADED"
+                else:
+                    provider_status = "UNCONFIGURED"
+            except Exception as search_err:
+                logger.warning("External research adapter search failed: %s", search_err)
+                provider_status = "DEGRADED"
+
+            # 1b. Fallback to local RAG if external search produced no bundle
+            if bundle is None:
+                try:
+                    from app.db.session import SessionLocal
+                    from app.rag.embeddings import get_embedding_provider
+                    from app.rag.pipeline import RAGEvidencePipelineService
+                    from app.rag.contracts import RetrievalQuery
+                    db = SessionLocal()
+                    try:
+                        rag_pipeline = RAGEvidencePipelineService(session=db, embedding_provider=get_embedding_provider())
+                        rag_query = RetrievalQuery(
+                            query_id=f"query_{uuid.uuid4().hex[:8]}",
+                            organization_id=organization_id,
+                            query_text=objective,
+                            top_k=3,
+                            similarity_threshold=0.35,
+                        )
+                        rag_bundle = rag_pipeline.execute_pipeline(
+                            query=rag_query,
+                            current_user_org_id=organization_id,
+                            actor_id=actor_id or "system",
+                        )
+                        if rag_bundle and rag_bundle.evidence_items:
+                            bundle = rag_bundle
+                            if provider_status == "UNCONFIGURED":
+                                provider_status = "COMPLETED"
+                    finally:
+                        db.close()
+                except Exception as rag_err:
+                    logger.debug("RAG fallback retrieval found no chunks: %s", rag_err)
 
         evidence_bundle_id = (
             bundle.bundle_id if isinstance(bundle, RAGEvidenceBundle)
@@ -299,7 +412,8 @@ def research_node(
             "citation_references": list(result.citation_ids),
             "findings": {
                 "summary": result.summary,
-                "status": result.status,
+                "status": "LIVE" if provider_status == "LIVE" else result.status,
+                "provider_status": provider_status,
                 "confidence": result.confidence,
                 "fingerprint": result.fingerprint,
                 "source_summary": result.source_summary,

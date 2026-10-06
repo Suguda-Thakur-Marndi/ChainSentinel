@@ -48,6 +48,16 @@ ALLOWED_STAGE_TRANSITIONS: Dict[AgentStage, Set[AgentStage]] = {
         AgentStage.TERMINATION,
     },
     AgentStage.SCENARIO_ANALYSIS: {
+        AgentStage.SIMULATION,
+        AgentStage.DECISION,
+        AgentStage.TERMINATION,
+    },
+    AgentStage.SIMULATION: {
+        AgentStage.OPTIMIZATION,
+        AgentStage.DECISION,
+        AgentStage.TERMINATION,
+    },
+    AgentStage.OPTIMIZATION: {
         AgentStage.DECISION,
         AgentStage.TERMINATION,
     },

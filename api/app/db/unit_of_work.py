@@ -32,6 +32,7 @@ from app.repositories.risk_repositories import (
     RiskRepository,
 )
 from app.repositories.shipment import ShipmentEventRepository, ShipmentRepository
+from app.repositories.signal_repository import SignalRepository
 from app.repositories.supplier import SupplierRepository
 
 logger = get_logger("unit_of_work")
@@ -69,6 +70,7 @@ class UnitOfWork:
         self._actions: Optional[ActionRepository] = None
         self._verification_results: Optional[VerificationResultRepository] = None
         self._notifications: Optional[NotificationRepository] = None
+        self._signals: Optional[SignalRepository] = None
 
     @property
     def suppliers(self) -> SupplierRepository:
@@ -223,6 +225,13 @@ class UnitOfWork:
         if self._notifications is None:
             self._notifications = NotificationRepository(self.session)
         return self._notifications
+
+    @property
+    def signals(self) -> SignalRepository:
+        """Signal repository accessor sharing the UoW session."""
+        if self._signals is None:
+            self._signals = SignalRepository(self.session)
+        return self._signals
 
     def repository(self, model: Type[T]) -> BaseRepository[T]:
         """Dynamically obtain or instantiate a generic BaseRepository for any domain model."""

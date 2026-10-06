@@ -153,6 +153,7 @@ class SimulationPropagation(BaseModel):
     edges_traversed_count: int = Field(default=0, ge=0)
     effects_generated_count: int = Field(default=0, ge=0)
     propagation_paths: List[List[str]] = Field(default_factory=list)
+    downstream_affected_nodes: List[str] = Field(default_factory=list)
 
 
 class SimulationMetric(BaseModel):
@@ -188,6 +189,10 @@ class SimulationOutcome(BaseModel):
     simulated_risk_score: Optional[float] = Field(None, ge=0.0, le=100.0)
     risk_delta: Optional[float] = None
     severity: str = Field(default="LOW", max_length=50)
+    p10_delay_minutes: Optional[float] = None
+    p50_delay_minutes: Optional[float] = None
+    p90_delay_minutes: Optional[float] = None
+    p95_delay_minutes: Optional[float] = None
 
 
 # SimulationImpact contract alias/equivalent for SimulationOutcome

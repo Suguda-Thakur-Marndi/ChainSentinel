@@ -39,7 +39,7 @@ class AuditService:
 
     @staticmethod
     def log_event(
-        uow: UnitOfWork,
+        uow: Any,
         action: str,
         resource_type: str,
         org_id: Optional[str] = None,
@@ -52,11 +52,24 @@ class AuditService:
         request_id: Optional[str] = None,
         auto_commit: bool = False,
     ) -> AuditLog:
-        """Sanitize payloads and persist an immutable audit log entry via the active Unit of Work."""
+        """Sanitize payloads and persist an immutable audit log entry via the active Unit of Work or Session."""
+        from sqlalchemy.orm import Session
+        from app.db.unit_of_work import UnitOfWork
+
+        resolved_uow: UnitOfWork
+        if isinstance(uow, Session):
+            resolved_uow = UnitOfWork(session=uow)
+        elif hasattr(uow, "audit_logs"):
+            resolved_uow = uow
+        elif hasattr(uow, "session") and isinstance(uow.session, Session):
+            resolved_uow = UnitOfWork(session=uow.session)
+        else:
+            raise ValueError(f"Expected UnitOfWork or Session, got {type(uow)}")
+
         clean_before = sanitize_payload(before_data) if before_data is not None else None
         clean_after = sanitize_payload(after_data) if after_data is not None else None
 
-        return uow.audit_logs.append_log(
+        return resolved_uow.audit_logs.append_log(
             org_id=org_id,
             actor_type=actor_type,
             actor_id=actor_id,
@@ -69,3 +82,4 @@ class AuditService:
             after_json=clean_after,
             auto_commit=auto_commit,
         )
+

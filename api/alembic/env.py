@@ -35,7 +35,7 @@ def run_migrations_offline() -> None:
     """
     import os
     x_args = context.get_x_argument(as_dictionary=True)
-    url = x_args.get("url") or os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+    url = x_args.get("url") or settings.DATABASE_URL or os.environ.get("DATABASE_URL")
     if url and url.startswith("postgresql://"):
         url = url.replace("postgresql://", "postgresql+psycopg://", 1)
     context.configure(
@@ -57,7 +57,7 @@ def run_migrations_online() -> None:
     """
     import os
     x_args = context.get_x_argument(as_dictionary=True)
-    url = x_args.get("url") or os.environ.get("DATABASE_URL") or settings.DATABASE_URL
+    url = x_args.get("url") or settings.DATABASE_URL or os.environ.get("DATABASE_URL")
     if url and url.startswith("postgresql://"):
         url = url.replace("postgresql://", "postgresql+psycopg://", 1)
 

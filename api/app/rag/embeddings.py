@@ -12,6 +12,7 @@ import hashlib
 import math
 import os
 import random
+import time
 from typing import Any, Dict, List, Optional, Union
 
 from app.rag.contracts import (
@@ -291,14 +292,158 @@ class BedrockEmbeddingProvider(BaseEmbeddingProvider):
             raise RAGEmbeddingError(f"Bedrock embedding execution error: {err}") from err
 
 
+class GeminiEmbeddingProvider(BaseEmbeddingProvider):
+    """Production Google GenAI Gemini embedding provider.
+
+    Uses models/gemini-embedding-001 with output_dimensionality=1536.
+    Strictly enforces 1536-dimensional L2-normalized vector representations,
+    automatic bounded exponential backoff retries, and comprehensive error taxonomy.
+    """
+
+    def __init__(
+        self,
+        model_name: str = "models/gemini-embedding-001",
+        api_key: Optional[str] = None,
+        timeout_seconds: float = 30.0,
+        max_retries: int = 3,
+    ) -> None:
+        from app.core.config import settings
+
+        self._model_name = model_name
+        self._api_key = (
+            api_key
+            or getattr(settings, "GEMINI_API_KEY", None)
+            or os.environ.get("GEMINI_API_KEY")
+        )
+        self._timeout_seconds = timeout_seconds
+        self._max_retries = max_retries
+        self._client = None
+        if self._api_key and self._api_key.strip():
+            try:
+                from google import genai
+                from google.genai import types
+
+                timeout_ms = int(self._timeout_seconds * 1000)
+                self._client = genai.Client(
+                    api_key=self._api_key.strip(),
+                    http_options=types.HttpOptions(timeout=timeout_ms),
+                )
+            except Exception:
+                self._client = None
+
+    @property
+    def provider(self) -> EmbeddingProvider:
+        return EmbeddingProvider.GEMINI
+
+    @property
+    def default_model(self) -> str:
+        return self._model_name
+
+    @property
+    def is_configured(self) -> bool:
+        return self._client is not None
+
+    def _normalize_vector(self, raw_values: List[float]) -> List[float]:
+        """Ensure L2 normalization of vector."""
+        norm = math.sqrt(sum(x * x for x in raw_values))
+        if norm == 0.0:
+            return [0.0] * len(raw_values)
+        return [float(x / norm) for x in raw_values]
+
+    def _embed_single_raw(self, text: str, model_id: str) -> List[float]:
+        clean_text = text.strip()
+        if not clean_text:
+            raise RAGMalformedInputError("Cannot embed empty or whitespace-only text.")
+
+        if self._client is None:
+            from app.core.config import settings
+            key = (
+                self._api_key
+                or getattr(settings, "GEMINI_API_KEY", None)
+                or os.environ.get("GEMINI_API_KEY")
+            )
+            if key and key.strip():
+                from google import genai
+                from google.genai import types
+
+                timeout_ms = int(self._timeout_seconds * 1000)
+                self._client = genai.Client(
+                    api_key=key.strip(),
+                    http_options=types.HttpOptions(timeout=timeout_ms),
+                )
+                self._api_key = key.strip()
+            else:
+                raise RAGEmbeddingError(
+                    "Gemini API key is not configured. Set GEMINI_API_KEY to generate real embeddings."
+                )
+
+        from google.genai import types
+
+        last_exc = None
+        for attempt in range(1, self._max_retries + 2):
+            try:
+                res = self._client.models.embed_content(
+                    model=model_id,
+                    contents=clean_text,
+                    config=types.EmbedContentConfig(output_dimensionality=self.dimension),
+                )
+                if not hasattr(res, "embeddings") or not res.embeddings:
+                    raise RAGEmbeddingError("Gemini returned empty embeddings response.")
+                values = list(res.embeddings[0].values)
+                if len(values) != self.dimension:
+                    raise RAGEmbeddingDimensionError(
+                        f"Gemini returned vector of dimension {len(values)}, expected {self.dimension}."
+                    )
+                return self._normalize_vector(values)
+            except (RAGEmbeddingError, RAGEmbeddingDimensionError):
+                raise
+            except Exception as exc:
+                last_exc = exc
+                if attempt <= self._max_retries:
+                    time.sleep(0.5 * (2 ** (attempt - 1)))
+
+        raise RAGEmbeddingError(
+            f"Gemini embedding execution failed after {self._max_retries + 1} attempts: {last_exc}"
+        ) from last_exc
+
+    def embed_text(self, text: str, model: Optional[str] = None) -> EmbeddingVector:
+        model_id = model or self._model_name
+        values = self._embed_single_raw(text, model_id)
+        return EmbeddingVector(
+            values=values,
+            dimension=self.dimension,
+            is_normalized=True,
+        )
+
+    def embed_batch(self, texts: List[str], model: Optional[str] = None) -> List[EmbeddingVector]:
+        if not texts:
+            return []
+        model_id = model or self._model_name
+        return [self.embed_text(t, model_id) for t in texts]
+
+
 def get_embedding_provider(
-    provider: Union[str, EmbeddingProvider] = EmbeddingProvider.LOCAL_MOCK,
+    provider: Optional[Union[str, EmbeddingProvider]] = None,
     **kwargs: Any,
 ) -> BaseEmbeddingProvider:
-    """Factory resolving embedding provider backend instance."""
+    """Factory resolving embedding provider backend instance.
+
+    Defaults to GEMINI when GEMINI_API_KEY is configured.
+    """
+    from app.core.config import settings
+
+    if provider is None:
+        key = getattr(settings, "GEMINI_API_KEY", None) or os.environ.get("GEMINI_API_KEY")
+        if key and key.strip():
+            provider = EmbeddingProvider.GEMINI
+        else:
+            provider = EmbeddingProvider.LOCAL_MOCK
+
     prov_str = str(provider.value if isinstance(provider, EmbeddingProvider) else provider).upper()
 
-    if prov_str == EmbeddingProvider.LOCAL_MOCK.value:
+    if prov_str == EmbeddingProvider.GEMINI.value:
+        return GeminiEmbeddingProvider(**kwargs)
+    elif prov_str == EmbeddingProvider.LOCAL_MOCK.value:
         return LocalMockEmbeddingProvider(**kwargs)
     elif prov_str == EmbeddingProvider.OPENAI.value:
         return OpenAIEmbeddingProvider(**kwargs)

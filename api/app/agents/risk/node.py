@@ -49,7 +49,7 @@ def _emit_risk_audit(
         status,
         clean_details,
     )
-    if uow is not None and hasattr(uow, "audit_logs"):
+    if uow is not None:
         try:
             from app.services.audit_service import AuditService
             AuditService.log_event(
@@ -271,8 +271,9 @@ def risk_node(state: AgentGraphStateDict) -> Dict[str, Any]:
                 factor_count=result.factor_count,
             )
 
-        # 4b. Generate Claude Risk Explanation (Phase 10 Step 4)
-        use_claude = state.get("use_claude", True)
+        use_claude = state.get("use_claude")
+        if use_claude is None:
+            use_claude = bool(state.get("llm_provider") is not None or state.get("use_llm") is True)
         explanation_payload: Optional[Dict[str, Any]] = None
         uow = state.get("uow") or (
             state.get("input_references", {}).get("uow")

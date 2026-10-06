@@ -212,12 +212,29 @@ class LiveMapAggregator:
         sources_meta: Dict[str, Dict[str, Any]] = {}
         for name, provider in self._providers.items():
             health = await provider.health_check()
+            is_live = health.status == ProviderHealthStatus.CONNECTED
+            if is_live:
+                data_source_badge = "LIVE TELEMETRY"
+                freshness = "LIVE"
+            elif health.objects > 0:
+                data_source_badge = "CACHED TELEMETRY"
+                freshness = "CACHED"
+            elif "fixture" in name.lower() or "mock" in name.lower():
+                data_source_badge = "SIMULATED FIXTURES"
+                freshness = "SIMULATED"
+            else:
+                data_source_badge = "UNAVAILABLE"
+                freshness = "UNAVAILABLE"
+
             sources_meta[name] = {
                 "status": health.status.value,
                 "purpose": health.purpose,
                 "last_update": health.last_success,
                 "object_count": health.objects,
                 "reason": health.reason,
+                "is_live": is_live,
+                "data_source": data_source_badge,
+                "freshness": freshness,
             }
 
         return LiveMapResponse(

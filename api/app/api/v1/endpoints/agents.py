@@ -98,7 +98,6 @@ def run_agent_graph(
     run_id = f"run_rw_api_{uuid.uuid4().hex[:12]}"
     correlation_id = f"corr_rw_{uuid.uuid4().hex[:12]}"
     trace_id = f"trace_rw_{uuid.uuid4().hex[:12]}"
-
     initial_state: Dict[str, Any] = {
         "run_id": run_id,
         "organization_id": org_id,
@@ -115,6 +114,7 @@ def run_agent_graph(
         "enable_action": payload.enable_action,
         "enable_verification": payload.enable_verification,
         "action_mode": payload.action_mode,
+        "use_llm": True,
     }
     if payload.requires_human_approval is not None:
         initial_state["requires_human_approval"] = payload.requires_human_approval

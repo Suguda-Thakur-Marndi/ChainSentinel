@@ -1,7 +1,8 @@
 """Health check endpoints for RiskWise API v1."""
 from fastapi import APIRouter, HTTPException, status
 from app.db.session import check_db_connection
-from app.schemas.health import DatabaseHealthResponse, HealthResponse
+from app.schemas.health import DatabaseHealthResponse, HealthResponse, SystemHealthResponse
+from app.core.config import settings
 
 router = APIRouter(tags=["Health"])
 
@@ -10,6 +11,20 @@ router = APIRouter(tags=["Health"])
 def get_health() -> HealthResponse:
     """Application health check endpoint verifying service liveness."""
     return HealthResponse(status="ok")
+
+
+@router.get("/system/health", response_model=SystemHealthResponse)
+def get_system_health() -> SystemHealthResponse:
+    """Detailed system health check endpoint verifying core subsystem readiness."""
+    db_connected, _ = check_db_connection()
+    return SystemHealthResponse(
+        status="ok" if db_connected else "degraded",
+        version=settings.VERSION,
+        components={
+            "database": {"status": "ok" if db_connected else "unavailable"},
+            "api": {"status": "ok"},
+        },
+    )
 
 
 @router.get(

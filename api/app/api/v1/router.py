@@ -27,6 +27,7 @@ from app.api.v1.endpoints import actions, approvals, audit_logs
 from app.api.v1.endpoints import decisions, digital_twin, optimization, simulation
 from app.api.v1.endpoints import evaluations, agents
 from app.api.v1.endpoints import map as map_endpoint
+from app.api.v1.endpoints import signals
 
 api_router = APIRouter()
 
@@ -78,4 +79,5 @@ api_router.include_router(evaluations.router, prefix="/evaluations", tags=["Eval
 
 # Live Geospatial Map & Multi-Source Telemetry (AISStream, Weather, TomTom, Shipments)
 api_router.include_router(map_endpoint.router, prefix="/map", tags=["Live Map & Telemetry"])
+api_router.include_router(signals.router, prefix="/signals", tags=["Signals"])
 

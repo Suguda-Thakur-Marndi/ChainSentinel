@@ -77,7 +77,9 @@ def init_db_engine():
                 logger.warning(
                     f"Remote database unreachable ({type(exc).__name__}). Falling back to local SQLite for development."
                 )
-                local_url = "sqlite:///./riskwise_local.db"
+                from app.core.config import _base_dir
+                abs_local_db = (_base_dir / "riskwise_local.db").resolve()
+                local_url = f"sqlite:///{abs_local_db.as_posix()}"
                 engine = create_engine(
                     local_url,
                     connect_args={"check_same_thread": False},
