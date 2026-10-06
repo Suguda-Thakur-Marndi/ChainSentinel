@@ -11,14 +11,12 @@ import {
   Globe2,
   Radio,
   RefreshCw,
-  Ship,
-  Plane,
-  Truck,
   Wind,
   Flame,
   Activity,
   Layers,
 } from "lucide-react";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 
 export default function GlobalLiveMapPage() {
   const [objects, setObjects] = useState<LiveMapObject[]>([]);
@@ -153,6 +151,7 @@ export default function GlobalLiveMapPage() {
 
   // Telemetry breakdown metrics
   const maritimeCount = objects.filter((o) => o.type === "vessel").length;
+  const flightCount = objects.filter((o) => o.type === "aircraft").length;
   const shipmentCount = objects.filter((o) => o.type === "shipment").length;
   const weatherCount = objects.filter((o) => o.type === "weather").length;
   const incidentCount = objects.filter((o) => o.type === "incident").length;
@@ -192,11 +191,15 @@ export default function GlobalLiveMapPage() {
             <div className="flex items-center gap-2">
               <div className="hidden lg:flex items-center gap-2 text-xs font-mono">
                 <span className="px-2 py-1 rounded bg-[#0B0F14] border border-[#243044] text-sky-300 flex items-center gap-1.5">
-                  <Ship className="w-3.5 h-3.5 text-sky-400" />
+                  <TransportModeIcon mode="ocean" size={14} variant="semantic" />
                   <strong>{maritimeCount}</strong> Ships
                 </span>
+                <span className="px-2 py-1 rounded bg-[#0B0F14] border border-[#243044] text-amber-300 flex items-center gap-1.5">
+                  <TransportModeIcon mode="air" size={14} variant="semantic" />
+                  <strong>{flightCount}</strong> Flights
+                </span>
                 <span className="px-2 py-1 rounded bg-[#0B0F14] border border-[#243044] text-blue-300 flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5 text-blue-400" />
+                  <TransportModeIcon mode="container" size={14} variant="semantic" />
                   <strong>{shipmentCount}</strong> Cargo
                 </span>
                 <span className="px-2 py-1 rounded bg-[#0B0F14] border border-[#243044] text-rose-300 flex items-center gap-1.5">

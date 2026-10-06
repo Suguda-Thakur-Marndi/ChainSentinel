@@ -16,6 +16,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 import type { SimulationResult } from "@/lib/api/types";
 
@@ -220,7 +221,10 @@ export default function SimulationResultPage() {
                             href={`/shipments/${shipId}`}
                             className="p-2 rounded bg-[#1A2332] hover:bg-slate-800 text-xs font-mono text-blue-400 flex items-center justify-between block"
                           >
-                            <span>{shipId}</span>
+                            <span className="flex items-center gap-1.5">
+                              <TransportModeIcon mode="container" size={13} variant="semantic" />
+                              <span>{shipId}</span>
+                            </span>
                             <span className="text-[10px] text-slate-500 flex items-center gap-1">
                               Inspect <ArrowRight className="w-3 h-3" />
                             </span>

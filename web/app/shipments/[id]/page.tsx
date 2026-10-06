@@ -12,13 +12,17 @@ import {
   GitCommit,
   MapPin,
   RefreshCw,
-  Route,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { EvidenceBadge, RiskBadge, StatusBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
 import { MapCard, MapEntity } from "@/components/map/MapCard";
+import {
+  TransportModeBadge,
+  TransportModeIcon,
+  normalizeTransportMode,
+} from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 import type {
   RiskResponse,
@@ -146,7 +150,13 @@ export default function ShipmentDetailPage() {
           {
             id: shipment.id,
             name: shipment.tracking_number,
-            type: shipment.mode.toUpperCase() === "OCEAN" ? "vessel" : "truck",
+            type: (() => {
+              const norm = normalizeTransportMode(shipment.mode);
+              if (norm === "ocean") return "vessel";
+              if (norm === "air") return "aircraft";
+              if (norm === "rail") return "train";
+              return "truck";
+            })(),
             lat: shipment.current_lat,
             lng: shipment.current_lng,
             provenance: shipment.data_provenance,
@@ -203,10 +213,8 @@ export default function ShipmentDetailPage() {
                 <StatusBadge status={shipment.status} />
               </div>
               <div className="text-right pl-3 border-l border-[#243044]">
-                <span className="text-[10px] uppercase font-mono text-slate-500 block">Mode</span>
-                <span className="font-mono text-xs uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                  {shipment.mode}
-                </span>
+                <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">Mode</span>
+                <TransportModeBadge mode={shipment.mode} />
               </div>
             </div>
           </div>
@@ -216,7 +224,7 @@ export default function ShipmentDetailPage() {
             {/* Transit Route */}
             <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Route className="w-3.5 h-3.5 text-blue-400" /> Transit Route
+                <TransportModeIcon mode={shipment.mode} size={14} variant="semantic" /> Transit Route
               </span>
               <div className="flex items-center justify-between text-xs pt-1">
                 <div>

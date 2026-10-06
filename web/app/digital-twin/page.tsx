@@ -6,12 +6,16 @@ import {
   Building2,
   Factory,
   Network,
+  Plane,
   RefreshCw,
   Search,
   Ship,
+  TrainFront,
+  Truck,
   Warehouse,
   X,
 } from "lucide-react";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
@@ -189,18 +193,18 @@ export default function DigitalTwinPage() {
                     const nodeId = node.id || node.node_id || `node-${idx}`;
                     const selectedId = selectedNode?.id || selectedNode?.node_id;
                     const isSelected = selectedId === nodeId;
-                    const Icon =
-                      node.node_type === "SUPPLIER"
-                        ? Building2
-                        : node.node_type === "PORT"
-                        ? Anchor
-                        : node.node_type === "FACTORY"
-                        ? Factory
-                        : node.node_type === "WAREHOUSE"
-                        ? Warehouse
-                        : node.node_type === "CARRIER"
-                        ? Ship
-                        : Network;
+                    const Icon = (() => {
+                      const type = (node.node_type || "").toUpperCase();
+                      if (type === "SUPPLIER") return Building2;
+                      if (type === "PORT" || type === "SEAPORT") return Anchor;
+                      if (type === "AIRPORT" || type === "AIR_TERMINAL") return Plane;
+                      if (type === "FACTORY") return Factory;
+                      if (type === "WAREHOUSE" || type === "DC" || type === "STORAGE") return Warehouse;
+                      if (type === "CARRIER" || type === "VESSEL" || type === "OCEAN") return Ship;
+                      if (type === "ROAD" || type === "TRUCK") return Truck;
+                      if (type === "RAIL" || type === "TRAIN") return TrainFront;
+                      return Network;
+                    })();
 
                     return (
                       <div
@@ -245,9 +249,12 @@ export default function DigitalTwinPage() {
                 <div>
                   <div className="flex items-start justify-between border-b border-[#243044] pb-3 mb-4">
                     <div>
-                      <span className="text-[10px] font-mono uppercase text-blue-400 block">
-                        {selectedNode.node_type}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <TransportModeIcon mode={selectedNode.node_type} size={14} variant="semantic" />
+                        <span className="text-[10px] font-mono uppercase text-blue-400">
+                          {selectedNode.node_type}
+                        </span>
+                      </div>
                       <h3 className="text-sm font-bold text-white mt-0.5">{selectedNode.label}</h3>
                     </div>
                     <button
@@ -306,7 +313,10 @@ export default function DigitalTwinPage() {
                                 <span className="truncate">
                                   {src === curId ? `→ ${tgt}` : `← ${src}`}
                                 </span>
-                                <span className="text-[10px] text-slate-500">{e.edge_type}</span>
+                                <span className="text-[10px] text-slate-400 flex items-center gap-1">
+                                  <TransportModeIcon mode={e.edge_type} size={12} variant="semantic" />
+                                  {e.edge_type}
+                                </span>
                               </div>
                             );
                           })}

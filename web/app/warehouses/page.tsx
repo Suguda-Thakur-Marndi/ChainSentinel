@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Warehouse } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
@@ -109,6 +109,7 @@ export default function WarehousesPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <Warehouse className="w-5 h-5 text-orange-400" />
                 Warehouses & Distribution Centers
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
                   {warehouses.length} Hubs

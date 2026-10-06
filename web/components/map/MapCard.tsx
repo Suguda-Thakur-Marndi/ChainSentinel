@@ -19,12 +19,15 @@ import {
   X,
   AlertTriangle,
   Plane,
-  Box,
+  Boxes,
   Flame,
   Clock,
   Radio,
   SlidersHorizontal,
+  TrainFront,
+  Warehouse,
 } from "lucide-react";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 import type { LiveMapObject, LiveMapObjectType, ProviderHealth } from "@/lib/api/types";
 
 // Backward-compatible interface for legacy callers
@@ -106,6 +109,8 @@ function getTypeColor(type: string): string {
       return "#A855F7"; // Purple
     case "port":
       return "#34D399"; // Green
+    case "warehouse":
+      return "#F97316"; // Orange
     case "weather":
       return "#F43F5E"; // Rose
     case "incident":
@@ -173,7 +178,9 @@ export function MapCard({
     aircraft: true,
     shipment: true,
     truck: true,
+    train: true,
     port: true,
+    warehouse: true,
     weather: true,
     incident: true,
     transit: true,
@@ -511,9 +518,11 @@ export function MapCard({
             {[
               { key: "vessel", label: "Maritime Vessels (AIS)", count: typeCounts["vessel"] || 0, color: "#38BDF8", icon: Ship },
               { key: "aircraft", label: "Aviation Flights", count: typeCounts["aircraft"] || 0, color: "#F59E0B", icon: Plane },
-              { key: "shipment", label: "Verified Shipments", count: typeCounts["shipment"] || 0, color: "#60A5FA", icon: Box },
+              { key: "shipment", label: "Verified Shipments", count: typeCounts["shipment"] || 0, color: "#60A5FA", icon: Boxes },
               { key: "truck", label: "Road Freight & Trucks", count: typeCounts["truck"] || 0, color: "#10B981", icon: Truck },
+              { key: "train", label: "Rail Freight & Trains", count: typeCounts["train"] || 0, color: "#A855F7", icon: TrainFront },
               { key: "port", label: "Ports & Hub Terminals", count: typeCounts["port"] || 0, color: "#34D399", icon: Anchor },
+              { key: "warehouse", label: "Warehouses & Storage", count: typeCounts["warehouse"] || 0, color: "#F97316", icon: Warehouse },
               { key: "weather", label: "Meteorological Hazards", count: typeCounts["weather"] || 0, color: "#F43F5E", icon: Wind },
               { key: "incident", label: "Port Gate / Corridor Delays", count: typeCounts["incident"] || 0, color: "#EF4444", icon: Flame },
             ].map(({ key, label, count, color, icon: Icon }) => (
@@ -600,10 +609,7 @@ export function MapCard({
           <div className="flex items-start justify-between border-b border-[#1E293B] pb-2">
             <div>
               <div className="flex items-center gap-1.5">
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: getTypeColor(selectedObject.type) }}
-                />
+                <TransportModeIcon mode={selectedObject.type} size={14} variant="semantic" />
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
                   {selectedObject.type} • {selectedObject.source}
                 </span>

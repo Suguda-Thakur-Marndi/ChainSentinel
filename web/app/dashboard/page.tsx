@@ -9,7 +9,7 @@ import {
   Flame,
   RefreshCw,
   ShieldCheck,
-  Truck,
+  Boxes,
   UserCheck,
   Bot,
   Activity,
@@ -25,6 +25,7 @@ import { OperationalPipeline } from "@/components/ui/OperationalPipeline";
 import { RiskBadge, VerificationBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState } from "@/components/ui/FeedbackStates";
 import { ArchCard, ArchCardHeader, ArchCardTitle, ArchCardContent, ArchButton, ArchBadge } from "@/components/ui/ArchitecturalComponents";
+import { normalizeTransportMode } from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 import type {
   ApprovalResponse,
@@ -112,7 +113,13 @@ export default function DashboardPage() {
     .map((s) => ({
       id: s.id,
       name: s.tracking_number,
-      type: s.mode.toUpperCase() === "OCEAN" ? "vessel" : "truck",
+      type: (() => {
+        const norm = normalizeTransportMode(s.mode);
+        if (norm === "ocean") return "vessel";
+        if (norm === "air") return "aircraft";
+        if (norm === "rail") return "train";
+        return "truck";
+      })(),
       lat: s.current_lat!,
       lng: s.current_lng!,
       provenance: s.data_provenance,
@@ -203,7 +210,7 @@ export default function DashboardPage() {
                   title="Tracked Assets"
                   value={metrics?.shipments_in_transit ?? 0}
                   subtext="Active In Transit"
-                  icon={Truck}
+                  icon={Boxes}
                   variant="default"
                 />
                 <MetricCard

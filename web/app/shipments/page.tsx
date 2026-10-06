@@ -3,15 +3,19 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Boxes,
   Plus,
   RefreshCw,
-  Truck,
 } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { EvidenceBadge, StatusBadge } from "@/components/ui/Badges";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import {
+  TransportModeBadge,
+  normalizeTransportMode,
+} from "@/components/ui/TransportModeIcon";
 import {
   ArchButton,
   ArchModal,
@@ -111,7 +115,9 @@ export default function ShipmentsPage() {
       (s.carrier_id && s.carrier_id.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const matchesStatus = statusFilter === "ALL" || s.status === statusFilter;
-    const matchesMode = modeFilter === "ALL" || s.mode.toUpperCase() === modeFilter.toUpperCase();
+    const matchesMode =
+      modeFilter === "ALL" ||
+      normalizeTransportMode(s.mode) === normalizeTransportMode(modeFilter);
 
     return matchesSearch && matchesStatus && matchesMode;
   });
@@ -143,11 +149,7 @@ export default function ShipmentsPage() {
       key: "mode",
       header: "Mode",
       sortable: true,
-      render: (row) => (
-        <span className="font-mono text-[11px] uppercase text-slate-400 px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">
-          {row.mode}
-        </span>
-      ),
+      render: (row) => <TransportModeBadge mode={row.mode} />,
     },
     {
       key: "status",
@@ -204,7 +206,7 @@ export default function ShipmentsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-arch pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
-                <Truck className="w-5 h-5 text-[#D95E00]" />
+                <Boxes className="w-5 h-5 text-[#D95E00]" />
                 Shipments Monitor
                 <ArchBadge variant="orange">
                   {shipments.length} Total
@@ -266,12 +268,13 @@ export default function ShipmentsPage() {
               onChange={(e) => setModeFilter(e.target.value)}
               className="bg-card border border-arch text-xs font-mono text-muted-foreground rounded px-2.5 py-1.5 focus:outline-none focus:border-[#D95E00]"
               style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-arch)" }}
+              aria-label="Filter by transport mode"
             >
               <option value="ALL">All Modes</option>
-              <option value="OCEAN">Ocean</option>
-              <option value="AIR">Air</option>
-              <option value="ROAD">Road</option>
-              <option value="RAIL">Rail</option>
+              <option value="OCEAN">Ocean Freight</option>
+              <option value="AIR">Air Freight</option>
+              <option value="ROAD">Road Freight</option>
+              <option value="RAIL">Rail Freight</option>
             </select>
           </TableToolbar>
 

@@ -25,6 +25,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { OptimizationStatusBadge } from "@/components/ui/Badges";
 import { MetricCard } from "@/components/ui/MetricCard";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/FeedbackStates";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 import type { OptimizationResult } from "@/lib/api/types";
 
@@ -253,6 +254,7 @@ export default function OptimizationDetailPage() {
                   >
                     <div>
                       <div className="flex items-center gap-2">
+                        <TransportModeIcon mode={c.action_type} size={15} variant="semantic" />
                         <span className="font-semibold text-slate-200">{c.action_type}</span>
                         {c.candidate_id === result.selected_candidate_id && (
                           <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold">

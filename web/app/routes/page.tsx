@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Route } from "lucide-react";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AppShell } from "@/components/layout/AppShell";
 import { Column, DataTable, TableToolbar } from "@/components/ui/DataTable";
 import { ErrorState } from "@/components/ui/FeedbackStates";
+import { TransportModeBadge } from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 import type { RouteResponse } from "@/lib/api/types";
 
@@ -104,11 +105,7 @@ export default function RoutesPage() {
       key: "mode",
       header: "Transit Mode",
       sortable: true,
-      render: (row) => (
-        <span className="font-mono text-[11px] uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-          {row.mode || "—"}
-        </span>
-      ),
+      render: (row) => <TransportModeBadge mode={row.mode} />,
     },
     {
       key: "transit_time_days",
@@ -148,6 +145,7 @@ export default function RoutesPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <Route className="w-5 h-5 text-sky-400" />
                 Logistics Corridors & Shipping Lanes
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
                   {routes.length} Active Lanes

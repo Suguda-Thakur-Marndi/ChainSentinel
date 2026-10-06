@@ -8,14 +8,15 @@ import {
   Flame,
   Loader2,
   Search,
-  Truck,
   X,
 } from "lucide-react";
+import { TransportModeIcon } from "@/components/ui/TransportModeIcon";
 import { apiClient } from "@/lib/api/client";
 
 interface SearchResultItem {
   id: string;
   type: "shipment" | "risk" | "incident" | "supplier";
+  mode?: string;
   title: string;
   subtitle: string;
   url: string;
@@ -80,6 +81,7 @@ export function GlobalSearchModal({
               items.push({
                 id: s.id,
                 type: "shipment",
+                mode: s.mode,
                 title: s.tracking_number,
                 subtitle: `${s.origin || "Origin"} → ${s.destination || "Dest"} (${s.status})`,
                 url: `/shipments/${s.id}`,
@@ -163,10 +165,8 @@ export function GlobalSearchModal({
             </div>
           ) : (
             results.map((item) => {
-              const Icon =
-                item.type === "shipment"
-                  ? Truck
-                  : item.type === "risk"
+              const NonShipmentIcon =
+                item.type === "risk"
                   ? AlertOctagon
                   : item.type === "incident"
                   ? Flame
@@ -182,7 +182,11 @@ export function GlobalSearchModal({
                   className="w-full flex items-center gap-3 p-2.5 rounded-md hover:bg-slate-800/60 transition-colors text-left group"
                 >
                   <div className="p-2 rounded bg-slate-800 text-slate-400 group-hover:text-blue-400 group-hover:bg-blue-950/40 transition-colors">
-                    <Icon className="w-4 h-4" />
+                    {item.type === "shipment" ? (
+                      <TransportModeIcon mode={item.mode} size={16} variant="semantic" />
+                    ) : (
+                      <NonShipmentIcon className="w-4 h-4" />
+                    )}
                   </div>
                   <div className="flex-1 truncate">
                     <span className="text-xs font-semibold text-slate-200 block truncate group-hover:text-white">
