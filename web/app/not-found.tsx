@@ -25,15 +25,14 @@ export default function NotFoundPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-center gap-2">
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-rose-950/40 text-rose-400 border border-rose-800/40">
-                ERROR 404
+                404
               </span>
-              <span className="text-xs font-mono text-muted-foreground">ROUTE NOT FOUND</span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground font-mono">
-              Unmapped Operational Coordinate
+              Page Not Found
             </h1>
             <p className="text-xs text-muted-foreground font-mono max-w-sm mx-auto">
-              The requested supply corridor, node identifier, or security endpoint does not exist within the active network topology.
+              The requested page or resource could not be found.
             </p>
           </div>
 
@@ -41,13 +40,13 @@ export default function NotFoundPage() {
             <Link href="/dashboard">
               <ArchButton variant="default" size="sm" className="gap-2">
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                Control Tower Overview
+                Dashboard
               </ArchButton>
             </Link>
             <Link href="/map">
               <ArchButton variant="outline" size="sm" className="gap-2">
                 <Globe2 className="w-3.5 h-3.5" />
-                Global Live Map
+                Live Map
               </ArchButton>
             </Link>
             <Link href="/system-health">
@@ -59,8 +58,8 @@ export default function NotFoundPage() {
           </div>
 
           <div className="pt-4 border-t text-[10px] font-mono text-muted-foreground flex items-center justify-between" style={{ borderColor: "var(--border-arch)" }}>
-            <span>CHAINSENTINEL</span>
-            <span className="text-[#0A7A75]">ZERO-TRUST BOUNDARY ACTIVE</span>
+            <span>ChainSentinel</span>
+            <span>Error 404</span>
           </div>
         </div>
       </div>

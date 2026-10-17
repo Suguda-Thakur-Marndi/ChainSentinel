@@ -108,22 +108,13 @@ export function ChainSentinelLogo({
               SENTINEL
             </span>
           </div>
-          <span className="ml-1 px-1.5 py-0.5 text-[9px] uppercase font-mono font-bold tracking-widest bg-cyan-500/10 text-cyan-300 border border-cyan-500/25 rounded shadow-[0_0_10px_rgba(6,182,212,0.15)]">
-            AUTONOMOUS
-          </span>
         </div>
 
         {showSubtitle && (
           <div className="flex flex-col items-center gap-1">
             <p className="text-xs text-slate-400 font-medium tracking-wide">
-              Autonomous Supply Chain Risk Intelligence & Defense
+              Supply Chain Risk Intelligence & Operations
             </p>
-            <div className="flex items-center gap-1.5 pt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
-                DEFENSE GRID ONLINE
-              </span>
-            </div>
           </div>
         )}
       </div>

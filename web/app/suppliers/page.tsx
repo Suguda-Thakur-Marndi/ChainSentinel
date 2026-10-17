@@ -228,8 +228,8 @@ export default function SuppliersPage() {
           <ArchModal
             isOpen={showCreateModal}
             onClose={() => setShowCreateModal(false)}
-            title="Register Authoritative Supplier"
-            subtitle="Deterministic Multi-tier Supplier Profile Creation"
+            title="Register Supplier"
+            subtitle="Create supplier profile"
           >
             <form onSubmit={handleCreateSupplier} className="space-y-4">
               <ArchFormGroup>
@@ -254,7 +254,7 @@ export default function SuppliersPage() {
                   />
                 </ArchFormGroup>
                 <ArchFormGroup>
-                  <ArchLabel>Country / Jurisdiction</ArchLabel>
+                  <ArchLabel>Country</ArchLabel>
                   <ArchInput
                     type="text"
                     value={country}

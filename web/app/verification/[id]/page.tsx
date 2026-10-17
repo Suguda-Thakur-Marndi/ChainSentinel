@@ -97,7 +97,7 @@ export default function VerificationDetailPage() {
               href="/verification"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Verification Console
+              <ArrowLeft className="w-4 h-4" /> Back to Verification
             </Link>
 
             <button
@@ -114,7 +114,7 @@ export default function VerificationDetailPage() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono text-emerald-400 block font-bold">
-                  Phase 18 Ground-Truth Physical Verification Report
+                  Physical Verification Report
                 </span>
                 <EvidenceBadge source={verification.evidence_precedence} />
               </div>
@@ -128,7 +128,7 @@ export default function VerificationDetailPage() {
 
             <div className="text-right">
               <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">
-                Deterministic Status
+                Status
               </span>
               <VerificationBadge status={verification.status} />
             </div>
@@ -138,7 +138,7 @@ export default function VerificationDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                <Scale className="w-4 h-4 text-blue-400" /> Intended Mitigation Target
+                <Scale className="w-4 h-4 text-blue-400" /> Intended Target
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
                 {verification.intended_outcome || "Reroute cargo through alternate port to reduce arrival delay by 48 hours."}
@@ -155,7 +155,7 @@ export default function VerificationDetailPage() {
 
             <div className="p-4 rounded-lg bg-[#111827] border border-emerald-900/40 space-y-2">
               <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Observed Physical Ground-Truth
+                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Observed Telemetry
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed">
                 {verification.observed_outcome || verification.observation_summary || "Physical vessel AIS confirmed berth arrival within tolerance window."}
@@ -171,9 +171,9 @@ export default function VerificationDetailPage() {
             </div>
           </div>
 
-          {/* Disclaimer */}
-          <div className="p-3.5 rounded-lg bg-[#111827] border border-[#243044] text-[11px] font-mono text-slate-400 text-center">
-            Verification is deterministic — AI does not determine the outcome.
+          {/* Telemetry Notice */}
+          <div className="p-3 rounded-lg bg-[#111827] border border-[#243044] text-[11px] font-mono text-slate-400 text-center">
+            Outcome verified against physical telemetry transponders.
           </div>
         </div>
       </AppShell>

@@ -24,8 +24,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "CHAINSENTINEL — Autonomous Security & Risk Intelligence",
-  description: "Enterprise multi-tier supply chain risk intelligence, digital twin simulation, and autonomous mitigation platform.",
+  title: "ChainSentinel — Supply Chain Risk Intelligence",
+  description: "Supply chain risk intelligence, digital twin simulation, and automated mitigation.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

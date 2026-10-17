@@ -145,20 +145,11 @@ export default function AuditLogPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#0A7A75]/15 text-[#0A7A75] border border-[#0A7A75]/30">
-                  COMPLIANCE LEDGER
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  CRYPTOGRAPHICALLY SEALED
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                Enterprise Immutable Audit Ledger
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                Audit Ledger
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Append-only compliance ledger tracking all agent actions, human sign-offs, and solver telemetry.
+                Compliance ledger tracking agent actions, approvals, and solver executions.
               </p>
             </div>
 
@@ -170,7 +161,7 @@ export default function AuditLogPage() {
               className="font-mono text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              <span>Refresh Ledger</span>
+              <span>Refresh</span>
             </ArchButton>
           </div>
 
@@ -187,7 +178,7 @@ export default function AuditLogPage() {
             data={filteredLogs}
             isLoading={isLoading}
             emptyTitle="Audit Log Empty"
-            emptyMessage="No administrative actions or agent executions recorded in current epoch."
+            emptyMessage="No audit log events recorded."
           />
         </div>
       </AppShell>

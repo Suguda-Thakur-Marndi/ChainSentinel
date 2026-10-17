@@ -50,7 +50,7 @@ export default function IncidentDetailPage() {
         setRecommendations([]);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to load incident war room");
+      setError(err instanceof Error ? err.message : "Failed to load incident details");
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +80,7 @@ export default function IncidentDetailPage() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load incident war room");
+          setError(err instanceof Error ? err.message : "Failed to load incident details");
           setIsLoading(false);
         }
       });
@@ -93,7 +93,7 @@ export default function IncidentDetailPage() {
     return (
       <ProtectedRoute>
         <AppShell>
-          <LoadingState message="Initializing Incident War Room context..." />
+          <LoadingState message="Loading incident details..." />
         </AppShell>
       </ProtectedRoute>
     );
@@ -129,7 +129,7 @@ export default function IncidentDetailPage() {
               href="/incidents"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Incident Register
+              <ArrowLeft className="w-4 h-4" /> Back to Incidents
             </Link>
 
             <button
@@ -147,7 +147,7 @@ export default function IncidentDetailPage() {
               <div className="space-y-1 max-w-2xl">
                 <div className="flex items-center gap-2">
                   <span className="text-xs uppercase font-mono text-rose-400 font-bold flex items-center gap-1">
-                    <Flame className="w-3.5 h-3.5" /> Incident War Room
+                    <Flame className="w-3.5 h-3.5" /> Incident Details
                   </span>
                   <RiskBadge severity={incident.severity} />
                 </div>
@@ -159,7 +159,7 @@ export default function IncidentDetailPage() {
 
               <div className="text-right">
                 <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">
-                  Active Status
+                  Status
                 </span>
                 <span className="px-3 py-1 rounded-md text-xs font-mono font-bold uppercase bg-slate-800 text-slate-200 border border-slate-700">
                   {incident.status}
@@ -216,10 +216,10 @@ export default function IncidentDetailPage() {
           <ArchCard>
             <ArchCardContent className="space-y-2">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
-                Disruption Narrative
+                Description
               </h3>
               <p className="text-xs font-mono text-muted-foreground leading-relaxed">
-                {incident.description || "Operational disruption reported across primary logistics corridors. Active automated root-cause research dispatched."}
+                {incident.description || "Operational disruption reported across primary logistics corridors."}
               </p>
             </ArchCardContent>
           </ArchCard>
@@ -229,21 +229,21 @@ export default function IncidentDetailPage() {
             <div className="p-4">
               <div className="flex items-center justify-between border-b border-arch pb-2 mb-3">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
-                  <Scale className="w-4 h-4 text-[#D95E00]" /> Synthesized Mitigation Candidates
+                  <Scale className="w-4 h-4 text-[#D95E00]" /> Mitigation Recommendations
                 </h3>
                 <Link
                   href="/recommendations"
                   className="text-xs font-mono text-[#D95E00] hover:underline flex items-center gap-1"
                 >
-                  Recommendations Queue <ExternalLink className="w-3 h-3" />
+                  View Queue <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
 
               <div className="space-y-3">
                 {recommendations.length === 0 ? (
                   <EmptyState
-                    title="No Mitigation Actions Formulated"
-                    message="Run simulation or optimization to synthesize algorithmic mitigation candidates."
+                    title="No Recommendations Formulated"
+                    message="Run simulation or optimization to generate mitigation candidates."
                   />
                 ) : (
                   recommendations.map((rec) => (

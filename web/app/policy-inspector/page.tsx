@@ -195,24 +195,15 @@ export default function PolicyInspectorPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#E88D00]/15 text-[#E88D00] border border-[#E88D00]/30">
-                  GOVERNANCE ENGINE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  DETERMINISTIC SECURITY POLICIES
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                Policy Inspector & Condition Rules
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                Policy Inspector
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Declarative security boundaries, human-in-the-loop escalation caps, and real-time policy evaluation status.
+                Declarative security policies, approval escalation rules, and threshold conditions.
               </p>
             </div>
 
-            <ArchBadge variant="orange">5 ENFORCED RULES</ArchBadge>
+            <ArchBadge variant="orange">{POLICIES.length} Enforced Rules</ArchBadge>
           </div>
 
           {/* Search & Effect Filters */}
@@ -395,10 +386,10 @@ export default function PolicyInspectorPage() {
                     variant="default"
                     size="sm"
                     onClick={() => {
-                      alert(`Simulation test passed: Rule ${activePolicy.code} successfully evaluated against 5,000 synthetic transactions with 100% precision.`);
+                      alert(`Simulation test passed: Rule ${activePolicy.code} evaluated successfully.`);
                     }}
                   >
-                    Simulate Rule Evaluation
+                    Test Rule
                   </ArchButton>
                 </div>
               </div>

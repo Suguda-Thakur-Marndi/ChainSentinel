@@ -157,7 +157,7 @@ export function GlobalSearchModal({
         <div className="max-h-96 overflow-y-auto p-2 divide-y divide-slate-800/60">
           {query.trim() === "" ? (
             <div className="p-8 text-center text-xs text-slate-500">
-              Type keywords to search live operational supply chain telemetry...
+              Type to search shipments, risks, suppliers...
             </div>
           ) : results.length === 0 && !isLoading ? (
             <div className="p-8 text-center text-xs text-slate-500">
@@ -208,7 +208,6 @@ export function GlobalSearchModal({
         {/* Footer info */}
         <div className="px-4 py-2 bg-[#0B0F14] border-t border-[#243044] flex items-center justify-between text-[11px] text-slate-500 font-mono">
           <span>Esc to exit</span>
-          <span>Authoritative Backend Index</span>
         </div>
       </div>
     </div>

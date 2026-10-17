@@ -18,7 +18,6 @@ export function LoadingState({
     >
       <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-3" />
       <p className="text-sm font-medium text-slate-300">{message}</p>
-      <span className="text-xs text-slate-500 mt-1">Connecting to authoritative backend...</span>
     </div>
   );
 }

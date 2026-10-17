@@ -96,7 +96,7 @@ export default function IncidentsPage() {
     },
     {
       key: "status",
-      header: "War Room Status",
+      header: "Status",
       sortable: true,
       render: (row) => {
         let variant: "success" | "warning" | "error" | "info" | "neutral" = "info";
@@ -125,13 +125,13 @@ export default function IncidentsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Incident War Room Register
+                Incidents
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800">
                   {incidents.filter((i) => i.status !== "RESOLVED" && i.status !== "CLOSED").length} Active
                 </span>
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
-                Real-time disruption events triggering automated root-cause research, simulation & mitigation.
+                Disruption events across shipping lanes, ports, suppliers, and transit corridors.
               </p>
             </div>
 

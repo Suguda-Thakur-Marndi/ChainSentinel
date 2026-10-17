@@ -59,7 +59,7 @@ function toLiveMapObject(ent: MapEntity | LiveMapObject): LiveMapObject {
     id: legacy.id,
     name: legacy.name,
     type: (legacy.type as LiveMapObjectType) || "shipment",
-    source: "internal_riskwise",
+    source: "internal_chainsentinel",
     latitude: legacy.lat,
     longitude: legacy.lng,
     heading: legacy.heading_degrees ?? null,
@@ -201,7 +201,7 @@ export function MapCard({
     }
 
     window.gm_authFailure = () => {
-      console.warn("[RiskWise Maps] Google Maps authentication or billing failure detected.");
+      console.warn("[ChainSentinel Maps] Google Maps authentication or billing failure detected.");
       setGoogleMapsAuthError("Google Maps API requires billing enabled on Google Cloud. Switching to Tactical SVG mode.");
       setMapViewType("tactical-radar");
     };
@@ -268,7 +268,7 @@ export function MapCard({
         });
       }
     } catch (err) {
-      console.warn("[RiskWise Maps] Error initializing Google Map:", err);
+      console.warn("[ChainSentinel Maps] Error initializing Google Map:", err);
     }
   }, [googleMapsReady, mapViewType]);
 

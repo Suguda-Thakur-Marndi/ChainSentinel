@@ -35,22 +35,19 @@ export default function AdminPage() {
           <div className="border-b border-arch pb-4">
             <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
               <Shield className="w-5 h-5 text-[#D95E00]" />
-              Tenant Administration & RBAC Controls
-              <ArchBadge variant="orange">
-                Enterprise
-              </ArchBadge>
+              Administration
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-              Multi-tenant boundary enforcement, role-based access control, and backend system configuration.
+              Organization settings, user roles, integrations, and compliance.
             </p>
           </div>
 
           <ArchTabs defaultValue="org">
             <ArchTabsList>
-              <ArchTabsTrigger value="org">Organization Settings</ArchTabsTrigger>
-              <ArchTabsTrigger value="users">Users & Roles (RBAC)</ArchTabsTrigger>
-              <ArchTabsTrigger value="integrations">Telemetry Integrations</ArchTabsTrigger>
-              <ArchTabsTrigger value="security">Audit & Compliance</ArchTabsTrigger>
+              <ArchTabsTrigger value="org">Organization</ArchTabsTrigger>
+              <ArchTabsTrigger value="users">Users & Roles</ArchTabsTrigger>
+              <ArchTabsTrigger value="integrations">Integrations</ArchTabsTrigger>
+              <ArchTabsTrigger value="security">Compliance</ArchTabsTrigger>
             </ArchTabsList>
 
             {/* Tab 1: Organization */}
@@ -60,10 +57,10 @@ export default function AdminPage() {
                   <div className="flex items-center justify-between border-b border-arch pb-3">
                     <div className="flex items-center gap-2">
                       <Building2 className="w-4 h-4 text-[#D95E00]" />
-                      <h3 className="text-sm font-bold text-foreground font-mono">Active Tenant Boundary</h3>
+                      <h3 className="text-sm font-bold text-foreground font-mono">Organization Details</h3>
                     </div>
                     <ArchBadge variant="teal">
-                      TENANT ISOLATED
+                      ACTIVE
                     </ArchBadge>
                   </div>
 
@@ -110,7 +107,7 @@ export default function AdminPage() {
                   <div className="flex items-center justify-between border-b border-arch pb-3">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-[#D95E00]" />
-                      <h3 className="text-sm font-bold text-foreground font-mono">Role-Based Access Control (RBAC)</h3>
+                      <h3 className="text-sm font-bold text-foreground font-mono">Roles & Permissions</h3>
                     </div>
                     <span className="text-xs text-muted-foreground font-mono">5 Defined Roles</span>
                   </div>
@@ -129,7 +126,7 @@ export default function AdminPage() {
                       style={{ backgroundColor: "var(--bg-primary)" }}
                     >
                       <h5 className="font-semibold text-foreground uppercase tracking-wider">
-                        Authoritative Role Hierarchy:
+                        Role Hierarchy:
                       </h5>
                       <ul className="space-y-1 text-muted-foreground font-mono">
                         <li>• <strong className="text-[#D95E00]">ADMIN:</strong> Full tenant governance, user management, integration secrets.</li>
@@ -154,7 +151,7 @@ export default function AdminPage() {
                       <h3 className="text-sm font-bold text-foreground font-mono">Telemetry & Adapter Integrations</h3>
                     </div>
                     <ArchBadge variant="default">
-                      BACKEND SECRETS VAULT
+                      SERVER MANAGED
                     </ArchBadge>
                   </div>
 
@@ -186,9 +183,8 @@ export default function AdminPage() {
                   <div className="flex items-center justify-between border-b border-arch pb-3">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-[#0A7A75]" />
-                      <h3 className="text-sm font-bold text-foreground font-mono">Compliance & Cryptographic Verification</h3>
+                      <h3 className="text-sm font-bold text-foreground font-mono">Compliance & Security</h3>
                     </div>
-                    <ArchBadge variant="teal">SOC2 Type II Ready</ArchBadge>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -196,7 +192,7 @@ export default function AdminPage() {
                       <ArchCardContent className="space-y-1">
                         <span className="font-semibold text-foreground block font-mono">Session Management</span>
                         <p className="text-muted-foreground text-[11px] font-mono">
-                          Strict HttpOnly, SameSite=Lax session cookies. Zero browser token exposure.
+                          Secure encrypted session cookies.
                         </p>
                       </ArchCardContent>
                     </ArchCard>

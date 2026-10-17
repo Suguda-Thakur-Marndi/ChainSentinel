@@ -127,13 +127,10 @@ export default function ActionsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Operational Action Execution Monitor
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
-                  Phase 17
-                </span>
+                Action Dispatch
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
-                Idempotent operational dispatch via ERP, TMS, and carrier execution adapters.
+                Dispatch history across ERP, TMS, and carrier execution adapters.
               </p>
             </div>
 
@@ -152,13 +149,13 @@ export default function ActionsPage() {
           {/* Stepper Banner Notice */}
           <div className="p-3 rounded-md bg-[#111827] border border-[#243044] flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-200">Execution Stepper:</span>
+              <span className="font-semibold text-slate-200">Execution Pipeline:</span>
               <span className="font-mono text-[11px]">
                 Queued → Validation → Approval Binding → Idempotency → Execution → Adapter Ack
               </span>
             </div>
             <span className="text-amber-400/90 font-mono text-[11px] font-semibold">
-              SUBMITTED != VERIFIED
+              Verification Required
             </span>
           </div>
 

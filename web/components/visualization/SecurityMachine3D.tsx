@@ -12,7 +12,6 @@ import {
   Sparkles,
   Zap,
   Activity,
-  AlertCircle,
   Terminal,
 } from "lucide-react";
 
@@ -83,7 +82,7 @@ const SECURITY_NODES: SecurityNode[] = [
 export function SecurityMachine3D({
   activePostureScore = 99.4,
   mitigationsCount = 12,
-  threatsBlocked = 4,
+  threatsBlocked: _threatsBlocked = 4,
 }: {
   activePostureScore?: number;
   mitigationsCount?: number;
@@ -94,7 +93,7 @@ export function SecurityMachine3D({
   const [force2D, setForce2D] = useState(false);
   const [activeNode, setActiveNode] = useState<SecurityNode>(SECURITY_NODES[0]);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [tiltAngle, setTiltAngle] = useState(55);
+  const [tiltAngle] = useState(55);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const animationFrameRef = useRef<number | null>(null);
 
@@ -157,15 +156,11 @@ export function SecurityMachine3D({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold tracking-wider font-mono text-foreground uppercase">
-                SECURITY MACHINE // ARCHITECTURAL CORE
-              </span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#0A7A75]/15 text-[#0A7A75] border border-[#0A7A75]/30 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                DETERMINISTIC
+                SECURITY ARCHITECTURE CORE
               </span>
             </div>
             <span className="text-[11px] text-muted-foreground font-mono">
-              Autonomous Policy Enforcer & Telemetry Pipeline
+              Security & Telemetry Pipeline
             </span>
           </div>
         </div>
@@ -311,10 +306,10 @@ export function SecurityMachine3D({
                 {/* Coordinate Grid on Substrate */}
                 <div className="absolute inset-0 bg-grid-architectural opacity-40 rounded-xl" />
                 <div className="absolute top-2 left-2 text-[8px] font-mono text-muted-foreground/60 tracking-widest">
-                  SYS://SENTINEL-CORE-V4
+                  SENTINEL CORE
                 </div>
                 <div className="absolute bottom-2 right-2 text-[8px] font-mono text-[#0A7A75]/80">
-                  LATENCY 14MS
+                  TELEMETRY ACTIVE
                 </div>
               </div>
 
@@ -330,7 +325,7 @@ export function SecurityMachine3D({
                   <div className="w-7 h-7 rounded-full bg-[#D95E00]/20 border border-[#D95E00] flex items-center justify-center animate-pulse">
                     <ShieldCheck className="w-4 h-4 text-[#D95E00]" />
                   </div>
-                  <span className="text-[9px] font-bold font-mono text-white mt-1">CORE 99.4%</span>
+                  <span className="text-[9px] font-bold font-mono text-white mt-1">CORE ACTIVE</span>
                 </div>
 
                 {/* Floating Core Holographic Shield Ring */}
@@ -426,8 +421,8 @@ export function SecurityMachine3D({
             <span className="text-[#D95E00] font-bold">{mitigationsCount} DISPATCHED</span>
           </div>
           <div className="px-2 py-1 rounded bg-[#0F172A]/90 border border-arch backdrop-blur-md text-[11px] font-mono flex items-center gap-2">
-            <span className="text-muted-foreground">ZERO-TRUST:</span>
-            <span className="text-[#0A7A75] font-bold">100% ENFORCED</span>
+            <span className="text-muted-foreground">POLICY:</span>
+            <span className="text-[#0A7A75] font-bold">ENFORCED</span>
           </div>
         </div>
       </div>
@@ -439,12 +434,12 @@ export function SecurityMachine3D({
       >
         <div className="flex items-center gap-2">
           <Activity className="w-3.5 h-3.5 text-[#0A7A75]" />
-          <span>Real-time Hardware & Policy Consensus: NOMINAL</span>
+          <span>System Status: NOMINAL</span>
         </div>
         <div className="flex items-center gap-3 text-[11px]">
           <span>Rotate: {Math.round(rotationAngle)}°</span>
           <span>Tilt: {tiltAngle}°</span>
-          <span className="text-[#D95E00]">SHA256://EVIDENCE-VERIFIED</span>
+          <span className="text-[#D95E00]">VERIFIED</span>
         </div>
       </div>
     </div>

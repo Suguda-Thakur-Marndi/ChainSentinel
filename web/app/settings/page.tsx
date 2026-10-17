@@ -53,20 +53,11 @@ export default function SettingsPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#D95E00]/15 text-[#D95E00] border border-[#D95E00]/30">
-                  CONFIGURATION
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  ENTERPRISE PLATFORM SETTINGS
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                Security Posture & Control Tower Settings
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                Settings
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Operator identity, zero-trust token boundaries, human escalation thresholds, and visual design themes.
+                Operator profile, escalation thresholds, and appearance preferences.
               </p>
             </div>
 
@@ -84,7 +75,7 @@ export default function SettingsPage() {
               <ArchCardHeader>
                 <ArchCardTitle className="font-mono text-xs uppercase flex items-center gap-2">
                   <User className="w-4 h-4 text-[#D95E00]" />
-                  Authorized Operator Profile & RBAC
+                  Operator Profile
                 </ArchCardTitle>
               </ArchCardHeader>
               <ArchCardContent className="space-y-4 font-mono text-xs">
@@ -113,7 +104,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className="text-[10px] text-muted-foreground uppercase block mb-1">
-                      Enterprise Tenant
+                      Organization
                     </label>
                     <input
                       type="text"
@@ -139,17 +130,17 @@ export default function SettingsPage() {
               <ArchCardHeader>
                 <ArchCardTitle className="font-mono text-xs uppercase flex items-center gap-2">
                   <Lock className="w-4 h-4 text-[#0A7A75]" />
-                  Zero-Trust Token & Autonomous Policy Gates
+                  Security & Policy Thresholds
                 </ArchCardTitle>
               </ArchCardHeader>
               <ArchCardContent className="space-y-4 font-mono text-xs">
                 <div className="p-3 rounded bg-surface border border-arch flex items-center justify-between">
                   <div>
                     <span className="font-bold text-foreground block">
-                      HttpOnly Secure Cookie Boundary
+                      Session Security
                     </span>
                     <span className="text-[11px] text-muted-foreground">
-                      Client-side localStorage contains zero auth tokens. All session assertions are passed via encrypted HTTP cookies.
+                      Secure encrypted cookie session management.
                     </span>
                   </div>
                   <ArchBadge variant="teal">ENFORCED</ArchBadge>
@@ -211,13 +202,13 @@ export default function SettingsPage() {
               <ArchCardHeader>
                 <ArchCardTitle className="font-mono text-xs uppercase flex items-center gap-2">
                   <Sliders className="w-4 h-4 text-[#D95E00]" />
-                  Visual System & Architectural Palette
+                  Appearance
                 </ArchCardTitle>
               </ArchCardHeader>
               <ArchCardContent className="space-y-4 font-mono text-xs">
                 <div>
                   <span className="text-muted-foreground block mb-2">
-                    Select Active Theme Mode (Derived from deep-research-report.md)
+                    Theme Mode
                   </span>
                   <div className="grid grid-cols-2 gap-3 max-w-md">
                     <button
@@ -269,7 +260,7 @@ export default function SettingsPage() {
             <div className="flex justify-end gap-3">
               <ArchButton type="submit" variant="default" size="md" className="gap-2">
                 <Save className="w-4 h-4" />
-                Commit Security Configuration
+                Save Settings
               </ArchButton>
             </div>
           </form>

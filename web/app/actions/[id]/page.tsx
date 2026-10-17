@@ -68,7 +68,7 @@ export default function ActionDetailPage() {
     return (
       <ProtectedRoute>
         <AppShell>
-          <LoadingState message="Loading action execution dossier..." />
+          <LoadingState message="Loading action details..." />
         </AppShell>
       </ProtectedRoute>
     );
@@ -111,7 +111,7 @@ export default function ActionDetailPage() {
               href="/actions"
               className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-mono transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Action Monitor
+              <ArrowLeft className="w-4 h-4" /> Back to Actions
             </Link>
 
             <Link href={`/verification?action_id=${action.id}`}>
@@ -128,7 +128,7 @@ export default function ActionDetailPage() {
               <div className="flex flex-wrap items-center justify-between gap-4 font-mono">
                 <div className="space-y-1.5">
                   <span className="text-[10px] uppercase font-mono text-[#D95E00] block font-bold tracking-wider">
-                    Phase 17 Operational Action Dispatch
+                    Operational Action Dispatch
                   </span>
                   <h1 className="text-xl font-bold text-foreground tracking-tight font-mono">
                     {action.action_type}
@@ -170,7 +170,7 @@ export default function ActionDetailPage() {
             <ArchCard>
               <ArchCardContent className="space-y-2">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
-                  Execution Payload (Command Ingestion)
+                  Execution Payload
                 </h3>
                 <pre
                   className="p-3 rounded border border-arch text-[11px] font-mono text-muted-foreground overflow-x-auto max-h-60"
@@ -184,7 +184,7 @@ export default function ActionDetailPage() {
             <ArchCard>
               <ArchCardContent className="space-y-2">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground">
-                  Adapter Acknowledgement Result
+                  Adapter Result
                 </h3>
                 <pre
                   className="p-3 rounded border border-arch text-[11px] font-mono text-muted-foreground overflow-x-auto max-h-60"
@@ -196,11 +196,11 @@ export default function ActionDetailPage() {
             </ArchCard>
           </div>
 
-          {/* Explicit Notice: SUBMITTED != VERIFIED */}
+          {/* Verification Notice */}
           <div className="p-3.5 rounded-lg bg-amber-950/20 border border-amber-900/40 text-xs text-amber-300 font-mono flex items-center justify-between">
-            <span>IMPORTANT INVARIANT: SUBMITTED != VERIFIED</span>
+            <span>Status: Awaiting Verification</span>
             <span className="text-slate-400 text-[11px]">
-              Adapter execution acknowledgement is not equivalent to verified business mitigation.
+              Adapter execution acknowledgement requires downstream physical verification.
             </span>
           </div>
         </div>

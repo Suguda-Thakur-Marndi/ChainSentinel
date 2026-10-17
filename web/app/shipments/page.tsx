@@ -207,13 +207,13 @@ export default function ShipmentsPage() {
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
                 <Boxes className="w-5 h-5 text-[#D95E00]" />
-                Shipments Monitor
+                Shipments
                 <ArchBadge variant="orange">
                   {shipments.length} Total
                 </ArchBadge>
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Real-time multi-tier logistics tracking, carrier telemetry & predicted delays.
+                Tracking, carrier status, and predicted delay intelligence.
               </p>
             </div>
 
@@ -234,7 +234,7 @@ export default function ShipmentsPage() {
                 onClick={() => setShowCreateModal(true)}
               >
                 <Plus className="w-4 h-4" />
-                <span>Register Shipment</span>
+                <span>New Shipment</span>
               </ArchButton>
             </div>
           </div>
@@ -292,8 +292,8 @@ export default function ShipmentsPage() {
           <ArchModal
             isOpen={showCreateModal}
             onClose={() => setShowCreateModal(false)}
-            title="Register Authoritative Shipment"
-            subtitle="Deterministic Multi-tier Logistics Tracking"
+            title="New Shipment"
+            subtitle="Create tracked shipment"
           >
             {createError && (
               <div className="mb-4 p-3 rounded bg-rose-950/40 border border-rose-800 text-xs text-rose-300 font-mono">

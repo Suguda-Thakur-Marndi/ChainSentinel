@@ -140,19 +140,16 @@ export default function DashboardPage() {
           >
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#D95E00]/15 text-[#D95E00] border border-[#D95E00]/30">
-                  DEFENSE GRADE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75]" />
                 <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  ACTIVE AIRSPACE & SUPPLY CORRIDORS
+                  Live Operations
                 </span>
               </div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                CHAINSENTINEL // Control Tower Overview
+                Control Tower Overview
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Architectural intelligence, multi-agent sandboxing, deterministic optimization & human-governed mitigation.
+                Real-time supply chain monitoring, risk intelligence, and automated mitigation.
               </p>
             </div>
 
@@ -216,7 +213,7 @@ export default function DashboardPage() {
                 <MetricCard
                   title="Verified 30D"
                   value={metrics?.verified_actions_30d ?? 0}
-                  subtext="Zero Hallucination Actions"
+                  subtext="Verified Actions"
                   icon={ShieldCheck}
                   variant="success"
                 />
@@ -228,7 +225,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-[#D95E00]" />
                     <span className="text-xs font-bold font-mono text-foreground uppercase">
-                      Tactical Dispatch Quick Actions
+                      Quick Actions
                     </span>
                   </div>
                   <ArchBadge variant="orange">READY</ArchBadge>
@@ -241,7 +238,7 @@ export default function DashboardPage() {
                   >
                     <div className="flex items-center justify-between text-muted-foreground mb-1">
                       <Bot className="w-3.5 h-3.5 text-[#D95E00]" />
-                      <span className="text-[10px]">AI AGENTS</span>
+                      <span className="text-[10px]">AGENTS</span>
                     </div>
                     <span className="font-semibold text-foreground truncate">Inspect Agent Runs</span>
                   </Link>
@@ -274,7 +271,7 @@ export default function DashboardPage() {
                   >
                     <div className="flex items-center justify-between text-muted-foreground mb-1">
                       <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-[10px]">P99 14MS</span>
+                      <span className="text-[10px]">HEALTH</span>
                     </div>
                     <span className="font-semibold text-foreground truncate">System Health</span>
                   </Link>
@@ -289,7 +286,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-2">
               <MapCard
                 entities={mapEntities}
-                title="Global Live Logistics & Maritime AIS Telemetry"
+                title="Global Live Logistics & Maritime AIS Map"
                 height="h-[460px]"
               />
             </div>
@@ -310,7 +307,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2">
                     <Flame className="w-4 h-4 text-rose-500" />
                     <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">
-                      Active Threat Incidents
+                      Active Incidents
                     </h3>
                   </div>
                   <Link
@@ -357,8 +354,8 @@ export default function DashboardPage() {
                 className="pt-2 border-t flex items-center justify-between text-[11px] font-mono text-muted-foreground"
                 style={{ borderColor: "var(--border-arch)" }}
               >
-                <span>Deterministic Threat Detection</span>
-                <span className="text-[#0A7A75]">Continuous Ping</span>
+                <span>Incident Monitoring</span>
+                <span className="text-[#0A7A75]">Active</span>
               </div>
             </div>
           </div>
@@ -380,21 +377,21 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <UserCheck className="w-4 h-4 text-[#D95E00]" />
                   <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">
-                    Pending Governance Approvals ({approvals.length})
+                    Pending Approvals ({approvals.length})
                   </h3>
                 </div>
                 <Link
                   href="/approvals"
                   className="text-[11px] text-[#D95E00] hover:underline flex items-center gap-1 font-mono"
                 >
-                  Review Dossiers <ArrowRight className="w-3 h-3" />
+                  Review All <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
 
               <div className="space-y-2.5">
                 {approvals.length === 0 ? (
                   <EmptyState
-                    title="Governance Queue Clear"
+                    title="Queue Clear"
                     message="All automated escalations have been reviewed or resolved."
                   />
                 ) : (
@@ -441,22 +438,22 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#0A7A75]" />
                   <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">
-                    Deterministic Verification Ledger
+                    Verification Records
                   </h3>
                 </div>
                 <Link
                   href="/verification"
                   className="text-[11px] text-[#0A7A75] hover:underline flex items-center gap-1 font-mono"
                 >
-                  Audit Ledger <ArrowRight className="w-3 h-3" />
+                  View All <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
 
               <div className="space-y-2.5">
                 {verifications.length === 0 ? (
                   <EmptyState
-                    title="Ledger Awaiting Telemetry"
-                    message="Verification runs will populate here as mitigations complete."
+                    title="No Verification Records"
+                    message="Verification runs will appear here as actions complete."
                   />
                 ) : (
                   verifications.slice(0, 3).map((v) => (

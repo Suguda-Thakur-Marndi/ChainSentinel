@@ -125,13 +125,10 @@ export default function OptimizationPage() {
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
                 <Sliders className="w-5 h-5 text-[#D95E00]" />
-                Mathematical Optimization Engine
-                <ArchBadge variant="orange">
-                  Google OR-Tools
-                </ArchBadge>
+                Route & Network Optimization
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Deterministic Mixed-Integer Linear Programming (MILP) solver for multi-objective cost, delay & risk trade-offs.
+                Mixed-integer linear programming solver for multi-objective cost, delay, and risk trade-offs.
               </p>
             </div>
 
@@ -153,7 +150,7 @@ export default function OptimizationPage() {
                 isLoading={isSolving}
               >
                 <Play className="w-3.5 h-3.5" />
-                <span>{isSolving ? "Solving MILP..." : "Trigger Optimization Run"}</span>
+                <span>{isSolving ? "Solving..." : "Run Optimization"}</span>
               </ArchButton>
             </div>
           </div>

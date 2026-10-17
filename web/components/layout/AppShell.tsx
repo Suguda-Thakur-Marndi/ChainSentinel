@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className="min-h-screen flex items-center justify-center"
         style={{ backgroundColor: "var(--bg-primary)", color: "var(--text-primary)" }}
       >
-        <LoadingState message="Authenticating Control Tower session..." />
+        <LoadingState message="Authenticating session..." />
       </div>
     );
   }

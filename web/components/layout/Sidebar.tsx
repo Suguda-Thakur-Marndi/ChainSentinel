@@ -56,14 +56,14 @@ const NAVIGATION: NavGroup[] = [
   {
     group: "Command Center",
     items: [
-      { label: "Overview & Machine", href: "/dashboard", icon: LayoutDashboard },
+      { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
       { label: "Global Live Map", href: "/map", icon: Globe2 },
     ],
   },
   {
     group: "Agentic Execution",
     items: [
-      { label: "Agent Runs", href: "/agent-runs", icon: Bot, badge: "AI" },
+      { label: "Agent Runs", href: "/agent-runs", icon: Bot },
       { label: "Action Dispatch", href: "/actions", icon: Zap },
     ],
   },
@@ -80,7 +80,7 @@ const NAVIGATION: NavGroup[] = [
     group: "Security & Intelligence",
     items: [
       { label: "Evaluation & QA", href: "/evaluation", icon: Shield },
-      { label: "Threat Incidents", href: "/incidents", icon: Flame },
+      { label: "Incidents", href: "/incidents", icon: Flame },
       { label: "Risk Matrix", href: "/risks", icon: AlertOctagon },
       { label: "Digital Twin", href: "/digital-twin", icon: Network },
       { label: "Simulations", href: "/simulations", icon: Cpu },
@@ -91,7 +91,7 @@ const NAVIGATION: NavGroup[] = [
   {
     group: "Infrastructure & Platform",
     items: [
-      { label: "System Health", href: "/system-health", icon: Activity, badge: "P99" },
+      { label: "System Health", href: "/system-health", icon: Activity },
       { label: "Verification", href: "/verification", icon: ShieldCheck },
       { label: "Notifications", href: "/notifications", icon: Bell },
       { label: "Settings", href: "/settings", icon: Settings },
@@ -143,7 +143,7 @@ export function Sidebar({
           {/* Architectural Hex/Prism Logo */}
           <div className="w-8 h-8 rounded bg-[#151D2A] border border-[#D95E00]/60 p-1 flex items-center justify-center shadow-sm shadow-[#D95E00]/30 group-hover:border-[#D95E00] transition-colors flex-shrink-0">
             <span className="font-mono font-black text-xs text-[#D95E00] tracking-wider">
-              MS
+              CS
             </span>
           </div>
           {!isCollapsed && (
@@ -153,7 +153,7 @@ export function Sidebar({
               </span>
               <span className="text-[9px] text-muted-foreground font-mono tracking-wider flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse inline-block" />
-                ARCHITECTURAL INTEL
+                RISK INTELLIGENCE
               </span>
             </div>
           )}
@@ -178,7 +178,7 @@ export function Sidebar({
         >
           <div className="truncate">
             <span className="text-[9px] uppercase font-mono tracking-wider text-muted-foreground block">
-              ENTERPRISE TENANT
+              ORGANIZATION
             </span>
             <span className="text-xs font-medium text-foreground truncate block font-mono">
               {user?.organization?.name || "Global Defense Logistics"}

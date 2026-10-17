@@ -78,7 +78,7 @@ export default function RisksPage() {
     },
     {
       key: "title",
-      header: "Threat Assessment",
+      header: "Risk Description",
       sortable: true,
       render: (row) => (
         <div className="max-w-md">
@@ -105,7 +105,7 @@ export default function RisksPage() {
     },
     {
       key: "source",
-      header: "Ingestion Source",
+      header: "Source",
       sortable: true,
       render: (row) => (
         <span className="font-mono text-[11px] text-slate-400">{row.source || "SYSTEM"}</span>
@@ -130,13 +130,13 @@ export default function RisksPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Authoritative Risk Register
+                Risk Register
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800">
                   {risks.filter((r) => r.severity === "CRITICAL").length} Critical
                 </span>
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
-                Deterministic Bayesian and empirical risk scoring across supplier, port, route, and cargo vectors.
+                Risk scoring across suppliers, ports, routes, and cargo vectors.
               </p>
             </div>
 

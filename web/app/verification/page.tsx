@@ -113,13 +113,10 @@ export default function VerificationPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Deterministic Verification Engine Console
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  Phase 18
-                </span>
+                Verification
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
-                Strict ground-truth physical telemetry verification. AI does not determine the outcome.
+                Physical telemetry verification and observed post-action outcomes.
               </p>
             </div>
 
@@ -135,16 +132,16 @@ export default function VerificationPage() {
 
           {error && <ErrorState message={error} onRetry={fetchVerifications} />}
 
-          {/* Authoritative Deterministic Disclaimer Notice */}
-          <div className="p-3.5 rounded-lg bg-[#111827] border border-emerald-900/40 text-xs text-emerald-300 flex items-center justify-between">
+          {/* Evidence Precedence Notice */}
+          <div className="p-3 rounded-lg bg-[#111827] border border-emerald-900/40 text-xs text-emerald-300 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span className="font-semibold">
-                Verification is deterministic — AI does not determine the outcome.
+                Evidence Precedence: Observed Real-World Telemetry
               </span>
             </div>
             <span className="text-[11px] font-mono text-slate-400">
-              Evidence Authority: REAL &gt; ESTIMATED &gt; SIMULATED
+              Order: REAL &gt; ESTIMATED &gt; SIMULATED
             </span>
           </div>
 

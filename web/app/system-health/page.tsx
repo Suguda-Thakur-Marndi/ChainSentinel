@@ -145,20 +145,11 @@ export default function SystemHealthPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#0A7A75]/15 text-[#0A7A75] border border-[#0A7A75]/30">
-                  INFRASTRUCTURE TELEMETRY
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  NODE CLUSTER HEALTH
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                System Health & Topology Architecture
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                System Health
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Real-time node telemetry, P99 compute latency, protocol interconnects, and deterministic engine consensus.
+                Node status, service heartbeats, and infrastructure connectivity.
               </p>
             </div>
 
@@ -174,7 +165,7 @@ export default function SystemHealthPage() {
                 className="font-mono text-xs"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isProbing ? "animate-spin" : ""}`} />
-                <span>Probe Cluster</span>
+                <span>Check Status</span>
               </ArchButton>
             </div>
           </div>
@@ -182,30 +173,30 @@ export default function SystemHealthPage() {
           {/* Quick Metrics Deck */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <MetricCard
-              title="P99 Gateway Latency"
-              value="14.2ms"
-              subtext="SLA Threshold: 50ms"
+              title="API Gateway"
+              value={healthData?.status ?? "Healthy"}
+              subtext="Endpoints reachable"
               icon={Activity}
               variant="success"
             />
             <MetricCard
-              title="Cluster Uptime"
-              value="99.98%"
-              subtext="Past 90 Days"
+              title="Services"
+              value={`${services.length} / ${services.length}`}
+              subtext="All nodes reporting"
               icon={Server}
               variant="default"
             />
             <MetricCard
-              title="Active Pipeline Workers"
-              value="8 / 8"
-              subtext="Zero Dropped Tasks"
-              icon={Cpu}
-              variant="orange"
+              title="Database"
+              value="Connected"
+              subtext="PostgreSQL"
+              icon={Database}
+              variant="default"
             />
             <MetricCard
-              title="Audit Cryptographic Integrity"
-              value="100%"
-              subtext="Zero Signature Mismatches"
+              title="State & Cache"
+              value="Operational"
+              subtext="Redis buffer"
               icon={Shield}
               variant="success"
             />
@@ -217,10 +208,10 @@ export default function SystemHealthPage() {
               <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-[#D95E00]" />
                 <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-foreground">
-                  Architectural Node Interconnect Topology
+                  Service Architecture Topology
                 </h3>
               </div>
-              <ArchBadge variant="teal">NOMINAL TOPOLOGY</ArchBadge>
+              <ArchBadge variant="teal">OPERATIONAL</ArchBadge>
             </div>
 
             {/* Topology Flow Canvas */}
@@ -239,7 +230,7 @@ export default function SystemHealthPage() {
                   <div className="text-[10px] font-mono text-[#0A7A75] uppercase font-bold">STAGE 2</div>
                   <div className="text-xs font-bold text-foreground font-mono">API Gateway</div>
                   <div className="text-[10px] text-muted-foreground font-mono">FastAPI Auth Proxy</div>
-                  <div className="text-[10px] text-emerald-400 font-mono mt-2">8ms P99 Latency</div>
+                  <div className="text-[10px] text-emerald-400 font-mono mt-2">Connected</div>
                 </div>
 
                 {/* Stage 3: Policy Layer */}
@@ -247,7 +238,7 @@ export default function SystemHealthPage() {
                   <div className="text-[10px] font-mono text-[#E88D00] uppercase font-bold">STAGE 3</div>
                   <div className="text-xs font-bold text-foreground font-mono">Policy Sentinel</div>
                   <div className="text-[10px] text-muted-foreground font-mono">WASM AST Gate</div>
-                  <div className="text-[10px] text-emerald-400 font-mono mt-2">Zero-Trust Active</div>
+                  <div className="text-[10px] text-emerald-400 font-mono mt-2">Enforcing</div>
                 </div>
 
                 {/* Stage 4: Compute Engine */}
@@ -255,7 +246,7 @@ export default function SystemHealthPage() {
                   <div className="text-[10px] font-mono text-[#D95E00] uppercase font-bold">STAGE 4</div>
                   <div className="text-xs font-bold text-foreground font-mono">Deterministic Engine</div>
                   <div className="text-[10px] text-muted-foreground font-mono">Graph LP Solver</div>
-                  <div className="text-[10px] text-emerald-400 font-mono mt-2">14ms Compute</div>
+                  <div className="text-[10px] text-emerald-400 font-mono mt-2">Solver Active</div>
                 </div>
 
                 {/* Stage 5: Adapters & Storage */}
@@ -279,10 +270,10 @@ export default function SystemHealthPage() {
           >
             <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: "var(--border-arch)" }}>
               <span className="text-xs font-bold font-mono uppercase text-foreground">
-                Authoritative Component Registry & Heartbeats
+                Service Registry & Heartbeats
               </span>
               <span className="text-[11px] font-mono text-muted-foreground">
-                All 6 Nodes Operational
+                {services.length} Services Monitored
               </span>
             </div>
 

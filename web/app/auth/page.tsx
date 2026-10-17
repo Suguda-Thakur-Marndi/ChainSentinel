@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { RiskWiseLogo } from "@/components/auth/RiskWiseLogo";
+import { ChainSentinelLogo } from "@/components/auth/RiskWiseLogo";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthModeSwitch, AuthMode } from "@/components/auth/AuthModeSwitch";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
@@ -48,7 +48,7 @@ function AuthContent() {
       >
         <Loader2 className="w-6 h-6 text-blue-400 animate-spin" aria-hidden="true" />
         <p className="text-sm text-slate-300 font-medium">
-          Session verified. Redirecting to CHAINSENTINEL workspace…
+          Session verified. Redirecting…
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ function AuthContent() {
   return (
     <AuthCard>
       {/* Brand Header */}
-      <RiskWiseLogo size="md" />
+      <ChainSentinelLogo size="md" />
 
       {/* Error Alert Display */}
       {activeError && (
@@ -113,7 +113,7 @@ function AuthContent() {
           className="w-full py-2.5 px-4 rounded-xl border border-[#D95E00]/40 hover:border-[#D95E00]/80 bg-[#D95E00]/10 hover:bg-[#D95E00]/20 text-[#D95E00] text-xs font-mono font-medium flex items-center justify-center gap-2 transition-all cursor-pointer text-center shadow-sm shadow-[#D95E00]/10 select-none"
         >
           <span className="w-2 h-2 rounded-full bg-[#0A7A75] animate-pulse" />
-          Enter Mission Control (Demo Access)
+          Demo Access
         </a>
       </div>
 
@@ -153,10 +153,10 @@ export default function AuthPage() {
       <header className="w-full max-w-5xl flex items-center justify-between text-[11px] text-slate-500 font-mono z-10 py-1">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-          <span className="tracking-widest uppercase font-semibold">CHAINSENTINEL GATEWAY SECURE</span>
+          <span className="tracking-widest uppercase font-semibold">CHAINSENTINEL GATEWAY</span>
         </div>
         <div className="hidden sm:block text-slate-500 tracking-wider">
-          TLS 1.3 • STRICT MULTI-TENANT
+          TLS 1.3 ENCRYPTED
         </div>
       </header>
 
@@ -169,7 +169,7 @@ export default function AuthPage() {
 
       {/* Footer / Governance */}
       <footer className="w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500 z-10 py-1 border-t border-white/[0.04]">
-        <p>© {new Date().getFullYear()} CHAINSENTINEL Systems Inc. Enterprise Defense Edition.</p>
+        <p>© {new Date().getFullYear()} CHAINSENTINEL Inc. All rights reserved.</p>
         <div className="flex items-center gap-4 text-slate-400">
           <span className="hover:text-slate-200 transition-colors cursor-default">
             Security Architecture

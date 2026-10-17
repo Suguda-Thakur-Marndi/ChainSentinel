@@ -165,7 +165,7 @@ export default function GlobalLiveMapPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                  Global Live Telemetry Control Tower
+                  Global Live Map
                 </h1>
                 <span
                   className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider border ${
@@ -176,14 +176,14 @@ export default function GlobalLiveMapPage() {
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full ${
-                      wsConnected ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                      wsConnected ? "bg-emerald-400" : "bg-amber-400"
                     }`}
                   />
-                  {wsConnected ? "Live Telemetry Connected" : "Connecting Stream..."}
+                  {wsConnected ? "Live" : "Connecting..."}
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Real-time geospatial tracking across maritime AIS transponders, port gates, meteorological corridors, and verified supply chain assets.
+                Real-time geospatial tracking across vessels, flights, weather systems, and active shipments.
               </p>
             </div>
 
@@ -226,7 +226,7 @@ export default function GlobalLiveMapPage() {
           {/* Map Display Container */}
           {isLoading && objects.length === 0 ? (
             <div className="flex-1 min-h-[600px] flex items-center justify-center">
-              <LoadingState message="Establishing live telemetry stream with AISStream, OpenWeather & TomTom..." />
+              <LoadingState message="Loading live telemetry stream..." />
             </div>
           ) : error && objects.length === 0 ? (
             <ErrorState message={error} onRetry={fetchInitialData} />
@@ -237,7 +237,7 @@ export default function GlobalLiveMapPage() {
                 providers={providers}
                 wsConnected={wsConnected}
                 onRefresh={fetchInitialData}
-                title="Multi-Source Real-Time Geospatial Intelligence"
+                title="Live Geospatial Map"
                 height="h-full min-h-[550px]"
               />
             </div>

@@ -243,11 +243,11 @@ export default function ApprovalsPage() {
     },
     {
       key: "fingerprint",
-      header: "Cryptographic Seal",
+      header: "Audit Seal",
       render: (row) => (
         <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-800">
           <Fingerprint className="w-3 h-3" />
-          {row.fingerprint ? `${row.fingerprint.slice(0, 10)}...` : "SHA256:OK"}
+          {row.fingerprint ? `${row.fingerprint.slice(0, 10)}...` : "VERIFIED"}
         </span>
       ),
     },
@@ -272,20 +272,11 @@ export default function ApprovalsPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#D95E00]/15 text-[#D95E00] border border-[#D95E00]/30">
-                  GOVERNANCE GATE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D95E00] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  HUMAN-IN-THE-LOOP CONTROL
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                Human Governance Approvals & Sign-Off
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                Approvals
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Mandatory operational governance gate. Autonomous execution requires explicit authorized sign-off.
+                Review and sign off on high-impact mitigation decisions and automated action dispatches.
               </p>
             </div>
 
@@ -305,7 +296,7 @@ export default function ApprovalsPage() {
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  Pending Review ({pendingItems.length})
+                  Pending ({pendingItems.length})
                 </button>
                 <button
                   onClick={() => setTab("history")}
@@ -315,7 +306,7 @@ export default function ApprovalsPage() {
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  Sign-Off Archive
+                  History
                 </button>
               </div>
 
@@ -400,16 +391,16 @@ export default function ApprovalsPage() {
                       <p className="text-slate-300 mt-1">{dossier.rationale}</p>
                     </div>
 
-                    {/* Authoritative vs Non-Authoritative Section */}
+                    {/* Decision Data vs Advisory Section */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {/* Authoritative Evidence */}
+                      {/* Decision Data */}
                       <div className="p-3 rounded bg-blue-950/20 border border-blue-900/40 space-y-2">
                         <div className="flex items-center justify-between border-b border-blue-900/30 pb-1">
                           <span className="font-semibold text-blue-300 uppercase tracking-wider text-[10px]">
-                            Authoritative Engine Data
+                            Decision Data
                           </span>
                           <span className="text-[9px] font-mono text-blue-400 bg-blue-900/50 px-1 rounded">
-                            SOURCE_OF_TRUTH
+                            VERIFIED
                           </span>
                         </div>
                         <div className="space-y-1.5 text-slate-300">
@@ -419,7 +410,7 @@ export default function ApprovalsPage() {
                           </div>
                           {dossier.fingerprint && (
                             <div>
-                              <span className="text-slate-400 block text-[10px]">Cryptographic Fingerprint:</span>
+                              <span className="text-slate-400 block text-[10px]">Fingerprint:</span>
                               <span className="font-mono text-[10px] text-emerald-400 break-all">
                                 {dossier.fingerprint}
                               </span>
@@ -427,22 +418,22 @@ export default function ApprovalsPage() {
                           )}
                           {dossier.recommendation_summary && (
                             <div>
-                              <span className="text-slate-400 block text-[10px]">Deterministic Plan:</span>
+                              <span className="text-slate-400 block text-[10px]">Plan Summary:</span>
                               <span className="text-slate-200">{dossier.recommendation_summary}</span>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Non-Authoritative Claude Explanation */}
+                      {/* Advisory Narrative */}
                       <div className="p-3 rounded bg-amber-950/20 border border-amber-900/40 space-y-2">
                         <div className="flex items-center justify-between border-b border-amber-900/30 pb-1">
                           <span className="font-semibold text-amber-300 uppercase tracking-wider text-[10px] flex items-center gap-1">
                             <AlertTriangle className="w-3 h-3 text-amber-400" />
-                            LLM Advisory Narrative
+                            Advisory Narrative
                           </span>
                           <span className="text-[9px] font-mono text-amber-400 bg-amber-900/50 px-1 rounded">
-                            NON-AUTHORITATIVE
+                            ADVISORY
                           </span>
                         </div>
                         {dossier.claude_explanation ? (
@@ -467,7 +458,7 @@ export default function ApprovalsPage() {
                           </span>
                         )}
                         <p className="text-[9px] text-amber-400/80 border-t border-amber-900/20 pt-1">
-                          Notice: AI-generated summaries are purely advisory. Operational governance must rely on authoritative engine calculations.
+                          Notice: Advisory narrative is supplementary. Operational approvals rely on verified data.
                         </p>
                       </div>
                     </div>
@@ -477,7 +468,7 @@ export default function ApprovalsPage() {
                       <div className="space-y-3 pt-2 border-t border-[#243044]">
                         <div>
                           <label className="block text-slate-300 font-medium mb-1">
-                            Formal Operator Rationale & Justification (Recorded to Immutable Audit Trail)
+                            Operator Notes & Rationale (Recorded to Audit Trail)
                           </label>
                           <textarea
                             rows={3}
@@ -495,7 +486,7 @@ export default function ApprovalsPage() {
                             className="px-4 py-2 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800 font-medium transition-colors flex items-center gap-1.5"
                           >
                             <XCircle className="w-4 h-4" />
-                            Reject Action Candidate
+                            Reject
                           </button>
                           <button
                             onClick={() => handleDecision("APPROVE")}
@@ -503,7 +494,7 @@ export default function ApprovalsPage() {
                             className="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-colors flex items-center gap-1.5"
                           >
                             <CheckCircle2 className="w-4 h-4" />
-                            Authorize Execution
+                            Approve
                           </button>
                         </div>
                       </div>
@@ -529,7 +520,7 @@ export default function ApprovalsPage() {
               <div className="w-full max-w-lg rounded-lg border border-[#243044] bg-[#111827] shadow-2xl p-6 space-y-4">
                 <div className="flex items-center justify-between border-b border-[#243044] pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-white">Historical Sign-Off Record</h3>
+                    <h3 className="text-sm font-bold text-white">Approval Record</h3>
                     <span className="text-[10px] font-mono text-slate-400">
                       ID: {selectedHistory.id}
                     </span>

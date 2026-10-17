@@ -18,7 +18,7 @@ export default function RootPage() {
         className="min-h-screen flex items-center justify-center"
         style={{ backgroundColor: "var(--bg-primary)" }}
       >
-        <LoadingState message="Redirecting to Control Tower..." />
+        <LoadingState message="Redirecting to dashboard..." />
       </div>
     </ProtectedRoute>
   );

@@ -114,13 +114,10 @@ export default function DecisionsPage() {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#243044] pb-4">
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                Decision Formulation Subsystem
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
-                  Phase 15
-                </span>
+                Decisions
               </h1>
               <p className="text-xs text-slate-400 mt-0.5">
-                Deterministic synthesis of risk, prediction, scenario, and solver outcomes into actionable candidates.
+                Formulated mitigation decisions synthesized from risk predictions and operational constraints.
               </p>
             </div>
 

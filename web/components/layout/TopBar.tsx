@@ -68,7 +68,7 @@ export function TopBar({
         >
           <div className="flex items-center gap-2 truncate">
             <Search className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-            <span className="truncate">Search agent tools, agent runs, policies, shipments...</span>
+            <span className="truncate">Search shipments, risks, suppliers, policies...</span>
           </div>
           <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-muted-foreground border border-arch bg-surface flex-shrink-0">
             <Command className="w-2.5 h-2.5" /> K
@@ -86,7 +86,7 @@ export function TopBar({
             backgroundColor: "var(--bg-card)",
             borderColor: "var(--border-arch)",
           }}
-          title={isHealthy ? "API Gateway & Deterministic Core Online" : "Degraded Connectivity"}
+          title={isHealthy ? "API Gateway & System Core Online" : "Degraded Connectivity"}
         >
           <Activity
             className={`w-3.5 h-3.5 ${
@@ -107,7 +107,7 @@ export function TopBar({
                 : "text-amber-400"
             }`}
           >
-            {isHealthy === true ? "ONLINE (14ms)" : isHealthy === false ? "OFFLINE" : "PROBING"}
+            {isHealthy === true ? "ONLINE" : isHealthy === false ? "OFFLINE" : "PROBING"}
           </span>
         </Link>
 

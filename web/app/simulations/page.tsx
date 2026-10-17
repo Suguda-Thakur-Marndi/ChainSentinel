@@ -105,13 +105,10 @@ export default function SimulationsPage() {
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 font-mono">
                 <Cpu className="w-5 h-5 text-[#D95E00]" />
-                What-If Simulation Engine
-                <ArchBadge variant="orange">
-                  Phase 13
-                </ArchBadge>
+                Simulation Engine
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Deterministic stress testing, port disruption cascades & supply-chain counterfactual modeling.
+                Stress testing, port disruption cascades, and counterfactual supply chain modeling.
               </p>
             </div>
 
@@ -124,7 +121,7 @@ export default function SimulationsPage() {
               }}
             >
               <Play className="w-3.5 h-3.5" />
-              <span>Launch New Simulation</span>
+              <span>New Simulation</span>
             </ArchButton>
           </div>
 
@@ -135,7 +132,7 @@ export default function SimulationsPage() {
             isOpen={wizardOpen}
             onClose={() => setWizardOpen(false)}
             title={`Simulation Setup Wizard — Step ${step} of 3`}
-            subtitle="Monte Carlo Stochastic Cascade Modeling"
+            subtitle="Scenario Configuration"
           >
             {/* Step 1: Scenario Definition */}
             {step === 1 && (
@@ -279,7 +276,7 @@ export default function SimulationsPage() {
                     isLoading={isSubmitting}
                   >
                     <Play className="w-3.5 h-3.5" />
-                    <span>{isSubmitting ? "Executing Monte Carlo..." : "Execute Simulation"}</span>
+                    <span>{isSubmitting ? "Running Simulation..." : "Run Simulation"}</span>
                   </ArchButton>
                 </div>
               </div>
@@ -316,7 +313,7 @@ export default function SimulationsPage() {
                   <Zap className="w-3.5 h-3.5 text-[#E88D00]" /> Solver Handoff
                 </span>
                 <p className="text-xs font-mono text-muted-foreground leading-relaxed">
-                  Simulation shock vectors feed directly into Google OR-Tools to solve optimal candidate mitigations.
+                  Simulation shock vectors feed into the optimization solver to determine candidate mitigations.
                 </p>
               </ArchCardContent>
             </ArchCard>

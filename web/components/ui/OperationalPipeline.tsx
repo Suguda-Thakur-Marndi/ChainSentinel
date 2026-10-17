@@ -49,9 +49,9 @@ export function OperationalPipeline({
     <div className={`p-4 rounded-lg bg-[#111827] border border-[#243044] ${className}`}>
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Autonomous Operational Execution Pipeline
+          Operational Execution Pipeline
         </h4>
-        <span className="text-[11px] font-mono text-slate-500">Live Stage Telemetry</span>
+        <span className="text-[11px] font-mono text-slate-500">Pipeline Stages</span>
       </div>
 
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">

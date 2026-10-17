@@ -115,7 +115,7 @@ export default function OptimizationDetailPage() {
               href="/optimization"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Optimization Runs
+              <ArrowLeft className="w-4 h-4" /> Back to Optimization
             </Link>
 
             <button
@@ -132,19 +132,19 @@ export default function OptimizationDetailPage() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] uppercase font-mono text-blue-400 block font-bold">
-                  Google OR-Tools Mathematical Optimization Result
+                  Optimization Result
                 </span>
               </div>
               <h1 className="text-xl font-bold text-white tracking-tight">Run ID: {result.optimization_id}</h1>
               <p className="text-xs text-slate-400 font-mono">
-                Objective: <span className="text-slate-200">{result.objective}</span> • Solver: Google OR-Tools CP-SAT
+                Objective: <span className="text-slate-200">{result.objective}</span> • Solver: MILP CP-SAT
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <span className="text-[10px] uppercase font-mono text-slate-500 block mb-1">
-                  Authoritative Solver Status
+                  Status
                 </span>
                 <OptimizationStatusBadge status={result.status} />
               </div>
@@ -156,7 +156,7 @@ export default function OptimizationDetailPage() {
             <MetricCard
               title="Solver Execution Time"
               value={`${result.runtime_ms} ms`}
-              subtext="Sub-second deterministic solve"
+              subtext="Solver runtime"
               icon={Clock}
               variant="default"
               trend={null}
@@ -182,7 +182,7 @@ export default function OptimizationDetailPage() {
           {/* Pareto Frontier Section */}
           <div className="p-4 rounded-lg bg-[#111827] border border-[#243044]">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3 border-b border-[#243044] pb-2 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-blue-400" /> Multi-Objective Pareto Frontier
+              <Sparkles className="w-4 h-4 text-blue-400" /> Pareto Frontier
             </h3>
 
             {hasParetoData ? (
@@ -233,7 +233,7 @@ export default function OptimizationDetailPage() {
           {/* Candidate Alternatives List */}
           <div className="p-4 rounded-lg bg-[#111827] border border-[#243044]">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3 border-b border-[#243044] pb-2">
-              Candidate Mitigation Alternatives ({result.candidates?.length || 0})
+              Candidate Alternatives ({result.candidates?.length || 0})
             </h3>
 
             <div className="space-y-2.5">
@@ -258,7 +258,7 @@ export default function OptimizationDetailPage() {
                         <span className="font-semibold text-slate-200">{c.action_type}</span>
                         {c.candidate_id === result.selected_candidate_id && (
                           <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold">
-                            RECOMMENDED SOLUTION
+                            RECOMMENDED
                           </span>
                         )}
                         {c.pareto_optimal && (

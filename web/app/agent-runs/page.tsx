@@ -265,20 +265,11 @@ export default function AgentRunsPage() {
             style={{ borderColor: "var(--border-arch)" }}
           >
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#D95E00]/15 text-[#D95E00] border border-[#D95E00]/30">
-                  AGENTIC INTELLIGENCE
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0A7A75] animate-pulse" />
-                <span className="text-[11px] font-mono text-muted-foreground uppercase">
-                  SANDBOXED EXECUTION LOGS
-                </span>
-              </div>
-              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2 mt-1">
-                AI Agent Runs & Execution Traces
+              <h1 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                Agent Runs
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5 font-mono">
-                Full-fidelity audit of autonomous decisions, agent tool calls, policy evaluations, and cryptographic proof hashes.
+                Execution traces, tool calls, policy evaluations, and decision logs.
               </p>
             </div>
 
@@ -290,7 +281,7 @@ export default function AgentRunsPage() {
                 className="font-mono text-xs"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                <span>Refresh Runs</span>
+                <span>Refresh</span>
               </ArchButton>
             </div>
           </div>
@@ -356,11 +347,11 @@ export default function AgentRunsPage() {
                       backgroundColor: "var(--bg-card-elevated)",
                     }}
                   >
-                    <th className="py-3 px-4">Run Identifier</th>
-                    <th className="py-3 px-4">Agent Identity & Task</th>
+                    <th className="py-3 px-4">Run ID</th>
+                    <th className="py-3 px-4">Agent & Task</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4">Model & Runtime</th>
-                    <th className="py-3 px-4">Agent Tools Invoked</th>
+                    <th className="py-3 px-4">Tools Invoked</th>
                     <th className="py-3 px-4">Latency</th>
                     <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
@@ -535,16 +526,16 @@ export default function AgentRunsPage() {
 
                 <div className="pt-2 border-t flex justify-end gap-2" style={{ borderColor: "var(--border-arch)" }}>
                   <ArchButton variant="outline" size="sm" onClick={() => setSelectedRun(null)}>
-                    Close Trace
+                    Close
                   </ArchButton>
                   <ArchButton
                     variant="default"
                     size="sm"
                     onClick={() => {
-                      alert(`Exported cryptographic evidence dossier for Run ${selectedRun.id}`);
+                      alert(`Exported audit trace for Run ${selectedRun.id}`);
                     }}
                   >
-                    Export Signed Audit Dossier
+                    Export Trace
                   </ArchButton>
                 </div>
               </div>

@@ -104,7 +104,7 @@ export default function ShipmentDetailPage() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to load shipment dossier");
+          setError(err instanceof Error ? err.message : "Failed to load shipment details");
           setIsLoading(false);
         }
       });
@@ -117,7 +117,7 @@ export default function ShipmentDetailPage() {
     return (
       <ProtectedRoute>
         <AppShell>
-          <LoadingState message="Retrieving authoritative shipment dossier..." />
+          <LoadingState message="Loading shipment details..." />
         </AppShell>
       </ProtectedRoute>
     );
@@ -178,7 +178,7 @@ export default function ShipmentDetailPage() {
               href="/shipments"
               className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200"
             >
-              <ArrowLeft className="w-4 h-4" /> Back to Shipments Monitor
+              <ArrowLeft className="w-4 h-4" /> Back to Shipments
             </Link>
 
             <button
@@ -194,7 +194,7 @@ export default function ShipmentDetailPage() {
           <div className="p-5 rounded-lg bg-[#111827] border border-[#243044] flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase font-mono text-slate-500">Tracking Dossier</span>
+                <span className="text-xs uppercase font-mono text-slate-500">Shipment Details</span>
                 <EvidenceBadge source={shipment.data_provenance} />
               </div>
               <h1 className="text-2xl font-bold font-mono text-white tracking-tight">
@@ -242,7 +242,7 @@ export default function ShipmentDetailPage() {
             {/* Prediction Delay & ETA */}
             <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-amber-400" /> ML Predicted Delay & ETA
+                <Clock className="w-3.5 h-3.5 text-amber-400" /> Predicted Delay & ETA
               </span>
               <div className="flex items-center justify-between text-xs pt-1">
                 <div>
@@ -254,11 +254,11 @@ export default function ShipmentDetailPage() {
                   >
                     {shipment.delay_minutes !== null && shipment.delay_minutes !== undefined
                       ? `+${Math.round(shipment.delay_minutes)} mins`
-                      : "Zero Variance"}
+                      : "On Time"}
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-slate-500 block">Authoritative ETA</span>
+                  <span className="text-[10px] text-slate-500 block">Estimated Arrival</span>
                   <span className="font-mono text-slate-200">
                     {shipment.eta ? new Date(shipment.eta).toLocaleDateString() : "Pending"}
                   </span>
@@ -269,7 +269,7 @@ export default function ShipmentDetailPage() {
             {/* Spatial Position */}
             <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] space-y-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> GPS / AIS Coordinate
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> Coordinates
               </span>
               <div className="pt-1">
                 {shipment.current_lat !== null && shipment.current_lat !== undefined ? (
@@ -277,7 +277,7 @@ export default function ShipmentDetailPage() {
                     {shipment.current_lat.toFixed(4)}°, {shipment.current_lng?.toFixed(4)}°
                   </span>
                 ) : (
-                  <span className="text-xs text-slate-500 italic">No GPS coordinates locked</span>
+                  <span className="text-xs text-slate-500 italic">No coordinates available</span>
                 )}
                 <span className="text-[10px] text-slate-500 block mt-0.5">
                   Carrier: {shipment.carrier_id || "Unassigned"}
@@ -292,7 +292,7 @@ export default function ShipmentDetailPage() {
             <div>
               <MapCard
                 entities={mapEntities}
-                title="Current Position Telemetry"
+                title="Current Position"
                 height="h-[380px]"
               />
             </div>
@@ -301,14 +301,14 @@ export default function ShipmentDetailPage() {
             <div className="p-4 rounded-lg bg-[#111827] border border-[#243044] flex flex-col justify-between h-[380px]">
               <div>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3 border-b border-[#243044] pb-2 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-blue-400" /> Append-Only Telemetry Events
+                  <Activity className="w-4 h-4 text-blue-400" /> Telemetry Events
                 </h3>
 
                 <div className="space-y-3 overflow-y-auto max-h-[290px] pr-1">
                   {(!Array.isArray(events) || events.length === 0) ? (
                     <EmptyState
                       title="No Events Recorded"
-                      message="No raw telemetry pings logged for this container yet."
+                      message="No events logged for this shipment."
                     />
                   ) : (
                     events.map((ev, idx) => (
@@ -342,7 +342,7 @@ export default function ShipmentDetailPage() {
               </div>
 
               <div className="pt-2 border-t border-[#243044] text-[10px] font-mono text-slate-500 text-right">
-                Immutable Telemetry Stream
+                Live Event Stream
               </div>
             </div>
           </div>
@@ -354,14 +354,14 @@ export default function ShipmentDetailPage() {
                 <div className="flex items-center gap-2">
                   <AlertOctagon className="w-4 h-4 text-rose-400" />
                   <h3 className="text-xs font-bold uppercase tracking-wider text-rose-300">
-                    Linked Authoritative Risk Signal
+                    Linked Risk Signal
                   </h3>
                 </div>
                 <Link
                   href={`/risks/${linkedRisk.id}`}
                   className="text-xs text-blue-400 hover:underline flex items-center gap-1"
                 >
-                  Inspect Risk Detail <ExternalLink className="w-3 h-3" />
+                  View Risk <ExternalLink className="w-3 h-3" />
                 </Link>
               </div>
 

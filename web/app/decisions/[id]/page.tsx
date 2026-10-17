@@ -110,7 +110,7 @@ export default function DecisionDetailPage() {
             <Link href={`/approvals?decision_id=${decision.decision_id}`}>
               <ArchButton variant="default" size="sm">
                 <UserCheck className="w-3.5 h-3.5" />
-                <span>Submit to Human Gate</span>
+                <span>Submit for Approval</span>
               </ArchButton>
             </Link>
           </div>
@@ -119,7 +119,7 @@ export default function DecisionDetailPage() {
             <div className="p-5 flex flex-wrap items-center justify-between gap-4 font-mono">
               <div className="space-y-1.5 max-w-2xl">
                 <span className="text-[10px] uppercase font-mono text-[#D95E00] block font-bold tracking-wider">
-                  Phase 15 Decision Synthesis
+                  Decision Synthesis
                 </span>
                 <h1 className="text-xl font-bold text-foreground tracking-tight">{decision.title}</h1>
                 <p className="text-xs text-muted-foreground font-mono">
@@ -138,7 +138,7 @@ export default function DecisionDetailPage() {
             <ArchCard>
               <ArchCardContent className="space-y-2.5">
                 <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-                  <Scale className="w-4 h-4 text-[#D95E00]" /> Deterministic Synthesis Rationale
+                  <Scale className="w-4 h-4 text-[#D95E00]" /> Synthesis Rationale
                 </h3>
                 <p className="text-xs font-mono text-muted-foreground leading-relaxed">{decision.rationale}</p>
               </ArchCardContent>
@@ -149,7 +149,7 @@ export default function DecisionDetailPage() {
                 <ArchCardContent className="space-y-2.5">
                   <div className="flex items-center justify-between font-mono">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#0A7A75] flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-[#0A7A75]" /> Advisory AI Reasoning
+                      <Sparkles className="w-4 h-4 text-[#0A7A75]" /> Advisory Reasoning
                     </h3>
                     <ArchBadge variant="teal">Advisory</ArchBadge>
                   </div>
@@ -157,7 +157,7 @@ export default function DecisionDetailPage() {
                     &ldquo;{decision.ai_explanation}&rdquo;
                   </p>
                   <div className="pt-2 border-t border-arch text-[10px] font-mono text-muted-foreground">
-                    Notice: Claude / Gemini is advisory only. Backend mathematical optimization remains authoritative.
+                    Notice: Advisory reasoning is non-binding. Mathematical solver outputs determine optimization.
                   </div>
                 </ArchCardContent>
               </ArchCard>

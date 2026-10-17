@@ -103,7 +103,7 @@ export function MetricCard({
             </span>
           </div>
         ) : (
-          <span className="text-[11px] text-muted-foreground/70 italic">Authoritative Telemetry</span>
+          <span />
         )}
         {subtext && <span className="text-[11px] text-muted-foreground truncate">{subtext}</span>}
       </div>

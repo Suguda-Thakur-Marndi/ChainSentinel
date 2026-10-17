@@ -116,14 +116,11 @@ export default function EvaluationPage() {
         >
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="flex items-center gap-2 text-[#0A7A75] text-xs font-semibold tracking-wider uppercase mb-2 font-mono">
-                <ShieldCheck className="w-4 h-4" /> Comprehensive Security & QA Framework
-              </div>
-              <h1 className="text-2xl font-bold text-foreground tracking-tight font-mono">
-                Deterministic Evaluation & Safety Framework
+              <h1 className="text-xl font-bold text-foreground tracking-tight font-mono">
+                System Evaluation & Quality Assurance
               </h1>
               <p className="text-muted-foreground text-xs mt-1 max-w-2xl font-mono">
-                Benchmarking LangGraph agents, RAG groundedness, delay ML inference, simulation propagation, OR-Tools optimization, decision ranking, human approval gates, sensory verification, and security invariants against versioned golden datasets.
+                Automated regression testing and benchmark evaluations across model inferences, simulation pipelines, and safety invariants.
               </p>
             </div>
             <ArchButton
@@ -133,7 +130,7 @@ export default function EvaluationPage() {
               size="sm"
               className="font-mono text-xs"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh Benchmark
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /> Refresh
             </ArchButton>
           </div>
         </div>
