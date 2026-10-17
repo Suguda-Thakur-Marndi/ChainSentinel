@@ -113,7 +113,7 @@ async def websocket_map_live(
     session = None
     if session_id:
         session_svc = get_session_service()
-        session = await session_svc.get_session(session_id)
+        session = session_svc.get_session(session_id)
 
     if is_prod and not session:
         logger.warning("[MapWebSocket] Rejected unauthenticated connection in production.")

@@ -400,14 +400,14 @@ class TestPhase11MandatoryCriticalTests:
     def test_critical_15_model_metadata_cannot_be_fabricated(self) -> None:
         # MLModelMetadata enforces extra="forbid" and validation
         with pytest.raises(Exception):
-            MLModelMetadata(
-                model_id="test_m",
-                model_family=ModelFamily.SHIPMENT_DELAY,
-                model_version="1.0.0",
-                task_type=TaskType.REGRESSION,
-                metrics=ModelMetrics(is_calculated=True, mae=10.0, rmse=15.0),
-                fabricated_field="illegal_value",  # Forbidden extra field!
-            )
+            MLModelMetadata.model_validate({
+                "model_id": "test_m",
+                "model_family": ModelFamily.SHIPMENT_DELAY,
+                "model_version": "1.0.0",
+                "task_type": TaskType.REGRESSION,
+                "metrics": ModelMetrics(is_calculated=True, mae=10.0, rmse=15.0),
+                "fabricated_field": "illegal_value",  # Forbidden extra field!
+            })
 
     # 16. Feature schema mismatch fails safely.
     def test_critical_16_feature_schema_mismatch_fails_safely(self) -> None:

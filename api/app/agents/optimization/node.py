@@ -27,6 +27,7 @@ from app.optimization.candidates import CandidateRouteGenerator
 from app.optimization.contracts import (
     OptimizationDomain,
     OptimizationObjectiveType,
+    OptimizationProvenance,
     OptimizationRequest,
     OptimizationResult,
     OptimizationStatus,
@@ -181,17 +182,24 @@ def optimization_node(state: AgentGraphStateDict) -> Dict[str, Any]:
                 solver_config=opt_request.solver_config,
             )
             sol_status, obj_val, var_assignments, solver_meta = OrToolsSolver.solve(prob)
+            duration_ms = (time.perf_counter() - start_time) * 1000.0
+            provenance = OptimizationProvenance(
+                organization_id=org_id,
+                digital_twin_snapshot_fingerprint=snapshot.twin_fingerprint if snapshot else ("0" * 64),
+                digital_twin_snapshot_id=snapshot.twin_id if snapshot else None,
+                scenario_id=state.get("scenario_id"),
+                simulation_id=sim_id,
+                simulation_fingerprint=state.get("simulation_reference", {}).get("fingerprint") if isinstance(state.get("simulation_reference"), dict) else None,
+            )
             opt_result = ResultBuilder.build_result(
                 problem=prob,
                 status=sol_status,
                 objective_value=obj_val,
                 variable_assignments=var_assignments,
                 solver_metadata=solver_meta,
-                digital_twin_snapshot_id=snapshot.twin_id if snapshot else None,
-                digital_twin_snapshot_fingerprint=snapshot.twin_fingerprint if snapshot else ("0" * 64),
-                scenario_id=state.get("scenario_id"),
-                simulation_id=sim_id,
-                simulation_fingerprint=state.get("simulation_reference", {}).get("fingerprint") if isinstance(state.get("simulation_reference"), dict) else None,
+                provenance=provenance,
+                request_fingerprint=prob.fingerprint,
+                duration_ms=duration_ms,
             )
 
         opt_dict = opt_result.model_dump(mode="json")

@@ -129,7 +129,6 @@ def simulation_node(state: AgentGraphStateDict) -> Dict[str, Any]:
 
         # Fallback in-memory minimal snapshot if db not available
         if snapshot is None:
-            from app.digital_twin.contracts import DigitalTwinNode, DigitalTwinEdge, DigitalTwinGraphMeta
             import hashlib
             from datetime import datetime, timezone
 
@@ -138,19 +137,14 @@ def simulation_node(state: AgentGraphStateDict) -> Dict[str, Any]:
                 twin_id=f"twin_{org_id[:8]}",
                 organization_id=org_id,
                 version="1.0",
+                node_count=0,
+                edge_count=0,
                 nodes={},
                 edges={},
-                meta=DigitalTwinGraphMeta(
-                    organization_id=org_id,
-                    twin_id=f"twin_{org_id[:8]}",
-                    node_count=0,
-                    edge_count=0,
-                    total_flow_capacity=0.0,
-                    graph_density=0.0,
-                    is_connected=True,
-                    created_at=datetime.now(timezone.utc),
-                ),
+                source_fingerprint=fp,
                 twin_fingerprint=fp,
+                generated_at=datetime.now(timezone.utc),
+                status="CURRENT",
             )
 
         if snapshot.organization_id != org_id:
