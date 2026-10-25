@@ -5,7 +5,7 @@ Exposes and registers all RiskWise 2.0 domain entities with Base.metadata.
 from app.db.base import Base, generate_uuid
 
 # Tenancy & Identity
-from app.models.tenancy import Organization, User
+from app.models.tenancy import Organization, OrganizationInvitation, OrganizationMembership, PasswordResetToken, User
 
 # Supply Chain Network
 from app.models.network import (
@@ -64,6 +64,9 @@ __all__ = [
     # Tenancy
     "Organization",
     "User",
+    "OrganizationMembership",
+    "OrganizationInvitation",
+    "PasswordResetToken",
     # Network
     "Supplier",
     "SupplierSite",

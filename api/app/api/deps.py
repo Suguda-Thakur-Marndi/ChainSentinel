@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.context import AuthenticatedContext
 from app.db.session import get_db
-from app.models.tenancy import Organization, User
+from app.models.tenancy import Organization, OrganizationMembership, User
 from app.schemas.session import SessionData
 from app.services.session_service import SessionService, get_session_service
 
@@ -47,7 +47,7 @@ def get_authenticated_context(
 
     Raises:
         HTTPException(401): If user does not exist or has been deactivated.
-        HTTPException(403): If the user's organization has been suspended.
+        HTTPException(403): If the user's organization has been suspended or membership is invalid.
     """
     user = db.get(User, session_data.user_id)
     if not user:
@@ -65,18 +65,50 @@ def get_authenticated_context(
         )
 
     organization: Optional[Organization] = None
-    if user.org_id:
-        organization = user.organization or db.get(Organization, user.org_id)
-        if organization and not organization.is_active:
+    active_org_id = session_data.organization_id or user.org_id
+    active_role = session_data.role or user.role or "ANALYST"
+
+    if active_org_id:
+        membership = (
+            db.query(OrganizationMembership)
+            .filter(
+                OrganizationMembership.user_id == user.id,
+                OrganizationMembership.org_id == active_org_id,
+                OrganizationMembership.is_active == True,
+            )
+            .first()
+        )
+        if not membership:
+            if user.org_id == active_org_id:
+                membership = OrganizationMembership(
+                    user_id=user.id,
+                    org_id=active_org_id,
+                    role=user.role or "ANALYST",
+                    is_active=True,
+                )
+                db.add(membership)
+                db.commit()
+                db.refresh(membership)
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Access denied: user is not an authorized member of this organization",
+                )
+
+        organization = db.get(Organization, active_org_id)
+        if not organization or not organization.is_active:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Organization is inactive",
             )
+        active_role = membership.role or user.role or "ANALYST"
 
     return AuthenticatedContext(
         user=user,
         session_data=session_data,
         organization=organization,
+        organization_id=active_org_id,
+        role=active_role,
     )
 
 

@@ -16,6 +16,7 @@ import { useAuth } from "@/lib/auth/AuthContext";
 import { useTheme } from "@/lib/theme/ThemeContext";
 import { apiClient } from "@/lib/api/client";
 import { RoleBadge } from "../ui/Badges";
+import { OrganizationSelector } from "../auth/OrganizationSelector";
 
 export function TopBar({
   onOpenSearch,
@@ -139,6 +140,11 @@ export function TopBar({
             </span>
           )}
         </Link>
+
+        {/* Tenant Organization Switcher */}
+        <div className="hidden md:flex items-center">
+          <OrganizationSelector variant="dropdown" />
+        </div>
 
         {/* Operator Profile */}
         <div

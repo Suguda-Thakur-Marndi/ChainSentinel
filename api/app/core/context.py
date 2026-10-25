@@ -12,13 +12,19 @@ class AuthenticatedContext:
         user: User,
         session_data: SessionData,
         organization: Optional[Organization] = None,
+        organization_id: Optional[str] = None,
+        role: Optional[str] = None,
     ):
         self.user = user
         self.session_data = session_data
         self.user_id: str = user.id
         self.organization: Optional[Organization] = organization
-        self.organization_id: Optional[str] = user.org_id
-        self.role: str = user.role
+        self.organization_id: Optional[str] = (
+            organization_id
+            if organization_id is not None
+            else (organization.id if organization else user.org_id)
+        )
+        self.role: str = role if role is not None else (user.role or "ANALYST")
 
     @property
     def org_id(self) -> Optional[str]:

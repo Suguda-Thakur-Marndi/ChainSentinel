@@ -215,6 +215,24 @@ class SessionService:
         )
         return new_session
 
+    def update_session(
+        self,
+        session_id: str,
+        organization_id: Optional[str],
+        role: Optional[str] = None,
+    ) -> Optional[SessionData]:
+        """Update active organization boundary and role for an active session."""
+        session_data = self.get_session(session_id)
+        if not session_data:
+            return None
+        session_data.organization_id = organization_id
+        if role:
+            session_data.role = role
+        now = datetime.now(timezone.utc)
+        remaining_ttl = max(1, int((session_data.expires_at - now).total_seconds()))
+        self.store.set(session_id, session_data, ttl_seconds=remaining_ttl)
+        return session_data
+
     @staticmethod
     def set_session_cookie(response: Response, session_id: str) -> None:
         """Set the secure HttpOnly session cookie on the outgoing HTTP response."""

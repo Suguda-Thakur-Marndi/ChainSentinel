@@ -39,6 +39,7 @@ import {
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useTheme } from "@/lib/theme/ThemeContext";
 import { RoleBadge } from "../ui/Badges";
+import { OrganizationSelector } from "../auth/OrganizationSelector";
 
 interface NavItem {
   label: string;
@@ -176,13 +177,11 @@ export function Sidebar({
             borderColor: "var(--border-arch)",
           }}
         >
-          <div className="truncate">
-            <span className="text-[9px] uppercase font-mono tracking-wider text-muted-foreground block">
+          <div className="truncate flex-1 mr-2">
+            <span className="text-[9px] uppercase font-mono tracking-wider text-muted-foreground block mb-0.5">
               ORGANIZATION
             </span>
-            <span className="text-xs font-medium text-foreground truncate block font-mono">
-              {user?.organization?.name || "Global Defense Logistics"}
-            </span>
+            <OrganizationSelector variant="dropdown" />
           </div>
           {user?.role && <RoleBadge role={user.role} />}
         </div>

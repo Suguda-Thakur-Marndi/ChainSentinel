@@ -1,6 +1,14 @@
 """Pydantic schemas package for RiskWise 2.0 API contracts."""
 from app.schemas.health import DatabaseHealthResponse, HealthResponse
-from app.schemas.auth import GoogleAuthUrlResponse, LogoutResponse, OrganizationSummary, UserMeResponse
+from app.schemas.auth import (
+    GoogleAuthUrlResponse,
+    LogoutResponse,
+    OrganizationMembershipSummary,
+    OrganizationSummary,
+    SwitchOrgRequest,
+    SwitchOrgResponse,
+    UserMeResponse,
+)
 from app.schemas.session import SessionData
 from app.schemas.common import (
     ErrorDetail,

@@ -206,17 +206,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [state.permissions]
   );
 
+  const switchOrg = useCallback(
+    async (orgId: string): Promise<UserMeResponse | null> => {
+      try {
+        const res = await apiClient.auth.switchOrg(orgId);
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("riskwise_preferred_org_id", orgId);
+          } catch {
+            // Ignore storage restrictions
+          }
+        }
+        const nextState = resolveAuthState(res.user);
+        setState(nextState);
+        return res.user;
+      } catch (err) {
+        console.error("Failed to switch organization:", err);
+        throw err;
+      }
+    },
+    []
+  );
+
   const contextValue: AuthContextType = useMemo(
     () => ({
       ...state,
       isLoading: state.status === "loading",
       isAuthenticated: state.status === "authenticated",
       refreshSession,
+      switchOrg,
       logout,
       hasRole,
       hasPermission,
     }),
-    [state, refreshSession, logout, hasRole, hasPermission]
+    [state, refreshSession, switchOrg, logout, hasRole, hasPermission]
   );
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

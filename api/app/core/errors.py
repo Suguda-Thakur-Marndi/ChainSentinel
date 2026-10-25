@@ -212,15 +212,25 @@ def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(RequestValidationError)
     async def validation_error_handler(request: Request, exc: RequestValidationError):
         logger.warning("Validation error on path %s: %s", request.url, exc.errors())
+        sanitized_errors = []
+        for err in exc.errors():
+            err_dict = dict(err)
+            if "ctx" in err_dict and isinstance(err_dict["ctx"], dict):
+                err_dict["ctx"] = {
+                    k: str(v) if isinstance(v, Exception) else v
+                    for k, v in err_dict["ctx"].items()
+                }
+            sanitized_errors.append(err_dict)
+
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             content={
                 "error": {
                     "code": "VALIDATION_ERROR",
                     "message": "Request validation failed",
-                    "details": exc.errors(),
+                    "details": sanitized_errors,
                 },
-                "detail": exc.errors(),
+                "detail": sanitized_errors,
             },
         )
 

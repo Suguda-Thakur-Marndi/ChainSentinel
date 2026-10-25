@@ -222,6 +222,20 @@ class OAuthService:
 
             db.commit()
             db.refresh(user)
+
+            # Ensure membership record exists
+            if org and org.is_active:
+                m = db.query(models.OrganizationMembership).filter_by(user_id=user.id, org_id=org.id).first()
+                if not m:
+                    m = models.OrganizationMembership(
+                        user_id=user.id,
+                        org_id=org.id,
+                        role=user.role or "ANALYST",
+                        is_active=True,
+                    )
+                    db.add(m)
+                    db.commit()
+
             return user, org
 
         # 2. First login / New user provisioning
@@ -246,6 +260,15 @@ class OAuthService:
             last_active_at=datetime.now(timezone.utc),
         )
         db.add(new_user)
+        db.flush()
+
+        new_membership = models.OrganizationMembership(
+            user_id=new_user.id,
+            org_id=new_org.id,
+            role="Admin",
+            is_active=True,
+        )
+        db.add(new_membership)
         db.commit()
         db.refresh(new_user)
 

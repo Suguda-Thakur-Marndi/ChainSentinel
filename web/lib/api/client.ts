@@ -9,7 +9,22 @@
  * - Typed accessor domains matching the authoritative FastAPI backend
  */
 
-import { LogoutResponse, UserMeResponse } from "../auth/types";
+import type {
+  AcceptInvitationRequest,
+  CompanyRegisterRequest,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  InvitationDetailsResponse,
+  InvitationResponse,
+  InviteEmployeeRequest,
+  LoginRequest,
+  LogoutResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  SwitchOrgRequest,
+  SwitchOrgResponse,
+  UserMeResponse,
+} from "../auth/types";
 import type {
   ActionCommand,
   ActionCreate,
@@ -256,6 +271,42 @@ class ApiClient {
 
     logout: (): Promise<LogoutResponse> => {
       return this.post<LogoutResponse>("/api/v1/auth/logout");
+    },
+
+    registerCompany: (data: CompanyRegisterRequest): Promise<UserMeResponse> => {
+      return this.post<UserMeResponse>("/api/v1/auth/register-company", data);
+    },
+
+    login: (data: LoginRequest): Promise<UserMeResponse> => {
+      return this.post<UserMeResponse>("/api/v1/auth/login", data);
+    },
+
+    forgotPassword: (data: ForgotPasswordRequest): Promise<ForgotPasswordResponse> => {
+      return this.post<ForgotPasswordResponse>("/api/v1/auth/forgot-password", data);
+    },
+
+    resetPassword: (data: ResetPasswordRequest): Promise<ResetPasswordResponse> => {
+      return this.post<ResetPasswordResponse>("/api/v1/auth/reset-password", data);
+    },
+
+    inviteEmployee: (data: InviteEmployeeRequest): Promise<InvitationResponse> => {
+      return this.post<InvitationResponse>("/api/v1/auth/invitations", data);
+    },
+
+    listInvitations: (): Promise<InvitationResponse[]> => {
+      return this.get<InvitationResponse[]>("/api/v1/auth/invitations");
+    },
+
+    getInvitation: (token: string): Promise<InvitationDetailsResponse> => {
+      return this.get<InvitationDetailsResponse>(`/api/v1/auth/invitations/${encodeURIComponent(token)}`);
+    },
+
+    acceptInvitation: (token: string, data: AcceptInvitationRequest): Promise<UserMeResponse> => {
+      return this.post<UserMeResponse>(`/api/v1/auth/invitations/${encodeURIComponent(token)}/accept`, data);
+    },
+
+    switchOrg: (orgId: string): Promise<SwitchOrgResponse> => {
+      return this.post<SwitchOrgResponse>("/api/v1/auth/switch-org", { org_id: orgId });
     },
 
     getGoogleAuthUrl: (returnTo: string = "/"): string => {

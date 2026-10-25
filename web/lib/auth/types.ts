@@ -1,9 +1,9 @@
 /**
- * Frontend Authentication & Identity Types for RiskWise 2.0 (Phase 3 Step 6).
+ * Frontend Authentication & Identity Types for ChainSentinel.
  *
  * Strictly aligned with FastAPI backend Pydantic models in:
- * - apps/api/app/schemas/auth.py
- * - apps/api/app/schemas/session.py
+ * - api/app/schemas/auth.py
+ * - api/app/schemas/session.py
  */
 
 export interface OrganizationSummary {
@@ -11,6 +11,14 @@ export interface OrganizationSummary {
   name: string;
   slug: string | null;
   plan: string;
+  is_active: boolean;
+}
+
+export interface OrganizationMembershipSummary {
+  org_id: string;
+  organization_name: string;
+  organization_slug?: string | null;
+  role: string;
   is_active: boolean;
 }
 
@@ -22,6 +30,7 @@ export interface UserMeResponse {
   org_id: string | null;
   organization_id?: string | null;
   organization: OrganizationSummary | null;
+  organizations?: OrganizationMembershipSummary[];
   permissions: string[];
 }
 
@@ -33,6 +42,71 @@ export interface LogoutResponse {
 export interface GoogleAuthUrlResponse {
   authorization_url: string;
   state: string;
+}
+
+export interface CompanyRegisterRequest {
+  full_name: string;
+  company_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  terms_accepted: boolean;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  status: string;
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  new_password: string;
+  confirm_password: string;
+}
+
+export interface ResetPasswordResponse {
+  status: string;
+  message: string;
+}
+
+export interface InviteEmployeeRequest {
+  email: string;
+  role?: string;
+}
+
+export interface InvitationResponse {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  org_id: string;
+  organization_name?: string | null;
+  expires_at: string;
+  invitation_link?: string | null;
+  created_at: string;
+}
+
+export interface InvitationDetailsResponse {
+  email: string;
+  role: string;
+  organization_name: string;
+  organization_slug?: string | null;
+  expires_at: string;
+}
+
+export interface AcceptInvitationRequest {
+  full_name: string;
+  password: string;
+  confirm_password: string;
 }
 
 export type AuthStatus =
@@ -53,10 +127,22 @@ export interface AuthState {
   error: string | null;
 }
 
+export interface SwitchOrgRequest {
+  org_id: string;
+}
+
+export interface SwitchOrgResponse {
+  status: string;
+  active_organization_id: string;
+  role: string;
+  user: UserMeResponse;
+}
+
 export interface AuthContextType extends AuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
   refreshSession: () => Promise<UserMeResponse | null>;
+  switchOrg: (orgId: string) => Promise<UserMeResponse | null>;
   logout: () => Promise<void>;
   hasRole: (...roles: string[]) => boolean;
   hasPermission: (permission: string) => boolean;
