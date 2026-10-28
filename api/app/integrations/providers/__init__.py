@@ -69,6 +69,25 @@ from app.integrations.providers.tomtom import (
     TomTomAdapter,
     TomTomNormalizer,
 )
+from app.integrations.providers.usgs import (
+    DEFAULT_USGS_FEED_URL,
+    DEFAULT_USGS_QUERY_URL,
+    USGSEarthquakeAdapter,
+    USGSEarthquakeNormalizer,
+)
+from app.integrations.providers.openmeteo import (
+    DEFAULT_OPENMETEO_FORECAST_URL,
+    DEFAULT_OPENMETEO_MARINE_URL,
+    OpenMeteoAdapter,
+    OpenMeteoNormalizer,
+)
+from app.integrations.providers.nominatim import (
+    DEFAULT_NOMINATIM_BASE_URL,
+    DEFAULT_NOMINATIM_SEARCH_URL,
+    DEFAULT_NOMINATIM_REVERSE_URL,
+    NominatimAdapter,
+    NominatimNormalizer,
+)
 
 __all__ = [
     "DEFAULT_OPENWEATHER_BASE_URL",
@@ -126,5 +145,21 @@ __all__ = [
     "TavilySearchResult",
     "TavilySearchResponse",
     "create_tavily_research_job",
+    # USGS Earthquake
+    "DEFAULT_USGS_FEED_URL",
+    "DEFAULT_USGS_QUERY_URL",
+    "USGSEarthquakeAdapter",
+    "USGSEarthquakeNormalizer",
+    # Open-Meteo Weather & Marine
+    "DEFAULT_OPENMETEO_FORECAST_URL",
+    "DEFAULT_OPENMETEO_MARINE_URL",
+    "OpenMeteoAdapter",
+    "OpenMeteoNormalizer",
+    # Nominatim Geocoding
+    "DEFAULT_NOMINATIM_BASE_URL",
+    "DEFAULT_NOMINATIM_SEARCH_URL",
+    "DEFAULT_NOMINATIM_REVERSE_URL",
+    "NominatimAdapter",
+    "NominatimNormalizer",
 ]
 

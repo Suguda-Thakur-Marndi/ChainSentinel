@@ -123,6 +123,8 @@ class TelemetryIngestionWorker:
             "shipment": "LOGISTICS",
             "incident": "GENERAL",
             "port": "OCEAN",
+            "seismic": "GEOLOGICAL",
+            "earthquake": "GEOLOGICAL",
         }
 
         # 3. Persist valid objects into signals and correlate shipments

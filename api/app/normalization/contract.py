@@ -47,6 +47,7 @@ class SignalDomain(str, Enum):
     RAIL = "RAIL"
     LOGISTICS = "LOGISTICS"
     INTELLIGENCE = "INTELLIGENCE"
+    GEOLOGICAL = "GEOLOGICAL"
     GENERAL = "GENERAL"
 
 

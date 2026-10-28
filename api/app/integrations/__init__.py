@@ -151,6 +151,22 @@ from app.integrations.providers import (
     create_opensky_polling_job,
     create_rail_polling_job,
     create_tavily_research_job,
+    # USGS Earthquake
+    DEFAULT_USGS_FEED_URL,
+    DEFAULT_USGS_QUERY_URL,
+    USGSEarthquakeAdapter,
+    USGSEarthquakeNormalizer,
+    # Open-Meteo Weather & Marine
+    DEFAULT_OPENMETEO_FORECAST_URL,
+    DEFAULT_OPENMETEO_MARINE_URL,
+    OpenMeteoAdapter,
+    OpenMeteoNormalizer,
+    # Nominatim Geocoding
+    DEFAULT_NOMINATIM_BASE_URL,
+    DEFAULT_NOMINATIM_SEARCH_URL,
+    DEFAULT_NOMINATIM_REVERSE_URL,
+    NominatimAdapter,
+    NominatimNormalizer,
 )
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
@@ -245,6 +261,22 @@ __all__ = [
     "TavilySearchResult",
     "TavilySearchResponse",
     "create_tavily_research_job",
+    # Providers (USGS Earthquake)
+    "DEFAULT_USGS_FEED_URL",
+    "DEFAULT_USGS_QUERY_URL",
+    "USGSEarthquakeAdapter",
+    "USGSEarthquakeNormalizer",
+    # Providers (Open-Meteo Weather & Marine)
+    "DEFAULT_OPENMETEO_FORECAST_URL",
+    "DEFAULT_OPENMETEO_MARINE_URL",
+    "OpenMeteoAdapter",
+    "OpenMeteoNormalizer",
+    # Providers (Nominatim Geocoding Reference)
+    "DEFAULT_NOMINATIM_BASE_URL",
+    "DEFAULT_NOMINATIM_SEARCH_URL",
+    "DEFAULT_NOMINATIM_REVERSE_URL",
+    "NominatimAdapter",
+    "NominatimNormalizer",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -412,5 +444,48 @@ if not default_provider_registry.is_registered(TavilyAdapter.provider_name):
             retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
         ),
     )
+
+if not default_provider_registry.is_registered(USGSEarthquakeAdapter.provider_name):
+    default_provider_registry.register(
+        USGSEarthquakeAdapter,
+        default_config=ProviderConfig(
+            provider_name=USGSEarthquakeAdapter.provider_name,
+            provider_type=USGSEarthquakeAdapter.provider_type,
+            base_url=DEFAULT_USGS_FEED_URL,
+            auth_mode=AuthMode.NONE,
+            secret_ref=None,
+            rate_limit=RateLimitConfig(requests_per_minute=60),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(OpenMeteoAdapter.provider_name):
+    default_provider_registry.register(
+        OpenMeteoAdapter,
+        default_config=ProviderConfig(
+            provider_name=OpenMeteoAdapter.provider_name,
+            provider_type=OpenMeteoAdapter.provider_type,
+            base_url=DEFAULT_OPENMETEO_FORECAST_URL,
+            auth_mode=AuthMode.NONE,
+            secret_ref="env:OPENMETEO_API_KEY",
+            rate_limit=RateLimitConfig(requests_per_minute=120),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
+if not default_provider_registry.is_registered(NominatimAdapter.provider_name):
+    default_provider_registry.register(
+        NominatimAdapter,
+        default_config=ProviderConfig(
+            provider_name=NominatimAdapter.provider_name,
+            provider_type=NominatimAdapter.provider_type,
+            base_url=DEFAULT_NOMINATIM_SEARCH_URL,
+            auth_mode=AuthMode.NONE,
+            secret_ref=None,
+            rate_limit=RateLimitConfig(requests_per_minute=60, burst_limit=1),
+            retry=RetryConfig(max_retries=2, initial_delay_seconds=1.0),
+        ),
+    )
+
 
 

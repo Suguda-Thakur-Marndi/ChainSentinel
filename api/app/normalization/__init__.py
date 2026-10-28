@@ -38,6 +38,7 @@ from app.normalization.handlers import (
     RailTransitNormalizationHandler,
     RoadTrafficNormalizationHandler,
     WeatherNormalizationHandler,
+    GeologicalHazardNormalizationHandler,
 )
 from app.normalization.identifiers import (
     IdentifierNormalizer,
@@ -91,6 +92,7 @@ __all__ = [
     "BaseDomainNormalizationHandler",
     "DomainNormalizationRegistry",
     "WeatherNormalizationHandler",
+    "GeologicalHazardNormalizationHandler",
     "RoadTrafficNormalizationHandler",
     "OceanAISNormalizationHandler",
     "MaritimePortNormalizationHandler",

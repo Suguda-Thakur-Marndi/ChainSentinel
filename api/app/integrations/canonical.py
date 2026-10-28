@@ -68,6 +68,14 @@ class CanonicalEventType(str, Enum):
     NEWS_EVENT = "NEWS_EVENT"
     GEOPOLITICAL_EVENT = "GEOPOLITICAL_EVENT"
 
+    # Geological / Natural Hazards
+    EARTHQUAKE = "EARTHQUAKE"
+    TSUNAMI = "TSUNAMI"
+    NATURAL_DISASTER = "NATURAL_DISASTER"
+
+    # Geocoding & Reference Data
+    GEOCODING_REFERENCE = "GEOCODING_REFERENCE"
+
     # Extensible Fallback
     CUSTOM = "CUSTOM"
 

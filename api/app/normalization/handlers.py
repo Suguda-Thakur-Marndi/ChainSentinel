@@ -644,7 +644,69 @@ class IntelligenceNewsNormalizationHandler(BaseDomainNormalizationHandler):
 
 
 # -----------------------------------------------------------------------------
-# 8. General Fallback Domain Handler
+# 8. Geological & Natural Hazard Domain Handler
+# -----------------------------------------------------------------------------
+class GeologicalHazardNormalizationHandler(BaseDomainNormalizationHandler):
+    """Normalizes earthquake, tsunami, and geological disaster signals."""
+
+    _SUPPORTED_TYPES = {
+        CanonicalEventType.EARTHQUAKE,
+        CanonicalEventType.TSUNAMI,
+        CanonicalEventType.NATURAL_DISASTER,
+        "EARTHQUAKE",
+        "TSUNAMI",
+        "NATURAL_DISASTER",
+    }
+
+    def can_handle(self, event: CanonicalExternalEvent) -> bool:
+        ev_type = str(event.event_type.value if hasattr(event.event_type, "value") else event.event_type)
+        return ev_type in self._SUPPORTED_TYPES or "earthquake" in ev_type.lower() or "seismic" in ev_type.lower()
+
+    def normalize(self, event: CanonicalExternalEvent) -> NormalizedRiskSignal:
+        attrs = dict(event.normalized_attributes)
+        ev_str = str(event.event_type.value if hasattr(event.event_type, "value") else event.event_type)
+        mag = attrs.get("magnitude")
+        tsunami = attrs.get("tsunami_warning", False)
+
+        disruption = 0.9 if (tsunami or (mag and mag >= 7.0)) else (0.7 if (mag and mag >= 6.0) else (0.4 if (mag and mag >= 5.0) else 0.2))
+
+        measurements = OperationalValues(
+            disruption_level=disruption,
+            operational_status=event.status or "ACTIVE",
+        )
+
+        return NormalizedRiskSignal(
+            organization_id=event.org_id,
+            domain=SignalDomain.GEOLOGICAL,
+            signal_type=SignalType.HAZARD,
+            event_type=ev_str,
+            status=StatusNormalizer.normalize_status(event.status),
+            severity=event.severity,
+            confidence=event.confidence if event.confidence is not None else 0.95,
+            quality=event.quality,
+            event_time=event.event_timestamp,
+            observed_at=event.observed_at,
+            received_at=event.received_at,
+            **self._extract_location_context(event),
+            entities=self._extract_base_entities(event),
+            source=event.provider,
+            source_type=event.source_type,
+            provider=event.provider,
+            canonical_event_id=event.event_id,
+            raw_event_id=event.raw_event_id,
+            provider_event_id=event.source_event_id,
+            source_reference=event.source_url,
+            correlation_id=event.correlation_id,
+            trace_id=getattr(event, "trace_id", None),
+            ingestion_run_id=event.ingestion_run_id,
+            measurements=measurements,
+            normalized_attributes=attrs,
+            canonical_attributes={"raw_status": event.status, "magnitude": mag, "tsunami": tsunami},
+        )
+
+
+# -----------------------------------------------------------------------------
+# 9. General Fallback Domain Handler
 # -----------------------------------------------------------------------------
 class GeneralNormalizationHandler(BaseDomainNormalizationHandler):
     """Fallback handler for arbitrary custom or unclassified canonical events."""
@@ -705,6 +767,7 @@ class DomainNormalizationRegistry:
             RailTransitNormalizationHandler(),
             LogisticsTrackingNormalizationHandler(),
             IntelligenceNewsNormalizationHandler(),
+            GeologicalHazardNormalizationHandler(),
             GeneralNormalizationHandler(),  # Fallback must be last
         ]
 
