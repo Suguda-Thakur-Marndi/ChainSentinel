@@ -167,6 +167,10 @@ from app.integrations.providers import (
     DEFAULT_NOMINATIM_REVERSE_URL,
     NominatimAdapter,
     NominatimNormalizer,
+    # NOAA NWS Active Alerts
+    DEFAULT_NOAA_ALERTS_URL,
+    NOAAAlertsAdapter,
+    NOAANormalizer,
 )
 from app.integrations.rate_limiter import ProviderRateLimiter
 from app.integrations.registry import ProviderRegistry, default_provider_registry
@@ -277,6 +281,10 @@ __all__ = [
     "DEFAULT_NOMINATIM_REVERSE_URL",
     "NominatimAdapter",
     "NominatimNormalizer",
+    # Providers (NOAA NWS Active Alerts)
+    "DEFAULT_NOAA_ALERTS_URL",
+    "NOAAAlertsAdapter",
+    "NOAANormalizer",
     # Errors
     "IngestionError",
     "ProviderConfigurationError",
@@ -486,6 +494,21 @@ if not default_provider_registry.is_registered(NominatimAdapter.provider_name):
             retry=RetryConfig(max_retries=2, initial_delay_seconds=1.0),
         ),
     )
+
+if not default_provider_registry.is_registered(NOAAAlertsAdapter.provider_name):
+    default_provider_registry.register(
+        NOAAAlertsAdapter,
+        default_config=ProviderConfig(
+            provider_name=NOAAAlertsAdapter.provider_name,
+            provider_type=NOAAAlertsAdapter.provider_type,
+            base_url=DEFAULT_NOAA_ALERTS_URL,
+            auth_mode=AuthMode.NONE,
+            secret_ref=None,
+            rate_limit=RateLimitConfig(requests_per_minute=60),
+            retry=RetryConfig(max_retries=3, initial_delay_seconds=0.5),
+        ),
+    )
+
 
 
 

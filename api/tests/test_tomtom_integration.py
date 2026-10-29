@@ -653,14 +653,15 @@ def test_34_secret_redaction():
     assert "key=[REDACTED]" in sanitized_url
 
 
-def test_35_provider_health_check():
+def test_35_provider_health_check(monkeypatch):
     """35. Test provider health check states (HEALTHY, UNCONFIGURED, UNHEALTHY, DEGRADED)."""
     # Healthy
     client_ok = create_mock_client(200, json_data=SAMPLE_FLOW_DATA)
     adapter_ok = TomTomAdapter(secret="valid_key", http_client=client_ok)
     assert adapter_ok.health_check().status == ProviderHealthStatus.HEALTHY
 
-    # Unconfigured
+    # Unconfigured (isolate from environment)
+    monkeypatch.delenv("TOMTOM_API_KEY", raising=False)
     adapter_unconf = TomTomAdapter(
         config=ProviderConfig(provider_name="tomtom", provider_type=ProviderType.ROAD_TRAFFIC, secret_ref=None),
         secret=None,

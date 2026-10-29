@@ -686,7 +686,7 @@ def test_28_alert_behavior_according_to_supported_capability():
     assert "alert_event" not in canon_25.normalized_attributes
 
 
-def test_29_provider_health_check():
+def test_29_provider_health_check(monkeypatch):
     """29. Test provider health check (HEALTHY, UNCONFIGURED, UNHEALTHY, DEGRADED)."""
     # Healthy
     client_ok = create_mock_client(200, json_data=SAMPLE_LONDON_WEATHER)
@@ -694,7 +694,9 @@ def test_29_provider_health_check():
     res_ok = adapter_ok.health_check()
     assert res_ok.status == ProviderHealthStatus.HEALTHY
 
-    # Unconfigured
+    # Unconfigured (isolate from environment)
+    monkeypatch.delenv("OPENWEATHER_API_KEY", raising=False)
+    monkeypatch.delenv("OPENWEATHERMAP_API_KEY", raising=False)
     adapter_unconf = OpenWeatherAdapter(
         config=ProviderConfig(provider_name="openweather", provider_type=ProviderType.WEATHER, secret_ref=None),
         secret=None,

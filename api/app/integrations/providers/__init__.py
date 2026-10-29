@@ -88,6 +88,11 @@ from app.integrations.providers.nominatim import (
     NominatimAdapter,
     NominatimNormalizer,
 )
+from app.integrations.providers.noaa import (
+    DEFAULT_NOAA_ALERTS_URL,
+    NOAAAlertsAdapter,
+    NOAANormalizer,
+)
 
 __all__ = [
     "DEFAULT_OPENWEATHER_BASE_URL",
@@ -161,5 +166,9 @@ __all__ = [
     "DEFAULT_NOMINATIM_REVERSE_URL",
     "NominatimAdapter",
     "NominatimNormalizer",
+    # NOAA NWS Active Alerts
+    "DEFAULT_NOAA_ALERTS_URL",
+    "NOAAAlertsAdapter",
+    "NOAANormalizer",
 ]
 
